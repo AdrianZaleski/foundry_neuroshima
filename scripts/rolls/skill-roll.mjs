@@ -248,6 +248,9 @@ export async function rollSkill(actor, skillKey) {
   }
 
   const { testType, startingDifficultyIndex } = testConfiguration;
+  const testTitle = testType === "open"
+    ? `Otwarty test umiejętności: ${displayedSkillName}`
+    : `Test umiejętności: ${displayedSkillName}`;
 
   // Wartość końcowa może być zmieniana przez efekty, ale nie może spaść poniżej zera.
   const skillLevel = Math.max(0, skill.value);
@@ -309,7 +312,7 @@ export async function rollSkill(actor, skillKey) {
   await roll.toMessage({
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
-      `<strong>Test umiejętności: ${displayedSkillName}</strong>`,
+      `<strong>${testTitle}</strong>`,
       `Współczynnik: ${selectedAttributeLabel} (${attribute.value})`,
       `Poziom umiejętności: ${skillLevel}`,
       `Suwak: ${prepareSliderDescription(skillLevel)}`,

@@ -47,6 +47,9 @@ export async function rollAttribute(actor, attributeKey) {
   }
 
   const { testType, startingDifficultyIndex } = testConfiguration;
+  const testTitle = testType === "open"
+    ? `Otwarty test: ${attributeLabel}`
+    : `Test: ${attributeLabel}`;
 
   // Foundry sam losuje trzy kości dwudziestościenne i przechowuje ich wyniki.
   const roll = await new foundry.dice.Roll("3d20").evaluate();
@@ -93,7 +96,7 @@ export async function rollAttribute(actor, attributeKey) {
   await roll.toMessage({
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
-      `<strong>Test: ${attributeLabel}</strong>`,
+      `<strong>${testTitle}</strong>`,
       `Wartość współczynnika: ${attribute.value}`,
       `Początkowy poziom trudności: ${startingDifficultyLabel}`,
       `Ostateczny poziom trudności: ${finalDifficultyLabel}`,
