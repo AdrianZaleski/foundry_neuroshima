@@ -6,14 +6,29 @@ import {
   selectStartingDifficultyIndex
 } from "./roll-helpers.mjs";
 
+const ATTRIBUTE_LABELS = {
+  zrecznosc: "Zręczność",
+  percepcja: "Percepcja",
+  charakter: "Charakter",
+  spryt: "Spryt",
+  budowa: "Budowa"
+};
+
 // Funkcja pomocnicza tworzy powiązanie umiejętności ze współczynnikiem.
 // Dzięki niej nie powtarzamy dla każdego wpisu trzech identycznych właściwości.
-function createSkillConfiguration(skillLabel, attributeKey, attributeLabel, usesCustomName = false) {
+function createSkillConfiguration(
+  skillLabel,
+  attributeKey,
+  attributeLabel,
+  usesCustomName = false,
+  usesCustomAttribute = false
+) {
   return {
     label: skillLabel,
     attributeKey,
     attributeLabel,
-    usesCustomName
+    usesCustomName,
+    usesCustomAttribute
   };
 }
 
@@ -78,7 +93,10 @@ const SKILL_CONFIGURATION = {
   kondycja: createSkillConfiguration("Kondycja", "budowa", "Budowa"),
   jazdaKonna: createSkillConfiguration("Jazda konna", "budowa", "Budowa"),
   powozenie: createSkillConfiguration("Powożenie", "budowa", "Budowa"),
-  ujezdzanie: createSkillConfiguration("Ujeżdżanie", "budowa", "Budowa")
+  ujezdzanie: createSkillConfiguration("Ujeżdżanie", "budowa", "Budowa"),
+  wlasnaUmiejetnosc1: createSkillConfiguration("Własna umiejętność 1", "zrecznosc", "Zręczność", true, true),
+  wlasnaUmiejetnosc2: createSkillConfiguration("Własna umiejętność 2", "zrecznosc", "Zręczność", true, true),
+  wlasnaUmiejetnosc3: createSkillConfiguration("Własna umiejętność 3", "zrecznosc", "Zręczność", true, true)
 };
 
 function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, skillLevel) {
@@ -178,7 +196,17 @@ export async function rollSkill(actor, skillKey) {
     return;
   }
 
-  const attribute = actor.system.attributes[skillConfiguration.attributeKey];
+  const selectedAttributeKey = skillConfiguration.usesCustomAttribute
+    ? skill.attributeKey
+    : skillConfiguration.attributeKey;
+  const selectedAttributeLabel = ATTRIBUTE_LABELS[selectedAttributeKey];
+  const attribute = actor.system.attributes[selectedAttributeKey];
+
+  if (!attribute || !selectedAttributeLabel) {
+    ui.notifications.error("Wybrana umiejętność nie ma prawidłowego współczynnika.");
+    return;
+  }
+
   const customSkillName = skillConfiguration.usesCustomName ? skill.name.trim() : "";
   const displayedSkillName = customSkillName || skillConfiguration.label;
   const startingDifficultyIndex = await selectStartingDifficultyIndex();
@@ -217,7 +245,7 @@ export async function rollSkill(actor, skillKey) {
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
       `<strong>Test umiejętności: ${displayedSkillName}</strong>`,
-      `Współczynnik: ${skillConfiguration.attributeLabel} (${attribute.value})`,
+      `Współczynnik: ${selectedAttributeLabel} (${attribute.value})`,
       `Poziom umiejętności: ${skillLevel}`,
       `Suwak: ${prepareSliderDescription(skillLevel)}`,
       `Początkowy poziom trudności: ${DIFFICULTY_LABELS[startingDifficultyIndex]}`,

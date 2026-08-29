@@ -31,6 +31,16 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
       value: new NumberField({ required: true, nullable: false, integer: true, initial: 0, persisted: false })
     });
 
+    // Własna umiejętność różni się od Wiedzy ogólnej możliwością
+    // wybrania jednego z pięciu współczynników używanego podczas testu.
+    const createCustomSkillSchema = () => new SchemaField({
+      name: new StringField({ required: true, nullable: false, initial: "" }),
+      attributeKey: new StringField({ required: true, nullable: false, initial: "zrecznosc" }),
+      base: new NumberField({ required: true, nullable: false, integer: true, min: 0, max: 20, initial: 0 }),
+      modifier: new NumberField({ required: true, nullable: false, integer: true, initial: 0, persisted: false }),
+      value: new NumberField({ required: true, nullable: false, integer: true, initial: 0, persisted: false })
+    });
+
     return {
       attributes: new SchemaField({
         zrecznosc: createAttributeSchema(),
@@ -102,7 +112,10 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         kondycja: createSkillSchema(),
         jazdaKonna: createSkillSchema(),
         powozenie: createSkillSchema(),
-        ujezdzanie: createSkillSchema()
+        ujezdzanie: createSkillSchema(),
+        wlasnaUmiejetnosc1: createCustomSkillSchema(),
+        wlasnaUmiejetnosc2: createCustomSkillSchema(),
+        wlasnaUmiejetnosc3: createCustomSkillSchema()
       })
     };
   }

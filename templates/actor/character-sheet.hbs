@@ -551,4 +551,66 @@
     <output>Wartość końcowa: {{system.skills.ujezdzanie.value}}</output>
     <button type="button" data-action="rollSkill" data-skill="ujezdzanie">Test umiejętności</button>
   </div>
+
+  <h2>Własne umiejętności</h2>
+
+  {{!-- Każde pole ma własną nazwę, poziom i niezależnie wybrany współczynnik. --}}
+  <div class="skills">
+    <h3>Własna umiejętność 1</h3>
+
+    <label>
+      Nazwa
+      <input type="text" name="system.skills.wlasnaUmiejetnosc1.name" value="{{system.skills.wlasnaUmiejetnosc1.name}}">
+    </label>
+    <label>
+      Współczynnik
+      <select name="system.skills.wlasnaUmiejetnosc1.attributeKey">
+        {{selectOptions attributeOptions selected=system.skills.wlasnaUmiejetnosc1.attributeKey}}
+      </select>
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wlasnaUmiejetnosc1.base" value="{{system.skills.wlasnaUmiejetnosc1.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wlasnaUmiejetnosc1.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wlasnaUmiejetnosc1">Test umiejętności</button>
+
+    <h3>Własna umiejętność 2</h3>
+
+    <label>
+      Nazwa
+      <input type="text" name="system.skills.wlasnaUmiejetnosc2.name" value="{{system.skills.wlasnaUmiejetnosc2.name}}">
+    </label>
+    <label>
+      Współczynnik
+      <select name="system.skills.wlasnaUmiejetnosc2.attributeKey">
+        {{selectOptions attributeOptions selected=system.skills.wlasnaUmiejetnosc2.attributeKey}}
+      </select>
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wlasnaUmiejetnosc2.base" value="{{system.skills.wlasnaUmiejetnosc2.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wlasnaUmiejetnosc2.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wlasnaUmiejetnosc2">Test umiejętności</button>
+
+    <h3>Własna umiejętność 3</h3>
+
+    <label>
+      Nazwa
+      <input type="text" name="system.skills.wlasnaUmiejetnosc3.name" value="{{system.skills.wlasnaUmiejetnosc3.name}}">
+    </label>
+    <label>
+      Współczynnik
+      <select name="system.skills.wlasnaUmiejetnosc3.attributeKey">
+        {{selectOptions attributeOptions selected=system.skills.wlasnaUmiejetnosc3.attributeKey}}
+      </select>
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wlasnaUmiejetnosc3.base" value="{{system.skills.wlasnaUmiejetnosc3.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wlasnaUmiejetnosc3.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wlasnaUmiejetnosc3">Test umiejętności</button>
+  </div>
 </section>

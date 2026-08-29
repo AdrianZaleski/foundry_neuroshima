@@ -40,6 +40,16 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.actor = this.actor;
     context.system = this.actor.system;
 
+    // Słownik zasila listy wyboru współczynnika przy własnych umiejętnościach.
+    // Klucz jest zapisywany w danych, a polska nazwa jest wyświetlana użytkownikowi.
+    context.attributeOptions = {
+      zrecznosc: "Zręczność",
+      percepcja: "Percepcja",
+      charakter: "Charakter",
+      spryt: "Spryt",
+      budowa: "Budowa"
+    };
+
     return context;
   }
 
