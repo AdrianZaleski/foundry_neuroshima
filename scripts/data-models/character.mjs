@@ -48,7 +48,19 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         motocykl: createSkillSchema(),
         kradziezKieszonkowa: createSkillSchema(),
         zwinneDlonie: createSkillSchema(),
-        otwieranieZamkow: createSkillSchema()
+        otwieranieZamkow: createSkillSchema(),
+        wyczucieKierunku: createSkillSchema(),
+        tropienie: createSkillSchema(),
+        przygotowaniePulapki: createSkillSchema(),
+        nasluchiwanie: createSkillSchema(),
+        wypatrywanie: createSkillSchema(),
+        czujnosc: createSkillSchema(),
+        skradanieSie: createSkillSchema(),
+        ukrywanieSie: createSkillSchema(),
+        maskowanie: createSkillSchema(),
+        lowiectwo: createSkillSchema(),
+        zdobywanieWody: createSkillSchema(),
+        znajomoscTerenu: createSkillSchema()
       })
     };
   }

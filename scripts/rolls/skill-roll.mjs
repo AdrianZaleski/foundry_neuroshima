@@ -6,33 +6,45 @@ import {
   selectStartingDifficultyIndex
 } from "./roll-helpers.mjs";
 
-// Wszystkie umiejętności dodane na tym etapie korzystają ze Zręczności.
-// Funkcja pomocnicza pozwala podać tylko nazwę wyświetlaną użytkownikowi.
-function createDexteritySkillConfiguration(skillLabel) {
+// Funkcja pomocnicza tworzy powiązanie umiejętności ze współczynnikiem.
+// Dzięki niej nie powtarzamy dla każdego wpisu trzech identycznych właściwości.
+function createSkillConfiguration(skillLabel, attributeKey, attributeLabel) {
   return {
     label: skillLabel,
-    attributeKey: "zrecznosc",
-    attributeLabel: "Zręczność"
+    attributeKey,
+    attributeLabel
   };
 }
 
 // Każda standardowa umiejętność ma stałą nazwę i przypisany współczynnik.
 const SKILL_CONFIGURATION = {
-  bijatyka: createDexteritySkillConfiguration("Bijatyka"),
-  bronReczna: createDexteritySkillConfiguration("Broń ręczna"),
-  rzucanie: createDexteritySkillConfiguration("Rzucanie"),
-  pistolety: createDexteritySkillConfiguration("Pistolety"),
-  karabiny: createDexteritySkillConfiguration("Karabiny"),
-  bronMaszynowa: createDexteritySkillConfiguration("Broń maszynowa"),
-  luk: createDexteritySkillConfiguration("Łuk"),
-  kusza: createDexteritySkillConfiguration("Kusza"),
-  proca: createDexteritySkillConfiguration("Proca"),
-  samochod: createDexteritySkillConfiguration("Samochód"),
-  ciezarowka: createDexteritySkillConfiguration("Ciężarówka"),
-  motocykl: createDexteritySkillConfiguration("Motocykl"),
-  kradziezKieszonkowa: createDexteritySkillConfiguration("Kradzież kieszonkowa"),
-  zwinneDlonie: createDexteritySkillConfiguration("Zwinne dłonie"),
-  otwieranieZamkow: createDexteritySkillConfiguration("Otwieranie zamków")
+  bijatyka: createSkillConfiguration("Bijatyka", "zrecznosc", "Zręczność"),
+  bronReczna: createSkillConfiguration("Broń ręczna", "zrecznosc", "Zręczność"),
+  rzucanie: createSkillConfiguration("Rzucanie", "zrecznosc", "Zręczność"),
+  pistolety: createSkillConfiguration("Pistolety", "zrecznosc", "Zręczność"),
+  karabiny: createSkillConfiguration("Karabiny", "zrecznosc", "Zręczność"),
+  bronMaszynowa: createSkillConfiguration("Broń maszynowa", "zrecznosc", "Zręczność"),
+  luk: createSkillConfiguration("Łuk", "zrecznosc", "Zręczność"),
+  kusza: createSkillConfiguration("Kusza", "zrecznosc", "Zręczność"),
+  proca: createSkillConfiguration("Proca", "zrecznosc", "Zręczność"),
+  samochod: createSkillConfiguration("Samochód", "zrecznosc", "Zręczność"),
+  ciezarowka: createSkillConfiguration("Ciężarówka", "zrecznosc", "Zręczność"),
+  motocykl: createSkillConfiguration("Motocykl", "zrecznosc", "Zręczność"),
+  kradziezKieszonkowa: createSkillConfiguration("Kradzież kieszonkowa", "zrecznosc", "Zręczność"),
+  zwinneDlonie: createSkillConfiguration("Zwinne dłonie", "zrecznosc", "Zręczność"),
+  otwieranieZamkow: createSkillConfiguration("Otwieranie zamków", "zrecznosc", "Zręczność"),
+  wyczucieKierunku: createSkillConfiguration("Wyczucie kierunku", "percepcja", "Percepcja"),
+  tropienie: createSkillConfiguration("Tropienie", "percepcja", "Percepcja"),
+  przygotowaniePulapki: createSkillConfiguration("Przygotowanie pułapki", "percepcja", "Percepcja"),
+  nasluchiwanie: createSkillConfiguration("Nasłuchiwanie", "percepcja", "Percepcja"),
+  wypatrywanie: createSkillConfiguration("Wypatrywanie/Przeszukiwanie", "percepcja", "Percepcja"),
+  czujnosc: createSkillConfiguration("Czujność", "percepcja", "Percepcja"),
+  skradanieSie: createSkillConfiguration("Skradanie się", "percepcja", "Percepcja"),
+  ukrywanieSie: createSkillConfiguration("Ukrywanie się", "percepcja", "Percepcja"),
+  maskowanie: createSkillConfiguration("Maskowanie", "percepcja", "Percepcja"),
+  lowiectwo: createSkillConfiguration("Łowiectwo", "percepcja", "Percepcja"),
+  zdobywanieWody: createSkillConfiguration("Zdobywanie wody", "percepcja", "Percepcja"),
+  znajomoscTerenu: createSkillConfiguration("Znajomość terenu", "percepcja", "Percepcja")
 };
 
 function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, skillLevel) {
