@@ -1,4 +1,5 @@
 <section class="neuroshima-character-sheet">
+  {{!-- Nazwa jest standardowym polem dokumentu Actor w Foundry. --}}
   <header>
     <label>
       Nazwa postaci
@@ -8,35 +9,41 @@
 
   <h2>Współczynniki</h2>
 
+  {{!-- Każdy przycisk przekazuje do JavaScriptu klucz właściwego współczynnika. --}}
   <div class="attributes">
     <label>
       Zręczność bazowa
       <input type="number" name="system.attributes.zrecznosc.base" value="{{system.attributes.zrecznosc.base}}" min="1" max="40" step="1">
     </label>
     <output>Wartość końcowa: {{system.attributes.zrecznosc.value}}</output>
+    <button type="button" data-action="rollAttribute" data-attribute="zrecznosc">Rzuć 3k20</button>
 
     <label>
       Percepcja bazowa
       <input type="number" name="system.attributes.percepcja.base" value="{{system.attributes.percepcja.base}}" min="1" max="40" step="1">
     </label>
     <output>Wartość końcowa: {{system.attributes.percepcja.value}}</output>
+    <button type="button" data-action="rollAttribute" data-attribute="percepcja">Rzuć 3k20</button>
 
     <label>
       Charakter bazowy
       <input type="number" name="system.attributes.charakter.base" value="{{system.attributes.charakter.base}}" min="1" max="40" step="1">
     </label>
     <output>Wartość końcowa: {{system.attributes.charakter.value}}</output>
+    <button type="button" data-action="rollAttribute" data-attribute="charakter">Rzuć 3k20</button>
 
     <label>
       Spryt bazowy
       <input type="number" name="system.attributes.spryt.base" value="{{system.attributes.spryt.base}}" min="1" max="40" step="1">
     </label>
     <output>Wartość końcowa: {{system.attributes.spryt.value}}</output>
+    <button type="button" data-action="rollAttribute" data-attribute="spryt">Rzuć 3k20</button>
 
     <label>
       Budowa bazowa
       <input type="number" name="system.attributes.budowa.base" value="{{system.attributes.budowa.base}}" min="1" max="40" step="1">
     </label>
     <output>Wartość końcowa: {{system.attributes.budowa.value}}</output>
+    <button type="button" data-action="rollAttribute" data-attribute="budowa">Rzuć 3k20</button>
   </div>
 </section>
