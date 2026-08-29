@@ -1,0 +1,18 @@
+{
+  "id": "neuroshima",
+  "title": "Neuroshima",
+  "description": "System Neuroshima RPG dla Foundry Virtual Tabletop.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": 14,
+    "verified": 14
+  },
+  "esmodules": [
+    "scripts/neuroshima.mjs"
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {}
+    }
+  }
+}

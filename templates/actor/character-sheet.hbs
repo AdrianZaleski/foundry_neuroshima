@@ -1,0 +1,42 @@
+<section class="neuroshima-character-sheet">
+  <header>
+    <label>
+      Nazwa postaci
+      <input type="text" name="name" value="{{actor.name}}">
+    </label>
+  </header>
+
+  <h2>Współczynniki</h2>
+
+  <div class="attributes">
+    <label>
+      Zręczność bazowa
+      <input type="number" name="system.attributes.zrecznosc.base" value="{{system.attributes.zrecznosc.base}}" min="1" max="40" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.attributes.zrecznosc.value}}</output>
+
+    <label>
+      Percepcja bazowa
+      <input type="number" name="system.attributes.percepcja.base" value="{{system.attributes.percepcja.base}}" min="1" max="40" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.attributes.percepcja.value}}</output>
+
+    <label>
+      Charakter bazowy
+      <input type="number" name="system.attributes.charakter.base" value="{{system.attributes.charakter.base}}" min="1" max="40" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.attributes.charakter.value}}</output>
+
+    <label>
+      Spryt bazowy
+      <input type="number" name="system.attributes.spryt.base" value="{{system.attributes.spryt.base}}" min="1" max="40" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.attributes.spryt.value}}</output>
+
+    <label>
+      Budowa bazowa
+      <input type="number" name="system.attributes.budowa.base" value="{{system.attributes.budowa.base}}" min="1" max="40" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.attributes.budowa.value}}</output>
+  </div>
+</section>
