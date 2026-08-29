@@ -15,7 +15,8 @@
       "character": {}
     },
     "Item": {
-      "equipment": {}
+      "equipment": {},
+      "weapon": {}
     }
   }
 }

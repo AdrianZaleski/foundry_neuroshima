@@ -1,0 +1,120 @@
+<section class="neuroshima-weapon-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header>
+    <label>
+      Nazwa broni
+      <input type="text" name="name" value="{{item.name}}">
+    </label>
+  </header>
+
+  <h2>Broń</h2>
+
+  <label>
+    Klasa broni
+    <select name="system.weaponClass">
+      {{selectOptions weaponClassOptions selected=system.weaponClass}}
+    </select>
+  </label>
+
+  <label>
+    Kod amunicji
+    <input type="text" name="system.ammunitionCode" value="{{system.ammunitionCode}}" placeholder="np. AMMO_556">
+  </label>
+
+  <h3>Magazynek</h3>
+
+  <label>
+    Pojemność magazynka
+    <input type="number" name="system.magazineCapacity" value="{{system.magazineCapacity}}" min="0" step="1">
+  </label>
+
+  <label>
+    Aktualna liczba nabojów
+    <input type="number" name="system.currentAmmunition" value="{{system.currentAmmunition}}" min="0" max="{{system.magazineCapacity}}" step="1">
+  </label>
+
+  <h3>Parametry strzału</h3>
+
+  <label>
+    Wynik zacięcia
+    <input type="number" name="system.misfireRoll" value="{{system.misfireRoll}}" min="1" max="20" step="1">
+  </label>
+
+  <label>
+    Modyfikator celności w procentach
+    <input type="number" name="system.accuracyModifier" value="{{system.accuracyModifier}}" step="1">
+  </label>
+
+  <label>
+    Zasięg w metrach
+    <input type="number" name="system.range" value="{{system.range}}" min="0" step="1">
+  </label>
+
+  <label>
+    Szybkostrzelność
+    <input type="number" name="system.fireRate" value="{{system.fireRate}}" min="1" step="1">
+  </label>
+
+  <label>
+    Rodzaje ataku
+    <input type="text" name="system.attackTypes" value="{{system.attackTypes}}" placeholder="np. S,A">
+  </label>
+
+  <label>
+    Czas przeładowania
+    <input type="number" name="system.reloadTime" value="{{system.reloadTime}}" min="0" step="1">
+  </label>
+
+  <label>
+    Punkty przebicia pancerza
+    <input type="number" name="system.armorPenetration" value="{{system.armorPenetration}}" min="0" step="1">
+  </label>
+
+  <label>
+    Obrażenia
+    <select name="system.damageCode">
+      {{selectOptions damageOptions selected=system.damageCode}}
+    </select>
+  </label>
+
+  <label>
+    Wymagana Budowa
+    <input type="number" name="system.requiredStrength" value="{{system.requiredStrength}}" min="0" step="1">
+  </label>
+
+  <h3>Pozostałe dane</h3>
+
+  <label>
+    Kod kabury
+    <input type="text" name="system.holsterCode" value="{{system.holsterCode}}" placeholder="np. P albo N">
+  </label>
+
+  <label>
+    Masa
+    <input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.01">
+  </label>
+
+  <label>
+    Cena
+    <input type="number" name="system.price" value="{{system.price}}" min="0" step="0.01">
+  </label>
+
+  <label>
+    Dostępność w procentach
+    <input type="number" name="system.availability" value="{{system.availability}}" min="0" max="100" step="1">
+  </label>
+
+  <label>
+    Kod źródłowy
+    <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" placeholder="np. WP_AK">
+  </label>
+
+  <label>
+    Akcje specjalne
+    <input type="text" name="system.actions" value="{{system.actions}}">
+  </label>
+
+  <label>
+    Opis
+    <textarea name="system.description" rows="8">{{system.description}}</textarea>
+  </label>
+</section>
