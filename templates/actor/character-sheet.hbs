@@ -614,13 +614,65 @@
     <button type="button" data-action="rollSkill" data-skill="wlasnaUmiejetnosc3">Test umiejętności</button>
   </div>
 
+  <h2>Obciążenie</h2>
+
+  {{!-- Ta wartość jest sumą masy zwykłego ekwipunku oraz wszystkich broni. --}}
+  <p><strong>Łączna masa noszonych przedmiotów:</strong> {{totalCarriedWeight}}</p>
+
+  <h2>Broń</h2>
+
+  {{!-- Każda broń jest osobnym Itemem należącym do tej postaci. --}}
+  <div class="weapons">
+    <button type="button" data-action="createWeapon">Dodaj broń</button>
+
+    <p><strong>Masa broni:</strong> {{totalWeaponWeight}}</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Broń</th>
+          <th>Magazynek</th>
+          <th>Obrażenia</th>
+          <th>Zasięg i przebicie</th>
+          <th>Masa</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each weaponItems}}
+          <tr>
+            <td>
+              <strong>{{this.name}}</strong><br>
+              <small>{{this.weaponClassName}}</small>
+            </td>
+            <td>{{this.currentAmmunition}} / {{this.magazineCapacity}}</td>
+            <td>{{this.damageName}}</td>
+            <td>
+              {{this.range}} m<br>
+              <small>PP: {{this.armorPenetration}}</small>
+            </td>
+            <td>{{this.weight}}</td>
+            <td>
+              <button type="button" data-action="editWeapon" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteWeapon" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="6">Postać nie posiada jeszcze żadnej broni.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
   <h2>Ekwipunek</h2>
 
   {{!-- Przedmioty na tej liście są Itemami osadzonymi w konkretnej postaci. --}}
   <div class="equipment">
     <button type="button" data-action="createEquipment">Dodaj przedmiot</button>
 
-    <p><strong>Łączna masa ekwipunku:</strong> {{totalEquipmentWeight}}</p>
+    <p><strong>Masa zwykłego ekwipunku:</strong> {{totalEquipmentWeight}}</p>
 
     <table>
       <thead>

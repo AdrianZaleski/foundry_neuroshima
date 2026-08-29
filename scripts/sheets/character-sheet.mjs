@@ -4,6 +4,30 @@ import { rollSkill } from "../rolls/skill-roll.mjs";
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
 
+// Karta postaci pokazuje polskie nazwy zamiast technicznych kodów zapisanych
+// w danych broni. Nieznany kod nadal zostanie pokazany, aby nie ukrywać danych.
+const weaponClassNames = {
+  ARIFLE: "Karabin automatyczny",
+  MACHINEGUN: "Karabin maszynowy",
+  RIFLE: "Karabin półautomatyczny",
+  MPISTOL: "Pistolet maszynowy",
+  PISTOL: "Pistolet",
+  REVOLVER: "Rewolwer",
+  REPEATER: "Karabin powtarzalny",
+  LAUNCHER: "Granatnik",
+  BLACKPOWDER: "Broń czarnoprochowa",
+  PROJECTILE: "Broń miotana",
+  SNIPER: "Karabin snajperski",
+  SHOTGUN: "Śrutówka"
+};
+
+const damageNames = {
+  D_D: "Draśnięcie",
+  D_L: "Lekkie",
+  D_C: "Ciężkie",
+  D_K: "Krytyczne"
+};
+
 export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   // DEFAULT_OPTIONS opisuje zachowanie okna karty wspólne dla każdej postaci.
   static DEFAULT_OPTIONS = {
@@ -17,7 +41,12 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // Te trzy akcje obsługują przedmioty zapisane wewnątrz konkretnej postaci.
       createEquipment: this.#onCreateEquipment,
       editEquipment: this.#onEditEquipment,
-      deleteEquipment: this.#onDeleteEquipment
+      deleteEquipment: this.#onDeleteEquipment,
+
+      // Broń jest osobnym typem Itemu, dlatego otrzymuje osobne akcje.
+      createWeapon: this.#onCreateWeapon,
+      editWeapon: this.#onEditWeapon,
+      deleteWeapon: this.#onDeleteWeapon
     },
     position: {
       width: 520,
@@ -55,8 +84,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       budowa: "Budowa"
     };
 
-    // Actor może posiadać różne typy Itemów. Na tej liście pokazujemy obecnie
-    // tylko zwykły ekwipunek, ponieważ broń i pancerz dodamy w kolejnych etapach.
+    // Actor może posiadać różne typy Itemów. Ta lista zawiera wyłącznie
+    // zwykły ekwipunek; broń przygotowujemy osobno poniżej.
     context.equipmentItems = this.actor.items
       .filter((item) => item.type === "equipment")
       .map((item) => ({
@@ -75,6 +104,33 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       0
     );
     context.totalEquipmentWeight = Math.round(equipmentWeightSum * 100) / 100;
+
+    // Broń również jest osadzonym Itemem, ale pokazujemy ją na osobnej liście,
+    // ponieważ posiada magazynek oraz parametry potrzebne później w walce.
+    context.weaponItems = this.actor.items
+      .filter((item) => item.type === "weapon")
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        weaponClassName: weaponClassNames[item.system.weaponClass] ?? item.system.weaponClass,
+        currentAmmunition: item.system.currentAmmunition,
+        magazineCapacity: item.system.magazineCapacity,
+        damageName: damageNames[item.system.damageCode] ?? item.system.damageCode,
+        range: item.system.range,
+        armorPenetration: item.system.armorPenetration,
+        weight: item.system.weight
+      }));
+
+    const weaponWeightSum = context.weaponItems.reduce(
+      (currentSum, item) => currentSum + item.weight,
+      0
+    );
+    context.totalWeaponWeight = Math.round(weaponWeightSum * 100) / 100;
+
+    // Łączne obciążenie obejmuje obecnie zwykły ekwipunek i broń.
+    // Kolejne typy przedmiotów, na przykład pancerz, dołączymy później.
+    const carriedWeightSum = equipmentWeightSum + weaponWeightSum;
+    context.totalCarriedWeight = Math.round(carriedWeightSum * 100) / 100;
 
     return context;
   }
@@ -139,6 +195,56 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         title: "Usuwanie przedmiotu"
       },
       content: `<p>Czy na pewno usunąć przedmiot <strong>${safeItemName}</strong>?</p>`,
+      modal: true
+    });
+
+    if (!deletionConfirmed) return;
+
+    await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+  }
+
+  // Nowa broń powstaje bezpośrednio wewnątrz postaci i od razu otwiera
+  // własną kartę, na której można uzupełnić jej parametry.
+  static async #onCreateWeapon() {
+    const [createdWeapon] = await this.actor.createEmbeddedDocuments("Item", [
+      {
+        name: "Nowa broń",
+        type: "weapon"
+      }
+    ]);
+
+    await createdWeapon.sheet.render({ force: true });
+  }
+
+  static async #onEditWeapon(event, target) {
+    const itemId = target.dataset.itemId;
+    const weaponItem = this.actor.items.get(itemId);
+
+    if (!weaponItem || weaponItem.type !== "weapon") {
+      ui.notifications.warn("Nie znaleziono tej broni na karcie postaci.");
+      return;
+    }
+
+    await weaponItem.sheet.render({ force: true });
+  }
+
+  // Potwierdzenie chroni przed przypadkowym usunięciem całej broni wraz
+  // z zapisanym stanem magazynka i pozostałymi danymi egzemplarza.
+  static async #onDeleteWeapon(event, target) {
+    const itemId = target.dataset.itemId;
+    const weaponItem = this.actor.items.get(itemId);
+
+    if (!weaponItem || weaponItem.type !== "weapon") {
+      ui.notifications.warn("Nie znaleziono tej broni na karcie postaci.");
+      return;
+    }
+
+    const safeWeaponName = foundry.utils.escapeHTML(weaponItem.name);
+    const deletionConfirmed = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: "Usuwanie broni"
+      },
+      content: `<p>Czy na pewno usunąć broń <strong>${safeWeaponName}</strong>?</p>`,
       modal: true
     });
 
