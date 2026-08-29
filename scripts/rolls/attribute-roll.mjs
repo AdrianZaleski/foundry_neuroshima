@@ -23,11 +23,52 @@ const DIFFICULTY_LABELS = [
   "Arcymistrzowski"
 ];
 
-// Na obecnym etapie każdy test rozpoczyna się od poziomu "Przeciętny".
+// Po otwarciu okna jako domyślny zaznaczamy poziom "Przeciętny".
 const DEFAULT_DIFFICULTY_INDEX = 1;
 
-function calculateFinalDifficultyIndex(dieResults) {
-  let difficultyIndex = DEFAULT_DIFFICULTY_INDEX;
+async function selectStartingDifficultyIndex() {
+  // Tworzymy pozycje listy na podstawie tej samej tabeli,
+  // której później użyjemy podczas obliczania progu testu.
+  const difficultyOptions = DIFFICULTY_LABELS
+    .map((difficultyLabel, difficultyIndex) => {
+      const thresholdChange = -DIFFICULTY_MODIFIERS[difficultyIndex];
+      const thresholdChangeLabel = thresholdChange >= 0 ? `+${thresholdChange}` : thresholdChange;
+      const selectedAttribute = difficultyIndex === DEFAULT_DIFFICULTY_INDEX ? "selected" : "";
+
+      return `<option value="${difficultyIndex}" ${selectedAttribute}>${difficultyLabel} (współczynnik ${thresholdChangeLabel})</option>`;
+    })
+    .join("");
+
+  // DialogV2.input zwraca dane formularza albo null, gdy użytkownik zamknie okno.
+  const formData = await foundry.applications.api.DialogV2.input({
+    window: {
+      title: "Wybierz poziom trudności"
+    },
+    content: `
+      <div class="form-group">
+        <label for="neuroshima-difficulty">Poziom trudności</label>
+        <select id="neuroshima-difficulty" name="difficultyIndex">
+          ${difficultyOptions}
+        </select>
+      </div>
+    `,
+    ok: {
+      label: "Rzuć 3k20",
+      icon: "fas fa-dice-d20"
+    },
+    rejectClose: false,
+    modal: true
+  });
+
+  if (!formData) {
+    return null;
+  }
+
+  return Number(formData.difficultyIndex);
+}
+
+function calculateFinalDifficultyIndex(dieResults, startingDifficultyIndex) {
+  let difficultyIndex = startingDifficultyIndex;
 
   // Każda wyrzucona 1 ułatwia test o jeden poziom,
   // a każda wyrzucona 20 utrudnia go o jeden poziom.
@@ -66,12 +107,20 @@ export async function rollAttribute(actor, attributeKey) {
 
   const attributeLabel = ATTRIBUTE_LABELS[attributeKey];
 
+  // Najpierw pytamy użytkownika o trudność. Zamknięcie okna przerywa cały test.
+  const startingDifficultyIndex = await selectStartingDifficultyIndex();
+
+  if (startingDifficultyIndex === null) {
+    return;
+  }
+
   // Foundry sam losuje trzy kości dwudziestościenne i przechowuje ich wyniki.
   const roll = await new foundry.dice.Roll("3d20").evaluate();
 
   // Pierwszy element tablicy "dice" zawiera wszystkie trzy wyniki z zapisu 3d20.
   const dieResults = roll.dice[0].results.map((dieResultData) => dieResultData.result);
-  const finalDifficultyIndex = calculateFinalDifficultyIndex(dieResults);
+  const finalDifficultyIndex = calculateFinalDifficultyIndex(dieResults, startingDifficultyIndex);
+  const startingDifficultyLabel = DIFFICULTY_LABELS[startingDifficultyIndex];
   const finalDifficultyLabel = DIFFICULTY_LABELS[finalDifficultyIndex];
   const successThreshold = attribute.value - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
   const numberOfSuccesses = dieResults.filter((dieResult) => dieResult <= successThreshold).length;
@@ -83,7 +132,8 @@ export async function rollAttribute(actor, attributeKey) {
     flavor: [
       `<strong>Test: ${attributeLabel}</strong>`,
       `Wartość współczynnika: ${attribute.value}`,
-      `Poziom trudności: ${finalDifficultyLabel}`,
+      `Początkowy poziom trudności: ${startingDifficultyLabel}`,
+      `Ostateczny poziom trudności: ${finalDifficultyLabel}`,
       `Próg sukcesu: ${successThreshold}`,
       `Kości: ${dieResultsDescription}`,
       `<strong>Liczba sukcesów: ${numberOfSuccesses}</strong>`
