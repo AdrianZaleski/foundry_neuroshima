@@ -6,24 +6,33 @@ import {
   selectStartingDifficultyIndex
 } from "./roll-helpers.mjs";
 
+// Wszystkie umiejętności dodane na tym etapie korzystają ze Zręczności.
+// Funkcja pomocnicza pozwala podać tylko nazwę wyświetlaną użytkownikowi.
+function createDexteritySkillConfiguration(skillLabel) {
+  return {
+    label: skillLabel,
+    attributeKey: "zrecznosc",
+    attributeLabel: "Zręczność"
+  };
+}
+
 // Każda standardowa umiejętność ma stałą nazwę i przypisany współczynnik.
-// Na razie rejestrujemy wyłącznie pierwszą grupę "Walka wręcz".
 const SKILL_CONFIGURATION = {
-  bijatyka: {
-    label: "Bijatyka",
-    attributeKey: "zrecznosc",
-    attributeLabel: "Zręczność"
-  },
-  bronReczna: {
-    label: "Broń ręczna",
-    attributeKey: "zrecznosc",
-    attributeLabel: "Zręczność"
-  },
-  rzucanie: {
-    label: "Rzucanie",
-    attributeKey: "zrecznosc",
-    attributeLabel: "Zręczność"
-  }
+  bijatyka: createDexteritySkillConfiguration("Bijatyka"),
+  bronReczna: createDexteritySkillConfiguration("Broń ręczna"),
+  rzucanie: createDexteritySkillConfiguration("Rzucanie"),
+  pistolety: createDexteritySkillConfiguration("Pistolety"),
+  karabiny: createDexteritySkillConfiguration("Karabiny"),
+  bronMaszynowa: createDexteritySkillConfiguration("Broń maszynowa"),
+  luk: createDexteritySkillConfiguration("Łuk"),
+  kusza: createDexteritySkillConfiguration("Kusza"),
+  proca: createDexteritySkillConfiguration("Proca"),
+  samochod: createDexteritySkillConfiguration("Samochód"),
+  ciezarowka: createDexteritySkillConfiguration("Ciężarówka"),
+  motocykl: createDexteritySkillConfiguration("Motocykl"),
+  kradziezKieszonkowa: createDexteritySkillConfiguration("Kradzież kieszonkowa"),
+  zwinneDlonie: createDexteritySkillConfiguration("Zwinne dłonie"),
+  otwieranieZamkow: createDexteritySkillConfiguration("Otwieranie zamków")
 };
 
 function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, skillLevel) {

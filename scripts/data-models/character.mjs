@@ -36,7 +36,19 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
       skills: new SchemaField({
         bijatyka: createSkillSchema(),
         bronReczna: createSkillSchema(),
-        rzucanie: createSkillSchema()
+        rzucanie: createSkillSchema(),
+        pistolety: createSkillSchema(),
+        karabiny: createSkillSchema(),
+        bronMaszynowa: createSkillSchema(),
+        luk: createSkillSchema(),
+        kusza: createSkillSchema(),
+        proca: createSkillSchema(),
+        samochod: createSkillSchema(),
+        ciezarowka: createSkillSchema(),
+        motocykl: createSkillSchema(),
+        kradziezKieszonkowa: createSkillSchema(),
+        zwinneDlonie: createSkillSchema(),
+        otwieranieZamkow: createSkillSchema()
       })
     };
   }
