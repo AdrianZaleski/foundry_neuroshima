@@ -1,6 +1,6 @@
 export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
-    const { NumberField, SchemaField } = foundry.data.fields;
+    const { NumberField, SchemaField, StringField } = foundry.data.fields;
 
     // Każdy z pięciu współczynników ma identyczną strukturę danych.
     // Funkcja pomocnicza chroni nas przed pięciokrotnym powtarzaniem definicji.
@@ -17,6 +17,15 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
     // Umiejętności korzystają z podobnej struktury jak współczynniki,
     // ale ich dozwolony poziom mieści się w zakresie od 0 do 20.
     const createSkillSchema = () => new SchemaField({
+      base: new NumberField({ required: true, nullable: false, integer: true, min: 0, max: 20, initial: 0 }),
+      modifier: new NumberField({ required: true, nullable: false, integer: true, initial: 0, persisted: false }),
+      value: new NumberField({ required: true, nullable: false, integer: true, initial: 0, persisted: false })
+    });
+
+    // Wiedza ogólna działa jak zwykła umiejętność, ale użytkownik sam wpisuje jej nazwę.
+    // Wszystkie takie pola pozostają na stałe przypisane do Sprytu.
+    const createGeneralKnowledgeSchema = () => new SchemaField({
+      name: new StringField({ required: true, nullable: false, initial: "" }),
       base: new NumberField({ required: true, nullable: false, integer: true, min: 0, max: 20, initial: 0 }),
       modifier: new NumberField({ required: true, nullable: false, integer: true, initial: 0, persisted: false }),
       value: new NumberField({ required: true, nullable: false, integer: true, initial: 0, persisted: false })
@@ -69,7 +78,31 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         opiekaNadZwierzetami: createSkillSchema(),
         odpornoscNaBol: createSkillSchema(),
         niezlomnosc: createSkillSchema(),
-        morale: createSkillSchema()
+        morale: createSkillSchema(),
+        leczenieRan: createSkillSchema(),
+        leczenieChorob: createSkillSchema(),
+        pierwszaPomoc: createSkillSchema(),
+        mechanika: createSkillSchema(),
+        elektronika: createSkillSchema(),
+        komputery: createSkillSchema(),
+        maszynyCiezkie: createSkillSchema(),
+        wozyBojowe: createSkillSchema(),
+        kutry: createSkillSchema(),
+        rusznikarstwo: createSkillSchema(),
+        wyrzutnie: createSkillSchema(),
+        materialyWybuchowe: createSkillSchema(),
+        wiedzaOgolna1: createGeneralKnowledgeSchema(),
+        wiedzaOgolna2: createGeneralKnowledgeSchema(),
+        wiedzaOgolna3: createGeneralKnowledgeSchema(),
+        wiedzaOgolna4: createGeneralKnowledgeSchema(),
+        wiedzaOgolna5: createGeneralKnowledgeSchema(),
+        wiedzaOgolna6: createGeneralKnowledgeSchema(),
+        plywanie: createSkillSchema(),
+        wspinaczka: createSkillSchema(),
+        kondycja: createSkillSchema(),
+        jazdaKonna: createSkillSchema(),
+        powozenie: createSkillSchema(),
+        ujezdzanie: createSkillSchema()
       })
     };
   }

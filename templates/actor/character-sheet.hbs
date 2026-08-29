@@ -335,4 +335,220 @@
     <output>Wartość końcowa: {{system.skills.morale.value}}</output>
     <button type="button" data-action="rollSkill" data-skill="morale">Test umiejętności</button>
   </div>
+
+  <h2>Umiejętności — Spryt</h2>
+
+  <div class="skills">
+    <h3>Medycyna</h3>
+
+    <label>
+      Leczenie ran
+      <input type="number" name="system.skills.leczenieRan.base" value="{{system.skills.leczenieRan.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.leczenieRan.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="leczenieRan">Test umiejętności</button>
+
+    <label>
+      Leczenie chorób
+      <input type="number" name="system.skills.leczenieChorob.base" value="{{system.skills.leczenieChorob.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.leczenieChorob.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="leczenieChorob">Test umiejętności</button>
+
+    <label>
+      Pierwsza pomoc
+      <input type="number" name="system.skills.pierwszaPomoc.base" value="{{system.skills.pierwszaPomoc.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.pierwszaPomoc.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="pierwszaPomoc">Test umiejętności</button>
+
+    <h3>Technika</h3>
+
+    <label>
+      Mechanika
+      <input type="number" name="system.skills.mechanika.base" value="{{system.skills.mechanika.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.mechanika.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="mechanika">Test umiejętności</button>
+
+    <label>
+      Elektronika
+      <input type="number" name="system.skills.elektronika.base" value="{{system.skills.elektronika.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.elektronika.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="elektronika">Test umiejętności</button>
+
+    <label>
+      Komputery
+      <input type="number" name="system.skills.komputery.base" value="{{system.skills.komputery.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.komputery.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="komputery">Test umiejętności</button>
+
+    <h3>Sprzęt</h3>
+
+    <label>
+      Maszyny ciężkie
+      <input type="number" name="system.skills.maszynyCiezkie.base" value="{{system.skills.maszynyCiezkie.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.maszynyCiezkie.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="maszynyCiezkie">Test umiejętności</button>
+
+    <label>
+      Wozy bojowe
+      <input type="number" name="system.skills.wozyBojowe.base" value="{{system.skills.wozyBojowe.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wozyBojowe.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wozyBojowe">Test umiejętności</button>
+
+    <label>
+      Kutry
+      <input type="number" name="system.skills.kutry.base" value="{{system.skills.kutry.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.kutry.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="kutry">Test umiejętności</button>
+
+    <h3>Pirotechnika</h3>
+
+    <label>
+      Rusznikarstwo
+      <input type="number" name="system.skills.rusznikarstwo.base" value="{{system.skills.rusznikarstwo.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.rusznikarstwo.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="rusznikarstwo">Test umiejętności</button>
+
+    <label>
+      Wyrzutnie
+      <input type="number" name="system.skills.wyrzutnie.base" value="{{system.skills.wyrzutnie.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wyrzutnie.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wyrzutnie">Test umiejętności</button>
+
+    <label>
+      Materiały wybuchowe
+      <input type="number" name="system.skills.materialyWybuchowe.base" value="{{system.skills.materialyWybuchowe.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.materialyWybuchowe.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="materialyWybuchowe">Test umiejętności</button>
+
+    <h3>Wiedza ogólna — pierwsze trzy pola</h3>
+
+    <label>
+      Nazwa dziedziny 1
+      <input type="text" name="system.skills.wiedzaOgolna1.name" value="{{system.skills.wiedzaOgolna1.name}}">
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wiedzaOgolna1.base" value="{{system.skills.wiedzaOgolna1.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wiedzaOgolna1.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wiedzaOgolna1">Test wiedzy</button>
+
+    <label>
+      Nazwa dziedziny 2
+      <input type="text" name="system.skills.wiedzaOgolna2.name" value="{{system.skills.wiedzaOgolna2.name}}">
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wiedzaOgolna2.base" value="{{system.skills.wiedzaOgolna2.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wiedzaOgolna2.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wiedzaOgolna2">Test wiedzy</button>
+
+    <label>
+      Nazwa dziedziny 3
+      <input type="text" name="system.skills.wiedzaOgolna3.name" value="{{system.skills.wiedzaOgolna3.name}}">
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wiedzaOgolna3.base" value="{{system.skills.wiedzaOgolna3.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wiedzaOgolna3.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wiedzaOgolna3">Test wiedzy</button>
+
+    <h3>Wiedza ogólna — kolejne trzy pola</h3>
+
+    <label>
+      Nazwa dziedziny 4
+      <input type="text" name="system.skills.wiedzaOgolna4.name" value="{{system.skills.wiedzaOgolna4.name}}">
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wiedzaOgolna4.base" value="{{system.skills.wiedzaOgolna4.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wiedzaOgolna4.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wiedzaOgolna4">Test wiedzy</button>
+
+    <label>
+      Nazwa dziedziny 5
+      <input type="text" name="system.skills.wiedzaOgolna5.name" value="{{system.skills.wiedzaOgolna5.name}}">
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wiedzaOgolna5.base" value="{{system.skills.wiedzaOgolna5.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wiedzaOgolna5.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wiedzaOgolna5">Test wiedzy</button>
+
+    <label>
+      Nazwa dziedziny 6
+      <input type="text" name="system.skills.wiedzaOgolna6.name" value="{{system.skills.wiedzaOgolna6.name}}">
+    </label>
+    <label>
+      Poziom
+      <input type="number" name="system.skills.wiedzaOgolna6.base" value="{{system.skills.wiedzaOgolna6.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wiedzaOgolna6.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wiedzaOgolna6">Test wiedzy</button>
+  </div>
+
+  <h2>Umiejętności — Budowa</h2>
+
+  <div class="skills">
+    <h3>Sprawność</h3>
+
+    <label>
+      Pływanie
+      <input type="number" name="system.skills.plywanie.base" value="{{system.skills.plywanie.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.plywanie.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="plywanie">Test umiejętności</button>
+
+    <label>
+      Wspinaczka
+      <input type="number" name="system.skills.wspinaczka.base" value="{{system.skills.wspinaczka.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.wspinaczka.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="wspinaczka">Test umiejętności</button>
+
+    <label>
+      Kondycja
+      <input type="number" name="system.skills.kondycja.base" value="{{system.skills.kondycja.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.kondycja.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="kondycja">Test umiejętności</button>
+
+    <h3>Jeździectwo</h3>
+
+    <label>
+      Jazda konna
+      <input type="number" name="system.skills.jazdaKonna.base" value="{{system.skills.jazdaKonna.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.jazdaKonna.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="jazdaKonna">Test umiejętności</button>
+
+    <label>
+      Powożenie
+      <input type="number" name="system.skills.powozenie.base" value="{{system.skills.powozenie.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.powozenie.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="powozenie">Test umiejętności</button>
+
+    <label>
+      Ujeżdżanie
+      <input type="number" name="system.skills.ujezdzanie.base" value="{{system.skills.ujezdzanie.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.ujezdzanie.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="ujezdzanie">Test umiejętności</button>
+  </div>
 </section>

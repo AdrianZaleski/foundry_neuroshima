@@ -8,11 +8,12 @@ import {
 
 // Funkcja pomocnicza tworzy powiązanie umiejętności ze współczynnikiem.
 // Dzięki niej nie powtarzamy dla każdego wpisu trzech identycznych właściwości.
-function createSkillConfiguration(skillLabel, attributeKey, attributeLabel) {
+function createSkillConfiguration(skillLabel, attributeKey, attributeLabel, usesCustomName = false) {
   return {
     label: skillLabel,
     attributeKey,
-    attributeLabel
+    attributeLabel,
+    usesCustomName
   };
 }
 
@@ -53,7 +54,31 @@ const SKILL_CONFIGURATION = {
   opiekaNadZwierzetami: createSkillConfiguration("Opieka nad zwierzętami", "charakter", "Charakter"),
   odpornoscNaBol: createSkillConfiguration("Odporność na ból", "charakter", "Charakter"),
   niezlomnosc: createSkillConfiguration("Niezłomność", "charakter", "Charakter"),
-  morale: createSkillConfiguration("Morale", "charakter", "Charakter")
+  morale: createSkillConfiguration("Morale", "charakter", "Charakter"),
+  leczenieRan: createSkillConfiguration("Leczenie ran", "spryt", "Spryt"),
+  leczenieChorob: createSkillConfiguration("Leczenie chorób", "spryt", "Spryt"),
+  pierwszaPomoc: createSkillConfiguration("Pierwsza pomoc", "spryt", "Spryt"),
+  mechanika: createSkillConfiguration("Mechanika", "spryt", "Spryt"),
+  elektronika: createSkillConfiguration("Elektronika", "spryt", "Spryt"),
+  komputery: createSkillConfiguration("Komputery", "spryt", "Spryt"),
+  maszynyCiezkie: createSkillConfiguration("Maszyny ciężkie", "spryt", "Spryt"),
+  wozyBojowe: createSkillConfiguration("Wozy bojowe", "spryt", "Spryt"),
+  kutry: createSkillConfiguration("Kutry", "spryt", "Spryt"),
+  rusznikarstwo: createSkillConfiguration("Rusznikarstwo", "spryt", "Spryt"),
+  wyrzutnie: createSkillConfiguration("Wyrzutnie", "spryt", "Spryt"),
+  materialyWybuchowe: createSkillConfiguration("Materiały wybuchowe", "spryt", "Spryt"),
+  wiedzaOgolna1: createSkillConfiguration("Wiedza ogólna 1", "spryt", "Spryt", true),
+  wiedzaOgolna2: createSkillConfiguration("Wiedza ogólna 2", "spryt", "Spryt", true),
+  wiedzaOgolna3: createSkillConfiguration("Wiedza ogólna 3", "spryt", "Spryt", true),
+  wiedzaOgolna4: createSkillConfiguration("Wiedza ogólna 4", "spryt", "Spryt", true),
+  wiedzaOgolna5: createSkillConfiguration("Wiedza ogólna 5", "spryt", "Spryt", true),
+  wiedzaOgolna6: createSkillConfiguration("Wiedza ogólna 6", "spryt", "Spryt", true),
+  plywanie: createSkillConfiguration("Pływanie", "budowa", "Budowa"),
+  wspinaczka: createSkillConfiguration("Wspinaczka", "budowa", "Budowa"),
+  kondycja: createSkillConfiguration("Kondycja", "budowa", "Budowa"),
+  jazdaKonna: createSkillConfiguration("Jazda konna", "budowa", "Budowa"),
+  powozenie: createSkillConfiguration("Powożenie", "budowa", "Budowa"),
+  ujezdzanie: createSkillConfiguration("Ujeżdżanie", "budowa", "Budowa")
 };
 
 function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, skillLevel) {
@@ -154,6 +179,8 @@ export async function rollSkill(actor, skillKey) {
   }
 
   const attribute = actor.system.attributes[skillConfiguration.attributeKey];
+  const customSkillName = skillConfiguration.usesCustomName ? skill.name.trim() : "";
+  const displayedSkillName = customSkillName || skillConfiguration.label;
   const startingDifficultyIndex = await selectStartingDifficultyIndex();
 
   if (startingDifficultyIndex === null) {
@@ -189,7 +216,7 @@ export async function rollSkill(actor, skillKey) {
   await roll.toMessage({
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
-      `<strong>Test umiejętności: ${skillConfiguration.label}</strong>`,
+      `<strong>Test umiejętności: ${displayedSkillName}</strong>`,
       `Współczynnik: ${skillConfiguration.attributeLabel} (${attribute.value})`,
       `Poziom umiejętności: ${skillLevel}`,
       `Suwak: ${prepareSliderDescription(skillLevel)}`,
