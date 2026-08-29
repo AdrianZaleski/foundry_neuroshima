@@ -613,4 +613,45 @@
     <output>Wartość końcowa: {{system.skills.wlasnaUmiejetnosc3.value}}</output>
     <button type="button" data-action="rollSkill" data-skill="wlasnaUmiejetnosc3">Test umiejętności</button>
   </div>
+
+  <h2>Ekwipunek</h2>
+
+  {{!-- Przedmioty na tej liście są Itemami osadzonymi w konkretnej postaci. --}}
+  <div class="equipment">
+    <button type="button" data-action="createEquipment">Dodaj przedmiot</button>
+
+    <p><strong>Łączna masa ekwipunku:</strong> {{totalEquipmentWeight}}</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nazwa</th>
+          <th>Liczba</th>
+          <th>Masa sztuki</th>
+          <th>Łączna masa</th>
+          <th>Cena</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each equipmentItems}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.unitWeight}}</td>
+            <td>{{this.totalWeight}}</td>
+            <td>{{this.price}}</td>
+            <td>
+              <button type="button" data-action="editEquipment" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteEquipment" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="6">Postać nie posiada jeszcze żadnego ekwipunku.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </section>
