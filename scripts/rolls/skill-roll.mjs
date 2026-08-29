@@ -44,7 +44,16 @@ const SKILL_CONFIGURATION = {
   maskowanie: createSkillConfiguration("Maskowanie", "percepcja", "Percepcja"),
   lowiectwo: createSkillConfiguration("Łowiectwo", "percepcja", "Percepcja"),
   zdobywanieWody: createSkillConfiguration("Zdobywanie wody", "percepcja", "Percepcja"),
-  znajomoscTerenu: createSkillConfiguration("Znajomość terenu", "percepcja", "Percepcja")
+  znajomoscTerenu: createSkillConfiguration("Znajomość terenu", "percepcja", "Percepcja"),
+  perswazja: createSkillConfiguration("Perswazja", "charakter", "Charakter"),
+  zastraszanie: createSkillConfiguration("Zastraszanie", "charakter", "Charakter"),
+  zdolnosciPrzywodcze: createSkillConfiguration("Zdolności przywódcze", "charakter", "Charakter"),
+  postrzeganieEmocji: createSkillConfiguration("Postrzeganie emocji", "charakter", "Charakter"),
+  blef: createSkillConfiguration("Blef", "charakter", "Charakter"),
+  opiekaNadZwierzetami: createSkillConfiguration("Opieka nad zwierzętami", "charakter", "Charakter"),
+  odpornoscNaBol: createSkillConfiguration("Odporność na ból", "charakter", "Charakter"),
+  niezlomnosc: createSkillConfiguration("Niezłomność", "charakter", "Charakter"),
+  morale: createSkillConfiguration("Morale", "charakter", "Charakter")
 };
 
 function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, skillLevel) {

@@ -60,7 +60,16 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         maskowanie: createSkillSchema(),
         lowiectwo: createSkillSchema(),
         zdobywanieWody: createSkillSchema(),
-        znajomoscTerenu: createSkillSchema()
+        znajomoscTerenu: createSkillSchema(),
+        perswazja: createSkillSchema(),
+        zastraszanie: createSkillSchema(),
+        zdolnosciPrzywodcze: createSkillSchema(),
+        postrzeganieEmocji: createSkillSchema(),
+        blef: createSkillSchema(),
+        opiekaNadZwierzetami: createSkillSchema(),
+        odpornoscNaBol: createSkillSchema(),
+        niezlomnosc: createSkillSchema(),
+        morale: createSkillSchema()
       })
     };
   }
