@@ -1,4 +1,5 @@
-<section class="neuroshima-character-sheet">
+{{!-- Cała zawartość karty przewija się pionowo, gdy nie mieści się w oknie. --}}
+<section class="neuroshima-character-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
   {{!-- Nazwa jest standardowym polem dokumentu Actor w Foundry. --}}
   <header>
     <label>
@@ -45,5 +46,32 @@
     </label>
     <output>Wartość końcowa: {{system.attributes.budowa.value}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="budowa">Rzuć 3k20</button>
+  </div>
+
+  <h2>Umiejętności — Zręczność</h2>
+  <h3>Walka wręcz</h3>
+
+  {{!-- Na tym etapie edytujemy i zapisujemy poziomy umiejętności, ale jeszcze nimi nie rzucamy. --}}
+  <div class="skills">
+    <label>
+      Bijatyka
+      <input type="number" name="system.skills.bijatyka.base" value="{{system.skills.bijatyka.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.bijatyka.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="bijatyka">Test umiejętności</button>
+
+    <label>
+      Broń ręczna
+      <input type="number" name="system.skills.bronReczna.base" value="{{system.skills.bronReczna.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.bronReczna.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="bronReczna">Test umiejętności</button>
+
+    <label>
+      Rzucanie
+      <input type="number" name="system.skills.rzucanie.base" value="{{system.skills.rzucanie.base}}" min="0" max="20" step="1">
+    </label>
+    <output>Wartość końcowa: {{system.skills.rzucanie.value}}</output>
+    <button type="button" data-action="rollSkill" data-skill="rzucanie">Test umiejętności</button>
   </div>
 </section>

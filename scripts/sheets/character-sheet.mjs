@@ -1,4 +1,5 @@
 import { rollAttribute } from "../rolls/attribute-roll.mjs";
+import { rollSkill } from "../rolls/skill-roll.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -10,11 +11,13 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     actions: {
       // Foundry wywoła tę metodę po kliknięciu elementu
       // posiadającego atrybut data-action="rollAttribute".
-      rollAttribute: this.#onRollAttribute
+      rollAttribute: this.#onRollAttribute,
+      rollSkill: this.#onRollSkill
     },
     position: {
       width: 520,
-      height: 420
+      // Większa wysokość pozwala zobaczyć pierwszą grupę umiejętności bez przewijania.
+      height: 560
     },
     form: {
       closeOnSubmit: false,
@@ -45,5 +48,11 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   static async #onRollAttribute(event, target) {
     const attributeKey = target.dataset.attribute;
     await rollAttribute(this.actor, attributeKey);
+  }
+
+  // Klucz umiejętności odczytujemy z przycisku i przekazujemy do mechaniki testu.
+  static async #onRollSkill(event, target) {
+    const skillKey = target.dataset.skill;
+    await rollSkill(this.actor, skillKey);
   }
 }
