@@ -18,7 +18,7 @@ export const DIFFICULTY_LABELS = [
 // Po otwarciu okna jako domyślny zaznaczamy poziom "Przeciętny".
 const DEFAULT_DIFFICULTY_INDEX = 1;
 
-export async function selectStartingDifficultyIndex() {
+export async function selectTestConfiguration() {
   // Tworzymy pozycje listy na podstawie tej samej tabeli,
   // której później użyjemy podczas obliczania progu testu.
   const difficultyOptions = DIFFICULTY_LABELS
@@ -34,9 +34,16 @@ export async function selectStartingDifficultyIndex() {
   // DialogV2.input zwraca dane formularza albo null, gdy użytkownik zamknie okno.
   const formData = await foundry.applications.api.DialogV2.input({
     window: {
-      title: "Wybierz poziom trudności"
+      title: "Ustawienia testu"
     },
     content: `
+      <div class="form-group">
+        <label for="neuroshima-test-type">Rodzaj testu</label>
+        <select id="neuroshima-test-type" name="testType">
+          <option value="closed" selected>Zamknięty</option>
+          <option value="open">Otwarty</option>
+        </select>
+      </div>
       <div class="form-group">
         <label for="neuroshima-difficulty">Poziom trudności</label>
         <select id="neuroshima-difficulty" name="difficultyIndex">
@@ -56,7 +63,10 @@ export async function selectStartingDifficultyIndex() {
     return null;
   }
 
-  return Number(formData.difficultyIndex);
+  return {
+    testType: String(formData.testType),
+    startingDifficultyIndex: Number(formData.difficultyIndex)
+  };
 }
 
 export function calculateFinalDifficultyIndex(dieResults, difficultyIndexBeforeCriticalResults) {
@@ -78,7 +88,10 @@ export function calculateFinalDifficultyIndex(dieResults, difficultyIndexBeforeC
 }
 
 export function prepareTestResultMessage(numberOfSuccesses) {
-  const testPassed = numberOfSuccesses >= 2;
+  return prepareTestVerdictMessage(numberOfSuccesses >= 2);
+}
+
+export function prepareTestVerdictMessage(testPassed) {
   const testResultLabel = testPassed ? "Test zdany" : "Test niezdany";
   const testResultBackgroundColor = testPassed ? "#2e7d32" : "#b71c1c";
 

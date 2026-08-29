@@ -3,7 +3,8 @@ import {
   DIFFICULTY_MODIFIERS,
   calculateFinalDifficultyIndex,
   prepareTestResultMessage,
-  selectStartingDifficultyIndex
+  prepareTestVerdictMessage,
+  selectTestConfiguration
 } from "./roll-helpers.mjs";
 
 // Klucze są technicznymi nazwami zapisanymi w modelu danych,
@@ -37,12 +38,15 @@ export async function rollAttribute(actor, attributeKey) {
 
   const attributeLabel = ATTRIBUTE_LABELS[attributeKey];
 
-  // Najpierw pytamy użytkownika o trudność. Zamknięcie okna przerywa cały test.
-  const startingDifficultyIndex = await selectStartingDifficultyIndex();
+  // Najpierw pytamy użytkownika o rodzaj i trudność testu.
+  // Zamknięcie okna przerywa cały test.
+  const testConfiguration = await selectTestConfiguration();
 
-  if (startingDifficultyIndex === null) {
+  if (testConfiguration === null) {
     return;
   }
+
+  const { testType, startingDifficultyIndex } = testConfiguration;
 
   // Foundry sam losuje trzy kości dwudziestościenne i przechowuje ich wyniki.
   const roll = await new foundry.dice.Roll("3d20").evaluate();
@@ -53,11 +57,37 @@ export async function rollAttribute(actor, attributeKey) {
   const startingDifficultyLabel = DIFFICULTY_LABELS[startingDifficultyIndex];
   const finalDifficultyLabel = DIFFICULTY_LABELS[finalDifficultyIndex];
   const successThreshold = attribute.value - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
-  const numberOfSuccesses = dieResults.filter((dieResult) => dieResult <= successThreshold).length;
-  const dieResultsDescription = prepareDieResultsDescription(dieResults, successThreshold);
+  let resultDescriptionLines;
 
-  // Zgodnie z zasadami Neuroshimy cały test wymaga sukcesu na co najmniej dwóch kościach.
-  const testResultMessage = prepareTestResultMessage(numberOfSuccesses);
+  if (testType === "open") {
+    const sortedDieResults = [...dieResults].sort((firstResult, secondResult) => firstResult - secondResult);
+    const consideredDieResults = sortedDieResults.slice(0, 2);
+    const discardedDieResult = sortedDieResults[2];
+    const decisiveDieResult = consideredDieResults[1];
+    const pointsDifference = successThreshold - decisiveDieResult;
+    const testPassed = pointsDifference >= 0;
+    const pointsDescription = testPassed
+      ? `Punkty Sukcesu: ${pointsDifference}`
+      : `Punkty Porażki: ${Math.abs(pointsDifference)}`;
+
+    resultDescriptionLines = [
+      "Rodzaj testu: Otwarty",
+      `Rozpatrywane kości: ${consideredDieResults.join(", ")}`,
+      `Odrzucona najwyższa kość: ${discardedDieResult}`,
+      `<strong>${pointsDescription}</strong>`,
+      prepareTestVerdictMessage(testPassed)
+    ];
+  } else {
+    const numberOfSuccesses = dieResults.filter((dieResult) => dieResult <= successThreshold).length;
+    const dieResultsDescription = prepareDieResultsDescription(dieResults, successThreshold);
+
+    resultDescriptionLines = [
+      "Rodzaj testu: Zamknięty",
+      `Kości: ${dieResultsDescription}`,
+      `<strong>Liczba sukcesów: ${numberOfSuccesses}</strong>`,
+      prepareTestResultMessage(numberOfSuccesses)
+    ];
+  }
 
   // Gotowy rzut publikujemy na czacie jako wiadomość przypisaną do postaci.
   await roll.toMessage({
@@ -68,9 +98,7 @@ export async function rollAttribute(actor, attributeKey) {
       `Początkowy poziom trudności: ${startingDifficultyLabel}`,
       `Ostateczny poziom trudności: ${finalDifficultyLabel}`,
       `Próg sukcesu: ${successThreshold}`,
-      `Kości: ${dieResultsDescription}`,
-      `<strong>Liczba sukcesów: ${numberOfSuccesses}</strong>`,
-      testResultMessage
+      ...resultDescriptionLines
     ].join("<br>")
   });
 }

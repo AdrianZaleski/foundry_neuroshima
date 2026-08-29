@@ -3,7 +3,8 @@ import {
   DIFFICULTY_MODIFIERS,
   calculateFinalDifficultyIndex,
   prepareTestResultMessage,
-  selectStartingDifficultyIndex
+  prepareTestVerdictMessage,
+  selectTestConfiguration
 } from "./roll-helpers.mjs";
 
 const ATTRIBUTE_LABELS = {
@@ -187,6 +188,37 @@ function prepareSkillDieResultsDescription(evaluatedDieResults, successThreshold
     .join(", ");
 }
 
+function applySkillToOpenTestDieResults(dieResults, skillLevel) {
+  const sortedDieResults = dieResults
+    .map((naturalResult) => ({
+      naturalResult,
+      adjustedResult: naturalResult,
+      usedSkillPoints: 0
+    }))
+    .sort((firstDie, secondDie) => firstDie.naturalResult - secondDie.naturalResult);
+
+  // Najwyższa kość nie bierze udziału w dalszym rozstrzyganiu testu otwartego.
+  const consideredDieResults = sortedDieResults.slice(0, 2);
+  const discardedDieResult = sortedDieResults[2];
+
+  // Każdy punkt umiejętności obniża aktualnie gorszą z dwóch kości.
+  // Przy remisie punkty trafiają naprzemiennie, ponieważ po każdym obniżeniu
+  // ponownie wybieramy kość z wyższym wynikiem.
+  for (let usedSkillPoint = 0; usedSkillPoint < skillLevel; usedSkillPoint += 1) {
+    const selectedDieResult = consideredDieResults[0].adjustedResult >= consideredDieResults[1].adjustedResult
+      ? consideredDieResults[0]
+      : consideredDieResults[1];
+
+    selectedDieResult.adjustedResult -= 1;
+    selectedDieResult.usedSkillPoints += 1;
+  }
+
+  return {
+    consideredDieResults,
+    discardedDieResult
+  };
+}
+
 export async function rollSkill(actor, skillKey) {
   const skillConfiguration = SKILL_CONFIGURATION[skillKey];
   const skill = actor.system.skills[skillKey];
@@ -209,11 +241,13 @@ export async function rollSkill(actor, skillKey) {
 
   const customSkillName = skillConfiguration.usesCustomName ? skill.name.trim() : "";
   const displayedSkillName = customSkillName || skillConfiguration.label;
-  const startingDifficultyIndex = await selectStartingDifficultyIndex();
+  const testConfiguration = await selectTestConfiguration();
 
-  if (startingDifficultyIndex === null) {
+  if (testConfiguration === null) {
     return;
   }
+
+  const { testType, startingDifficultyIndex } = testConfiguration;
 
   // Wartość końcowa może być zmieniana przez efekty, ale nie może spaść poniżej zera.
   const skillLevel = Math.max(0, skill.value);
@@ -230,16 +264,47 @@ export async function rollSkill(actor, skillKey) {
   );
 
   const successThreshold = attribute.value - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
-  const evaluatedDieResults = applySkillToDieResults(dieResults, successThreshold, skillLevel);
-  const numberOfSuccesses = evaluatedDieResults.filter(
-    (dieResult) => dieResult.adjustedResult <= successThreshold
-  ).length;
+  let resultDescriptionLines;
 
-  const dieResultsDescription = prepareSkillDieResultsDescription(
-    evaluatedDieResults,
-    successThreshold
-  );
-  const testResultMessage = prepareTestResultMessage(numberOfSuccesses);
+  if (testType === "open") {
+    const openTestResults = applySkillToOpenTestDieResults(dieResults, skillLevel);
+    const decisiveDieResult = Math.max(
+      ...openTestResults.consideredDieResults.map((dieResult) => dieResult.adjustedResult)
+    );
+    const pointsDifference = successThreshold - decisiveDieResult;
+    const testPassed = pointsDifference >= 0;
+    const pointsDescription = testPassed
+      ? `Punkty Sukcesu: ${pointsDifference}`
+      : `Punkty Porażki: ${Math.abs(pointsDifference)}`;
+    const consideredDiceDescription = prepareSkillDieResultsDescription(
+      openTestResults.consideredDieResults,
+      successThreshold
+    );
+
+    resultDescriptionLines = [
+      "Rodzaj testu: Otwarty",
+      `Rozpatrywane kości: ${consideredDiceDescription}`,
+      `Odrzucona najwyższa kość: ${openTestResults.discardedDieResult.naturalResult}`,
+      `<strong>${pointsDescription}</strong>`,
+      prepareTestVerdictMessage(testPassed)
+    ];
+  } else {
+    const evaluatedDieResults = applySkillToDieResults(dieResults, successThreshold, skillLevel);
+    const numberOfSuccesses = evaluatedDieResults.filter(
+      (dieResult) => dieResult.adjustedResult <= successThreshold
+    ).length;
+    const dieResultsDescription = prepareSkillDieResultsDescription(
+      evaluatedDieResults,
+      successThreshold
+    );
+
+    resultDescriptionLines = [
+      "Rodzaj testu: Zamknięty",
+      `Kości: ${dieResultsDescription}`,
+      `<strong>Liczba sukcesów: ${numberOfSuccesses}</strong>`,
+      prepareTestResultMessage(numberOfSuccesses)
+    ];
+  }
 
   await roll.toMessage({
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
@@ -251,9 +316,7 @@ export async function rollSkill(actor, skillKey) {
       `Początkowy poziom trudności: ${DIFFICULTY_LABELS[startingDifficultyIndex]}`,
       `Ostateczny poziom trudności: ${DIFFICULTY_LABELS[finalDifficultyIndex]}`,
       `Próg sukcesu: ${successThreshold}`,
-      `Kości: ${dieResultsDescription}`,
-      `<strong>Liczba sukcesów: ${numberOfSuccesses}</strong>`,
-      testResultMessage
+      ...resultDescriptionLines
     ].join("<br>")
   });
 }
