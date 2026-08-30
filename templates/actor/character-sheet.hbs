@@ -616,7 +616,7 @@
 
   <h2>Obciążenie</h2>
 
-  {{!-- Ta wartość jest sumą masy zwykłego ekwipunku oraz wszystkich broni. --}}
+  {{!-- Ta wartość jest sumą masy ekwipunku, broni oraz zapasów amunicji. --}}
   <p><strong>Łączna masa noszonych przedmiotów:</strong> {{totalCarriedWeight}}</p>
 
   <h2>Broń</h2>
@@ -645,7 +645,10 @@
               <strong>{{this.name}}</strong><br>
               <small>{{this.weaponClassName}}</small>
             </td>
-            <td>{{this.currentAmmunition}} / {{this.magazineCapacity}}</td>
+            <td>
+              {{this.currentAmmunition}} / {{this.magazineCapacity}}<br>
+              <small>{{this.ammunitionCode}}</small>
+            </td>
             <td>{{this.damageName}}</td>
             <td>
               {{this.range}} m<br>
@@ -653,6 +656,7 @@
             </td>
             <td>{{this.weight}}</td>
             <td>
+              <button type="button" data-action="reloadWeapon" data-item-id="{{this.id}}">Przeładuj</button>
               <button type="button" data-action="editWeapon" data-item-id="{{this.id}}">Edytuj</button>
               <button type="button" data-action="deleteWeapon" data-item-id="{{this.id}}">Usuń</button>
             </td>
@@ -660,6 +664,48 @@
         {{else}}
           <tr>
             <td colspan="6">Postać nie posiada jeszcze żadnej broni.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Amunicja</h2>
+
+  {{!-- Zapas amunicji nie obejmuje nabojów wpisanych w magazynkach broni. --}}
+  <div class="ammunition">
+    <button type="button" data-action="createAmmunition">Dodaj amunicję</button>
+
+    <p><strong>Masa amunicji:</strong> {{totalAmmunitionWeight}}</p>
+    <p><strong>Łączna wartość amunicji:</strong> {{totalAmmunitionPrice}}</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Amunicja</th>
+          <th>Symbol kompatybilności</th>
+          <th>Liczba</th>
+          <th>Wartość</th>
+          <th>Masa</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each ammunitionItems}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.ammunitionSymbol}}</td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.totalPrice}}</td>
+            <td>{{this.totalWeight}}</td>
+            <td>
+              <button type="button" data-action="editAmmunition" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteAmmunition" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="6">Postać nie posiada jeszcze żadnej amunicji.</td>
           </tr>
         {{/each}}
       </tbody>

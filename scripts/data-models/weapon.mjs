@@ -40,6 +40,20 @@ export class NeuroshimaWeaponDataModel extends foundry.abstract.TypeDataModel {
         min: 0,
         initial: 0
       }),
+
+      // Te pola opisują wariant znajdujący się obecnie w magazynku.
+      // Są uzupełniane podczas przeładowania z Itemu amunicji.
+      loadedAmmunitionSourceCode: new StringField({
+        required: true,
+        nullable: false,
+        initial: ""
+      }),
+      loadedAmmunitionUnitWeight: new NumberField({
+        required: true,
+        nullable: false,
+        min: 0,
+        initial: 0
+      }),
       misfireRoll: new NumberField({
         required: true,
         nullable: false,
@@ -131,6 +145,20 @@ export class NeuroshimaWeaponDataModel extends foundry.abstract.TypeDataModel {
         min: 0,
         initial: 0
       }),
+      loadedAmmunitionWeight: new NumberField({
+        required: true,
+        nullable: false,
+        min: 0,
+        initial: 0,
+        persisted: false
+      }),
+      totalWeight: new NumberField({
+        required: true,
+        nullable: false,
+        min: 0,
+        initial: 0,
+        persisted: false
+      }),
       actions: new StringField({
         required: true,
         nullable: false,
@@ -142,5 +170,18 @@ export class NeuroshimaWeaponDataModel extends foundry.abstract.TypeDataModel {
         initial: ""
       })
     };
+  }
+
+  prepareDerivedData() {
+    super.prepareDerivedData();
+
+    // Masa broni obejmuje masę samego egzemplarza oraz nabojów znajdujących
+    // się w magazynku. Dzięki temu przeładowanie nie zmienia obciążenia postaci.
+    this.loadedAmmunitionWeight = Math.round(
+      this.currentAmmunition * this.loadedAmmunitionUnitWeight * 100
+    ) / 100;
+    this.totalWeight = Math.round(
+      (this.weight + this.loadedAmmunitionWeight) * 100
+    ) / 100;
   }
 }

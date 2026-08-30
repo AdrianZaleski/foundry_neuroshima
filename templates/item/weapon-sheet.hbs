@@ -32,6 +32,10 @@
     <input type="number" name="system.currentAmmunition" value="{{system.currentAmmunition}}" min="0" max="{{system.magazineCapacity}}" step="1">
   </label>
 
+  {{!-- Te wartości są uzupełniane automatycznie podczas przeładowania. --}}
+  <p><strong>Załadowany wariant:</strong> {{system.loadedAmmunitionSourceCode}}</p>
+  <p><strong>Masa amunicji w magazynku:</strong> {{system.loadedAmmunitionWeight}}</p>
+
   <h3>Parametry strzału</h3>
 
   <label>
@@ -92,6 +96,8 @@
     Masa
     <input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.01">
   </label>
+
+  <p><strong>Łączna masa broni z amunicją:</strong> {{system.totalWeight}}</p>
 
   <label>
     Cena

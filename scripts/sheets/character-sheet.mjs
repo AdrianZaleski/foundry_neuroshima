@@ -46,7 +46,13 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // Broń jest osobnym typem Itemu, dlatego otrzymuje osobne akcje.
       createWeapon: this.#onCreateWeapon,
       editWeapon: this.#onEditWeapon,
-      deleteWeapon: this.#onDeleteWeapon
+      deleteWeapon: this.#onDeleteWeapon,
+      reloadWeapon: this.#onReloadWeapon,
+
+      // Zapas amunicji jest niezależny od nabojów znajdujących się w broni.
+      createAmmunition: this.#onCreateAmmunition,
+      editAmmunition: this.#onEditAmmunition,
+      deleteAmmunition: this.#onDeleteAmmunition
     },
     position: {
       width: 520,
@@ -113,12 +119,13 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         id: item.id,
         name: item.name,
         weaponClassName: weaponClassNames[item.system.weaponClass] ?? item.system.weaponClass,
+        ammunitionCode: item.system.ammunitionCode,
         currentAmmunition: item.system.currentAmmunition,
         magazineCapacity: item.system.magazineCapacity,
         damageName: damageNames[item.system.damageCode] ?? item.system.damageCode,
         range: item.system.range,
         armorPenetration: item.system.armorPenetration,
-        weight: item.system.weight
+        weight: item.system.totalWeight
       }));
 
     const weaponWeightSum = context.weaponItems.reduce(
@@ -127,9 +134,33 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     );
     context.totalWeaponWeight = Math.round(weaponWeightSum * 100) / 100;
 
-    // Łączne obciążenie obejmuje obecnie zwykły ekwipunek i broń.
+    // Każdy Item amunicji reprezentuje jeden zapas konkretnego rodzaju nabojów.
+    context.ammunitionItems = this.actor.items
+      .filter((item) => item.type === "ammunition")
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        ammunitionSymbol: item.system.ammunitionSymbol,
+        quantity: item.system.quantity,
+        totalPrice: item.system.totalPrice,
+        totalWeight: item.system.totalWeight
+      }));
+
+    const ammunitionWeightSum = context.ammunitionItems.reduce(
+      (currentSum, item) => currentSum + item.totalWeight,
+      0
+    );
+    context.totalAmmunitionWeight = Math.round(ammunitionWeightSum * 100) / 100;
+
+    const ammunitionPriceSum = context.ammunitionItems.reduce(
+      (currentSum, item) => currentSum + item.totalPrice,
+      0
+    );
+    context.totalAmmunitionPrice = Math.round(ammunitionPriceSum * 100) / 100;
+
+    // Łączne obciążenie obejmuje obecnie zwykły ekwipunek, broń i amunicję.
     // Kolejne typy przedmiotów, na przykład pancerz, dołączymy później.
-    const carriedWeightSum = equipmentWeightSum + weaponWeightSum;
+    const carriedWeightSum = equipmentWeightSum + weaponWeightSum + ammunitionWeightSum;
     context.totalCarriedWeight = Math.round(carriedWeightSum * 100) / 100;
 
     return context;
@@ -228,6 +259,133 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     await weaponItem.sheet.render({ force: true });
   }
 
+  // Przeładowanie porównuje kod wymagany przez broń z symbolem kompatybilności
+  // zapasu amunicji. Nie opiera się na nazwach widocznych dla użytkownika.
+  static async #onReloadWeapon(event, target) {
+    const itemId = target.dataset.itemId;
+    const weaponItem = this.actor.items.get(itemId);
+
+    if (!weaponItem || weaponItem.type !== "weapon") {
+      ui.notifications.warn("Nie znaleziono tej broni na karcie postaci.");
+      return;
+    }
+
+    const magazineCapacity = weaponItem.system.magazineCapacity;
+    const currentAmmunition = weaponItem.system.currentAmmunition;
+
+    if (magazineCapacity <= 0) {
+      ui.notifications.warn("Ta broń nie ma określonej pojemności magazynka.");
+      return;
+    }
+
+    if (currentAmmunition >= magazineCapacity) {
+      ui.notifications.info(`Magazynek broni ${weaponItem.name} jest już pełny.`);
+      return;
+    }
+
+    const requiredAmmunitionSymbol = weaponItem.system.ammunitionCode.trim();
+
+    if (!requiredAmmunitionSymbol) {
+      ui.notifications.warn("Broń nie ma określonego kodu wymaganej amunicji.");
+      return;
+    }
+
+    // Bierzemy pod uwagę tylko zgodne zapasy, w których pozostał co najmniej
+    // jeden nabój. Puste Itemy pozostają na karcie, ale nie można ich użyć.
+    const compatibleAmmunitionItems = this.actor.items.filter((item) => (
+      item.type === "ammunition"
+      && item.system.quantity > 0
+      && item.system.ammunitionSymbol.trim() === requiredAmmunitionSymbol
+    ));
+
+    if (compatibleAmmunitionItems.length === 0) {
+      ui.notifications.warn(`Brak amunicji zgodnej z kodem ${requiredAmmunitionSymbol}.`);
+      return;
+    }
+
+    let selectedAmmunitionItem = compatibleAmmunitionItems[0];
+
+    // Kilka wariantów może mieć ten sam symbol, na przykład zwykłe i sportowe
+    // strzały. W takiej sytuacji użytkownik wybiera konkretny zapas.
+    if (compatibleAmmunitionItems.length > 1) {
+      const ammunitionOptions = compatibleAmmunitionItems
+        .map((ammunitionItem) => {
+          const safeName = foundry.utils.escapeHTML(ammunitionItem.name);
+          return `<option value="${ammunitionItem.id}">${safeName} (${ammunitionItem.system.quantity} szt.)</option>`;
+        })
+        .join("");
+
+      const formData = await foundry.applications.api.DialogV2.input({
+        window: {
+          title: `Przeładowanie: ${weaponItem.name}`
+        },
+        content: `
+          <div class="form-group">
+            <label for="neuroshima-ammunition-item">Wybierz zapas amunicji</label>
+            <select id="neuroshima-ammunition-item" name="ammunitionItemId">
+              ${ammunitionOptions}
+            </select>
+          </div>
+        `,
+        ok: {
+          label: "Przeładuj"
+        },
+        rejectClose: false,
+        modal: true
+      });
+
+      if (!formData) return;
+
+      selectedAmmunitionItem = this.actor.items.get(String(formData.ammunitionItemId));
+
+      if (!selectedAmmunitionItem || selectedAmmunitionItem.type !== "ammunition") {
+        ui.notifications.warn("Nie znaleziono wybranego zapasu amunicji.");
+        return;
+      }
+    }
+
+    const missingAmmunition = magazineCapacity - currentAmmunition;
+    const transferredAmmunition = Math.min(
+      missingAmmunition,
+      selectedAmmunitionItem.system.quantity
+    );
+
+    const loadedAmmunitionSourceCode = weaponItem.system.loadedAmmunitionSourceCode;
+    const selectedAmmunitionSourceCode = selectedAmmunitionItem.system.sourceCode;
+
+    // Nie mieszamy automatycznie dwóch specjalnych wariantów w jednym
+    // magazynku. Najpierw trzeba opróżnić magazynek na karcie broni.
+    if (
+      currentAmmunition > 0
+      && loadedAmmunitionSourceCode
+      && loadedAmmunitionSourceCode !== selectedAmmunitionSourceCode
+    ) {
+      ui.notifications.warn(
+        "W magazynku znajduje się inny wariant amunicji. Najpierw opróżnij magazynek."
+      );
+      return;
+    }
+
+    // Oba dokumenty aktualizujemy jednym wywołaniem Foundry. Dzięki temu
+    // magazynek i zapas nie rozjadą się w połowie operacji.
+    await this.actor.updateEmbeddedDocuments("Item", [
+      {
+        _id: weaponItem.id,
+        "system.currentAmmunition": currentAmmunition + transferredAmmunition,
+        "system.loadedAmmunitionSourceCode": selectedAmmunitionSourceCode,
+        "system.loadedAmmunitionUnitWeight": selectedAmmunitionItem.system.unitWeight
+      },
+      {
+        _id: selectedAmmunitionItem.id,
+        "system.quantity": selectedAmmunitionItem.system.quantity - transferredAmmunition
+      }
+    ]);
+
+    ui.notifications.info(
+      `${weaponItem.name}: załadowano ${transferredAmmunition} szt. amunicji.`
+    );
+  }
+
   // Potwierdzenie chroni przed przypadkowym usunięciem całej broni wraz
   // z zapisanym stanem magazynka i pozostałymi danymi egzemplarza.
   static async #onDeleteWeapon(event, target) {
@@ -245,6 +403,56 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         title: "Usuwanie broni"
       },
       content: `<p>Czy na pewno usunąć broń <strong>${safeWeaponName}</strong>?</p>`,
+      modal: true
+    });
+
+    if (!deletionConfirmed) return;
+
+    await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+  }
+
+  // Amunicję tworzymy wewnątrz postaci, ponieważ jej ilość jest prywatnym
+  // stanem tej postaci i będzie się później zmniejszać podczas przeładowania.
+  static async #onCreateAmmunition() {
+    const [createdAmmunition] = await this.actor.createEmbeddedDocuments("Item", [
+      {
+        name: "Nowa amunicja",
+        type: "ammunition"
+      }
+    ]);
+
+    await createdAmmunition.sheet.render({ force: true });
+  }
+
+  static async #onEditAmmunition(event, target) {
+    const itemId = target.dataset.itemId;
+    const ammunitionItem = this.actor.items.get(itemId);
+
+    if (!ammunitionItem || ammunitionItem.type !== "ammunition") {
+      ui.notifications.warn("Nie znaleziono tej amunicji na karcie postaci.");
+      return;
+    }
+
+    await ammunitionItem.sheet.render({ force: true });
+  }
+
+  // Usuwamy cały zapas danego rodzaju amunicji, dlatego operacja wymaga
+  // wyraźnego potwierdzenia użytkownika.
+  static async #onDeleteAmmunition(event, target) {
+    const itemId = target.dataset.itemId;
+    const ammunitionItem = this.actor.items.get(itemId);
+
+    if (!ammunitionItem || ammunitionItem.type !== "ammunition") {
+      ui.notifications.warn("Nie znaleziono tej amunicji na karcie postaci.");
+      return;
+    }
+
+    const safeAmmunitionName = foundry.utils.escapeHTML(ammunitionItem.name);
+    const deletionConfirmed = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: "Usuwanie amunicji"
+      },
+      content: `<p>Czy na pewno usunąć amunicję <strong>${safeAmmunitionName}</strong>?</p>`,
       modal: true
     });
 
