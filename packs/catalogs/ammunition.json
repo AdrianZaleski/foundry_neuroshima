@@ -1,0 +1,1460 @@
+[
+  {
+    "_id": "3jwuv6y38KgGzdGQ",
+    "name": "Kamień",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_THROWN",
+      "ammunitionSymbol": "AMMO_THROWN",
+      "quantity": 1,
+      "unitPrice": 1,
+      "availability": 90,
+      "craftingDifficulty": "EASY",
+      "description": "Ciężki, wyważony kawał kamienia albo gruzu. Dobry do rzucania lub puszczania z procy",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 2,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "YqF7cKc1i2P7YcfX",
+    "name": "Strzała",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_ARROW",
+      "ammunitionSymbol": "AMMO_ARROW",
+      "quantity": 1,
+      "unitPrice": 1,
+      "availability": 80,
+      "craftingDifficulty": "AVERAGE",
+      "description": "Ot, zwyczajna strzła  - kawał drewna z osadzonym grotem z wyklepanej, naostrzonej blachy.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 3,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "L9qcJdrB6qbTAAkw",
+    "name": ".303\"",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_303",
+      "ammunitionSymbol": "AMMO_303",
+      "quantity": 1,
+      "unitPrice": 5,
+      "availability": 35,
+      "craftingDifficulty": "HARD",
+      "description": ".303 British – brytyjski nabój karabinowy wprowadzony do uzbrojenia armii brytyjskiej w 1888 roku jednocześnie z karabinem Lee-Metford.\r\n\r\nNabój .303 był początkowo elaborowany prochem czarnym, ale już w 1891 roku powstała jego wersja elaborowana kordytem. Zmiana materiału miotającego wymusiła dokonanie zmian w karabinie i w rezultacie w 1895 roku do uzbrojenia przyjęto karabin Lee-Enfield zasilany amunicją .303 British elaborowana prochem bezdymnym.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 4,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "YIRZeoFfig3r0KVx",
+    "name": ".357 Magnum",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_357",
+      "ammunitionSymbol": "AMMO_357",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 50,
+      "craftingDifficulty": "HARD",
+      "description": "Słabszy od czterdziestki czwórki – trzeba uważniej celować. To w zasadzie potężniejszy .38 Special. Rewolwer, który może strzelać nabojami .357. Powinien dać sobie radę także ze Special, bo to ta sama średnica łuski i pocisku. Ale uważaj! W drugą stronę to nie działa! Naboi .357 Magnum nie wepchniesz do bębenka rewolweru strzelającego amunicją .38 Special. Nie wejdą – koniec, kropka!",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 5,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "btgWhqYwB5KMerWI",
+    "name": ".22 LR (Long Rifle)",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_22",
+      "ammunitionSymbol": "AMMO_22",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 60,
+      "craftingDifficulty": "PROBLEMATIC",
+      "description": "To są niby naboje do broni palnej, ale raczej trudno jest czymś takim kogoś zabić. Może nawet nie przebić czaszki! Jeśli jednak chcesz upolować szczura bez mordęgi i wydawania kupy gambli na inne naboje, to proszę bardzo. Ale pamiętaj, żeby wyciągnąć spluwę na coś mocniejszego niż .22 LR, kiedy wyjedzie na ciebie z rykiem opancerzona półciężarówka.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 6,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "aclhYuQUxuVHiERH",
+    "name": "12 gauge",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_SH_12",
+      "ammunitionSymbol": "AMMO_SH_12",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 60,
+      "craftingDifficulty": "AVERAGE",
+      "description": "Są to najpopularniejsze naboje do broni długiej w całych Stanach. Do wyboru masz zarówno śrut, jak i brenekę. Ale to nie wszystkie rodzaje pocisków, jakie da się wsadzić do tego naboju. Można używać nawet skrawków metalu i tym podobnego syfu. Znacznie zmniejsza to wtedy zasięg, ale rany po trafieniu takim wynalazkiem nie goją się. Bo jak niby na trupie mają się goić rany?",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 7,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "PpAYbG82llKcu9YQ",
+    "name": ".44 Magnum",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_44",
+      "ammunitionSymbol": "AMMO_44",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 40,
+      "craftingDifficulty": "HARD",
+      "description": "Jest to dwudziestka dziewiątka Magnum 44, najpotężniejszy rewolwer na świecie, ten ci odstrzeli całą głowę”. Tak powiedział kiedyś najsławniejszy amerykański glina. Nie znał się na balistyce, bo pocisk .44 odstrzeli ci najwyżej pół głowy…",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 8,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "KMBl2YC0RvQQBHIB",
+    "name": ".50 Action Express (AE)",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_50AE",
+      "ammunitionSymbol": "AMMO_50AE",
+      "quantity": 1,
+      "unitPrice": 6,
+      "availability": 10,
+      "craftingDifficulty": "VHARD",
+      "description": "To nie nabój – to cholerna lokomotywa! Ciągnie za sobą śmierć i zniszczenie!",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 9,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "aCZduuIxEsZJcwbx",
+    "name": ".50\" BMG",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_50BMG",
+      "ammunitionSymbol": "AMMO_50BMG",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 30,
+      "craftingDifficulty": "VHARD",
+      "description": "To jest to, czego maszyny nie lubią najbardziej. Wystrzelony z dobrego karabinu rozpędza się do prędkości 850 metrów na sekundę. Waży przy tym tyle co snickers, a chyba nie chciałbyś oberwać pełnopłaszczowym snickersem lecącym z naddźwiękową prędkością, co? No, ale do byle karabinu nie załadujesz takich naboi. Na przykład M82A1 waży piętnaście kilogramów, więc nie postrzelasz sobie z niego z biodra. Kolba kopie cię nawet jak walisz z dwójnoga. Ale co ty? Worków z cementem nigdy nie nosiłeś?",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 10,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ppeMlAaI39dhKhGr",
+    "name": "Kula do czarnoprochowca",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_BLACKPOWDER",
+      "ammunitionSymbol": "AMMO_BLACKPOWDER",
+      "quantity": 1,
+      "unitPrice": 1,
+      "availability": 60,
+      "craftingDifficulty": "EASY",
+      "description": "Odlana z ołowiu kula do broni czarnoprochowej. Potrzebujesz jeszcze prochu,",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 11,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "mWVRa9mYJp4s42fX",
+    "name": "4,7 mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_47",
+      "ammunitionSymbol": "AMMO_47",
+      "quantity": 1,
+      "unitPrice": 6,
+      "availability": 15,
+      "craftingDifficulty": "XHARD",
+      "description": "Dzieciaku! Za garść tych naboi masz u mnie butelkę, choćby i Coca-Coli! Na pierwszy rzut oka wcale nie wyglądają jak naboje. To takie małe bloczki, zrobione z ładunku wybuchowego. W środku takiego opakowania siedzi pocisk. Nie ma łuski, więc nie ma czego napełniać… Będziesz musiał się zaopatrzyć w przedwojenną amunicję, albo odwiedzić Posterunek w poszukiwaniu naboi.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 12,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "hHyw1f3dPCvngIBL",
+    "name": "40mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_GL_40",
+      "ammunitionSymbol": "AMMO_GL_40",
+      "quantity": 1,
+      "unitPrice": 40,
+      "availability": 20,
+      "craftingDifficulty": "VHARD",
+      "description": "Nabój 40 × 46 mm SR – z pociskiem o niskiej prędkości początkowej od 75 do 125 m/s, wystrzeliwany głównie z granatników ręcznych, np. amerykańskiego M203 i polskiego granatnika rewolwerowego RGP-40,",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 13,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "eG7tQVSEl6Fns8R6",
+    "name": ".45\" ACP",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_45ACP",
+      "ammunitionSymbol": "AMMO_45ACP",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 50,
+      "craftingDifficulty": "HARD",
+      "description": "Sławne naboje do polowania na mamuty. Historię znasz, a ja dodam tylko, że są poddźwiękowe.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 14,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "Ammo556Sample001",
+    "name": "5,56mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_556",
+      "ammunitionSymbol": "AMMO_556",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 40,
+      "craftingDifficulty": "HARD",
+      "description": "Tymi nabojami strzelają najróżniejsze spluwy. Ze zwyczajnych będzie to Ruger Mini-14 i M16, a z tych zupełnie niezwykłych – FN F2000 i M29. Nawet kałacha zrobili na tę amunicję! Chyba najpopularniejszy pośredni nabój w ZSA.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 15,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "lT6oXzcIDlm2VlMq",
+    "name": "5.7x28mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_57",
+      "ammunitionSymbol": "AMMO_57",
+      "quantity": 1,
+      "unitPrice": 4,
+      "availability": 20,
+      "craftingDifficulty": "XHARD",
+      "description": "Pestki do tostera! Gdzie żeś je znalazł? Gadaj, ale już! To tylko atrapa? Szkoda, bo to niezłe naboje, do niezłej spluwy. Przez kevlar przechodzą jak rozgrzany nóż przez masło… no dobra to głupie porównanie, ale rozumiesz aluzję, prawda?",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 16,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "Ammo762AKSample1",
+    "name": "7.62×39mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_762AK",
+      "ammunitionSymbol": "AMMO_762AK",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 30,
+      "craftingDifficulty": "HARD",
+      "description": "Tylko te naboje wsadzisz do sławnego kałasznikowa! Mają dużą moc obalającą i stosunkowo łatwo je znaleźć, więc rozważ przezbrojenie się w ruski sprzęt. Poza tym strzelają nimi inne ruskie wynalazki, ale także Mini-30 – wersja Rugera Mini przystosowana do kalibru 7.62mm.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 17,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "6YH7MoIvLaRhOw97",
+    "name": "7.62×25mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_762TT",
+      "ammunitionSymbol": "AMMO_762TT",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 30,
+      "craftingDifficulty": "HARD",
+      "description": "Dawno, dawno temu pewien Niemiec nazwiskiem Mauser opracował naboje do swojego pistoletu. Okazały się bardzo skuteczne w likwidowaniu ludzi na znaczne dystanse, a sam pistolet zyskał miano klasyki rusznikarstwa. Opowiem ci kiedyś o nim, a teraz wróćmy do naboju Mausera. Po drugiej wojnie światowej przywłaszczyli go sobie Rosjanie i wsadzili go do tej wielgachnej Tetetki. I to jest ten sam nabój, który trzymasz w łapach.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 18,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "KwNBGC6XLyT1eKLp",
+    "name": "7.62×51mm NATO",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_762NT",
+      "ammunitionSymbol": "AMMO_762NT",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 40,
+      "craftingDifficulty": "HARD",
+      "description": "Od uderzenia cywilnej wersji tego naboju – .308 Winchester – zginął niejeden dziki zwierz. To cholernie popularna amunicja myśliwska. Szczególnie po wojnie dobrze się sprawdza w polowaniach na… maszyny.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 19,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "Ammo9mmSample001",
+    "name": "9×19mm Luger",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_9",
+      "ammunitionSymbol": "AMMO_9",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 50,
+      "craftingDifficulty": "HARD",
+      "description": "Za Oceanem mówili na to Parabellum, co miało znaczyć “szykuj wojnę”. Ja tam na wojnę z Glockiem bym się nie wybierał, ale warto mieć na co dzień spluwę strzelającą tymi nabojami. Dlaczego? Bo to cholernie popularny nabój. Wszędzie nim zapłacisz za żarcie, czy paliwo i do strzelania jest więcej niż odpowiedni.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 20,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "UkXvqm4GB5wmzeDl",
+    "name": ".38 Special",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_38",
+      "ammunitionSymbol": "AMMO_38",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 50,
+      "craftingDifficulty": "PROBLEMATIC",
+      "description": "Bardzo popularne wśród przeciętniaków. Strzelają nimi głównie małe rewolwery, służące do samoobrony. Nie powalą słonia, nie przebiją kamizelki kuloodpornej, ale krzywdę zrobić potrafią. Są tanie, łatwe do zrobienia, pasują do popularnych gnatów. To drugie z najpopularniejszych naboi do broni krótkiej w ZSA.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 21,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "9Pc8xkpAgeFep3Ks",
+    "name": "Bełt metalowy",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_BOLT_CNC",
+      "ammunitionSymbol": "AMMMO_BOLT",
+      "quantity": 1,
+      "unitPrice": 5,
+      "availability": 35,
+      "craftingDifficulty": "HARD",
+      "description": "Penetrator z hartowanej stali węglowej, lotka wytoczona z aluminium. Te bełty polecą dalej, a i poradzą sobie z kamizelką.",
+      "effectCode": "WEAPON_RANGE:20, ARMOR_PIERCING:1",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 22,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "4WTja6QwJYLPwA3N",
+    "name": ".32 ACP – Automatic Colt Pistol",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_32ACP",
+      "ammunitionSymbol": "AMMO_32ACP",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 45,
+      "craftingDifficulty": "PROBLEMATIC",
+      "description": "7,65 × 17 mm SR Browning – (inna nazwa .32 ACP – Automatic Colt Pistol) nabój opracowany przez Johna M. Browninga do pistoletu M1897 jednego z pierwszych w pełni udanych pistoletów samopowtarzalnych.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 23,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "qKNd8wkKXXkKZkj5",
+    "name": ".30 Carbine",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_30",
+      "ammunitionSymbol": "AMMO_30",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 45,
+      "craftingDifficulty": "PROBLEMATIC",
+      "description": ".30 Carbine (7.62×33mm) – amerykański nabój pośredni skonstruowany na początku lat 40, bazujący na pochodzącym z 1906 roku naboju .32 Winchester SL. Pierwszą seryjnie produkowaną bronią zasilaną tym nabojem był karabinek samopowtarzalny M1.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 24,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "7jaI113QXzaKgQEF",
+    "name": "Strzała sportowa",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_ARROW_SPORT",
+      "ammunitionSymbol": "AMMO_ARROW",
+      "quantity": 1,
+      "unitPrice": 5,
+      "availability": 20,
+      "craftingDifficulty": "LUCKY",
+      "description": "Wykonana z włówka węglowego, poobklejana napisami, znaczy się musiała być wykopane z jakiegoś dobrego sklepu myśliwego w jakimś Walmarcie. Poleci dalej, szybciej i celniej niż zwykła strzała.",
+      "effectCode": "WEAPON_RANGE:20, WEAPON_ACCURACY:10",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 25,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "rFccJhJBPkThoQLV",
+    "name": "Bełt",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMMO_BOLT",
+      "ammunitionSymbol": "AMMMO_BOLT",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 40,
+      "craftingDifficulty": "EASY",
+      "description": "Wyszlifowany kawał żelastwa wetknięty w drewno. ",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 26,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "cqhPE0EUMYbqhBYg",
+    "name": "Ręczny granat dymny",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_GR_DYMNY",
+      "ammunitionSymbol": "AMMO_THROWN",
+      "quantity": 1,
+      "unitPrice": 25,
+      "availability": 40,
+      "craftingDifficulty": "AVERAGE",
+      "description": "Granat dymny – granat ręczny służący do oślepiania stanowisk obserwacyjnych i ogniowych przeciwnika, maskowania działań wojsk własnych, pozorowania pożarów obiektów własnych [1] oraz sygnalizacji (np. dla lotnictwa).",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 27,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "bdeQnsggljKA4xG2",
+    "name": ".40 S&W",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_40",
+      "ammunitionSymbol": "AMMO_40",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 50,
+      "craftingDifficulty": "HARD",
+      "description": "Skoro są naboje 9mm do pistoletów i są 11.43mm to dlaczego by nie zrobić naboi 10mm? No bo już dawno je zrobili… Myśl o nich jak o 9mm Luger ze zwiększoną średnicą pocisku. Krzywdę robią porównywalną do amunicji .45 ACP.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 28,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "gslvMoQUTngLGAhP",
+    "name": ".500 A-square",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_50_MAGNUM",
+      "ammunitionSymbol": "AMMO_50_MAGNUM",
+      "quantity": 1,
+      "unitPrice": 8,
+      "availability": 15,
+      "craftingDifficulty": "VHARD",
+      "description": "Pozwól, że przedstawię ci słonia. Przed wojną żyły chyba w Europie… jeśli te zwierzaki zmutowały to ludzie mają tam teraz przerąbane. Cztery metry w kłębie, pięć ton żywej wagi. Do tego dwa wielkie kły wyrastające z mordy. A składa się jak origami po trafieniu pociskiem naboju .500 A-square.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 29,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "1Dys50QOx9AKOXEG",
+    "name": "4.6x30mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_46",
+      "ammunitionSymbol": "AMMO_46",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 25,
+      "craftingDifficulty": "HARD",
+      "description": "Coś jakby nabój na szczury… amunicja pośrednia do pistoletu? Malutki kaliber i duża prędkość lotu pocisku. Na pewno dobrze przechodzi przez pancerz. Strzela tym niemiecki MP7, całkiem popularny w oddziałach SWAT na terenie całego kraju. Przed wojną, rzecz jasna…",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 30,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ffQULxjphMNCVhKM",
+    "name": "Granat 40mm VOG",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_GL_40_RU",
+      "ammunitionSymbol": "AMMO_GL_40_RU",
+      "quantity": 1,
+      "unitPrice": 60,
+      "availability": 15,
+      "craftingDifficulty": "VHARD",
+      "description": "Roskyjsky granat bezłuskowy 40mm. Produkują takie która po uderzeniu o ziemię podskakuje i wybuchają w powietrzu. Ale to nie ta, którą masz w ręku. Ta po prostu wybucha tam gdzie wyląduje.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 31,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "G4Blk6gi3OJVwcO6",
+    "name": "12 Gauge Metalstorm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_SH_12_MAUL",
+      "ammunitionSymbol": "AMMO_SH_12_MAUL",
+      "quantity": 1,
+      "unitPrice": 40,
+      "availability": 10,
+      "craftingDifficulty": "LUCKY",
+      "description": "MAUL (Multi-Shot Accessory Underbarrel Launcher) – półautomatyczna strzelba kalibru 12 (18,5 mm). Ważąca około 0,8 kg strzelba może być samodzielną bronią lub podwieszona do normalnego karabinu. Jest ładowana amunicją nieśmiercionośną lub różnego zastosowania, np. przeznaczoną do wybijania drzwi[4].",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 32,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "8MfPgKsv20YZLLM0",
+    "name": ".30-06 Springfield",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_762_3006",
+      "ammunitionSymbol": "AMMO_762_3006",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 25,
+      "craftingDifficulty": "HARD",
+      "description": "Nabój 30-06 został w czasie II wojny światowej przyjęty do uzbrojenia wielu krajów, po wojnie był używany między innymi w Belgii, Luksemburgu i Brazylii. Od 1954 roku w związku z wprowadzeniem standardowego naboju karabinowego NATO (7,62 × 51 mm) nabój 30-06 był stopniowo wycofywany z uzbrojenia, ale nadal jest produkowany jako amunicja do broni kolekcjonerskiej, myśliwskiej i sportowej.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 33,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "OuVzYkueOutHSMRJ",
+    "name": "Granat 25mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_GL_25",
+      "ammunitionSymbol": "AMMO_GL_25",
+      "quantity": 1,
+      "unitPrice": 70,
+      "availability": 5,
+      "craftingDifficulty": "LUCKY",
+      "description": "Granat programowalny",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 34,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "EkNZgoW4uuAIZtWh",
+    "name": "Raca rozświetlająca",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_GR_ROZSWIETLAJACY",
+      "ammunitionSymbol": "AMMO_THROWN",
+      "quantity": 1,
+      "unitPrice": 25,
+      "availability": 30,
+      "craftingDifficulty": "AVERAGE",
+      "description": "Raca – przyrząd pirotechniczny służący oświetleniu terenu (w przeciwieństwie do flary, która pełni głównie funkcję sygnalizacyjną).",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 35,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "pbIQfa0HE09hCnNa",
+    "name": ".408 Cheyenne Tactical",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_408",
+      "ammunitionSymbol": "AMMO_408",
+      "quantity": 1,
+      "unitPrice": 8,
+      "availability": 10,
+      "craftingDifficulty": "XHARD",
+      "description": "The .408 Cheyenne Tactical designated 408 Chey Tac (10.36×77mm) by the C.I.P.[2] is a specialized rimless, bottlenecked, centerfire cartridge for military long-range sniper rifles that was developed by Dr. John D. Taylor and machinist William O. Wordman. The round was designed with a possible military need for a cartridge for anti-personnel, anti-sniper and anti-materiel roles with a (supersonic) precision range of 2,200 yards (2,000 m).",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 36,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "OsD72VcpKwDrQp8j",
+    "name": ".416 Barrett",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_416",
+      "ammunitionSymbol": "AMMO_416",
+      "quantity": 1,
+      "unitPrice": 9,
+      "availability": 10,
+      "craftingDifficulty": "XHARD",
+      "description": "The .416 Barrett or 10.6×83mm centerfire rifle cartridge is a proprietary bottlenecked centrefire rifle cartridge designed in 2005. It is an alternative to the .50 BMG in long-range high-power rifles.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 37,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "5JUKndMJeILvom1W",
+    "name": ".338 Lapua Magnum",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_338",
+      "ammunitionSymbol": "AMMO_338",
+      "quantity": 1,
+      "unitPrice": 7,
+      "availability": 15,
+      "craftingDifficulty": "VHARD",
+      "description": "Nabój .338 (8,6 × 70 mm lub 8,58 × 70 mm) Lapua Magnum jest kompromisem pomiędzy standardowymi nabojami NATO o kalibrach 7,62 mm NATO i 12,7 mm NATO pozwalającym zbudować karabin wyborowy o zasięgu skutecznym powyżej 1000 m, a jednocześnie wymiarach i masie mniejszej niż wkbw.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 38,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ioPpCUIlIcVHYUaT",
+    "name": ".300 Winchester Magnum",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_300",
+      "ammunitionSymbol": "AMMO_300",
+      "quantity": 1,
+      "unitPrice": 5,
+      "availability": 25,
+      "craftingDifficulty": "VHARD",
+      "description": "Nabój .300 Winchester Magnum (7,62 x 67 mm, .300 Win Mag) - amerykański nabój karabinowy wprowadzony w roku 1963. Początkowo skonstruowany jako nabój myśliwski. Obecnie używany w policyjnych karabinach wyborowych.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 39,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "siBZuW3x2et3MUZX",
+    "name": "9 x 39mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_939",
+      "ammunitionSymbol": "AMMO_939",
+      "quantity": 1,
+      "unitPrice": 5,
+      "availability": 15,
+      "craftingDifficulty": "XHARD",
+      "description": "Nabój 9 × 39 mm został opracowany przez zespół: konstruktor N.W. Zabielin i techonolog Ł.S. Dworianinow na początku lat 80. XX wieku. Początkowo pracowano nad nowym nabojem kalibru 7,62 mm o zwiększonej przebijalności, ale zmiana założeń taktycznych spowodowała porzucenie tego obiecującego kalibru. Założono, że nabój ma skutecznie razić cele w kamizelce kuloodpornej 6B2 z odległości 400 m. ",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 40,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "DncczrnfCsF9C0Ao",
+    "name": "5,45 x 39mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_545",
+      "ammunitionSymbol": "AMMO_545",
+      "quantity": 1,
+      "unitPrice": 3,
+      "availability": 20,
+      "craftingDifficulty": "HARD",
+      "description": "W latach 80. nabój 5,45 x 39 mm zaczął wypierać z uzbrojenia nabój 7,62 mm wz. 43 w większości armii państw Układu Warszawskiego. Pod koniec lat 80. nabój 5,45 x 39 mm przyjęto do uzbrojenia Ludowego Wojska Polskiego. ",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 41,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "Vh8SdkKXRZiapzng",
+    "name": ".44-40 WCF",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_4440",
+      "ammunitionSymbol": "AMMO_4440",
+      "quantity": 1,
+      "unitPrice": 2,
+      "availability": 25,
+      "craftingDifficulty": "PROBLEMATIC",
+      "description": "Z tymi nabojem jest tak, że łatwiej go zrobić samemu, niż znaleźć. Serio! Replika “Pissmakera” na te naboje nie była zbyt popularną w XXI wieku bronią. Tak samo naboje. Ale trzeba przyznać, że działają jak trzeba. Jak gościa trafisz, to leży i kwiczy.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 42,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "S2FVQ1sGvs7cxPMo",
+    "name": "Bumerang",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_BUMERANG",
+      "ammunitionSymbol": "AMMO_BUMERANG",
+      "quantity": 1,
+      "unitPrice": 20,
+      "availability": 20,
+      "craftingDifficulty": "AVERAGE",
+      "description": "Schludnie wycięty drewniany bumerang. Teoretycznie wraca do użytkownika, o ile nie utkwi komuś w głowie.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 43,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "EaxxWSWU11rFIuvd",
+    "name": "Granat gazowy",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_GR_GAZOWY",
+      "ammunitionSymbol": "AMMO_THROWN",
+      "quantity": 1,
+      "unitPrice": 75,
+      "availability": 5,
+      "craftingDifficulty": "XHARD",
+      "description": "Granat z gazem pieprzowym. Dziwne że jescze nie przegnił.",
+      "effectCode": "EXP_D:25, INFLIECT_EFFECT:EFFECT_TEARGAS",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 44,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "73G0j5DlZJkrmxXP",
+    "name": "Granat zaczepny",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_GR_ZACZEPNY",
+      "ammunitionSymbol": "AMMO_THROWN",
+      "quantity": 1,
+      "unitPrice": 60,
+      "availability": 15,
+      "craftingDifficulty": "VHARD",
+      "description": "Granat ręczny zaczepny – odłamkowy granat ręczny o donośności ok. 50 m i promieniu rażenia do 20 m.",
+      "effectCode": "EXP_K:1, EXP_C:2, EXP_L:3, EXP_D:4, INFLIECT_EFFECT:EFFECT_DAZZLE",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 45,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "EYbXACCq3oAeeZ2o",
+    "name": "Granat obronny",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_GR_OBRONNY",
+      "ammunitionSymbol": "AMMO_THROWN",
+      "quantity": 1,
+      "unitPrice": 100,
+      "availability": 5,
+      "craftingDifficulty": "XHARD",
+      "description": "Granat ręczny obronny – odłamkowy granat ręczny przeznaczony do zwalczania nacierającej piechoty przeciwnika. Zbudowany jest z grubościennej skorupy wypełnionej materiałem wybuchowym i zapalnika (najczęściej pirotechnicznego zapalnika czasowego). Granat obronny razi głównie odłamkami pochodzącymi ze skorupy. Jego skuteczny zasięg może sięgać 200 m, co przekracza możliwy zasięg rzutu i stwarza zagrożenie dla rzucającego, dlatego rzuca się je wyłącznie z ukrycia[1].",
+      "effectCode": "WEAPON_RANGE:-20, EXP_K:5, EXP_C:10, EXP_L:15, EXP_D:20, INFLIECT_EFFECT:EFFECT_DAZZLE",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 46,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "pLmkJRjDYgrmcgAY",
+    "name": "12.7×55mm STs-130",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_127WYCHLOP",
+      "ammunitionSymbol": "AMMO_127WYCHLOP",
+      "quantity": 1,
+      "unitPrice": 7,
+      "availability": 5,
+      "craftingDifficulty": "HARD",
+      "description": "The 12.7×55mm Subsonic cartridge is used in some Russian firearms such as VKS bullpup sniper rifle and ASh-12.7 bullpup battle rifle. The cartridge can carry a projectile weighing between from 59 grams (911 grains) and 76 g (1173 gr), yielding massive amounts of kinetic energy. The round can penetrate up to 16 mm (0.63 in) of steel at 200 meters or heavy body armor at 100 meters.",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 47,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "bTSIze6aF3IUzpBA",
+    "name": "20x102mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_20MM",
+      "ammunitionSymbol": "AMMO_20MM",
+      "quantity": 1,
+      "unitPrice": 18,
+      "availability": 5,
+      "craftingDifficulty": "VHARD",
+      "description": "",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 48,
+        "importWarnings": []
+      }
+    }
+  }
+]
+

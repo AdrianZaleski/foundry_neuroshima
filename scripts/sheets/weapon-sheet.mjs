@@ -1,4 +1,5 @@
 import { weightUnitOptions } from "../utils/weight.mjs";
+import { ammunitionCompatibilityOptions } from "../catalogs/ammunition-compatibility.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -29,6 +30,8 @@ export class NeuroshimaWeaponSheet extends HandlebarsApplicationMixin(ItemSheetV
     context.item = this.item;
     context.system = this.item.system;
     context.weightUnitOptions = weightUnitOptions;
+    context.ammunitionCompatibilityOptions = ammunitionCompatibilityOptions;
+    context.ammunitionCompatibilityListId = `weapon-ammunition-${this.item.id}`;
 
     // Klucze pochodzą z zakładki WEAPON, a polskie nazwy są przeznaczone
     // dla użytkownika karty. Sam klucz pozostaje zapisany w danych Itemu.

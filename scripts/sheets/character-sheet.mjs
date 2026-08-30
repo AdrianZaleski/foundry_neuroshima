@@ -1,5 +1,6 @@
 import { rollAttribute } from "../rolls/attribute-roll.mjs";
 import { rollSkill } from "../rolls/skill-roll.mjs";
+import { ammunitionNamesBySymbol } from "../catalogs/ammunition-compatibility.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -121,6 +122,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         name: item.name,
         weaponClassName: weaponClassNames[item.system.weaponClass] ?? item.system.weaponClass,
         ammunitionCode: item.system.ammunitionCode,
+        ammunitionName: ammunitionNamesBySymbol[item.system.ammunitionCode]
+          ?? item.system.ammunitionCode,
         currentAmmunition: item.system.currentAmmunition,
         magazineCapacity: item.system.magazineCapacity,
         damageName: damageNames[item.system.damageCode] ?? item.system.damageCode,
@@ -142,6 +145,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         id: item.id,
         name: item.name,
         ammunitionSymbol: item.system.ammunitionSymbol,
+        ammunitionCompatibilityName: ammunitionNamesBySymbol[item.system.ammunitionSymbol]
+          ?? item.system.ammunitionSymbol,
         quantity: item.system.quantity,
         totalPrice: item.system.totalPrice,
         totalWeight: item.system.totalWeight

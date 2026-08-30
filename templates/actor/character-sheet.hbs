@@ -647,7 +647,7 @@
             </td>
             <td>
               {{this.currentAmmunition}} / {{this.magazineCapacity}}<br>
-              <small>{{this.ammunitionCode}}</small>
+              <small>{{this.ammunitionName}}</small>
             </td>
             <td>{{this.damageName}}</td>
             <td>
@@ -694,7 +694,10 @@
         {{#each ammunitionItems}}
           <tr>
             <td>{{this.name}}</td>
-            <td>{{this.ammunitionSymbol}}</td>
+            <td>
+              {{this.ammunitionCompatibilityName}}<br>
+              <small>{{this.ammunitionSymbol}}</small>
+            </td>
             <td>{{this.quantity}}</td>
             <td>{{this.totalPrice}}</td>
             <td>{{this.totalWeight}} kg</td>

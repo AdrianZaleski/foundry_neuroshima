@@ -6,7 +6,7 @@ import { NeuroshimaCharacterSheet } from "./sheets/character-sheet.mjs";
 import { NeuroshimaAmmunitionSheet } from "./sheets/ammunition-sheet.mjs";
 import { NeuroshimaEquipmentSheet } from "./sheets/equipment-sheet.mjs";
 import { NeuroshimaWeaponSheet } from "./sheets/weapon-sheet.mjs";
-import { initializeSampleCompendia } from "./compendia/sample-compendia.mjs";
+import { initializeCatalogCompendia } from "./compendia/catalog-compendia.mjs";
 
 // Hak "init" jest uruchamiany jeden raz podczas startu świata Foundry.
 // W tym miejscu zgłaszamy Foundry elementy należące do naszego systemu.
@@ -73,8 +73,21 @@ Hooks.once("init", () => {
   );
 });
 
+// Kod źródłowy identyfikuje dokładny wariant broni albo amunicji.
+// Dla Itemów tworzonych ręcznie generujemy go automatycznie, aby użytkownik
+// nie musiał wymyślać technicznego i unikalnego oznaczenia.
+Hooks.on("preCreateItem", (item) => {
+  if (!["weapon", "ammunition"].includes(item.type)) return;
+  if (item.system.sourceCode) return;
+
+  const codePrefix = item.type === "weapon" ? "CUSTOM_WEAPON" : "CUSTOM_AMMO";
+  item.updateSource({
+    "system.sourceCode": `${codePrefix}_${foundry.utils.randomID()}`
+  });
+});
+
 // Wariant prototypowy tworzy dwie światowe biblioteki na podstawie źródeł
 // JSON przechowywanych w repozytorium. Docelowo zastąpią je paczki systemowe.
 Hooks.once("ready", async () => {
-  await initializeSampleCompendia();
+  await initializeCatalogCompendia();
 });

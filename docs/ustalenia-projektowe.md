@@ -129,3 +129,13 @@
 - Łączna masa stosu przedmiotów, zapasu amunicji, załadowanej broni i całego ekwipunku postaci jest wyświetlana w kilogramach.
 - Wyniki masy zachowują dokładność do `0,001 kg`, czyli jednego grama.
 - Jednostka wybrana przez użytkownika jest daną zapisywaną. Wartości przeliczone i sumy są polami wyliczanymi, których użytkownik nie edytuje ręcznie.
+
+## Katalog broni dystansowej i amunicji
+
+- Źródłowe katalogi JSON zawierają dane z zakładek `RANGED` i `AMMO` arkusza referencyjnego.
+- `sourceCode` identyfikuje dokładny wariant przedmiotu. Dla własnej broni i amunicji system generuje go automatycznie.
+- `ammunitionSymbol` na amunicji określa rodzinę kompatybilności.
+- `ammunitionCode` na broni wskazuje rodzinę amunicji przyjmowaną przez broń.
+- Kilka wariantów amunicji może mieć różne kody źródłowe i ten sam symbol kompatybilności.
+- Karty broni i amunicji pokazują listę znanych rodzin, ale pozwalają też wpisać nowy symbol.
+- Na karcie postaci pokazujemy czytelną nazwę amunicji, zachowując techniczny symbol w danych.

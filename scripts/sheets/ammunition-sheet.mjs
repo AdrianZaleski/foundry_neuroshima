@@ -1,4 +1,5 @@
 import { weightUnitOptions } from "../utils/weight.mjs";
+import { ammunitionCompatibilityOptions } from "../catalogs/ammunition-compatibility.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -29,6 +30,8 @@ export class NeuroshimaAmmunitionSheet extends HandlebarsApplicationMixin(ItemSh
     context.item = this.item;
     context.system = this.item.system;
     context.weightUnitOptions = weightUnitOptions;
+    context.ammunitionCompatibilityOptions = ammunitionCompatibilityOptions;
+    context.ammunitionCompatibilityListId = `ammunition-symbols-${this.item.id}`;
 
     // Klucze i nazwy pochodzą bezpośrednio z zakładki DIFFICULTY.
     context.craftingDifficultyOptions = {

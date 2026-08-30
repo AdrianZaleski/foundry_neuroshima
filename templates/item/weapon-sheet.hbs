@@ -16,9 +16,21 @@
   </label>
 
   <label>
-    Kod amunicji
-    <input type="text" name="system.ammunitionCode" value="{{system.ammunitionCode}}" placeholder="np. AMMO_556">
+    Rodzina amunicji
+    <input
+      type="text"
+      name="system.ammunitionCode"
+      value="{{system.ammunitionCode}}"
+      list="{{ammunitionCompatibilityListId}}"
+      placeholder="Wybierz albo wpisz nowy symbol"
+    >
   </label>
+  <datalist id="{{ammunitionCompatibilityListId}}">
+    {{#each ammunitionCompatibilityOptions}}
+      <option value="{{this.value}}">{{this.label}}</option>
+    {{/each}}
+  </datalist>
+  <small>Broń przyjmie każdy wariant amunicji należący do tej rodziny.</small>
 
   <h3>Magazynek</h3>
 
@@ -117,8 +129,8 @@
   </label>
 
   <label>
-    Kod źródłowy
-    <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" placeholder="np. WP_AK">
+    Kod źródłowy (automatyczny)
+    <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" readonly>
   </label>
 
   <label>

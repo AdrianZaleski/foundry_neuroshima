@@ -45,16 +45,29 @@
 
   <div class="form-group">
     <label>
-      Kod źródłowy
-      <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" placeholder="np. AMMO_ARROW_SPORT">
+      Kod źródłowy (automatyczny)
+      <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" readonly>
     </label>
+    <small>Identyfikuje dokładny wariant amunicji. System nadaje go automatycznie.</small>
   </div>
 
   <div class="form-group">
     <label>
-      Symbol kompatybilności
-      <input type="text" name="system.ammunitionSymbol" value="{{system.ammunitionSymbol}}" placeholder="np. AMMO_ARROW">
+      Rodzina kompatybilności
+      <input
+        type="text"
+        name="system.ammunitionSymbol"
+        value="{{system.ammunitionSymbol}}"
+        list="{{ammunitionCompatibilityListId}}"
+        placeholder="Wybierz albo wpisz nowy symbol"
+      >
     </label>
+    <datalist id="{{ammunitionCompatibilityListId}}">
+      {{#each ammunitionCompatibilityOptions}}
+        <option value="{{this.value}}">{{this.label}}</option>
+      {{/each}}
+    </datalist>
+    <small>Lista podpowiada znane rodziny, ale pozwala także wpisać nową.</small>
   </div>
 
   <div class="form-group">
