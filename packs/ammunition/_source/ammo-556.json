@@ -1,0 +1,25 @@
+{
+  "_id": "Ammo556Sample001",
+  "name": "5,56mm",
+  "type": "ammunition",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "sourceCode": "AMMO_556",
+    "ammunitionSymbol": "AMMO_556",
+    "quantity": 1,
+    "unitPrice": 3,
+    "availability": 40,
+    "craftingDifficulty": "HARD",
+    "description": "Tymi nabojami strzelają najróżniejsze spluwy. Ze zwyczajnych będzie to Ruger Mini-14 i M16, a z tych zupełnie niezwykłych – FN F2000 i M29. Nawet kałacha zrobili na tę amunicję! Chyba najpopularniejszy pośredni nabój w ZSA.",
+    "effectCode": "",
+    "unitWeight": 0,
+    "weightUnit": "g"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}

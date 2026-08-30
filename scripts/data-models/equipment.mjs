@@ -1,3 +1,8 @@
+import {
+  convertWeightToKilograms,
+  roundWeightInKilograms
+} from "../utils/weight.mjs";
+
 export class NeuroshimaEquipmentDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const { NumberField, StringField } = foundry.data.fields;
@@ -16,6 +21,12 @@ export class NeuroshimaEquipmentDataModel extends foundry.abstract.TypeDataModel
         nullable: false,
         min: 0,
         initial: 0
+      }),
+      weightUnit: new StringField({
+        required: true,
+        nullable: false,
+        choices: ["g", "kg"],
+        initial: "kg"
       }),
       price: new NumberField({
         required: true,
@@ -36,6 +47,13 @@ export class NeuroshimaEquipmentDataModel extends foundry.abstract.TypeDataModel
         min: 0,
         initial: 0,
         persisted: false
+      }),
+      unitWeightInKilograms: new NumberField({
+        required: true,
+        nullable: false,
+        min: 0,
+        initial: 0,
+        persisted: false
       })
     };
   }
@@ -43,7 +61,12 @@ export class NeuroshimaEquipmentDataModel extends foundry.abstract.TypeDataModel
   prepareDerivedData() {
     super.prepareDerivedData();
 
-    // Zaokrąglenie usuwa niedokładności zapisu liczb dziesiętnych w JavaScript.
-    this.totalWeight = Math.round(this.quantity * this.unitWeight * 100) / 100;
+    this.unitWeightInKilograms = convertWeightToKilograms(
+      this.unitWeight,
+      this.weightUnit
+    );
+    this.totalWeight = roundWeightInKilograms(
+      this.quantity * this.unitWeightInKilograms
+    );
   }
 }

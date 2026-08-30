@@ -1,0 +1,25 @@
+{
+  "_id": "Ammo9mmSample001",
+  "name": "9×19mm Luger",
+  "type": "ammunition",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "sourceCode": "AMMO_9",
+    "ammunitionSymbol": "AMMO_9",
+    "quantity": 1,
+    "unitPrice": 2,
+    "availability": 50,
+    "craftingDifficulty": "HARD",
+    "description": "Za Oceanem mówili na to Parabellum, co miało znaczyć “szykuj wojnę”. Ja tam na wojnę z Glockiem bym się nie wybierał, ale warto mieć na co dzień spluwę strzelającą tymi nabojami. Dlaczego? Bo to cholernie popularny nabój. Wszędzie nim zapłacisz za żarcie, czy paliwo i do strzelania jest więcej niż odpowiedni.",
+    "effectCode": "",
+    "unitWeight": 0,
+    "weightUnit": "g"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}

@@ -1,3 +1,8 @@
+import {
+  convertWeightToKilograms,
+  roundWeightInKilograms
+} from "../utils/weight.mjs";
+
 export class NeuroshimaWeaponDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const { NumberField, StringField } = foundry.data.fields;
@@ -145,6 +150,19 @@ export class NeuroshimaWeaponDataModel extends foundry.abstract.TypeDataModel {
         min: 0,
         initial: 0
       }),
+      weightUnit: new StringField({
+        required: true,
+        nullable: false,
+        choices: ["g", "kg"],
+        initial: "kg"
+      }),
+      weightInKilograms: new NumberField({
+        required: true,
+        nullable: false,
+        min: 0,
+        initial: 0,
+        persisted: false
+      }),
       loadedAmmunitionWeight: new NumberField({
         required: true,
         nullable: false,
@@ -177,11 +195,15 @@ export class NeuroshimaWeaponDataModel extends foundry.abstract.TypeDataModel {
 
     // Masa broni obejmuje masę samego egzemplarza oraz nabojów znajdujących
     // się w magazynku. Dzięki temu przeładowanie nie zmienia obciążenia postaci.
-    this.loadedAmmunitionWeight = Math.round(
-      this.currentAmmunition * this.loadedAmmunitionUnitWeight * 100
-    ) / 100;
-    this.totalWeight = Math.round(
-      (this.weight + this.loadedAmmunitionWeight) * 100
-    ) / 100;
+    this.weightInKilograms = convertWeightToKilograms(
+      this.weight,
+      this.weightUnit
+    );
+    this.loadedAmmunitionWeight = roundWeightInKilograms(
+      this.currentAmmunition * this.loadedAmmunitionUnitWeight
+    );
+    this.totalWeight = roundWeightInKilograms(
+      this.weightInKilograms + this.loadedAmmunitionWeight
+    );
   }
 }

@@ -1,0 +1,25 @@
+{
+  "_id": "Ammo762AKSample1",
+  "name": "7.62×39mm",
+  "type": "ammunition",
+  "img": "icons/svg/item-bag.svg",
+  "system": {
+    "sourceCode": "AMMO_762AK",
+    "ammunitionSymbol": "AMMO_762AK",
+    "quantity": 1,
+    "unitPrice": 2,
+    "availability": 30,
+    "craftingDifficulty": "HARD",
+    "description": "Tylko te naboje wsadzisz do sławnego kałasznikowa! Mają dużą moc obalającą i stosunkowo łatwo je znaleźć, więc rozważ przezbrojenie się w ruski sprzęt. Poza tym strzelają nimi inne ruskie wynalazki, ale także Mini-30 – wersja Rugera Mini przystosowana do kalibru 7.62mm.",
+    "effectCode": "",
+    "unitWeight": 0,
+    "weightUnit": "g"
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}

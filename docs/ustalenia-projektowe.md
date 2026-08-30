@@ -120,3 +120,12 @@
 - Wygrywa postać z większą liczbą Punktów Sukcesu.
 - Różnica pomiędzy wynikami stanowi Punkty Przewagi zwycięzcy i określa rozmiar zwycięstwa.
 - Przed rzutem MG może przydzielić każdej stronie osobny dodatkowy PT wynikający z jej sytuacji.
+
+## Masa przedmiotów
+
+- Na karcie Itemu użytkownik może podać masę w gramach (`g`) albo kilogramach (`kg`).
+- Domyślną jednostką amunicji są gramy, a broni i zwykłego ekwipunku kilogramy.
+- System przelicza każdą masę na kilogramy przed wykonaniem dalszych obliczeń.
+- Łączna masa stosu przedmiotów, zapasu amunicji, załadowanej broni i całego ekwipunku postaci jest wyświetlana w kilogramach.
+- Wyniki masy zachowują dokładność do `0,001 kg`, czyli jednego grama.
+- Jednostka wybrana przez użytkownika jest daną zapisywaną. Wartości przeliczone i sumy są polami wyliczanymi, których użytkownik nie edytuje ręcznie.

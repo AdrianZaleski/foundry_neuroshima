@@ -6,6 +6,7 @@ import { NeuroshimaCharacterSheet } from "./sheets/character-sheet.mjs";
 import { NeuroshimaAmmunitionSheet } from "./sheets/ammunition-sheet.mjs";
 import { NeuroshimaEquipmentSheet } from "./sheets/equipment-sheet.mjs";
 import { NeuroshimaWeaponSheet } from "./sheets/weapon-sheet.mjs";
+import { initializeSampleCompendia } from "./compendia/sample-compendia.mjs";
 
 // Hak "init" jest uruchamiany jeden raz podczas startu świata Foundry.
 // W tym miejscu zgłaszamy Foundry elementy należące do naszego systemu.
@@ -70,4 +71,10 @@ Hooks.once("init", () => {
       makeDefault: true
     }
   );
+});
+
+// Wariant prototypowy tworzy dwie światowe biblioteki na podstawie źródeł
+// JSON przechowywanych w repozytorium. Docelowo zastąpią je paczki systemowe.
+Hooks.once("ready", async () => {
+  await initializeSampleCompendia();
 });

@@ -1,3 +1,8 @@
+import {
+  convertWeightToKilograms,
+  roundWeightInKilograms
+} from "../utils/weight.mjs";
+
 export class NeuroshimaAmmunitionDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const { NumberField, StringField } = foundry.data.fields;
@@ -62,6 +67,12 @@ export class NeuroshimaAmmunitionDataModel extends foundry.abstract.TypeDataMode
         min: 0,
         initial: 0
       }),
+      weightUnit: new StringField({
+        required: true,
+        nullable: false,
+        choices: ["g", "kg"],
+        initial: "g"
+      }),
 
       // Wartości łączne wynikają z ilości i nie są osobno zapisywane w świecie.
       totalPrice: new NumberField({
@@ -77,6 +88,13 @@ export class NeuroshimaAmmunitionDataModel extends foundry.abstract.TypeDataMode
         min: 0,
         initial: 0,
         persisted: false
+      }),
+      unitWeightInKilograms: new NumberField({
+        required: true,
+        nullable: false,
+        min: 0,
+        initial: 0,
+        persisted: false
       })
     };
   }
@@ -84,9 +102,14 @@ export class NeuroshimaAmmunitionDataModel extends foundry.abstract.TypeDataMode
   prepareDerivedData() {
     super.prepareDerivedData();
 
-    // Zaokrąglenie do dwóch miejsc usuwa niedokładności liczb dziesiętnych
-    // charakterystyczne dla JavaScriptu.
+    // Cena i masa całego zapasu wynikają z liczby sztuk.
     this.totalPrice = Math.round(this.quantity * this.unitPrice * 100) / 100;
-    this.totalWeight = Math.round(this.quantity * this.unitWeight * 100) / 100;
+    this.unitWeightInKilograms = convertWeightToKilograms(
+      this.unitWeight,
+      this.weightUnit
+    );
+    this.totalWeight = roundWeightInKilograms(
+      this.quantity * this.unitWeightInKilograms
+    );
   }
 }

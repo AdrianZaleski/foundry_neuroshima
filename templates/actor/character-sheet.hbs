@@ -617,7 +617,7 @@
   <h2>Obciążenie</h2>
 
   {{!-- Ta wartość jest sumą masy ekwipunku, broni oraz zapasów amunicji. --}}
-  <p><strong>Łączna masa noszonych przedmiotów:</strong> {{totalCarriedWeight}}</p>
+  <p><strong>Łączna masa noszonych przedmiotów:</strong> {{totalCarriedWeight}} kg</p>
 
   <h2>Broń</h2>
 
@@ -625,7 +625,7 @@
   <div class="weapons">
     <button type="button" data-action="createWeapon">Dodaj broń</button>
 
-    <p><strong>Masa broni:</strong> {{totalWeaponWeight}}</p>
+    <p><strong>Masa broni:</strong> {{totalWeaponWeight}} kg</p>
 
     <table>
       <thead>
@@ -654,7 +654,7 @@
               {{this.range}} m<br>
               <small>PP: {{this.armorPenetration}}</small>
             </td>
-            <td>{{this.weight}}</td>
+            <td>{{this.weight}} kg</td>
             <td>
               <button type="button" data-action="reloadWeapon" data-item-id="{{this.id}}">Przeładuj</button>
               <button type="button" data-action="editWeapon" data-item-id="{{this.id}}">Edytuj</button>
@@ -676,7 +676,7 @@
   <div class="ammunition">
     <button type="button" data-action="createAmmunition">Dodaj amunicję</button>
 
-    <p><strong>Masa amunicji:</strong> {{totalAmmunitionWeight}}</p>
+    <p><strong>Masa amunicji:</strong> {{totalAmmunitionWeight}} kg</p>
     <p><strong>Łączna wartość amunicji:</strong> {{totalAmmunitionPrice}}</p>
 
     <table>
@@ -697,7 +697,7 @@
             <td>{{this.ammunitionSymbol}}</td>
             <td>{{this.quantity}}</td>
             <td>{{this.totalPrice}}</td>
-            <td>{{this.totalWeight}}</td>
+            <td>{{this.totalWeight}} kg</td>
             <td>
               <button type="button" data-action="editAmmunition" data-item-id="{{this.id}}">Edytuj</button>
               <button type="button" data-action="deleteAmmunition" data-item-id="{{this.id}}">Usuń</button>
@@ -718,7 +718,7 @@
   <div class="equipment">
     <button type="button" data-action="createEquipment">Dodaj przedmiot</button>
 
-    <p><strong>Masa zwykłego ekwipunku:</strong> {{totalEquipmentWeight}}</p>
+    <p><strong>Masa zwykłego ekwipunku:</strong> {{totalEquipmentWeight}} kg</p>
 
     <table>
       <thead>
@@ -736,8 +736,8 @@
           <tr>
             <td>{{this.name}}</td>
             <td>{{this.quantity}}</td>
-            <td>{{this.unitWeight}}</td>
-            <td>{{this.totalWeight}}</td>
+            <td>{{this.unitWeight}} {{this.weightUnit}}</td>
+            <td>{{this.totalWeight}} kg</td>
             <td>{{this.price}}</td>
             <td>
               <button type="button" data-action="editEquipment" data-item-id="{{this.id}}">Edytuj</button>

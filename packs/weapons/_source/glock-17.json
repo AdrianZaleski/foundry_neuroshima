@@ -1,0 +1,38 @@
+{
+  "_id": "Glock17Sample001",
+  "name": "Glock 17",
+  "type": "weapon",
+  "img": "icons/svg/sword.svg",
+  "system": {
+    "sourceCode": "WP_GLOCK17",
+    "weaponClass": "PISTOL",
+    "ammunitionCode": "AMMO_9",
+    "magazineCapacity": 17,
+    "currentAmmunition": 0,
+    "loadedAmmunitionSourceCode": "",
+    "loadedAmmunitionUnitWeight": 0,
+    "misfireRoll": 19,
+    "accuracyModifier": 20,
+    "range": 50,
+    "fireRate": 1,
+    "attackTypes": "S",
+    "reloadTime": 2,
+    "armorPenetration": 1,
+    "damageCode": "D_L",
+    "requiredStrength": 0,
+    "holsterCode": "P",
+    "price": 55,
+    "availability": 30,
+    "weight": 0,
+    "weightUnit": "kg",
+    "actions": "",
+    "description": ""
+  },
+  "effects": [],
+  "folder": null,
+  "sort": 0,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {}
+}

@@ -1,3 +1,5 @@
+import { weightUnitOptions } from "../utils/weight.mjs";
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -26,6 +28,7 @@ export class NeuroshimaAmmunitionSheet extends HandlebarsApplicationMixin(ItemSh
 
     context.item = this.item;
     context.system = this.item.system;
+    context.weightUnitOptions = weightUnitOptions;
 
     // Klucze i nazwy pochodzą bezpośrednio z zakładki DIFFICULTY.
     context.craftingDifficultyOptions = {

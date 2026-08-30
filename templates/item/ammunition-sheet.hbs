@@ -31,9 +31,15 @@
       Masa jednej sztuki
       <input type="number" name="system.unitWeight" value="{{system.unitWeight}}" min="0" step="0.01">
     </label>
+    <label>
+      Jednostka masy
+      <select name="system.weightUnit">
+        {{selectOptions weightUnitOptions selected=system.weightUnit}}
+      </select>
+    </label>
   </div>
 
-  <p><strong>Łączna masa:</strong> {{system.totalWeight}}</p>
+  <p><strong>Łączna masa:</strong> {{system.totalWeight}} kg</p>
 
   <h3>Dane katalogowe</h3>
 

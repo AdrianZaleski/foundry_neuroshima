@@ -1,0 +1,11 @@
+{
+  "name": "foundry-neuroshima",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:packs": "node tools/build-packs.mjs"
+  },
+  "devDependencies": {
+    "@foundryvtt/foundryvtt-cli": "0.0.6"
+  }
+}

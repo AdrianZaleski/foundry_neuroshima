@@ -99,6 +99,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         name: item.name,
         quantity: item.system.quantity,
         unitWeight: item.system.unitWeight,
+        weightUnit: item.system.weightUnit,
         totalWeight: item.system.totalWeight,
         price: item.system.price
       }));
@@ -109,7 +110,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       (currentSum, item) => currentSum + item.totalWeight,
       0
     );
-    context.totalEquipmentWeight = Math.round(equipmentWeightSum * 100) / 100;
+    context.totalEquipmentWeight = Math.round(equipmentWeightSum * 1000) / 1000;
 
     // Broń również jest osadzonym Itemem, ale pokazujemy ją na osobnej liście,
     // ponieważ posiada magazynek oraz parametry potrzebne później w walce.
@@ -132,7 +133,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       (currentSum, item) => currentSum + item.weight,
       0
     );
-    context.totalWeaponWeight = Math.round(weaponWeightSum * 100) / 100;
+    context.totalWeaponWeight = Math.round(weaponWeightSum * 1000) / 1000;
 
     // Każdy Item amunicji reprezentuje jeden zapas konkretnego rodzaju nabojów.
     context.ammunitionItems = this.actor.items
@@ -150,7 +151,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       (currentSum, item) => currentSum + item.totalWeight,
       0
     );
-    context.totalAmmunitionWeight = Math.round(ammunitionWeightSum * 100) / 100;
+    context.totalAmmunitionWeight = Math.round(ammunitionWeightSum * 1000) / 1000;
 
     const ammunitionPriceSum = context.ammunitionItems.reduce(
       (currentSum, item) => currentSum + item.totalPrice,
@@ -161,7 +162,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     // Łączne obciążenie obejmuje obecnie zwykły ekwipunek, broń i amunicję.
     // Kolejne typy przedmiotów, na przykład pancerz, dołączymy później.
     const carriedWeightSum = equipmentWeightSum + weaponWeightSum + ammunitionWeightSum;
-    context.totalCarriedWeight = Math.round(carriedWeightSum * 100) / 100;
+    context.totalCarriedWeight = Math.round(carriedWeightSum * 1000) / 1000;
 
     return context;
   }
@@ -373,7 +374,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         _id: weaponItem.id,
         "system.currentAmmunition": currentAmmunition + transferredAmmunition,
         "system.loadedAmmunitionSourceCode": selectedAmmunitionSourceCode,
-        "system.loadedAmmunitionUnitWeight": selectedAmmunitionItem.system.unitWeight
+        // Broń przechowuje masę jednego załadowanego naboju w kilogramach.
+        // Dzięki temu późniejsza zmiana jednostki na Itemie amunicji nie psuje magazynka.
+        "system.loadedAmmunitionUnitWeight": selectedAmmunitionItem.system.unitWeightInKilograms
       },
       {
         _id: selectedAmmunitionItem.id,
