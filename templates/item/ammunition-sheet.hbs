@@ -1,0 +1,83 @@
+<section class="neuroshima-ammunition-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header>
+    <div class="form-group">
+      <label>
+        Nazwa amunicji
+        <input type="text" name="name" value="{{item.name}}">
+      </label>
+    </div>
+  </header>
+
+  <h2>Amunicja</h2>
+
+  <div class="form-group">
+    <label>
+      Liczba sztuk
+      <input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1">
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>
+      Cena jednej sztuki
+      <input type="number" name="system.unitPrice" value="{{system.unitPrice}}" min="0" step="0.01">
+    </label>
+  </div>
+
+  <p><strong>Łączna wartość:</strong> {{system.totalPrice}}</p>
+
+  <div class="form-group">
+    <label>
+      Masa jednej sztuki
+      <input type="number" name="system.unitWeight" value="{{system.unitWeight}}" min="0" step="0.01">
+    </label>
+  </div>
+
+  <p><strong>Łączna masa:</strong> {{system.totalWeight}}</p>
+
+  <h3>Dane katalogowe</h3>
+
+  <div class="form-group">
+    <label>
+      Kod źródłowy
+      <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" placeholder="np. AMMO_ARROW_SPORT">
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>
+      Symbol kompatybilności
+      <input type="text" name="system.ammunitionSymbol" value="{{system.ammunitionSymbol}}" placeholder="np. AMMO_ARROW">
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>
+      Dostępność w procentach
+      <input type="number" name="system.availability" value="{{system.availability}}" min="0" max="100" step="1">
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>
+      Trudność wytwarzania
+      <select name="system.craftingDifficulty">
+        {{selectOptions craftingDifficultyOptions selected=system.craftingDifficulty}}
+      </select>
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>
+      Kod efektu
+      <input type="text" name="system.effectCode" value="{{system.effectCode}}">
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label>
+      Opis
+      <textarea name="system.description" rows="8">{{system.description}}</textarea>
+    </label>
+  </div>
+</section>

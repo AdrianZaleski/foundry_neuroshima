@@ -8,6 +8,14 @@
 - Nazwy wymagane lub przyjęte przez API Foundry zachowujemy bez zmian, aby kod był zgodny z dokumentacją systemu.
 - Nie komentujemy każdej oczywistej instrukcji, ponieważ nadmiar komentarzy utrudnia czytanie kodu tak samo jak ich brak.
 
+## Arkusz danych Neuroshimy
+
+- Udostępniony arkusz Google Sheets traktujemy jako źródło danych przygotowanych na podstawie podręczników Neuroshimy.
+- Korzystamy z niego przy projektowaniu modeli danych oraz późniejszym przygotowaniu zawartości Compendium.
+- Zakładkę `MISC` pomijamy, ponieważ zawiera luźne, nieuporządkowane materiały.
+- Pozostałe zakładki można wykorzystywać jako dane zgodne z podręcznikami.
+- Arkusz pozostaje materiałem referencyjnym tylko do odczytu; właściwa implementacja systemu jest zapisywana w repozytorium Git.
+
 ## Wiedza ogólna i własne umiejętności
 
 - Postać będzie miała sześć pól wiedzy ogólnej, pokazanych na karcie w układzie 3+3.

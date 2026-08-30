@@ -16,7 +16,8 @@
     },
     "Item": {
       "equipment": {},
-      "weapon": {}
+      "weapon": {},
+      "ammunition": {}
     }
   }
 }

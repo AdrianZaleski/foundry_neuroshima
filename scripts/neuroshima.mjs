@@ -1,7 +1,9 @@
 import { NeuroshimaCharacterDataModel } from "./data-models/character.mjs";
+import { NeuroshimaAmmunitionDataModel } from "./data-models/ammunition.mjs";
 import { NeuroshimaEquipmentDataModel } from "./data-models/equipment.mjs";
 import { NeuroshimaWeaponDataModel } from "./data-models/weapon.mjs";
 import { NeuroshimaCharacterSheet } from "./sheets/character-sheet.mjs";
+import { NeuroshimaAmmunitionSheet } from "./sheets/ammunition-sheet.mjs";
 import { NeuroshimaEquipmentSheet } from "./sheets/equipment-sheet.mjs";
 import { NeuroshimaWeaponSheet } from "./sheets/weapon-sheet.mjs";
 
@@ -19,6 +21,10 @@ Hooks.once("init", () => {
   // Typ "weapon" otrzymuje osobny model, ponieważ broń przechowuje
   // inne informacje niż zwykły przedmiot, na przykład magazynek i obrażenia.
   CONFIG.Item.dataModels.weapon = NeuroshimaWeaponDataModel;
+
+  // Amunicja jest osobnym Itemem, ponieważ jej liczba zmienia się niezależnie
+  // od broni i stanowi zapas noszony przez konkretną postać.
+  CONFIG.Item.dataModels.ammunition = NeuroshimaAmmunitionDataModel;
 
   // Rejestrujemy własny wygląd karty i ustawiamy go jako domyślny
   // dla wszystkich Actorów typu "character".
@@ -50,6 +56,17 @@ Hooks.once("init", () => {
     NeuroshimaWeaponSheet,
     {
       types: ["weapon"],
+      makeDefault: true
+    }
+  );
+
+  // Osobna karta amunicji pokazuje jej ilość, cenę, masę i dane katalogowe.
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.Item,
+    game.system.id,
+    NeuroshimaAmmunitionSheet,
+    {
+      types: ["ammunition"],
       makeDefault: true
     }
   );
