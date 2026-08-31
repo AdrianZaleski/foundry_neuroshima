@@ -54,6 +54,45 @@ const meleeDamageThresholdNames = {
   below19: "Budowa < 19"
 };
 
+const diseaseStageNames = {
+  first: "Etap pierwszy",
+  second: "Etap drugi",
+  third: "Etap trzeci",
+  terminal: "Stan terminalny"
+};
+
+const diseaseStageOrder = Object.keys(diseaseStageNames);
+
+async function changeDiseaseStage(characterSheet, target, direction) {
+  const diseaseItem = characterSheet.actor.items.get(target.dataset.itemId);
+  if (!diseaseItem || diseaseItem.type !== "disease") {
+    ui.notifications.warn("Nie znaleziono tej choroby na karcie postaci.");
+    return;
+  }
+
+  const currentIndex = diseaseStageOrder.indexOf(diseaseItem.system.currentStage);
+  const safeCurrentIndex = Math.max(0, currentIndex);
+  const nextIndex = Math.min(
+    diseaseStageOrder.length - 1,
+    Math.max(0, safeCurrentIndex + direction)
+  );
+  if (nextIndex === currentIndex) return;
+
+  await diseaseItem.update({ "system.currentStage": diseaseStageOrder[nextIndex] });
+}
+
+async function prepareDiseaseNameCatalog() {
+  const compendium = game.packs.get("world.neuroshima-diseases");
+  if (!compendium) return {};
+
+  await compendium.getIndex({ fields: ["system.sourceCode"] });
+  return Object.fromEntries(
+    [...compendium.index.values()]
+      .filter((entry) => entry.system?.sourceCode)
+      .map((entry) => [entry.system.sourceCode, entry.name])
+  );
+}
+
 function describeMeleeDamageProfile(damageByBuild) {
   return Object.entries(meleeDamageThresholdNames)
     .filter(([damageKey]) => damageByBuild[damageKey])
@@ -127,6 +166,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // posiadającego atrybut data-action="rollAttribute".
       rollAttribute: this.#onRollAttribute,
       rollSkill: this.#onRollSkill,
+      saveActorName: this.#onSaveActorName,
 
       // Każda rana jest osobnym Itemem osadzonym w postaci.
       createInjury: this.#onCreateInjury,
@@ -157,7 +197,18 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // Zapas amunicji jest niezależny od nabojów znajdujących się w broni.
       createAmmunition: this.#onCreateAmmunition,
       editAmmunition: this.#onEditAmmunition,
-      deleteAmmunition: this.#onDeleteAmmunition
+      deleteAmmunition: this.#onDeleteAmmunition,
+
+      createDisease: this.#onCreateDisease,
+      editDisease: this.#onEditDisease,
+      deleteDisease: this.#onDeleteDisease,
+      previousDiseaseStage: this.#onPreviousDiseaseStage,
+      nextDiseaseStage: this.#onNextDiseaseStage,
+
+      createMedicine: this.#onCreateMedicine,
+      editMedicine: this.#onEditMedicine,
+      deleteMedicine: this.#onDeleteMedicine,
+      consumeMedicine: this.#onConsumeMedicine
     },
     position: {
       width: 520,
@@ -178,6 +229,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         { id: "main", icon: "fa-solid fa-user", label: "Główne" },
         { id: "details", icon: "fa-solid fa-address-card", label: "Postać" },
         { id: "skills", icon: "fa-solid fa-list-check", label: "Umiejętności" },
+        { id: "health", icon: "fa-solid fa-heart-pulse", label: "Zdrowie" },
         { id: "inventory", icon: "fa-solid fa-box-open", label: "Ekwipunek" }
       ],
       initial: "main"
@@ -199,6 +251,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     skills: {
       template: "systems/neuroshima/templates/actor/parts/skills-tab.hbs"
     },
+    health: {
+      template: "systems/neuroshima/templates/actor/parts/health-tab.hbs"
+    },
     inventory: {
       template: "systems/neuroshima/templates/actor/parts/inventory-tab.hbs"
     }
@@ -212,7 +267,12 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.actor = this.actor;
     context.system = this.actor.system;
 
-    const [originCatalog, professionCatalog, specializationCatalog] = await Promise.all([
+    const [
+      originCatalog,
+      professionCatalog,
+      specializationCatalog,
+      diseaseNameBySourceCode
+    ] = await Promise.all([
       prepareBackgroundCatalog(
         "world.neuroshima-origins",
         this.actor.system.background.originSourceCode
@@ -224,7 +284,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       prepareBackgroundCatalog(
         "world.neuroshima-specializations",
         this.actor.system.background.specializationSourceCode
-      )
+      ),
+      prepareDiseaseNameCatalog()
     ]);
 
     context.originOptions = originCatalog.options;
@@ -233,6 +294,44 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.selectedOrigin = originCatalog.selectedEntry;
     context.selectedProfession = professionCatalog.selectedEntry;
     context.selectedSpecialization = specializationCatalog.selectedEntry;
+
+    // Choroba przeciągnięta z Compendium staje się niezależnym Itemem Actora.
+    // Aktualny etap można dzięki temu zmieniać bez modyfikowania wzorca.
+    context.diseaseItems = this.actor.items
+      .filter((item) => item.type === "disease")
+      .map((item) => {
+        const currentStage = item.system.stages[item.system.currentStage];
+        return {
+          id: item.id,
+          name: item.name,
+          currentStageName: diseaseStageNames[item.system.currentStage]
+            ?? item.system.currentStage,
+          currentStageSummary: currentStage?.summary ?? "",
+          currentStageDescription: currentStage?.description ?? "",
+          currentStageEffect: currentStage?.effect ?? "",
+          medicationDescription: item.system.medicationDescription,
+          canMoveBack: diseaseStageOrder.indexOf(item.system.currentStage) > 0,
+          canMoveForward: diseaseStageOrder.indexOf(item.system.currentStage)
+            < diseaseStageOrder.length - 1
+        };
+      });
+
+    context.medicineItems = this.actor.items
+      .filter((item) => item.type === "medicine")
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        diseaseName: diseaseNameBySourceCode[item.system.diseaseSourceCode]
+          ?? item.system.diseaseSourceCode
+          ?? "",
+        quantity: item.system.quantity,
+        packageSize: item.system.packageSize,
+        price: item.system.price,
+        availability: item.system.availability,
+        effect: item.system.effect,
+        effectDurationHours: item.system.effectDurationHours,
+        flavorText: item.system.flavorText
+      }));
 
     // Słownik zasila listy wyboru współczynnika przy własnych umiejętnościach.
     // Klucz jest zapisywany w danych, a polska nazwa jest wyświetlana użytkownikowi.
@@ -408,6 +507,20 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     await rollSkill(this.actor, skillKey);
   }
 
+  static async #onSaveActorName(event, target) {
+    const actorNameInput = target.closest("header")?.querySelector("[data-actor-name]");
+    const newActorName = actorNameInput?.value.trim();
+
+    if (!newActorName) {
+      ui.notifications.warn("Ksywa postaci nie może być pusta.");
+      return;
+    }
+
+    if (newActorName === this.actor.name) return;
+    await this.actor.update({ name: newActorName });
+    ui.notifications.info(`Zapisano ksywę: ${newActorName}.`);
+  }
+
   static async #onCreateInjury() {
     const [createdInjury] = await this.actor.createEmbeddedDocuments("Item", [
       {
@@ -452,6 +565,97 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     if (!deletionConfirmed) return;
 
     await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+  }
+
+  static async #onCreateDisease() {
+    const [createdDisease] = await this.actor.createEmbeddedDocuments("Item", [
+      { name: "Nowa choroba", type: "disease" }
+    ]);
+    await createdDisease.sheet.render({ force: true });
+  }
+
+  static async #onEditDisease(event, target) {
+    const diseaseItem = this.actor.items.get(target.dataset.itemId);
+    if (!diseaseItem || diseaseItem.type !== "disease") {
+      ui.notifications.warn("Nie znaleziono tej choroby na karcie postaci.");
+      return;
+    }
+    await diseaseItem.sheet.render({ force: true });
+  }
+
+  static async #onDeleteDisease(event, target) {
+    const diseaseItem = this.actor.items.get(target.dataset.itemId);
+    if (!diseaseItem || diseaseItem.type !== "disease") {
+      ui.notifications.warn("Nie znaleziono tej choroby na karcie postaci.");
+      return;
+    }
+
+    const safeDiseaseName = foundry.utils.escapeHTML(diseaseItem.name);
+    const deletionConfirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: "Usuwanie choroby" },
+      content: `<p>Czy na pewno usunąć chorobę <strong>${safeDiseaseName}</strong>?</p>`,
+      modal: true
+    });
+    if (!deletionConfirmed) return;
+    await this.actor.deleteEmbeddedDocuments("Item", [diseaseItem.id]);
+  }
+
+  static async #onPreviousDiseaseStage(event, target) {
+    await changeDiseaseStage(this, target, -1);
+  }
+
+  static async #onNextDiseaseStage(event, target) {
+    await changeDiseaseStage(this, target, 1);
+  }
+
+  static async #onCreateMedicine() {
+    const [createdMedicine] = await this.actor.createEmbeddedDocuments("Item", [
+      { name: "Nowy lek", type: "medicine" }
+    ]);
+    await createdMedicine.sheet.render({ force: true });
+  }
+
+  static async #onEditMedicine(event, target) {
+    const medicineItem = this.actor.items.get(target.dataset.itemId);
+    if (!medicineItem || medicineItem.type !== "medicine") {
+      ui.notifications.warn("Nie znaleziono tego leku na karcie postaci.");
+      return;
+    }
+    await medicineItem.sheet.render({ force: true });
+  }
+
+  static async #onConsumeMedicine(event, target) {
+    const medicineItem = this.actor.items.get(target.dataset.itemId);
+    if (!medicineItem || medicineItem.type !== "medicine") {
+      ui.notifications.warn("Nie znaleziono tego leku na karcie postaci.");
+      return;
+    }
+    if (medicineItem.system.quantity <= 0) {
+      ui.notifications.warn(`Brak dawek leku ${medicineItem.name}.`);
+      return;
+    }
+
+    await medicineItem.update({ "system.quantity": medicineItem.system.quantity - 1 });
+    ui.notifications.info(
+      `${medicineItem.name}: zużyto jedną dawkę. Efekt należy rozstrzygnąć zgodnie z opisem.`
+    );
+  }
+
+  static async #onDeleteMedicine(event, target) {
+    const medicineItem = this.actor.items.get(target.dataset.itemId);
+    if (!medicineItem || medicineItem.type !== "medicine") {
+      ui.notifications.warn("Nie znaleziono tego leku na karcie postaci.");
+      return;
+    }
+
+    const safeMedicineName = foundry.utils.escapeHTML(medicineItem.name);
+    const deletionConfirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: "Usuwanie leku" },
+      content: `<p>Czy na pewno usunąć lek <strong>${safeMedicineName}</strong>?</p>`,
+      modal: true
+    });
+    if (!deletionConfirmed) return;
+    await this.actor.deleteEmbeddedDocuments("Item", [medicineItem.id]);
   }
 
   static async #onCreateFeature(event, target) {

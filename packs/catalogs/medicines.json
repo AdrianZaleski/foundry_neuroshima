@@ -1,0 +1,1259 @@
+[
+  {
+    "_id": "meda09f1f50686f0",
+    "name": "Decalit",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_DECALIT",
+      "diseaseSourceCode": "DIS_CALC_LUNG",
+      "packageSize": 24,
+      "quantity": 24,
+      "price": 2,
+      "availability": 80,
+      "description": "Tabletki Decalcitu w blistrze. Nowy ma 24 tabletki.",
+      "flavorText": "Powrzechny lek na zwapnienie płuc.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 2,
+        "sourceId": "DRUG_DECALIT",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medbca83830c08da",
+    "name": "Calcidis",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_CALCIDIS",
+      "diseaseSourceCode": "DIS_CALC_LUNG",
+      "packageSize": 50,
+      "quantity": 50,
+      "price": 2,
+      "availability": 60,
+      "description": "Plastikowy słoik tabletek Calcdisu. Nowy ma 50 tabletek.",
+      "flavorText": "Powrzechny lek na zwapnienie płuc.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 3,
+        "sourceId": "DRUG_CALCIDIS",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medab18d1474be55",
+    "name": "Valapren",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_VALAPREN",
+      "diseaseSourceCode": "DIS_SAT_FEVER",
+      "packageSize": 20,
+      "quantity": 20,
+      "price": 5,
+      "availability": 20,
+      "description": "Słoiczek z pastylkami Valeprenu. Nowy ma 20 pastylek.",
+      "flavorText": "Valapren produkowany był przez kilka lat w jednej fabryce, gdzieś na północnym wschodzie. Nikt nie wie gdzie - ludzie, którzy handlują lekami nie ujawniają tak łatwo swoich źródeł. Na szczęście zrobili tego straszne ilości, ale w tej chwili niestety jest na wyczerpaniu - źródełko wysycha, a poza tym w okolicy pojawili się mutanci. Valapren jest coraz trudniej dostępny i droższy. Opakowanie to słoiczek z 20 pastylkami.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 4,
+        "sourceId": "DRUG_VALAPREN",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "mede21c541c2bc39",
+    "name": "Ebolakiller",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_EBOLAKILLER",
+      "diseaseSourceCode": "DIS_EBOLA",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 4,
+      "availability": 40,
+      "description": "Duża tabletka, indywidualnie pakowana.",
+      "flavorText": "Ebolakiller. Często możesz kupić na sztuki. Dostępność tego jest nienajlepsza - około 40% szans, że na to trafisz. Lepiej kupuj więcej, bo skutki tej choroby są straszne.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 5,
+        "sourceId": "DRUG_EBOLAKILLER",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medff126bed61190",
+    "name": "Tubokuraryna",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_TURBOKURARYNA",
+      "diseaseSourceCode": "DIS_MOUNT",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 1,
+      "availability": 70,
+      "description": "Fiołka do zastrzyku. Wykonując zastrzyk w brudzie, rzuć test Kondycji na infekcję.",
+      "flavorText": "Po wstrzyknięciu Turbokuraryny występuje godzinne porażenie mięśni twarzy i trudności z przełykaniem",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 6,
+        "sourceId": "DRUG_TURBOKURARYNA",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med42f2131f2eac5",
+    "name": "Benzodiazepiny",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_BENZODIAZEPINY",
+      "diseaseSourceCode": "DIS_MOUNT",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 2,
+      "availability": 50,
+      "description": "Fiołka do zastrzyku. Wykonując zastrzyk w brudzie, rzuć test Kondycji na infekcję.",
+      "flavorText": "Benzodiazepiny jako lek miorelaksacyjny dzaiłający na wszystkie mięśnie poprzecznie prążkowane, powoduje senność i otępienie (+20% na dwie godziny po zażyciu),",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 7,
+        "sourceId": "DRUG_BENZODIAZEPINY",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med17d290fa54d2d",
+    "name": "Progabid",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_PROGABID",
+      "diseaseSourceCode": "DIS_MOUNT",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 3,
+      "availability": 40,
+      "description": "Fiołka do zastrzyku. Wykonując zastrzyk w brudzie, rzuć test Kondycji na infekcję.",
+      "flavorText": "Progabid wywołuje drżenie nóg i rąk (+10% do czynności manualnych)",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 8,
+        "sourceId": "DRUG_PROGABID",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medc9f2fdb7f8f90",
+    "name": "Pinic",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_PINIO",
+      "diseaseSourceCode": "DIS_ALIEN",
+      "packageSize": 50,
+      "quantity": 50,
+      "price": 1,
+      "availability": 60,
+      "description": "Butla śmierdzącego, gęstego, brązowego syropu w ciemnym szkle.",
+      "flavorText": "Pinic obniża kwasowość potu. Na rynku sprzedawany na butelki, bo to syrop. Z jednej butelki starczy na 50 łyżek.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 9,
+        "sourceId": "DRUG_PINIO",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medce17cfae47bf9",
+    "name": "Uregyt [proszek w gramach]",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_UREGYT",
+      "diseaseSourceCode": "DIS_KIDNEY",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 2,
+      "availability": 80,
+      "description": "Gramowa samarka proszku.",
+      "flavorText": "Dopiero mieszanka Uregytu, Kwasu Foliowego i Preparatów Żelaza tworzy lek na chore nery. Sam Uregyt ma 50% szans zadziałać.",
+      "effect": "DRUG_EFFECTIVENESS:50",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 10,
+        "sourceId": "DRUG_UREGYT",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med573ff9f75b0f4",
+    "name": "Kwas Foliowy [proszek w gramach]",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_KWASFOLIOWY",
+      "diseaseSourceCode": "DIS_KIDNEY",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 1,
+      "availability": 80,
+      "description": "Gramowa samarka proszku. Dopiero mieszanka Uregytu, Kwasu Foliowego i Preparatów Żelaza tworzy lek na chore nery.",
+      "flavorText": "Dopiero mieszanka Uregytu, Kwasu Foliowego i Preparatów Żelaza tworzy lek na chore nery. Sam Kwas Foliowy ma 50% szans zadziałać.",
+      "effect": "DRUG_EFFECTIVENESS:50",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 11,
+        "sourceId": "DRUG_KWASFOLIOWY",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med115716e5ca75b",
+    "name": "Preparaty Żelaza [płyn w gramach]",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_ZELAZO",
+      "diseaseSourceCode": "DIS_KIDNEY",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 1,
+      "availability": 80,
+      "description": "Gramowa samarka proszku. Dopiero mieszanka Uregytu, Kwasu Foliowego i Preparatów Żelaza tworzy lek na chore nery.",
+      "flavorText": "Dopiero mieszanka Uregytu, Kwasu Foliowego i Preparatów Żelaza tworzy lek na chore nery. Sam Preparat Żelaza ma 50% szans zadziałać.",
+      "effect": "DRUG_EFFECTIVENESS:50",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 12,
+        "sourceId": "DRUG_ZELAZO",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med85808fa2da81f",
+    "name": "Gotowy lek na chore nery",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_MOCZOPEDNE",
+      "diseaseSourceCode": "DIS_KIDNEY",
+      "packageSize": 0,
+      "quantity": 0,
+      "price": 3,
+      "availability": 50,
+      "description": "Mieszanka Uregytu, Kwasu Foliowego i Preparatów Żelaza, gwarantuje leczenie chorych ner.",
+      "flavorText": "Zmieszany, gotowy lek na chore nery. Orenżadka że ja pierdolę.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 13,
+        "sourceId": "DRUG_MOCZOPEDNE",
+        "importWarnings": [
+          "Brak wielkości opakowania w źródłowej zakładce MEDS."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "medaee23340f006d",
+    "name": "Leki Przeciwhistaminowe",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_HISTAMINA",
+      "diseaseSourceCode": "DIS_ALLERGY",
+      "packageSize": 40,
+      "quantity": 40,
+      "price": 3,
+      "availability": 30,
+      "description": "Blister tabletek przeciwhistaminowych. Nowe mają 40 tabletek w opakowaniu.",
+      "flavorText": "Nie działają od razu.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 14,
+        "sourceId": "DRUG_HISTAMINA",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med06cb868ac4093",
+    "name": "Alef [proszek w gramach]",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_ALEF",
+      "diseaseSourceCode": "DIS_BOSTON",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 2,
+      "availability": 50,
+      "description": "Samarka z jednym gramem drobnego krystalicznego proszku.",
+      "flavorText": "Składnik leku na szaleństwo bostońskie. Stosowany sam ma tylko 25% szans że zadziała.",
+      "effect": "DRUG_EFFECTIVENESS:25",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 15,
+        "sourceId": "DRUG_ALEF",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med58d195c7829f3",
+    "name": "Bet [proszek w gramach]",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_BET",
+      "diseaseSourceCode": "DIS_BOSTON",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 2,
+      "availability": 40,
+      "description": "Samarka z jednym gramem żółtego, kleistego proszku.",
+      "flavorText": "Składnik leku na szaleństwo bostońskie. Stosowany sam ma tylko 25% szans że zadziała.",
+      "effect": "DRUG_EFFECTIVENESS:25",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 16,
+        "sourceId": "DRUG_BET",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medfd8c1122bd0b2",
+    "name": "Gimel [proszek w gramach]",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_GIMEL",
+      "diseaseSourceCode": "DIS_BOSTON",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 2,
+      "availability": 40,
+      "description": "Samarka z jednym gramem szarego, mącznego proszku.",
+      "flavorText": "Składnik leku na szaleństwo bostońskie. Stosowany sam ma tylko 25% szans że zadziała.",
+      "effect": "DRUG_EFFECTIVENESS:25",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 17,
+        "sourceId": "DRUG_GIMEL",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medf00f186db48bc",
+    "name": "Mieszanka antybiotyków na Szaleństwo Bostońskie",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_BOSTON",
+      "diseaseSourceCode": "DIS_BOSTON",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 10,
+      "availability": 15,
+      "description": "Zawinięty foliowy foreczek z jednym gramem żółtej bryłki lekarstwa na Szaleństwo Bostońskie.",
+      "flavorText": "Ten lek można wyprodukować samemu, mieszając Alef, Bet i Gimel.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 18,
+        "sourceId": "DRUG_BOSTON",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medfee1f6ee6032b",
+    "name": "Reminex",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_REMINEX",
+      "diseaseSourceCode": "DIS_TRUMAN",
+      "packageSize": 20,
+      "quantity": 20,
+      "price": 5,
+      "availability": 30,
+      "description": "Pudełko z ampułkami przeźroczystej cieczy. Pełne ma 20 sztuk.",
+      "flavorText": "Reminex to zastrzyk, który trzeba przyjmować dożylnie (musisz mieć strzykawkę i czystą igłę, jeżli nie masz czystem igły, możesz wszczepić sobie jakieś paskudztwo). W pudełku masz 20 porcji.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 19,
+        "sourceId": "DRUG_REMINEX",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med0a74b77f71d6a",
+    "name": "Relanium",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_DRGAWKI",
+      "diseaseSourceCode": "DIS_TREMOR",
+      "packageSize": 20,
+      "quantity": 20,
+      "price": 1,
+      "availability": 40,
+      "description": "Blister małych białych tabletek. Nowy ma 20 sztuk.",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 20,
+        "sourceId": "DRUG_DRGAWKI",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med9f8aaffd1898c",
+    "name": "Kriopercypitat",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_KRIO",
+      "diseaseSourceCode": "DIS_HEMOPHILIA",
+      "packageSize": 5,
+      "quantity": 5,
+      "price": 10,
+      "availability": 20,
+      "description": "Blister z ze sporymi, biało-zielonymi kapsułkami w osłonce. Nowy ma 5 kapsułek.",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 21,
+        "sourceId": "DRUG_KRIO",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med5cb50c50aa88d",
+    "name": "Osocze świeże",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_OSOCZESWIEZE",
+      "diseaseSourceCode": "DIS_HEMOPHILIA",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 5,
+      "availability": 10,
+      "description": "Worek ludzkiego osocza",
+      "flavorText": "Po 48 godzinach przestaje nadawać się do użytku.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 22,
+        "sourceId": "DRUG_OSOCZESWIEZE",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medd16cb6516b40d",
+    "name": "Osocze mrożone",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_OSOCZEMROZONE",
+      "diseaseSourceCode": "DIS_HEMOPHILIA",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 5,
+      "availability": 10,
+      "description": "Zamrożone ludzkie osocze",
+      "flavorText": "Musi być transportowane w chłodni.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 23,
+        "sourceId": "DRUG_OSOCZEMROZONE",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med3b3628d0bc2ac",
+    "name": "Desmopresyna",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_DESMOPRESYNA",
+      "diseaseSourceCode": "DIS_HEMOPHILIA",
+      "packageSize": 10,
+      "quantity": 10,
+      "price": 7,
+      "availability": 30,
+      "description": "Czerwone prasowane pastylki w blistrze. Nowe ma 10 pastylek.",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 24,
+        "sourceId": "DRUG_DESMOPRESYNA",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medb734106a9d290",
+    "name": "Mallonix [krople w butelce]",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_MALLONIX",
+      "diseaseSourceCode": "DIS_HOLLYWOOD",
+      "packageSize": 10,
+      "quantity": 10,
+      "price": 2,
+      "availability": 50,
+      "description": "Szklana fiołka z pipetą. Pełne wystarcza na 10 dawek.",
+      "flavorText": "Nie możesz tego dnia pić alkoholu, bo wtedy lek nie zadziała.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 25,
+        "sourceId": "DRUG_MALLONIX",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med8ad1bce5c83eb",
+    "name": "Wapniak [proszek w gramach]",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_WAPNIAK",
+      "diseaseSourceCode": "DIS_OSTEOPOROSIS",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 1,
+      "availability": 25,
+      "description": "10-gramowa torebka z wapniakiem",
+      "flavorText": "Środki z wapniem, bifosfoniany i fluorek sodu. Brzmi mądrze, nie?",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 26,
+        "sourceId": "DRUG_WAPNIAK",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medcae3f4a2c8424",
+    "name": "Actinix",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_ACTINIX",
+      "diseaseSourceCode": "DIS_DIZZY",
+      "packageSize": 20,
+      "quantity": 20,
+      "price": 2,
+      "availability": 50,
+      "description": "Zielone pigułki w blistrze. Nowe ma 20 pastylek w opakowaniu.",
+      "flavorText": "Jest taki zestaw pastylek. Dość trudny do zlokalizowania - mianowicie zielone pigułki Actinix i białe pigułki Rephidal. Brane odzielnie są kompletnie bezskuteczne.",
+      "effect": "DRUG_EFFECTIVENESS:0",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 27,
+        "sourceId": "DRUG_ACTINIX",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medefec9c7135cd4",
+    "name": "Rephidal",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_REPHIDAL",
+      "diseaseSourceCode": "DIS_DIZZY",
+      "packageSize": 8,
+      "quantity": 8,
+      "price": 3,
+      "availability": 25,
+      "description": "Białe pigułki w blistrze. Nowe ma 8 pastylek w opakowaniu.",
+      "flavorText": "Jest taki zestaw pastylek. Dość trudny do zlokalizowania - mianowicie zielone pigułki Actinix i białe pigułki Rephidal. Brane odzielnie są kompletnie bezskuteczne.",
+      "effect": "DRUG_EFFECTIVENESS:0",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 28,
+        "sourceId": "DRUG_REPHIDAL",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med3a1904e371dd7",
+    "name": "Actinix+Rephidal",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_REPHINIX",
+      "diseaseSourceCode": "DIS_DIZZY",
+      "packageSize": 16,
+      "quantity": 16,
+      "price": 6,
+      "availability": 10,
+      "description": "Garść Actinixu i Rephidalu wymieszana 1 do 1",
+      "flavorText": "Dopiero zażycie tych dwóch tabletek jednocześnie leczy objawy zawrotów głowy.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 29,
+        "sourceId": "DRUG_REPHINIX",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med8e5049d093fba",
+    "name": "Aspiryna K",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_ASPIRYNAK",
+      "diseaseSourceCode": "DIS_HEART",
+      "packageSize": 30,
+      "quantity": 30,
+      "price": 1,
+      "availability": 80,
+      "description": "Blister sporych białych prasowanych tabletek. Nowy ma 30 tabletek.",
+      "flavorText": "Lek przeciwzakrzepowy - kwas acetylosalicylowy, czyli mówiąc ludzkim językiem - aspiryna, a konkretniej aspiryna K.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 30,
+        "sourceId": "DRUG_ASPIRYNAK",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med1fc3d78f8cbc4",
+    "name": "Vallyn",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_PREPARATT",
+      "diseaseSourceCode": "DIS_ANEMIA",
+      "packageSize": 40,
+      "quantity": 40,
+      "price": 3,
+      "availability": 60,
+      "description": "Blister z małymi, okrągłymi, przeźroczystymi pigułkami. Nowy ma 40 pigułek.",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 31,
+        "sourceId": "DRUG_PREPARATT",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med1ae40bc35c160",
+    "name": "Getdint",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DEUG_PREPARATK",
+      "diseaseSourceCode": "DIS_ANEMIA",
+      "packageSize": 80,
+      "quantity": 80,
+      "price": 4,
+      "availability": 60,
+      "description": "Zakręcana szklana buteleczka z dymionego szkła. Nowa zawiera 80 zakropień.",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 32,
+        "sourceId": "DEUG_PREPARATK",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med38fe91d5fa4bc",
+    "name": "Memoral",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_MEMORAL",
+      "diseaseSourceCode": "DIS_MORBUS",
+      "packageSize": 80,
+      "quantity": 80,
+      "price": 6,
+      "availability": 25,
+      "description": "Blister z maleńkimi niebieslimi pigułkami. Nowy mieści aż 80 tabletek.",
+      "flavorText": "Mało skuteczne i rzadko spotykane. Memoral ma jeden hak: masz 50% szans, że zadziała. Nie wiadomo dlaczego tak się dzieje.",
+      "effect": "DRUG_EFFECTIVENESS:50",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 33,
+        "sourceId": "DRUG_MEMORAL",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "medca94de3ce6c1f",
+    "name": "Dracophen",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_DRACOPHEN",
+      "diseaseSourceCode": "DIS_DRACULA",
+      "packageSize": 20,
+      "quantity": 20,
+      "price": 3,
+      "availability": 60,
+      "description": "Ciemna, nieprzeźroczysta buteleczka zawiera 20 porcji łyżek tego paskudźtwa.",
+      "flavorText": "Dracophen to gęsty i niesmaczny syrop.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 34,
+        "sourceId": "DRUG_DRACOPHEN",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med2cf8b424de522",
+    "name": "AVTDS",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_AVTDS",
+      "diseaseSourceCode": "DIS_VTDS",
+      "packageSize": 30,
+      "quantity": 30,
+      "price": 2,
+      "availability": 40,
+      "description": "Cukierki do ssania o dużo mówiącej nazwie AVTDS. W nowym opakowaniu znajdziesz ich 30.",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 35,
+        "sourceId": "DRUG_AVTDS",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med3fd43ea191911",
+    "name": "Potatol",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_PSYCHOTROPYPIGULKA",
+      "diseaseSourceCode": "DIS_PARANOIA",
+      "packageSize": 6,
+      "quantity": 6,
+      "price": 6,
+      "availability": 20,
+      "description": "Małe, żółte pastylki powlekane. W nowym blistrze jest 6 sztuk.",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 36,
+        "sourceId": "DRUG_PSYCHOTROPYPIGULKA",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "mede89f22ee3a91b",
+    "name": "Rectalex",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_PSYCHOTROPYCZOPEK",
+      "diseaseSourceCode": "DIS_PARANOIA",
+      "packageSize": 12,
+      "quantity": 12,
+      "price": 2,
+      "availability": 40,
+      "description": "Spore, białe czopki doodbytnicze. W nowym opakowaniu jest 12 czopków. Po rozkruszeniu, zmieszniu z wodą z heroiną i podaniu doustnie stwierdzono śmierć.",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 37,
+        "sourceId": "DRUG_PSYCHOTROPYCZOPEK",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "med9dd9c464b535a",
+    "name": "Witaminy",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_WITAMINY",
+      "diseaseSourceCode": "",
+      "packageSize": 20,
+      "quantity": 20,
+      "price": 1,
+      "availability": 80,
+      "description": "Blister z powlekanymi kapsułkami. W nowym 20 sztuk.",
+      "flavorText": "Rzuć 2k20. Jeżeli wyrzucisz jedną lub więcej jedynkę masz +1 do budowy na następne 24h.",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 38,
+        "sourceId": "DRUG_WITAMINY",
+        "importWarnings": [
+          "Lek ogólny bez powiązania z konkretną chorobą."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "medbee42bb61172e",
+    "name": "Leki Przeciwbólowe",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_PRZECIWBOLOWE",
+      "diseaseSourceCode": "",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 1,
+      "availability": 70,
+      "description": "",
+      "flavorText": "",
+      "effect": "",
+      "effectDurationHours": 0
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 39,
+        "sourceId": "DRUG_PRZECIWBOLOWE",
+        "importWarnings": [
+          "Lek ogólny bez powiązania z konkretną chorobą.",
+          "Brak opisu przedmiotu w źródłowej zakładce MEDS."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "med1e052a929d8e4",
+    "name": "Ampułka Morfiny",
+    "type": "medicine",
+    "img": "icons/svg/pill.svg",
+    "system": {
+      "sourceCode": "DRUG_MORFINA",
+      "diseaseSourceCode": "",
+      "packageSize": 1,
+      "quantity": 1,
+      "price": 10,
+      "availability": 25,
+      "description": "Zawinięta w papier ampułka medycznej jakości morfiny wraz ze strzykawką.",
+      "flavorText": "Usuwa kary za niezdane testy odporności na ból. Każdemu użyciu towarzyszy test Charakteru na uzależnienie - za pierwszym użyciem Łatwy, za drugim Problematyczny,za każdym kolejnym Bardzo Trudny. Po miesiąciu nieużywania powraca do Łatwego.",
+      "effect": "EFFECT_PASSALLPAIN",
+      "effectDurationHours": 2
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MEDS",
+        "sourceRow": 40,
+        "sourceId": "DRUG_MORFINA",
+        "importWarnings": [
+          "Lek ogólny bez powiązania z konkretną chorobą."
+        ]
+      }
+    }
+  }
+]

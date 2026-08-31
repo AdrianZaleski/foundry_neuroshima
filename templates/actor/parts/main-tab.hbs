@@ -1,9 +1,11 @@
 <section class="tab {{tabs.main.cssClass}}" data-group="sheet" data-tab="main" style="height: calc(100% - 42px); overflow-y: auto; padding-right: 6px;">
-  {{!-- Ksywa jest standardową nazwą dokumentu Actor w Foundry. --}}
+  {{!-- Pole nie ma atrybutu name, więc zbiorczy formularz nie łączy go
+  z drugim polem ksywy z zakładki Postać. Zapis wykonuje osobna akcja. --}}
   <header>
     <label>
       Ksywa
-      <input type="text" name="name" value="{{actor.name}}">
+      <input type="text" value="{{actor.name}}" data-actor-name>
+      <button type="button" data-action="saveActorName">Zapisz ksywę</button>
     </label>
   </header>
 

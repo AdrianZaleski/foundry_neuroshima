@@ -1,0 +1,66 @@
+<section class="tab {{tabs.health.cssClass}}" data-group="sheet" data-tab="health" style="height: calc(100% - 42px); overflow-y: auto; padding-right: 6px;">
+  <h2>Choroby</h2>
+  <button type="button" data-action="createDisease">Dodaj chorobę</button>
+
+  {{#each diseaseItems}}
+    <article class="disease">
+      <h3>{{this.name}} — {{this.currentStageName}}</h3>
+      {{#if this.currentStageSummary}}<p><strong>Zasady:</strong> {{this.currentStageSummary}}</p>{{/if}}
+      {{#if this.currentStageDescription}}<p>{{this.currentStageDescription}}</p>{{/if}}
+      {{#if this.currentStageEffect}}<p><small>Kod efektu: {{this.currentStageEffect}}</small></p>{{/if}}
+      {{#if this.medicationDescription}}
+        <details>
+          <summary>Leczenie</summary>
+          <p>{{this.medicationDescription}}</p>
+        </details>
+      {{/if}}
+      <div>
+        <button type="button" data-action="previousDiseaseStage" data-item-id="{{this.id}}" {{#unless this.canMoveBack}}disabled{{/unless}}>Poprzedni etap</button>
+        <button type="button" data-action="nextDiseaseStage" data-item-id="{{this.id}}" {{#unless this.canMoveForward}}disabled{{/unless}}>Następny etap</button>
+        <button type="button" data-action="editDisease" data-item-id="{{this.id}}">Edytuj</button>
+        <button type="button" data-action="deleteDisease" data-item-id="{{this.id}}">Usuń</button>
+      </div>
+    </article>
+  {{else}}
+    <p>Postać nie ma obecnie żadnej choroby.</p>
+  {{/each}}
+
+  <h2>Leki</h2>
+  <button type="button" data-action="createMedicine">Dodaj lek</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Lek</th>
+        <th>Choroba</th>
+        <th>Dawki</th>
+        <th>Działanie</th>
+        <th>Akcje</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each medicineItems}}
+        <tr>
+          <td>
+            <strong>{{this.name}}</strong><br>
+            <small>Cena: {{this.price}}, dostępność: {{this.availability}}%</small>
+          </td>
+          <td>{{#if this.diseaseName}}{{this.diseaseName}}{{else}}Lek ogólny{{/if}}</td>
+          <td>{{this.quantity}} / {{this.packageSize}}</td>
+          <td>
+            {{#if this.flavorText}}{{this.flavorText}}{{else}}Brak opisu działania{{/if}}
+            {{#if this.effect}}<br><small>Kod efektu: {{this.effect}}</small>{{/if}}
+            {{#if this.effectDurationHours}}<br><small>Czas: {{this.effectDurationHours}} godz.</small>{{/if}}
+          </td>
+          <td>
+            <button type="button" data-action="consumeMedicine" data-item-id="{{this.id}}">Użyj dawki</button>
+            <button type="button" data-action="editMedicine" data-item-id="{{this.id}}">Edytuj</button>
+            <button type="button" data-action="deleteMedicine" data-item-id="{{this.id}}">Usuń</button>
+          </td>
+        </tr>
+      {{else}}
+        <tr><td colspan="5">Postać nie posiada jeszcze żadnych leków.</td></tr>
+      {{/each}}
+    </tbody>
+  </table>
+</section>

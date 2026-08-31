@@ -1,0 +1,40 @@
+<section class="neuroshima-disease-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header>
+    <label>Nazwa choroby <input type="text" name="name" value="{{item.name}}"></label>
+  </header>
+
+  <label>Aktualny etap
+    <select name="system.currentStage">
+      {{selectOptions diseaseStageOptions selected=system.currentStage}}
+    </select>
+  </label>
+
+  <label>Opis choroby
+    <textarea name="system.description" rows="8">{{system.description}}</textarea>
+  </label>
+
+  <h2>Etapy choroby</h2>
+  {{#each system.stages as |stage stageKey|}}
+    <fieldset>
+      <legend>{{lookup ../diseaseStageOptions stageKey}}</legend>
+      <label>Podsumowanie zasad
+        <textarea name="system.stages.{{stageKey}}.summary" rows="2">{{stage.summary}}</textarea>
+      </label>
+      <label>Opis etapu
+        <textarea name="system.stages.{{stageKey}}.description" rows="5">{{stage.description}}</textarea>
+      </label>
+      <label>Surowy kod efektu
+        <input type="text" name="system.stages.{{stageKey}}.effect" value="{{stage.effect}}">
+      </label>
+    </fieldset>
+  {{/each}}
+
+  <h2>Leczenie</h2>
+  <label>Opis leków i leczenia
+    <textarea name="system.medicationDescription" rows="6">{{system.medicationDescription}}</textarea>
+  </label>
+
+  <label>Kod źródłowy
+    <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" readonly>
+  </label>
+</section>

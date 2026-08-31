@@ -1,0 +1,37 @@
+<section class="neuroshima-medicine-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header>
+    <label>Nazwa leku <input type="text" name="name" value="{{item.name}}"></label>
+  </header>
+
+  <h2>Lek</h2>
+  <label>Kod leczonej choroby
+    <input type="text" name="system.diseaseSourceCode" value="{{system.diseaseSourceCode}}">
+  </label>
+  <label>Wielkość pełnego opakowania
+    <input type="number" name="system.packageSize" value="{{system.packageSize}}" min="0" step="1">
+  </label>
+  <label>Aktualna liczba dawek / sztuk
+    <input type="number" name="system.quantity" value="{{system.quantity}}" min="0" step="1">
+  </label>
+  <label>Cena
+    <input type="number" name="system.price" value="{{system.price}}" min="0" step="0.01">
+  </label>
+  <label>Dostępność w procentach
+    <input type="number" name="system.availability" value="{{system.availability}}" min="0" max="100" step="1">
+  </label>
+  <label>Opis przedmiotu
+    <textarea name="system.description" rows="5">{{system.description}}</textarea>
+  </label>
+  <label>Opis działania
+    <textarea name="system.flavorText" rows="6">{{system.flavorText}}</textarea>
+  </label>
+  <label>Surowy kod efektu
+    <input type="text" name="system.effect" value="{{system.effect}}">
+  </label>
+  <label>Czas działania w godzinach
+    <input type="number" name="system.effectDurationHours" value="{{system.effectDurationHours}}" min="0" step="0.25">
+  </label>
+  <label>Kod źródłowy
+    <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" readonly>
+  </label>
+</section>

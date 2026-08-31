@@ -1,0 +1,1047 @@
+[
+  {
+    "_id": "dise6c79f364e1bf",
+    "name": "Zwapnienie płuc",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_CALC_LUNG",
+      "description": "Chorujesz na zwapnienie płuc? To oznacza, że będziesz miał raczej nikłe szanse podczas biegu. Na przykład, gdy spieprzasz przed wświekłym psem. Masz mniejszą, niż zdrowy człowiek, pojemność płuc. Owszem, na początku gry jeszcze nie cierpisz z tego powodu. Nie narzekaj, inni mają gorzej. Będziesz się leczył, to wszystko będzie grać",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Budowa -2, Zręczność -2, testy Kondycji +30%",
+          "description": "Masz krótszy oddech i łatwo dostajesz zadyszki. O bieganiu zapomnij. Odegraj to fajnie, to może Mistrz Gry podrzuci ci kilka opakowań leku.",
+          "effect": "ATR_BUD:-2, ATR_ZRE:-2, SKILL_KONDYCJA:-30"
+        },
+        "second": {
+          "summary": "Budowa -4, Zręczność -4, testy Kondycji +60%",
+          "description": "Oddech ci się dalej skraca. Dostajesz niekontrolowanych ataków kaszlu.",
+          "effect": "ATR_BUD:-4, ATR_ZRE-4, SKILL_KONDYCJA:-60"
+        },
+        "third": {
+          "summary": "Budowa -10, Zręczność -10, Spryt -2, Percepcja -2, testy Kondycji +90%",
+          "description": "Oddech krótki, jak linijka pierwszoklasisty",
+          "effect": "ATR_BUD:-10, ATR_ZRE:-10, ATR_SPR:-2, ATR_PER:-2, SKILL_KONDYCJA:-90"
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Umierasz kaszląc i dławiąc się",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Każde, które nie pozwala na odkładanie się wapna w organiźmie. Nazwy tych leków mają w sobie coś z calcium, np. Decalcit (dostępność 80%, 24 tabletki w opakowaniu) czy Calcidis (dostępność 60%, 50 tabletek w słoiczku). Jest powrzechnie dostępny, możesz kupić go nawet w zwykłej, przydrożnej aptece."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 2,
+        "sourceId": "DIS_CALC_LUNG",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "discabf819d74f92",
+    "name": "Gorączka sobotniej nocy",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_SAT_FEVER",
+      "description": "Zajebista nazwa, ale gdy na nią chorujesz nie jest wcale tak wesoło. Gorączka sobotniej nocy, to choroba, którą przywlekli ludzie z okolic Waszyngtonu, gdzie na początku wojny zdetonowano chyba połowę ziemskiego potencjału militanego: broń nuklearną, biologiczną, chemiczną. Wszystko, co tylko nadawało się do masowej eksterminacji. Cele były jasne - prezydent i reszta politoków. Retrowirus, którego tam użytko, pochodził, zdaje się, z laboratoriów rosyjskich, tak przynajmniej tłumaczyli to później jajogłowi. Nazwa wzięła się od filmu, w którym John Travolta tańczy jak paralityk podczas ataku padaczki. Dlaczego? A zajrzyj do opisu objawów, to będziesz wiedział.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Zręczność -3, Budowa -3 przy testach ruchowych, testy kontaktów z ludźmi +60%",
+          "description": "Mało przyjemne. Pocisz się i masz niekontrolowane skurcze mięśni. Niektórych rzeczy nie zrobisz, choćbyś się zesrał, co w twoim stanie jest dość proste, w końcu zwieracze też są mięśniami, nie?",
+          "effect": "ATR_ZRE:-3, ATR_BUD:-3, SKILL_ZASTRASZANIE-80, SKILL_PERSWAZJA:-80, SKILL_ZDOLNOSCIPRZYWODCZE:-80, SKILL_BLEF:-80"
+        },
+        "second": {
+          "summary": "Zręczność -6, Budowa -6 przy testach ruchowych, testy kontaktów z ludźmi +90%",
+          "description": "Nie możesz wykonywać żadnych precyzyjnych czynności - strzelać, otwierać zamków, prowadzić samochodu. Biegać także nie możesz. Rób często Przeciętny test Budowy, jeśli go nie przejdziesz - mdlejesz na kilka chwil.",
+          "effect": "ATR_ZRE:-6, ATR_BUD:-6, SKILL_ZASTRASZANIE-90, SKILL_PERSWAZJA:-90, SKILL_ZDOLNOSCIPRZYWODCZE:-90, SKILL_BLEF:-90"
+        },
+        "third": {
+          "summary": "Zręczność -10, Budowa -10 przy testach ruchowych, testy kontaktów z ludźmi +120%",
+          "description": "Nie możesz przejść więcej niż dziesięć kroków. No dobra - jedenaście przejdziesz. Dwanaście też. Chodziło mi tylko o to, że chodzisz z trudem i nawala ci błędnik. Niekontrolowane skurcze mięśni powodują, żę zaczynasz tańczyć. Dosłownie - podrygujesz, jak małpa na drucie. Taniec jest niekontrolowany i po każdym ataku (Przeciętny test Budowy) padasz nieprzytomny i leżysz tak przez dłuższy czas.",
+          "effect": "ATR_ZRE:-10, ATR_BUD:-10, SKILL_ZASTRASZANIE-120, SKILL_PERSWAZJA:-120, SKILL_ZDOLNOSCIPRZYWODCZE:-120, SKILL_BLEF:-120"
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Wygląda to, jakby na każdy twój mięsień można wykonać rzut k20, by określić w którą stronę się udaje. Umierasz.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Valapren. Tylko i wyłącznie Lekarstwo, które produkowane było przez kilka lat w jednej fabryce, gdzieś na północnym wschodzie. Nikt nie wie gdzie - ludzie, którzy handlują lekami nie ujawniają tak łatwo swoich źródeł. Na szczęście zrobili tego straszne ilości, ale w tej chwili niestety jest na wyczerpaniu - źródełko wysycha, a poza tym w okolicy pojawili się mutanci. Valapren jest coraz trudniej dostępny, jeżli pytasz wędrownego handlarza lekami, czy ma pare pigułek - masz 20% szans, że tak. I jest bardzo drogi. Opakowanie to słoiczek z 20 pastylkami."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 3,
+        "sourceId": "DIS_SAT_FEVER",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "dis557a6d5f1d09e",
+    "name": "Przewlekła gorączka krwotoczna",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_EBOLA",
+      "description": "Gdy przed wojną agencje prasowe wspominały o wystąpieniu gdzieś na świecie gorączki krwiotocznej - ludzie wpadali w panikę. Na szczęście tylko do 2013 roku, gdy wynaleziono na nią lekarstwo. Wirus Ebola, który wywołuje gorączkę krwiotoczną, to jeden z najbardziej złośliwych wirusów w historii medycyny. Gdy dodatkowo został wzbogacony o kilka zjadliwych cech, był doskonałą wręcz bronią biologiczną. Zabija 50% - 80% chorych. Na szczęście na terenie Stanów większość ludzi należy do tej mniejszości, która jest odporna na jego działanie. Ale nie wszyscy. Jeśli chorujesz na przewlekłą gorączkę krwiotoczną - masz cholernego pecha. Jeśli nie będziesz zażywał leków, wszystko, oprócz twoich kości, zamieni się w galaretkę.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Zręczność -2, Budowa -4, testy kontaktów z ludźmi +60%",
+          "description": "Zaczynasz się źle czuć. Na skórze pojawiają ci się wybroczyny - podskórne wylewy krwi. Jest to wynikiem pojawienia się skrzepów we krwi, która zaczyna płynąć coraz wolniej, a skrzepy przywierają do ścian naczyń krwionośnych.",
+          "effect": "ATR_ZRE:-2, ATR_BUD:-4,"
+        },
+        "second": {
+          "summary": "Zręczność -4, Budowa -6, testy kontaktów z ludźmi +90%",
+          "description": "Jeśli nie zatrzymasz inwazji wirusa, zacznie on dosłownie rozkładać twoje ciało od wewnątrz. Ten mały skurwysyn szczególnie sobie upodobał twoją tkankę łączną. Mnoży się tam, jak głupi. Tkanka przekształca się w papkę. Obumiera i rozpływa się pod skórą, na której, oprócz wybroczyn, pojawiają się białe plamy. Wygląda to, nie wiem, jak pudding z tapioki. Otwierają się rany, z których cieknie krew. Jest jej cholernie dużo, bo kapie ci z każdego naturalnego otworu ciała: z oczu, uszu, nosa, dziąseł, gruczołów ślinowych.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "Zręczność -6, Budowa -10, Spryt -2, Percepcja -2, testy kontaktów z ludźmi +120%",
+          "description": "Język staje się czerwony i nabrzmiały, nie możesz mówić. Nikogo nie oczarujesz skórą miękką jak galaerta, którą możesz odrywać płatami od reszty ciała. Rzygasz czarną, przetrawioną krwią - puszczają ci wszystkie bariery w organizmie. Serce ci mięknie - dosłownie.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Ebola niszczy w znacznym stopniu żywą tkankę, chociaż ty jeszcze żyjesz. Wywołuje rozległą martwicę, która powoduje rozpływanie się twojego ciała, jak galareta. Skóra języka odziela się od mięśnia i zostaje połknięta lub wypluta. To cholernie boli. Nerki zablokowane skrzepami krwi przestają działać, w wyniku czego zatruwasz się własnymi szczynami. Błony śluzowe, skóra, wszystko się rozpływa. Horror. Umierasz w drgawkach rozchlapując swoją krew dookoła. Zakażona krew pada na innych ludzi. Tak właśnie przenosi się ebola. Jeśli zostałeś ochlapany - zrób sobie Trudny test Budowy. Bez żadnego Suwaka. Jeśli oblałeś (nomen omen) - wiesz co masz robić. Nową postać.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Ebolakiller. Często możesz kupić na sztuki. Dostępność tego jest nienajlepsza - około 40% szans, że na to trafisz. Lepiej kupuj więcej, bo skutki tej choroby są straszne. Uważaj, jeśli masz słabe nerwy - nie choruj na nią, bo będziesz musiał przeczytać objawy. Zostałeś ostrzeżony."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 4,
+        "sourceId": "DIS_EBOLA",
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "dis33b5e6d5c2003",
+    "name": "Mount Rushmore",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_MOUNT",
+      "description": "Ta choroba nazywa się jak góra, w której wykute były twarze prezydentów USA. Wywołuje ją pozostałość kolejnej broni biologicznej. Tym razem jednak pochodzi z okolic Vegas.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Zręczność -2, Percepcja -2, Budowa -2 przy testach ruchowych, testy kontaktów z ludźmi -20% (ułatwienie)",
+          "description": "To jedna z niewielu chorób, która ci coś dodaje - masz lekko zesztywniałe mięśnie, a najbardziej te twarzy. Kamienna twarz musi dawać ci jakieś bonusy. Ale to nie wszystko. To samo sztywnienie mięśni to jednak także sztywne paluszki. Wszystko, co wymaga szybkiego poruszania się, jest dla ciebie problemem.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "Zręczność -4, Percepcja -2, Budowa -4 przy testach ruchowych, testy kontaktów z ludźmi +30%",
+          "description": "W przyrodzie nic nie ginie: oddawaj bonus. Twoja twarz jest kamienna (dlatego Mount Rushmore to fajny pomysł, nie?). Masz kłopoty z mówieniem, jedzeniem czy poruszaniem się.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "Zręczność -10, Percepcja -4, Budowa -10 przy testach ruchowych, testy kontaktów z ludźmi +60%",
+          "description": "Jesteś sztywny, jak te, no, po Viagrze. No wiesz, dosłownie stoisz, nie możesz właściwie się poruszać.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Gdy ktoś ci powie, że masz serce z kamienia, nie obrażaj się. Mówi prawdę. Umierasz",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Lekarstwem na tą chorobę jest każdy środek rozkurczowy. Najbardziej dostępne są trzy z nich, a każdy ma inny efekt uboczny. Po wstrzyknięciu Turbokuraryny (dostępność 70%) występuje godzinne porażenie mięśni twarzy i trudności z przełykaniem. Benzodiazepiny (dostępność 50%) jako lek miorelaksacyjny dzaiłający na wszystkie mięśnie poprzecznie prążkowane, powoduje senność i otępienie (+20% na dwie godziny po zażyciu), a Progabid (dostępność 40%) wywołuje drżenie nóg i rąk (+10% do czynności manualnych)"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 5,
+        "sourceId": "DIS_MOUNT",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis5be97d273b367",
+    "name": "Syndrom Obcego",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_ALIEN",
+      "description": "Był kiedyś taki film: ganiał w nim potworek, który zamiast krwi miał stężony kwas. Jeśli zaświeciły ci się teraz oczy, to je zgasimy - nie będziesz miał kwaśnej krwi ani dwóch szczęk. Zwiększy się za to kwasowość potu. To choroba genetyczna, będąca skutkiem mutacji. Mało przyjemna, ale raczej bezpieczna.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Percepcja -2, testy kontaktów z ludźmi +30%",
+          "description": "Na skutek zwiększonej kwasowości potu, zaczyna się swędzieć skóra. Nie jesteś w stanie się rozglądać, bo musisz się drapać, albo jeszcze lepiej - oblewać wodą.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "Percepcja -4, Budowa -4, Zręczność -4, testy kontaktów z ludźmi +90%. Po wyjściu z choroby odparzenia zostają, kara +10% w testach kontaktów z ludźmi (na stałe)",
+          "description": "Zaczynasz śmierzieć. W dodatku robią ci się odparzenia na skórze",
+          "effect": ""
+        },
+        "third": {
+          "summary": "Percepcja -8, Budowa -8, Zręczność -8, testy kontaktów z ludźmi +90%",
+          "description": "Ból staje się nie do zniesienia. Smierdzusz, jak śmierdziałeś i twoja sytuacja nie może się już w tej kwestii pogorszyć. Po wyjściu z choroby dalej jesteś szpetny, więc załatw sobie jakąś fajną maskę.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "A jednak może się pogorszyć. Nie umierasz na coś takiego. Po wejściu w stan terminalny masz jedynie mnóstwo odparzeń, więc gdy wyzdrowiejesz, wygląd nie wróci już do normy, tak już zostanie. Zasady zdrowienia jak w przypadku stanu krytycznego.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Coś, co obniża kwasowość potu. Możesz wymyślić jakąś fajną nazwę. Na rynku możesz dostać Pinic (dostępność 60%), sprzedawany na butelki, bo to syrop. Z jednej butelki starczy na 50 łyżek."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 6,
+        "sourceId": "DIS_ALIEN",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "disb4186870a60a0",
+    "name": "Chore nery",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_KIDNEY",
+      "description": "Twoje nerki, na skutek przebytych w przeszłości chorób, są w strzępach. Nie działają poprawnie i czujesz to za każdym razem, gdy np. napijesz się piwa. Przed wojną można było się leczyć dializami. Dzisiaj znalezienie sprawnego aparatu zakrawa na cud. Na szczęście są środki farmakologiczne.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Percepcja -3, Spryt -2, Zręczność -2, Budowa -2 przy testach ruchowych, +30% do wszystkich testów",
+          "description": "Łatwo pomylić z niewyspaniem - jesteś zmęczony, osłabiony, kleją ci się oczy, masz problemy z koncentracją.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "Percepcja -5, Spryt -5, Zręczność -4, Budowa -4 przy testach ruchowych, +60% do wszystkich testów",
+          "description": "Nie chce ci się jeść, często chodzisz w krzaki za potrzebą, zwłaszcza nocą - bez efektu. Jest ci duszno, a ciało masz obrzęknięte - pochniesz od wody. Nie możesz się skoncentrować.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "Percepcja -8, Spryt -8, Zręczność -6, Budowa -10, +90% do wszystkich testów",
+          "description": "Leje się z ciebie z obu stron: rzygasz jak kot i masz sraczkę. Za to nie sikasz. Pierwsze i drugie prowadzi do odwodnienia. Trzecie - do mocznicy, czyli zatrucia organizmu moczem.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Wytwory przemiany materii nie wydalone przez nerki \"rozsadzają\" cię od środka. Umierasz na skutek mocznicy.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Preparaty moczopędne, np. Uregyt, do tego kwas foliowy i kreparaty żelaza (dostępność każdego to 80%). Muszą być mieszane razem, osobno działają ze skutecznością 80%. Mieszanka posiada dostępność 50%."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 7,
+        "sourceId": "DIS_KIDNEY",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis544edf4c16846",
+    "name": "Alergia",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_ALLERGY",
+      "description": "Mój dziadek, który przeżył wojnę, opowiadał mi, że na przełomie tysiącleci, na alergię cierpiały rzesze ludzi. A dziś? Dziś nie ma już rzesz ludzi, ale alergicy jak byli, tak są. Alergia to tak powrzechna choroba, że właściwie nie powinna się tutaj znaleźć. Jak mawiał staruszek Bill Gates: to nie wada, to cecha. Jeśli twoja postać choruje na alergię, musisz wylosować alergen, czyli substancję, która się uczula. Tutaj panuje duża dowolność - ale żeby nie było za łatwo, losujesz spośród kategorii, które niestety dość często będą się pojawiać na sesnach. Rzuć K6: 1) Gęsta roślinność, kontakt z roślinami; 2) Pierze i sierść zwierząd, czyli po prostu większość zwierząt; 3) Kurz, stare domy; 4) Wszelkie pokarmy pochodzenia roślinnego; 5) Wszelkie pokarmy pochodzenia zwierzęcego; 6) Masz podwójną alergię! Rzuć dwa razy, ale nie bój się, jeśli znów trafisz tutaj, powtórz ten rzut. Uwaga: Pierwsze symptomy występują tylko w pobliżu allergenu. Ale za to pojawiają się natychmiast, bez rzutu k20. Jeśli wydostaniesz się spod jego wpływu - przechodzą po jednym dniu bez zażywania leków. Rzuty k20 na szansę przejścia choroby w kolejne stany wykonuje się nie raz na dzień, a raz na 3 godziny.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Percepcja -3, testy kontaktów z ludźmi +30%",
+          "description": "Zazwyczaj katar sienny. Kichasz, prychasz i charczysz. Załzawionymi oczami niewiele zobaczysz, a zatkanym nosem nic nie wyniuchasz. Widziałeś kiedyś zasmarkanego amanta? W przypadku pokarmów dostajesz wysypki i drżą ci ręce.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "Percepcja -5, Zręczność -2, Budowa -2, testy kontaktów z ludźmi +60%",
+          "description": "Nie ukryjesz się już w wysokiej trawie, bo zdradzi cię siąkanie nosem i kichanie. O skradaniu możesz zapomnieć. W przypadku pokarmów skręca się, pocisz się i rzygasz.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "Percepcja -8, Zręczność -4, Budowa -4, testy kontaktów z ludźmi +90%",
+          "description": "Nadchodzi astma. Jeśli zapuścisz się tak, że jej dostaniesz, to zmieniają się nieco zasady choróbsk. Taki mały wyjątek: jeśli wyleczysz się z astmy, nie będziesz miał permanentnych zmian we Współczynnikach. W zamian za to, za każdym razem, gdy znajdziesz się w zasięgu alergenu - wpadasz od razu w stan ostry. Mało przyjemna perspektywa, co? Analogicznie w przypadku uczulenia na pokarmy.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Astma dusi. Nie możesz złapać oddechu, więc umierasz. W przypadku pokarmów - rzygasz własnymi wnętrznościami i umierasz.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Zależne od rodzaju alergii, ale zazwyczaj pomagają leki przeciwhistaminowe (40 tabletek w opakowaniu, dostępność 30%)"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 8,
+        "sourceId": "DIS_ALLERGY",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "disd9dfd19547d91",
+    "name": "Szaleństwo Boston",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_BOSTON",
+      "description": "Szaleństwo bostońskie, znane też pod nazwą gorączka bostońska, to skutek ataku biologiczno-chemicznego. Na to niegdyś piękne miasto spuszczono kilka rodzajów bakterii, a do tego spryskano mieszkańców jakimś chemicznym świństwem. Skutek był taki, że ci, co nie umarli od bakterii, umarli od bakterii, które błyskawicznie zmutowały. Tworząc, rzecz jasna nowe, zjadliwe szczepy, które okazały się nadzwyczaj skuteczne - ludzie, którzy zarazili się nimi, stawali się agresywnymi bestiami.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Spryt -3, testy kontaktów z ludźmi +30%",
+          "description": "Łatwo Cię zirytować, a nerwus nie wzbudza zaufania ludzi. Denerwuje cię byle co, ale raczej kończy się to na narzekaniu i warczeniu na innych graczy, niż na rękoczynach.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "Spryt -5, testy kontaktów z ludźmi +60%",
+          "description": "Oj, łatwo cię zdenerwować, łatwo. Nie zastanawiasz się raczej nad finezyjnym sposobem rozwiązania problemu, ale napieprzasz kijem, aż urwiesz, złamiesz, po prostu - zniszczysz.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "Spryt -8, Budowa +2 (maksymalnie 20),testy kontaktów z ludźmi +60%",
+          "description": "Oj, łatwo cię zdenerwować, bardzo, bardzo łatwo. Za każdym razem, gdy dochodzi do różnicy zdań, rwiesz się do bitki. Nie obchodzi cię, czy twój przeciwnik to chuchrowaty naukowiec, czy niedźwiedź z zoo. Powstrzyma cię tylko solidne klepanie michy. Argumenty już nie działają.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Żaden gracz nie dopuści, żeby kolega wpadł w taki stan. Prędzej go zabiją łyżeszką do herbaty. Stan terminalny w tym przypadku to kompletny, nieodwracalny i cholernie niebezpieczny berserk. Chore monstrum rzuca się na pierwszego lepszego człowieka i walczy do upadłego - nie czuje bólu, strachu ani zmęczenia. Obrażenia nie wywołują u niego żadnych efektów. Nie słabnie, chodzi na kikutach odciętych nóg. Walczy, aż zginie.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Szaleństwo bostońskie okazało się być na tyle groźne, że ocalałe laboratoria medyczne na gwałt szukały antybiotyku na tę chorobę. Trudno było je znaleźć - większość leków jest nieskuteczna: ten który zabija jeden szczep, nie rusza nawet drugiego. Te małe gówienka mutują bowiem potwornie szybko. Przekładając to na ludzki język - musisz mieć mieszankę trzech leków, które osobno nie działają: Alef (dostępność 50%), Bet i Gimel (dostępność obu to 40%). Można też dostać mieszankę (dostępność 30%)"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 9,
+        "sourceId": "DIS_BOSTON",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis0adadb6f6eeb7",
+    "name": "Syndrom Trumana",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_TRUMAN",
+      "description": "W Kalifornii tę chorobę nazywają matołkiem. Dobrze się domyślasz - chory na matołka głupieje. Przywlekli ją emigranci z Europy, gdy ich ławica w 2024 przypłynęła ocean na tratwach z trzciny. Kon-Tiki sobie urządzili, skubańcy. Nazwa wzięła się od generała Mitchella Thurmana, tego skurwiela, który kazał strzelać do emigrantów. To on był pierwszą ofiarą - wsławił się tym, że kazał swoim żołnierzom atakować pole kaktusów. Inne, przywleczone przez Europejczyków choroby jakoś się nie przyjęły w Ameryce. Tylko matołek się ostał, jakbyśmy mieli za mało własnych głupków.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Zaczynają się twoje problemy z koncentracją. Czynności wymagające skupienia uwagi są dla ciebie trudniejsze niż dla innych. Zaczynasz mieć kłopoty z rzeczami, które dotychczas były dla ciebie łatwe - np. z liczeniem pieniędzy albo ocenieniem czy kula wystrzelona z pistoletu trafi w biegnącego mutanta. Te problemy pojawiają się wtedy, kiedy najbardziej potrzebujesz skupienia, rzecz jasna.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "IQ spada ci, jak śmieg w zimie. Tylko uważaj na zaspy. Zawsze mówiuę w takiej sytuacji: oj, bracie masz kłopot. Teraz też tak zrobię: masz na prawdę spore kłopoty.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Jesteś debilem. Slinisz się i nie potrafisz przeczytać tekstu \"Knajpa\". To jeszcze pół biedy, ale gdy przeoczysz napisa \"Uwaga, zły pies\" - może być źle. Nikomu też nie zaimponuje śliniący się idiota. Zachowujesz się jak matoł: leziesz prosto pod koła ciężarówki, a w sytuacji, gdy kule świszczą koło uszu, śpiewasz skoczne  piosenki, stepując na barykadzie.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Na syndrom Thurmana się nie umiera. Ale i tak nie pograsz sobie swoim herosem - stajesz się warzywem, które robi pod siebie i na gówno mówi \"papu\". Oddaj kartę postaci.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Wbrew temu, co mogłoby się wydawać, amerykańskie laboratoria zareagowały dość szybko - wtedy jakieś w ogóle działały. Zidentyfikowali przyczynę choroby i wyprodukowali coś, co powstrzymuje postęp Syndromu Thurmana. Jest to zastrzyk, który trzeba przyjmować dożylnie (musisz mieć strzykawkę i czystą igłę, jeżli nie masz czystem igły, możesz wszczepić sobie jakieś paskudztwo). Nazywa się toto Reminex i znaleźć możesz z prawdopodobieństwem 40%. W pudełku masz 20 porcji."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 10,
+        "sourceId": "DIS_TRUMAN",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dise503ecf5b7521",
+    "name": "Drgawki",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_TREMOR",
+      "description": "Właściwie nazwa tej choroby mówi już wszystko. Tylko symptomy się z czasem pogłębiają. Trzęsie tobą na potęge. Do tego stopnia, że w kolejnych stadiach nie możesz podnieść łyżeczki od herbaty do ust, nie mówiąc już o celowaniu z pistoletu. Choroba polega chyba na jakimś uszkodzeniu mózgu - impulsy nerwowe są źle przewodzone i stąd drgawki.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Zaczynasz mieć trudności z opanowaniem rąk. Cały drżysz, jakby było ci zimno albo jakbyć miał wysoką gorączkę.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Ręce trzęsą ci się tak, że nie jesteś w stanie utrzymać poprawnie pistoletu. Podczas sikania nie zrobisz już fajnego wzorku.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Raz dziennie o wybranej przez Mistrza Gry porze, zrób Trudny test Buowy. Jeśli go nie przejdziesz - padasz na ziemię, kopiesz nowami piach i drzesz rękami glebę. Masz regularny atak padaczki. Dodatkowym zagrożeniem jest to, że podczas ataku możesz zrobić sobie krzywdę - masz na to jedną szansę na dwie - czyli 50%. Mistrz Gry wymyśli dla ciebie jakiś efekt",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Ataki padaczki są tak częste, że niemożliwiają normalne funkcjonowanie. W dodatku wycieńczony organizm odmawia posłuszeństwa - umierasz.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Jest na to lekarstwo, ale nie wiem, jak się nazywa (Relanium czy jakoś tak) i z czego się składa. Wystarczy, że poprosisz o lekarstwo na drgawki i masz jakieś 40% szansy, że to, co dostaniesz, będzie skutkowało."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 11,
+        "sourceId": "DIS_TREMOR",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis1dd2c7ece9fc0",
+    "name": "Hemofilia",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_HEMOPHILIA",
+      "description": "Hemofilia to choroba genetyczna. Występuje zazwyczaj u facetów. Pewien jajogłowy tłumaczył mi, że mamy tylko jeden chromosom, a baby mają dwa. I dlatego tak się dzieje. Mało kłopotliwa choroba, pod warunkiem że się nie skaleczysz. Bo możesz wykrwawić się na śmierć. Hemofilia polega na braku krzepliwości krwi.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Jeśli zostaniesz zraniony, obrażenia dostajesz podwójnie: pierwszy raz gdy dostaniesz kulkę (lub zwyczajnie się skaleczysz), a drugi raz, gdy przez pierwsze 5 minut nie wstrzykniesz sobie lekarstwa, które zwiększy ci krzepliwość krwi. Jeśli rana była poważna - zazwyczaj po kilku godzinach nie żyjesz. Małe ranki nie stanowią problemu.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Nie istnieją",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Nie istnieją",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Nie istnieją",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Preparaty krwiopochodne. Trudno dostępne, zazwyczaj drogie. Krioprecypitat (5 tabletek w opakowaniu, dostępność 20%) oraz Desmopresynę (10 tabletek w opakowaniu, dostępność 30%) można dostać wszędzie, ale już świeże lub mrożone osocze (dostępność 10%) tylko w dużych skupiskach ludności, stojących na wysokim poziomie cywylizacyjnym i technicznym. Mrożonego osocza nie da się transportować na duże odległości bez specjalnej chłodni."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 12,
+        "sourceId": "DIS_HEMOPHILIA",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis75bfbb41fda95",
+    "name": "Drętwota Hollywood",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_HOLLYWOOD",
+      "description": "Po raz pierwszy zaobserwowano ją w Hollywood, 3 października 2020 roku. Tam właśnie zachorował na nią popularny aktor filmów akcji - Robert Malone. Od popularnego onelinera Mallone'a powstała druga nazwa choroby: I'm your worst nightmare. Prawdopodobnie choroba rozwijała się już wcześniej, ale nikt tego nie zauważył, bo gwiazdor zawsze zachowywał się jak kloc drewna. W filmach i w życiu prywatnym. Prawdopodobnie przegapiono pierwsze symptomy i stan ostry. Gdy zbadał go lekarz, było już za późno na jakikolwiek ratunek. Drętwota Hollywood, to kolejna choroba o powojennej prowinencji. Atakuje układ nerwowy i powoduje otępienie. Zmysły powoli przestają funkcjonować, aż do kompletnego zaniku.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "Spryt:-2,Percepcja:-4, +10% do wszystkich testów, testy kontaktów z ludźmi -20%(ułatwienie)",
+          "description": "Gorzej ci idzie wypatrywanie, nasłuchiwanie, wąchanie, dotykanie. I ta kamienna twarz!",
+          "effect": ""
+        },
+        "second": {
+          "summary": "Spryt:-4, Percepcja:-6, Charakter:+4 w testach Odporności na ból, +20% do wszystkich testów",
+          "description": "Niedowidzisz, niedosłyszysz, ale za to nie czujesz prawie bólu.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "Spryt -8, Percepcja -10, Charakter +8 w testach odporności na ból, +30% do wszystkich testów, testy kontaktów z ludźmi +60%",
+          "description": "Jesteś prawie ślepy i głuchy. W dodatku otępiały.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Zmieniasz się w kamień. No, dobra - fantazjuję. Nie w kamień, ale w kompletnego autystyka. Oddaj kartę postaci.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Jest nim Mallonix. Dostępny jest prawie wszędzie - masz 50% szans, że trafisz na to lekarstwo. Jedną kroplę rozpuszczasz w szklance wody i pijesz. Nie możesz tego dnia pić alkoholu, bo wtedy lek nie zadziała."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 13,
+        "sourceId": "DIS_HOLLYWOOD",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis032549d191d29",
+    "name": "Oteoporoza",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_OSTEOPOROSIS",
+      "description": "Osteoporoza, to choroba powodująca odwapnienie kości. Stają się one kruche i łatwo je złamać. Dlatego nie choruj na osteoporozę, gdy masz zamiar biegać, wspinać się po górach, czy skakać na spadochronie.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Tutaj jest pies pogrzebany, bo pierwsze objawy są niezauważalne. Nic się nie zmienia. Jeśli masz Budowę poniżej 7 punktów, nie masz pierwszych symptomów. Od razu przechodzisz do stanu ostrego.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Musisz uważać - przy większych wstrząsach, uderzeniach, masz 50% (wyniki 1-10 w rzucie k20) szans, że sobie coś złamiesz. A jeśli złamanie się zrośnie krzywo - marny twój los. Nie ma u nas ubezpieczeń społecznych.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Jest podobny do stanu ostrego, tyle że szansa jest większa - 75% (1-15 na k20). Poczytaj sobie coś o złamaniach szyjki udowej. Miłej zabawy.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Występuje na skutek złamania szyjki udowej ze stanu krytycznego. Jeżeli poczytałeś, to wiesz o co chodzi, a jak nie poczytałeś, to chyba lepiej dla ciebie. Stajesz się inwalidą i niestety - nie możesz już grać tą postacią.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Środki z wapniem, bifosfoniany i fluorek sodu. Brzmi mądrze, nie? Wapniak 25% szans na znalezienie."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 14,
+        "sourceId": "DIS_OSTEOPOROSIS",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis6d04c70ae6b52",
+    "name": "Zawroty głowy",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_DIZZY",
+      "description": "Osobiście nie chciałbym mieć żadnych kłopotów z błędnikiem. To niezbyt fajnie zataczać się i rzygać, nie będąc pijanym",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Jeśli zaniedbasz się i nie leczysz - będziesz cierpiał na chorobę lokomocyjną. Polega ona na tym że rzygasz, jak jedziesz czymkolwiek dłużej niż 10 minut.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Masz trudności z chodzeniem - lekko się zataczasz. Może walnij sobie lufę samogonu, to będziesz wyglądał na zdrowego człowieka? Ludzie mają cię za pijaka. Podczas leczenia musisz leżeć. Wolno ci chodzić tylko za potrzebą!",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Leżysz, bo nie jesteś w stanie się poruszać. Wywołuje to u ciebie ogromne torsje. Dodatkowo pojawia się silny ból ucha. Tak silny, że leżysz i wyjesz.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Na to się nie umiera. Twoje szczęście. Stan krytyczny będzie się utrzymywał tak długo, dopóki się nie wyleczysz. Do tego czasu jesteś wyłączony z gry. Mam nadzieję, że masz dobrych kumpli...",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Jest taki zestaw pastylek. Dość trudny do zlokalizowania, jeden lek - zielone pigułki, nazywające się Actinix (20 pastylek w opakowaniu) znajdziesz z szansą 50%. Jednak drugi - białe pigułki o nazwie Rephidal (8 pastylek w opakowaniu) tylko w 20%"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 15,
+        "sourceId": "DIS_DIZZY",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis68fe1144599f4",
+    "name": "Niewydolność krążenia",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_HEART",
+      "description": "Twoje serce pracuje, jakby chciało, a nie mogło. Może to być arytmia, może coś innego. Szybko się męczysz i jesteś otępiały. Czasami występuje sinica - po prostu robisz się niebieski na pysku. Nic dobrego, chłopie.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Duszno ci podczas wysiłu. Męczysz się szybciej niż inni i jesteś generalnie uciążliwy.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Duszno ci nawet, gdy leżysz. W dodatku masz 10% szans, że po każdym większym wysiłku przeskakujesz od razu do stanu terminalnego",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Boli cię klatka, oddech krótki, jesteś jedną kupką nieszczęścia. Masz kłopoty z mówieniem, oddychaniem i tak dalej. Pojawiają się obrzęki nóg. Szansa przejścia od razu w stan terminalny rośnie do 20%.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Wysiaca ci pikawa i umierasz.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Znowu garść prochów. Stosuj leki wzmacniające kurczliwość serca. Stosuj leki przeciwzakrzepowe - kwas acetylosalicylowy, czyli mówiąc ludzkim językiem - aspiryna, a konkretniej aspiryna K (30 tabletek w opakowaniu, dostępność 60%), na którą teraz najłatwiej trafić. I ciesz się, że nie masz nadciśnienia, bo musiałbyś zażywać nitroglicerynę."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 16,
+        "sourceId": "DIS_HEART",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "disf78d73435ae93",
+    "name": "Anemia",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_ANEMIA",
+      "description": "Choroba krwi. Masz za mało czerwonych krwinek lub hemoglobiny i zanikający szpik kostrny, co stanowczo nie jest fajne. Męczysz się szybko, jesteś blady i łamią ci się paznokcie. Pół biedy, póki nie jesteś kobietą.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Masz przyspieszony oddech. Nic dziwnego - krew nie jest tak \"pojemna\", jak u zdrowych ludzi i żeby przetransportować tę samą ilość tlenu, musi szybciej krążyć.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Masz zawroty głowy, zadyszkę i poruszasz się dwa razy wolniej niż inni.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Właściwie nie możesz chodzić, bo przy każdym większym wysiłku niż machnięcie ręką - mdlejesz.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Występuje całkowity zanik szpiku kostnego i po prostu umierasz.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Preparaty krwiotwórcze. Oraz odpowiednie żarcie. No dobra, to ostatnie to żart, nie każę ci jeść szpinaku albo lucerny, bo te rośliny zdziczały i mają więcej pierwiastków radioaktywnych, niż żelaza. Lekarstwo występuje w dwóch postaciach: tańsze tabletki i droższe krople. Dostępność jednego i drugiego to około 60%. W opakowaniu: 40 tabletek lub 80 kropli."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 17,
+        "sourceId": "DIS_ANEMIA",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dise056fb98148fc",
+    "name": "Morbus Dexteri",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_MORBUS",
+      "description": "Jedyne, co jest fajne w teh chorobie, to nazwa. Jako pierwszy rozpoznał ją lekarz z Minnesoty - Charles Dexter. Mój znajomy łapiduch mówi, że to był szarlatan, nie lekarz - choroba ta, to zwykłe amnezje. Nie wiadomo za bardzo, od czego pochodzi: to prawdopodobnie choroba genetyczna. Polega ona na chwilowych zanikach pamięci: w pewnym momencie przestajesz wiedzieć, kim jesteś i co tu robisz. Ten stan mija po jakimś czasie i znowu stajesz się normalny.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Co kilka godzin tracisz na chwilę pamięć. Nie pamiętasz, kim jesteś, ani jak się nazywasz. Nie rozpoznajesz swoich kolegów i nie wiesz, kto jest szefem, ani podwładnym. Mistrz gry ma prawo w momencie utraty pamięci przejąć kontrolę nad twoją postacią. Stan powtarza się co trzy, cztery godziny (decyzja MG)",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Dostajesz kolejnej amnezji. Tym razem jest poważniejsza: podczas ataku choroby, oprócz utraty wszystkich informacji, nie możesz wykorzystywać większości Umiejętności (decyzja MG). Jak widzisz nie jest to typowa amnezja.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Zapominasz na stałe swoje personalia i część Umiejętności (decyzja MG)",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Dopada cię demencja, czyli tracisz zdolność zapamiętywania czegokolwiek. Oddaj kartę.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Mało skuteczne i rzadko spotykane. Nazywa się Memoral, ma 80 tabletek w opakowaniu i znajdziesz z szansą 30%. Ma jeden hak: masz około 50% szans, że zadziała. Nie wiadomo dlaczego tak się dzieje."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 18,
+        "sourceId": "DIS_MORBUS",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "disa534ee42d2089",
+    "name": "Syndrom Draculi",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_DRACULA",
+      "description": "Chociaż Neuroshima, to nie WoD, to jednak możesz zostać istotą, która boi się światła słonecznego. Zachoruj na syndrom Draculi i masz to jak w banku. Sprowadza się do tego, że nie lubisz i nie tolerujesz światła słonecznego.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Twoja skóra źle znosi światło słońca. Staje się sucha, popękana i mocno czerwona. Piecze przy dotknięciu. Ale to nie wszystko, na skutek obrażeń otrzymujesz rany i słabniesz. Jest noc? Budowa nie spada. Siedzisz w bunkrze, oświetlony żarówką? Nie spada. Słońce jest za chmurami? Spada. Wchodzisz do solarium? Spada.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Skóra przybiera brzydki brązowożółty odcień.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Nawet księżyc cię parzy. Z popękanej skóry toczy się śmierdząca, ciemnobrązowa ropa albo krew.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Nie masz już skóry. Oddaj kartę Mistrzowi.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Dracophen. To gęsty i niesmaczny syrop. Ciemna, nieprzeźroczysta buteleczka zawiera 100ml syropu. Wystarcza go na około 20 porcji leku. Prawdopodobieństwo znalezienia: 60%"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 19,
+        "sourceId": "DIS_DRACULA",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis3ec561fbc5f43",
+    "name": "Zespół wirusowej choroby języka",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_VTDS",
+      "description": "Wirus, który wywołuje tę chorobę, nie jest skutkiem działania broni biologicznej, ale też ma wojenne pochodzenie. Prawdopodobnie to zmutowany wirus opryszczki, który z dość łagodnego kanapowego pieska stał się rozjuszonym pitbullem.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Język ci puchnie. Na skutek tego mówisz, jakbyś miał pełne usta i w dodatku nie czujesz skamu. Na razie jest to dość niegroźne.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Tutaj sytuacja staje się trudniejsza. Nie możesz jeść - cokolwiek włożysz do ust, powoduje to silny, ostry ból. Język jest obrzękły i sączy się z niego krew. Mówisz z trudem, wolno cedząc słowa. Na skutek nie przyjmowania pokarmów - słabniesz.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Twój język staje się miekki i galaretowaty. Uważaj na niego, bo wystarczy, że go lekko przygryziesz, a stracisz cały. Ból jest tak silny, że promieniuje na całą głowę. Nie możesz się poruszać, bo rozsadza ci czaszkę. Środki przeciwbólowe nie działają.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Umierasz z bólu, głodu i gorączki.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Cukierki do ssania o dużo mówiącej nazwie AVTDS. W jednym opakowaniu znajdziesz ich 30. Prawdopodobieństwo natrafienia na nie wynosi około 40%, a więc jest spora szansa."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 20,
+        "sourceId": "DIS_VTDS",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "dis55ff6b0720d36",
+    "name": "Paranoja",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_PARANOIA",
+      "description": "Zawsze wydawało mi się, że wojna wyprodukuje przede wszystkim mutantów i ludzi chorych na ciele. A tu masz: pojawiło się mnóstwo wariatów. Z taką paranoją, bracie, nie masz większych szans w grupie. Po pierwsze, wszyscy dookoła będą mieli cię dość po kilku zdemaskowanych przez ciebie spiskach, po drugie, ty sam zamęczysz się psychicznie, a po trzecie wreszcie, możesz być niebezpieczny dla otoczenia i siebie.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "Zaczynasz uważnie obserwować towarzyszy - widzisz dokładnie, jak wszyscy coś szepczą po kryjomu - może coś knują przeciw tobie? Nieźle kombinujesz. Masz tak zacięty wyraz twarzy, że strach się bać.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Musisz odkryć, kto jest twoim ukrytym wrogiem. Nękasz (zagraj to!) swoich kolegów nieustannymi podejrzeniami - może to być ich spisek przeciw tobie, może ktoś z drużyny jest awatarem Molocha, który postawił sobie za cel krzyżowanie ciebie, swego jedynego syna? Wymyślaj, co chcesz. W każdym razie nękaj ich, w końcu to, że wpadłeś do strumyka, nie mogło być przypadkowe. Że woda tam sięga ledwie kolan? Na pewno jest radioaktywna! Współczynniki prawie się nie zmieniają - nie chcemy cię karać, twoja drużyna zrobi to za nas!",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Najwyższy czas przejść od słów, do czynów. Wiesz już, kto w drużynie knuje przeciw tobie. Wyrwij chwasta! Musisz uderzyć pierwszy, żeby nie dać się zaskoczyć. Stanowczo nie możesz zasnąć, bo cię dopadną.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Nie stwierdzono. Zawsze ktoś był szybszy. Ale na wszelki wypadek - tracisz kontrolę nad postacią.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": "Są psychotropy, które hamują rozwój tej choroby. Małe jednak szanse, że je znajdziesz: 25% szans. Pastylka albo czopek wiesz gdzie. Opakowanie zazwyczaj po 6 lub 12 sztuk leku, chociaż łatwiej dostać na sztuki."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 21,
+        "sourceId": "DIS_PARANOIA",
+        "importWarnings": [
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "diseb844fef13777",
+    "name": "Krótkowzroczność autoimmunologiczna",
+    "type": "disease",
+    "img": "icons/svg/poison.svg",
+    "system": {
+      "sourceCode": "DIS_MYOPIA",
+      "description": "Jakby mało było, że chce cię zabić wszystko co biegnie, człapie czy pełznie po pustyni, to do tej listy dodać możesz teraz własny organizm. Pech chciał że twojemu systemowi immunologicznemu z jakiegoś powodu nie spodobały się twoje oczy - rozpoznaje je jako ciało obce i próbuje się ich pozbyć.",
+      "currentStage": "first",
+      "stages": {
+        "first": {
+          "summary": "",
+          "description": "W pewnej piosence śpiewali \"Life's a blur, I'm going somewhere, dunno where\", ale w twoim przypadku to nie metafora, to opis twoich objawów. Jakbyś tych swoich zaropiałych patrzał nie wycierał, powyżej 60 metrów nie wiesz czy to co widzisz przed sobą to drzewo, czy koleś celujący do ciebie z karabinu.",
+          "effect": ""
+        },
+        "second": {
+          "summary": "",
+          "description": "Stajesz się ślepy jak kret - z tą różnicą, że kret nie ma wielkich, czerownych napuchniętych, ropiejących oczu. Widzisz tylko na 30 metrów przed sobą.",
+          "effect": ""
+        },
+        "third": {
+          "summary": "",
+          "description": "Twoje oczy przybierają kolor i konsystencję zsiadłego mleka. Trwale tracisz 1d6 punktów Percepcji. Do póki nie wyleczysz się do poprzedniego poziomu, stajesz się kompletnie ślepy.",
+          "effect": ""
+        },
+        "terminal": {
+          "summary": "",
+          "description": "Twoje oczy przybierają kolor i konsystencję zgniłych śliwek. Jeżeli nie masz w zasięgu słuchu (bo o wzroku możesz zapomnieć) porządnej kliniki, zakażenie rozprzestrzenia się do mózgu. Umierasz w drgawkach pieniąc z ust.",
+          "effect": ""
+        }
+      },
+      "medicationDescription": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "DISEASE",
+        "sourceRow": 22,
+        "sourceId": "DIS_MYOPIA",
+        "importWarnings": [
+          "Brak opisu leczenia w źródłowej zakładce DISEASE.",
+          "Brak technicznych kodów efektów etapów; zachowano opisowe zasady."
+        ]
+      }
+    }
+  }
+]

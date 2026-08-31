@@ -200,3 +200,15 @@
 - Zakładka `ATTACK` definiuje symbole rodzajów ataku i manewrów wraz z opisami.
 - Na obecnym etapie dane te służą do wyświetlania zrozumiałych nazw na kartach.
 - Samo zapisanie słowników nie uruchamia jeszcze mechaniki walki ani automatycznego zadawania ran.
+
+## Choroby i leki
+
+- Choroba jest Itemem typu `disease`, a lek Itemem typu `medicine`.
+- Compendia `Neuroshima: Choroby` i `Neuroshima: Leki` są synchronizowane odpowiednio z zakładkami `DISEASE` i `MEDS`.
+- Choroba przechowuje opis ogólny, trzy etapy, stan terminalny oraz opis leczenia.
+- Kopia choroby osadzona w Actorze ma własny aktualny etap. Zmiana etapu nie modyfikuje wpisu wzorcowego w Compendium.
+- Dla każdego etapu zachowujemy osobno krótkie podsumowanie zasad, opis fabularny i surowy kod efektu.
+- Kody efektów chorób i leków nie są jeszcze wykonywane automatycznie. Arkusz zawiera je tylko w części rekordów, a ich składnia nie jest jednolita.
+- Lek przechowuje kod powiązanej choroby, wielkość opakowania, aktualną liczbę dawek, cenę, dostępność, opis i czas działania.
+- Trzy leki ogólne nie są związane z żadną konkretną chorobą. Jest to prawidłowy stan danych, a nie błąd importu.
+- Użycie leku na karcie postaci zmniejsza liczbę dawek o jeden, lecz opisane działanie nadal rozstrzyga gracz lub MG.

@@ -2,7 +2,7 @@
   "id": "neuroshima",
   "title": "Neuroshima",
   "description": "System Neuroshima RPG dla Foundry Virtual Tabletop.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "compatibility": {
     "minimum": 14,
     "verified": 14
@@ -24,7 +24,9 @@
       "origin": {},
       "profession": {},
       "specialization": {},
-      "meleeWeapon": {}
+      "meleeWeapon": {},
+      "disease": {},
+      "medicine": {}
     }
   }
 }
