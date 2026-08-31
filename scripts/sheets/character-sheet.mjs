@@ -9,6 +9,7 @@ import {
   prepareDiseaseCatalog,
   prepareMedicinesByDisease
 } from "../catalogs/health-reference.mjs";
+import { rollNeuroshimaInitiative } from "../combat/initiative.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -158,6 +159,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // posiadającego atrybut data-action="rollAttribute".
       rollAttribute: this.#onRollAttribute,
       rollSkill: this.#onRollSkill,
+      rollInitiative: this.#onRollInitiative,
       saveActorName: this.#onSaveActorName,
 
       // Każda rana jest osobnym Itemem osadzonym w postaci.
@@ -500,6 +502,23 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   static async #onRollSkill(event, target) {
     const skillKey = target.dataset.skill;
     await rollSkill(this.actor, skillKey);
+  }
+
+  static async #onRollInitiative() {
+    const activeCombat = game.combat;
+    const combatant = activeCombat?.combatants.find(
+      (candidate) => candidate.actor?.id === this.actor.id
+    );
+
+    if (combatant) {
+      await activeCombat.rollInitiative(combatant.id);
+      return;
+    }
+
+    await rollNeuroshimaInitiative(this.actor);
+    ui.notifications.info(
+      "Actor nie uczestniczy w aktywnej walce. Wynik zapisano tylko na czacie."
+    );
   }
 
   static async #onSaveActorName(event, target) {

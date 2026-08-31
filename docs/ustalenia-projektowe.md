@@ -130,6 +130,21 @@
 - Wyniki masy zachowują dokładność do `0,001 kg`, czyli jednego grama.
 - Jednostka wybrana przez użytkownika jest daną zapisywaną. Wartości przeliczone i sumy są polami wyliczanymi, których użytkownik nie edytuje ręcznie.
 
+## Inicjatywa
+
+- Inicjatywa jest pierwszym wdrażanym elementem mechaniki walki i korzysta z natywnego Combat Trackera Foundry.
+- Każdy uczestnik wykonuje przed rozpoczęciem walki otwarty test 3k20. Wyższa liczba Punktów Sukcesu oznacza wcześniejszą kolejność.
+- Domyślnym współczynnikiem jest Zręczność. W sytuacjach opisanych w podręczniku można zamiast niej wybrać Percepcję.
+- Gracz wybiera umiejętność broni, którą postać rozpoczyna walkę. Brak umiejętności lub umiejętność na poziomie 0 utrudnia test o jeden PT.
+- Inicjatywa jest testem poprzedzającym właściwą walkę, dlatego działa w niej Suwak umiejętności.
+- Pełny poziom wybranej umiejętności jest automatycznie rozdzielany pomiędzy dwie rozpatrywane kości tak, aby poprawić wynik testu otwartego.
+- Do wyniku może zostać dodany bonus do Inicjatywy wybranej broni ręcznej.
+- Przed rzutem można uwzględnić kary z ran i pancerza oraz wpisać dodatkowe procentowe utrudnienie albo ułatwienie.
+- Wynik, także ujemny w przypadku Punktów Porażki, jest zapisywany jako liczba Inicjatywy uczestnika. Dzięki temu Foundry może prawidłowo uporządkować również postacie, którym test się nie udał.
+- Przy identycznych wynikach system zgłasza remis. Remisujący wykonują ponowne rzuty albo rozstrzygają oddanie Inicjatywy poza automatyzacją.
+- Przycisk na karcie Actora zapisuje wynik w aktywnej walce, jeżeli Actor jest jej uczestnikiem. Poza walką publikuje wyłącznie wynik testu na czacie.
+- Segmenty, deklarowanie akcji i pozostałe testy walki będą osobnym etapem. Serie i granaty pozostają odłożone.
+
 ## Rany i procentowe utrudnienia
 
 - Każda rana jest osobnym Itemem typu `injury` należącym do postaci.

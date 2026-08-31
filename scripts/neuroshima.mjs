@@ -19,6 +19,9 @@ import { NeuroshimaDiseaseSheet } from "./sheets/disease-sheet.mjs";
 import { NeuroshimaMedicineSheet } from "./sheets/medicine-sheet.mjs";
 import { NeuroshimaWeaponSheet } from "./sheets/weapon-sheet.mjs";
 import {
+  NeuroshimaCombat
+} from "./combat/initiative.mjs";
+import {
   initializeCatalogCompendia
 } from "./compendia/catalog-compendia.mjs";
 
@@ -38,6 +41,11 @@ Hooks.once("init", () => {
 
   // Łączymy typ Actora "character" z modelem danych postaci Neuroshimy.
   CONFIG.Actor.dataModels.character = NeuroshimaCharacterDataModel;
+
+  // Combat Tracker używa otwartego testu inicjatywy Neuroshimy zamiast
+  // standardowego pojedynczego rzutu opartego na formule.
+  CONFIG.Combat.documentClass = NeuroshimaCombat;
+  CONFIG.Combat.initiative.decimals = 0;
 
   // Łączymy typ Itemu "equipment" z modelem danych zwykłego ekwipunku.
   CONFIG.Item.dataModels.equipment = NeuroshimaEquipmentDataModel;
