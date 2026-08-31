@@ -85,10 +85,33 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     }
   };
 
-  // PARTS wskazuje plik Handlebars odpowiedzialny za zawartość okna karty.
+  // TABS jest natywną konfiguracją zakładek ApplicationV2 w Foundry 14.
+  // Foundry zapamiętuje aktywną zakładkę podczas ponownego renderowania karty.
+  static TABS = {
+    sheet: {
+      tabs: [
+        { id: "main", icon: "fa-solid fa-user", label: "Główne" },
+        { id: "skills", icon: "fa-solid fa-list-check", label: "Umiejętności" },
+        { id: "inventory", icon: "fa-solid fa-box-open", label: "Ekwipunek" }
+      ],
+      initial: "main"
+    }
+  };
+
+  // Każda zakładka ma własny, mniejszy szablon Handlebars. Zmiana układu
+  // ekwipunku nie wymaga dzięki temu edycji pól umiejętności albo ran.
   static PARTS = {
+    navigation: {
+      template: "templates/generic/tab-navigation.hbs"
+    },
     main: {
-      template: "systems/neuroshima/templates/actor/character-sheet.hbs"
+      template: "systems/neuroshima/templates/actor/parts/main-tab.hbs"
+    },
+    skills: {
+      template: "systems/neuroshima/templates/actor/parts/skills-tab.hbs"
+    },
+    inventory: {
+      template: "systems/neuroshima/templates/actor/parts/inventory-tab.hbs"
     }
   };
 

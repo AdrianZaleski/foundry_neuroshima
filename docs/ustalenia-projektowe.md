@@ -144,6 +144,15 @@
 - Przykład: test Przeciętny zaczyna od `0%`. Łączna kara `74%` daje PT Bardzo trudny.
 - Dopiero później stosujemy Suwak umiejętności oraz wpływ naturalnych wyników `1` i `20`.
 
+## Struktura karty postaci
+
+- Karta korzysta z natywnych zakładek ApplicationV2 dostępnych w Foundry 14.
+- Zakładka `Główne` zawiera nazwę, współczynniki, rany oraz utrudnienia.
+- Zakładka `Umiejętności` zawiera wszystkie standardowe i własne umiejętności.
+- Zakładka `Ekwipunek` zawiera obciążenie, broń, amunicję oraz zwykłe przedmioty.
+- Każda zakładka ma osobny plik Handlebars w `templates/actor/parts`.
+- Podział dotyczy wyłącznie sposobu wyświetlania. Nie zmienia zapisanych danych Actora ani Itemów.
+
 ## Katalog broni dystansowej i amunicji
 
 - Źródłowe katalogi JSON zawierają dane z zakładek `RANGED` i `AMMO` arkusza referencyjnego.

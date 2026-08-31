@@ -1,0 +1,144 @@
+<section class="tab {{tabs.inventory.cssClass}}" data-group="sheet" data-tab="inventory" style="height: calc(100% - 42px); overflow-y: auto; padding-right: 6px;">
+  <h2>Obciążenie</h2>
+
+  {{!-- Ta wartość jest sumą masy ekwipunku, broni oraz zapasów amunicji. --}}
+  <p><strong>Łączna masa noszonych przedmiotów:</strong> {{totalCarriedWeight}} kg</p>
+
+  <h2>Broń</h2>
+
+  {{!-- Każda broń jest osobnym Itemem należącym do tej postaci. --}}
+  <div class="weapons">
+    <button type="button" data-action="createWeapon">Dodaj broń</button>
+
+    <p><strong>Masa broni:</strong> {{totalWeaponWeight}} kg</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Broń</th>
+          <th>Magazynek</th>
+          <th>Obrażenia</th>
+          <th>Zasięg i przebicie</th>
+          <th>Masa</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each weaponItems}}
+          <tr>
+            <td>
+              <strong>{{this.name}}</strong><br>
+              <small>{{this.weaponClassName}}</small><br>
+              <small>{{this.attackTypeNames}}</small>
+            </td>
+            <td>
+              {{this.currentAmmunition}} / {{this.magazineCapacity}}<br>
+              <small>{{this.ammunitionName}}</small>
+            </td>
+            <td>{{this.damageName}}</td>
+            <td>
+              {{this.range}} m<br>
+              <small>PP: {{this.armorPenetration}}</small>
+            </td>
+            <td>{{this.weight}} kg</td>
+            <td>
+              <button type="button" data-action="reloadWeapon" data-item-id="{{this.id}}">Przeładuj</button>
+              <button type="button" data-action="editWeapon" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteWeapon" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="6">Postać nie posiada jeszcze żadnej broni.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Amunicja</h2>
+
+  {{!-- Zapas amunicji nie obejmuje nabojów wpisanych w magazynkach broni. --}}
+  <div class="ammunition">
+    <button type="button" data-action="createAmmunition">Dodaj amunicję</button>
+
+    <p><strong>Masa amunicji:</strong> {{totalAmmunitionWeight}} kg</p>
+    <p><strong>Łączna wartość amunicji:</strong> {{totalAmmunitionPrice}}</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Amunicja</th>
+          <th>Symbol kompatybilności</th>
+          <th>Liczba</th>
+          <th>Wartość</th>
+          <th>Masa</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each ammunitionItems}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>
+              {{this.ammunitionCompatibilityName}}<br>
+              <small>{{this.ammunitionSymbol}}</small>
+            </td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.totalPrice}}</td>
+            <td>{{this.totalWeight}} kg</td>
+            <td>
+              <button type="button" data-action="editAmmunition" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteAmmunition" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="6">Postać nie posiada jeszcze żadnej amunicji.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Ekwipunek</h2>
+
+  {{!-- Przedmioty na tej liście są Itemami osadzonymi w konkretnej postaci. --}}
+  <div class="equipment">
+    <button type="button" data-action="createEquipment">Dodaj przedmiot</button>
+
+    <p><strong>Masa zwykłego ekwipunku:</strong> {{totalEquipmentWeight}} kg</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nazwa</th>
+          <th>Liczba</th>
+          <th>Masa sztuki</th>
+          <th>Łączna masa</th>
+          <th>Cena</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each equipmentItems}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.unitWeight}} {{this.weightUnit}}</td>
+            <td>{{this.totalWeight}} kg</td>
+            <td>{{this.price}}</td>
+            <td>
+              <button type="button" data-action="editEquipment" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteEquipment" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="6">Postać nie posiada jeszcze żadnego ekwipunku.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section>
