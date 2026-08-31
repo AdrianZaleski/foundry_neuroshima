@@ -1,11 +1,13 @@
 import { NeuroshimaCharacterDataModel } from "./data-models/character.mjs";
 import { NeuroshimaAmmunitionDataModel } from "./data-models/ammunition.mjs";
 import { NeuroshimaEquipmentDataModel } from "./data-models/equipment.mjs";
+import { NeuroshimaFeatureDataModel } from "./data-models/feature.mjs";
 import { NeuroshimaInjuryDataModel } from "./data-models/injury.mjs";
 import { NeuroshimaWeaponDataModel } from "./data-models/weapon.mjs";
 import { NeuroshimaCharacterSheet } from "./sheets/character-sheet.mjs";
 import { NeuroshimaAmmunitionSheet } from "./sheets/ammunition-sheet.mjs";
 import { NeuroshimaEquipmentSheet } from "./sheets/equipment-sheet.mjs";
+import { NeuroshimaFeatureSheet } from "./sheets/feature-sheet.mjs";
 import { NeuroshimaInjurySheet } from "./sheets/injury-sheet.mjs";
 import { NeuroshimaWeaponSheet } from "./sheets/weapon-sheet.mjs";
 import {
@@ -43,6 +45,11 @@ Hooks.once("init", () => {
   // Rana jest Itemem należącym do postaci. Dzięki temu każda rana może mieć
   // własną lokację, rodzaj, karę procentową oraz opis skutków.
   CONFIG.Item.dataModels.injury = NeuroshimaInjuryDataModel;
+
+  // Sztuczki i cechy mają tę samą strukturę danych, lecz pozostają osobnymi
+  // typami Itemu, aby można je było niezależnie filtrować w Compendium.
+  CONFIG.Item.dataModels.perk = NeuroshimaFeatureDataModel;
+  CONFIG.Item.dataModels.trait = NeuroshimaFeatureDataModel;
 
   // Rejestrujemy własny wygląd karty i ustawiamy go jako domyślny
   // dla wszystkich Actorów typu "character".
@@ -100,18 +107,35 @@ Hooks.once("init", () => {
       makeDefault: true
     }
   );
+
+  // Jedna karta obsługuje oba rodzaje zdolności postaci. Nazwa sekcji jest
+  // dobierana na podstawie faktycznego typu otwartego Itemu.
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.Item,
+    game.system.id,
+    NeuroshimaFeatureSheet,
+    {
+      types: ["perk", "trait"],
+      makeDefault: true
+    }
+  );
 });
 
-// Kod źródłowy identyfikuje dokładny wariant broni albo amunicji.
+// Kod źródłowy identyfikuje dokładny wariant broni, amunicji albo zdolności.
 // Dla Itemów tworzonych ręcznie generujemy go automatycznie, aby użytkownik
 // nie musiał wymyślać technicznego i unikalnego oznaczenia.
 Hooks.on("preCreateItem", (item) => {
-  if (!["weapon", "ammunition"].includes(item.type)) return;
+  if (!["weapon", "ammunition", "perk", "trait"].includes(item.type)) return;
   if (item.system.sourceCode) return;
 
-  const codePrefix = item.type === "weapon" ? "CUSTOM_WEAPON" : "CUSTOM_AMMO";
+  const codePrefixByType = {
+    weapon: "CUSTOM_WEAPON",
+    ammunition: "CUSTOM_AMMO",
+    perk: "CUSTOM_PERK",
+    trait: "CUSTOM_TRAIT"
+  };
   item.updateSource({
-    "system.sourceCode": `${codePrefix}_${foundry.utils.randomID()}`
+    "system.sourceCode": `${codePrefixByType[item.type]}_${foundry.utils.randomID()}`
   });
 });
 

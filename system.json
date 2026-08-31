@@ -18,7 +18,9 @@
       "equipment": {},
       "weapon": {},
       "ammunition": {},
-      "injury": {}
+      "injury": {},
+      "perk": {},
+      "trait": {}
     }
   }
 }

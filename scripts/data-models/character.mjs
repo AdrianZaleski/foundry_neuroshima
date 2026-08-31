@@ -42,6 +42,39 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
     });
 
     return {
+      // Ksywa postaci pozostaje standardową nazwą dokumentu Actor. Pozostałe
+      // informacje osobowe zapisujemy w modelu systemu, aby można je było
+      // niezależnie wyświetlać i wykorzystywać w przyszłych automatyzacjach.
+      identity: new SchemaField({
+        firstName: new StringField({ required: true, nullable: false, initial: "" }),
+        lastName: new StringField({ required: true, nullable: false, initial: "" })
+      }),
+
+      // Na pierwszym etapie pola pochodzenia, profesji i specjalizacji są
+      // tekstowe. Później będzie można zasilać je katalogami z Compendium bez
+      // utraty możliwości wpisania własnego wariantu postaci.
+      background: new SchemaField({
+        origin: new StringField({ required: true, nullable: false, initial: "" }),
+        profession: new StringField({ required: true, nullable: false, initial: "" }),
+        specialization: new StringField({ required: true, nullable: false, initial: "" })
+      }),
+
+      development: new SchemaField({
+        experiencePoints: new NumberField({
+          required: true,
+          nullable: false,
+          integer: true,
+          min: 0,
+          initial: 0
+        })
+      }),
+
+      notes: new SchemaField({
+        character: new StringField({ required: true, nullable: false, initial: "" }),
+        reputation: new StringField({ required: true, nullable: false, initial: "" }),
+        contacts: new StringField({ required: true, nullable: false, initial: "" })
+      }),
+
       attributes: new SchemaField({
         zrecznosc: createAttributeSchema(),
         percepcja: createAttributeSchema(),

@@ -1,0 +1,120 @@
+<section class="tab {{tabs.details.cssClass}}" data-group="sheet" data-tab="details" style="height: calc(100% - 42px); overflow-y: auto; padding-right: 6px;">
+  <h2>Dane postaci</h2>
+
+  {{!-- Ksywa jest nazwą dokumentu Actor i dzięki temu pozostaje widoczna także poza kartą. --}}
+  <label>
+    Ksywa
+    <input type="text" name="name" value="{{actor.name}}">
+  </label>
+
+  <label>
+    Imię
+    <input type="text" name="system.identity.firstName" value="{{system.identity.firstName}}">
+  </label>
+
+  <label>
+    Nazwisko
+    <input type="text" name="system.identity.lastName" value="{{system.identity.lastName}}">
+  </label>
+
+  <label>
+    Pochodzenie
+    <input type="text" name="system.background.origin" value="{{system.background.origin}}">
+  </label>
+
+  <label>
+    Profesja
+    <input type="text" name="system.background.profession" value="{{system.background.profession}}">
+  </label>
+
+  <label>
+    Specjalizacja
+    <input type="text" name="system.background.specialization" value="{{system.background.specialization}}">
+  </label>
+
+  <label>
+    Punkty Doświadczenia
+    <input type="number" name="system.development.experiencePoints" value="{{system.development.experiencePoints}}" min="0" step="1">
+  </label>
+
+  <h2>Sztuczki</h2>
+
+  <button type="button" data-action="createFeature" data-feature-type="perk">Dodaj sztuczkę</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nazwa</th>
+        <th>Wymagania</th>
+        <th>Działanie</th>
+        <th>Akcje</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each perkItems}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td>{{this.requirements}}</td>
+          <td>{{this.effects}}</td>
+          <td>
+            <button type="button" data-action="editFeature" data-item-id="{{this.id}}">Edytuj</button>
+            <button type="button" data-action="deleteFeature" data-item-id="{{this.id}}">Usuń</button>
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="4">Postać nie posiada jeszcze żadnych sztuczek.</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <h2>Cechy</h2>
+
+  <button type="button" data-action="createFeature" data-feature-type="trait">Dodaj cechę</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nazwa</th>
+        <th>Wymagania</th>
+        <th>Działanie</th>
+        <th>Akcje</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each traitItems}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td>{{this.requirements}}</td>
+          <td>{{this.effects}}</td>
+          <td>
+            <button type="button" data-action="editFeature" data-item-id="{{this.id}}">Edytuj</button>
+            <button type="button" data-action="deleteFeature" data-item-id="{{this.id}}">Usuń</button>
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="4">Postać nie posiada jeszcze żadnych cech.</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <h2>Notatki</h2>
+
+  <label>
+    Opis i notatki postaci
+    <textarea name="system.notes.character" rows="8">{{system.notes.character}}</textarea>
+  </label>
+
+  <label>
+    Reputacja
+    <textarea name="system.notes.reputation" rows="6">{{system.notes.reputation}}</textarea>
+  </label>
+
+  <label>
+    Przyjaciele, znajomi i kontakty
+    <textarea name="system.notes.contacts" rows="6">{{system.notes.contacts}}</textarea>
+  </label>
+</section>

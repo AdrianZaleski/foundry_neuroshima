@@ -58,6 +58,12 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       editInjury: this.#onEditInjury,
       deleteInjury: this.#onDeleteInjury,
 
+      // Sztuczki i cechy korzystają ze wspólnej obsługi, a ich dokładny typ
+      // jest przekazywany przez przycisk tworzenia.
+      createFeature: this.#onCreateFeature,
+      editFeature: this.#onEditFeature,
+      deleteFeature: this.#onDeleteFeature,
+
       // Te trzy akcje obsługują przedmioty zapisane wewnątrz konkretnej postaci.
       createEquipment: this.#onCreateEquipment,
       editEquipment: this.#onEditEquipment,
@@ -91,6 +97,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     sheet: {
       tabs: [
         { id: "main", icon: "fa-solid fa-user", label: "Główne" },
+        { id: "details", icon: "fa-solid fa-address-card", label: "Postać" },
         { id: "skills", icon: "fa-solid fa-list-check", label: "Umiejętności" },
         { id: "inventory", icon: "fa-solid fa-box-open", label: "Ekwipunek" }
       ],
@@ -106,6 +113,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     },
     main: {
       template: "systems/neuroshima/templates/actor/parts/main-tab.hbs"
+    },
+    details: {
+      template: "systems/neuroshima/templates/actor/parts/details-tab.hbs"
     },
     skills: {
       template: "systems/neuroshima/templates/actor/parts/skills-tab.hbs"
@@ -155,6 +165,24 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       (currentSum, injury) => currentSum + injury.damageValue,
       0
     );
+
+    // Cechy i sztuczki są osadzonymi Itemami. Przygotowujemy dwie listy,
+    // aby karta mogła pokazać je osobno mimo wspólnego modelu danych.
+    const prepareFeatureItem = (item) => ({
+      id: item.id,
+      name: item.name,
+      requirements: item.system.requirements,
+      effects: item.system.effects,
+      description: item.system.description
+    });
+
+    context.perkItems = this.actor.items
+      .filter((item) => item.type === "perk")
+      .map(prepareFeatureItem);
+
+    context.traitItems = this.actor.items
+      .filter((item) => item.type === "trait")
+      .map(prepareFeatureItem);
 
     // Actor może posiadać różne typy Itemów. Ta lista zawiera wyłącznie
     // zwykły ekwipunek; broń przygotowujemy osobno poniżej.
@@ -290,6 +318,64 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         title: "Usuwanie rany"
       },
       content: `<p>Czy na pewno usunąć ranę <strong>${safeInjuryName}</strong>?</p>`,
+      modal: true
+    });
+
+    if (!deletionConfirmed) return;
+
+    await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+  }
+
+  static async #onCreateFeature(event, target) {
+    const featureType = target.dataset.featureType;
+    const featureTypeNames = {
+      perk: "Nowa sztuczka",
+      trait: "Nowa cecha"
+    };
+
+    if (!featureTypeNames[featureType]) {
+      ui.notifications.warn("Nieznany rodzaj zdolności postaci.");
+      return;
+    }
+
+    const [createdFeature] = await this.actor.createEmbeddedDocuments("Item", [
+      {
+        name: featureTypeNames[featureType],
+        type: featureType
+      }
+    ]);
+
+    await createdFeature.sheet.render({ force: true });
+  }
+
+  static async #onEditFeature(event, target) {
+    const itemId = target.dataset.itemId;
+    const featureItem = this.actor.items.get(itemId);
+
+    if (!featureItem || !["perk", "trait"].includes(featureItem.type)) {
+      ui.notifications.warn("Nie znaleziono tej sztuczki lub cechy na karcie postaci.");
+      return;
+    }
+
+    await featureItem.sheet.render({ force: true });
+  }
+
+  static async #onDeleteFeature(event, target) {
+    const itemId = target.dataset.itemId;
+    const featureItem = this.actor.items.get(itemId);
+
+    if (!featureItem || !["perk", "trait"].includes(featureItem.type)) {
+      ui.notifications.warn("Nie znaleziono tej sztuczki lub cechy na karcie postaci.");
+      return;
+    }
+
+    const safeFeatureName = foundry.utils.escapeHTML(featureItem.name);
+    const featureTypeName = featureItem.type === "trait" ? "cechę" : "sztuczkę";
+    const deletionConfirmed = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: "Usuwanie zdolności"
+      },
+      content: `<p>Czy na pewno usunąć ${featureTypeName} <strong>${safeFeatureName}</strong>?</p>`,
       modal: true
     });
 

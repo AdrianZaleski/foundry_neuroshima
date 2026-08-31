@@ -1,0 +1,33 @@
+<section class="neuroshima-feature-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header>
+    <label>
+      Nazwa
+      <input type="text" name="name" value="{{item.name}}">
+    </label>
+  </header>
+
+  <h2>{{featureTypeName}}</h2>
+
+  <label>
+    Zestaw zasad
+    <input type="text" name="system.ruleset" value="{{system.ruleset}}">
+  </label>
+
+  <label>
+    Wymagania
+    <textarea name="system.requirements" rows="3">{{system.requirements}}</textarea>
+  </label>
+
+  <label>
+    Działanie
+    <textarea name="system.effects" rows="7">{{system.effects}}</textarea>
+  </label>
+
+  <label>
+    Opis
+    <textarea name="system.description" rows="7">{{system.description}}</textarea>
+  </label>
+
+  {{!-- Kod źródłowy jest widoczny diagnostycznie, lecz powstaje automatycznie. --}}
+  <p><small>Kod źródłowy: {{system.sourceCode}}</small></p>
+</section>

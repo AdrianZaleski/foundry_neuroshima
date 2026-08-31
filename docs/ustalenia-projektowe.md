@@ -148,10 +148,21 @@
 
 - Karta korzysta z natywnych zakładek ApplicationV2 dostępnych w Foundry 14.
 - Zakładka `Główne` zawiera nazwę, współczynniki, rany oraz utrudnienia.
+- Zakładka `Postać` zawiera dane osobowe, pochodzenie, profesję, specjalizację, Punkty Doświadczenia, sztuczki, cechy oraz notatki.
 - Zakładka `Umiejętności` zawiera wszystkie standardowe i własne umiejętności.
 - Zakładka `Ekwipunek` zawiera obciążenie, broń, amunicję oraz zwykłe przedmioty.
 - Każda zakładka ma osobny plik Handlebars w `templates/actor/parts`.
 - Podział dotyczy wyłącznie sposobu wyświetlania. Nie zmienia zapisanych danych Actora ani Itemów.
+
+## Dane osobowe, sztuczki i cechy
+
+- Ksywa postaci jest standardową nazwą dokumentu Actor w Foundry.
+- Imię, nazwisko, pochodzenie, profesja, specjalizacja i Punkty Doświadczenia są zapisywane bezpośrednio w danych systemowych Actora.
+- Pochodzenie, profesja i specjalizacja są obecnie polami tekstowymi, dzięki czemu można wpisać wariant spoza katalogu.
+- Opis postaci, reputacja oraz przyjaciele i kontakty są osobnymi polami notatek Actora.
+- Sztuczki są osadzonymi Itemami typu `perk`, a cechy osadzonymi Itemami typu `trait`.
+- Oba typy korzystają ze wspólnego modelu obejmującego kod źródłowy, zestaw zasad, wymagania, działanie i opis.
+- Rozdzielenie typów umożliwia przygotowanie osobnych Compendiów na podstawie zakładek `PERK` i `TRAIT` arkusza referencyjnego.
 
 ## Katalog broni dystansowej i amunicji
 
