@@ -4,18 +4,32 @@ const catalogCompendiumDefinitions = [
     // dostał nowe wpisy zamiast drugiego, zduplikowanego Compendium.
     name: "neuroshima-weapons-sample",
     label: "Neuroshima: Broń dystansowa",
+    itemType: "weapon",
     catalogFile: "packs/catalogs/weapons.json"
   },
   {
     name: "neuroshima-ammunition-sample",
     label: "Neuroshima: Amunicja",
+    itemType: "ammunition",
     catalogFile: "packs/catalogs/ammunition.json"
+  },
+  {
+    name: "neuroshima-perks",
+    label: "Neuroshima: Sztuczki",
+    itemType: "perk",
+    catalogFile: "packs/catalogs/perks.json"
+  },
+  {
+    name: "neuroshima-traits",
+    label: "Neuroshima: Cechy",
+    itemType: "trait",
+    catalogFile: "packs/catalogs/traits.json"
   }
 ];
 
 // Zwiększamy numer po zmianie danych katalogowych. MG wykona wtedy jednorazową
 // synchronizację istniejących Kompendiów ze źródłami JSON w repozytorium.
-export const catalogRevision = 2;
+export const catalogRevision = 3;
 
 // Katalog jest tablicą kompletnych dokumentów Item. Pobieramy go przez serwer
 // Foundry jednym żądaniem zamiast odczytywać setki małych plików osobno.
@@ -106,6 +120,33 @@ async function synchronizeCompendium(compendium, definition, updateExistingDocum
 export async function initializeCatalogCompendia() {
   // Tylko MG może tworzyć Compendia i zapisywać w nich dokumenty.
   if (!game.user.isGM) return;
+
+  // Dozwolone podtypy dokumentów są wczytywane przez serwer z system.json.
+  // Po dodaniu nowego typu samo odświeżenie przeglądarki przeładowuje skrypty,
+  // ale nie manifest serwera. Zatrzymujemy wtedy import i prosimy o pełny
+  // restart Foundry zamiast generować serię błędów walidacji dokumentów.
+  const configuredItemTypes = game.documentTypes?.Item;
+  const availableItemTypes = new Set(
+    Array.isArray(configuredItemTypes)
+      ? configuredItemTypes
+      : Object.keys(configuredItemTypes ?? game.system.documentTypes?.Item ?? {})
+  );
+  const missingItemTypes = [...new Set(
+    catalogCompendiumDefinitions.map((definition) => definition.itemType)
+  )].filter((itemType) => !availableItemTypes.has(itemType));
+
+  if (missingItemTypes.length > 0) {
+    const missingTypesDescription = missingItemTypes.join(", ");
+    console.error(
+      `Neuroshima | Serwer nie wczytał typów Item: ${missingTypesDescription}. `
+      + "Wymagane jest pełne ponowne uruchomienie Foundry."
+    );
+    ui.notifications.error(
+      "Neuroshima: dodano nowe typy przedmiotów. Zamknij i uruchom ponownie "
+      + "serwer Foundry, a następnie otwórz świat ponownie."
+    );
+    return;
+  }
 
   try {
     let createdDocumentCount = 0;

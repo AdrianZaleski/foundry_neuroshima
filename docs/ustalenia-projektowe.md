@@ -163,6 +163,10 @@
 - Sztuczki są osadzonymi Itemami typu `perk`, a cechy osadzonymi Itemami typu `trait`.
 - Oba typy korzystają ze wspólnego modelu obejmującego kod źródłowy, zestaw zasad, wymagania, działanie i opis.
 - Rozdzielenie typów umożliwia przygotowanie osobnych Compendiów na podstawie zakładek `PERK` i `TRAIT` arkusza referencyjnego.
+- Compendium `Neuroshima: Sztuczki` jest synchronizowane z katalogiem utworzonym z zakładki `PERK`.
+- Compendium `Neuroshima: Cechy` jest synchronizowane z katalogiem utworzonym z zakładki `TRAIT`.
+- Arkusz zawiera dwa różne rekordy cechy `TRAIT_REPUTACJA`, przeznaczone dla Medyka i Najemnika. W katalogu ich kody rozszerzamy o wymaganie profesji, zachowując oryginalny kod w metadanych importu.
+- Po dodaniu nowego podtypu dokumentu do `system.json` wymagany jest pełny restart serwera Foundry. Odświeżenie samej karty przeglądarki nie przeładowuje serwerowej listy dozwolonych typów.
 
 ## Katalog broni dystansowej i amunicji
 

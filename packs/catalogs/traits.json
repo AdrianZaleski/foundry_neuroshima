@@ -1,0 +1,3726 @@
+[
+  {
+    "_id": "t2068f98bb76c12b",
+    "name": "Urodzony morderca",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_URODZONYMORDERCA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_POLUDNIOWAHEGEMONIA",
+      "effects": "Wyrzuciliby cię z Areny za szczególne bestialstwo. Wybierz sobie dowolny pakiet Umiejętności Wojownika. Wszystkie Umiejętności z paczki posiadasz na poziomie +2.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 2,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tbd5befd1e7fbe1f",
+    "name": "Wiesz, zjadłem własnego psa",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WIESZZZJADLEMWLASNEGOPSA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_POLUDNIOWAHEGEMONIA",
+      "effects": "Budzisz grozę. Twój widok paraliżuje. Jeżeli udało cl się kogoś zastraszyć (test Morale przed walką), w walce z nim automatycznie wygrywasz Inicjatywę.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 3,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t014b169625638f7",
+    "name": "Zawzięty sukinkot",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZAWZIETYSUKINKOT",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_POLUDNIOWAHEGEMONIA",
+      "effects": "Mówią o tobie, że pociągniesz do grobu swojego zabójcę. To prawda. Jesteś uparty, twardy i nie popuszczasz. Raz w ciągu sesji, podczas wykonywania testu Umiejętności, zamiast wymaganego Współczynnika możesz użyć Charakteru.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 4,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t824239e8a7eb88c",
+    "name": "Fart",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_FART",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_VEGAS",
+      "effects": "No i z czego się cieszysz? Myślisz, że masz farta i właśnie dlatego jesteś bezpieczny, jak jajeczko pod dupcią mamusi kurki? A chcesz przetestować swoje szczęście? Popatrz, załaduję jedną kulę i zagramy w rosyjską ruletkę, chcesz? Co, tak... Poważnie chcesz? Jesteś chory.\n\nWiesz, zróbmy tak, że trzykrotnie podczas sesji możesz powtórzyć jeden nieudany rzut na dowolnej z trzech kości.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 5,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t5596d344202ebfe",
+    "name": "Hazardzista",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_HAZARDZISTA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_VEGAS",
+      "effects": "Zwinne paluszki to bogactwo naturalne. Znasz tysiąc oszustw. Miałeś okazję wyćwiczyć swoje dłonie i manipulujesz nimi lepiej niż japoński robot. Zaczynasz grę posiadając (gratisowo) wszystkie Umiejętności z pakietu Zdolności manualne na poziomie +2.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 6,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ta35a77bf1c40b7b",
+    "name": "Telepata",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_TELEPATA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_VEGAS",
+      "effects": "A ty telepata Jesteś? Skąd wiesz, że on blefuje? Co znaczy, że on nas nie zabije? Masz to gdzieś na piśmie? Chyba nie myślisz, że ci uwierzę!\n\nPoziom trudności wszystkich testów Blefu, Perswazji i Zastraszania w stosunku do ciebie jest zwiększany o Jeden w górę.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 7,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t064a3aff9ddf2e4",
+    "name": "Towarzysz",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_TOWARZYSZ",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_CZLOWIEKPUSTYNI",
+      "effects": "Ten skorpion to też twój przyjaciel? Wiesz, psa bym zrozumlał, może jakiegoś ptaka, czy coś. Ale skorpion? Wybierz sobie inne!\r\n\r\nMożesz wybrać Jedno zwierzę, które będzie twoim kompanem, będzie ci służyło, ale musisz je kochać. Zwleirzęciem może być dowolny ssak, ptak, gad lub inne stworzenie, za pozwoleniem MG. Od tej pory jest was dwóch. Gdybyś, na przykład miał tandem, moglibyście sobie pojeździć po pustyni, he, he...\r\n\r\nTakiemu towarzyszowi możesz wydawać kilka rodzajów poleceń, jak np. „bierz go\", „do nogi\", „cicho\", „leżeć\" itp.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 8,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t3b8857afec80e5e",
+    "name": "Jestem duchem pustyni",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_JESTEMDUCHEMPUSTYNI",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_CZLOWIEKPUSTYNI",
+      "effects": "Nauczyłeś się przydatnej sztuczki. W trudnych warunkach (wysoka temperatura lub brak pożywienia i wody), potrafisz pogrążyć się w katalepsjl i przeżyć. W stanie uśpienia leżysz nieruchomo i nie odbierasz żadnych bodźców zewnętrznych do czasu, aż warunki staną się bardziej sprzyjające. W ten sposób możesz przetrwać trzy miesiące.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 9,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "te5536f28509c968",
+    "name": "Polegam tyko na sobie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_POLEGAMTYLKONASOBIE",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_CZLOWIEKPUSTYNI",
+      "effects": "Jeżeli posługujesz się bronią własnej roboty (nle dotyczy bron: palnej), lub jakimkolwiek innym wykonanym przez siebie narzędziem, w każdym teście z jego wykorzystaniem możesz odjąć dwa oczka od rzutu na jednej z kostek.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 10,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tfdd00b4b17ea4e9",
+    "name": "Zalety klasycznego wykształcenia",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZALETYKLASYCZNEGOWYKSZTALCENIA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_NOWYJORK",
+      "effects": "Miałeś bardzo dobrych nauczycieli. Jeżeli na dalszym etapie tworzenia postaci wyblerzesz jako specjalizację Technika, otrzymujesz dodatkowe 10 punktów do wydania na Umiejętności oparte o Spryt.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 11,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t63bfd6363ed263e",
+    "name": "Wizja",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WIZJA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_NOWYJORK",
+      "effects": "Wiele lat odbudowywania NJ nauczyło clę, jak pracować w ruinach. Teraz możesz wjechać nawet do największej dziury, ale nie dostrzeżesz ruin i syfu, lecz plac budowy. Taki optymizm przydaje się w wielu sytuacjach. Jesteś w jakiejś zapadłej wiosce, którą w ciągu ośmiu godzin trzeba zamienić na twierdzę? Inni by płakali. Ty zabierasz się do roboty. MG Jest zobowiązany podpowiedzieć ci, jak najlepiej odbudować lub przebudować daną lokację według potrzeb (nocleg, dom, twierdza itp.).",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 12,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "te7364d5c5fe53c3",
+    "name": "Czas patriotów",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_CZASPATRIOTOW",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_NOWYJORK",
+      "effects": "Heroizm to twoje drugie imię. Raz na sesję, wykonując test Cholernie trudny możesz dodać wartość swojego Charakteru do testowanej Umiejętności. Krótko mówiąc, raz na sesję zdajesz automatycznie test, mam rację?",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 13,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t16e2a401682d7d5",
+    "name": "Człowiek zwany koniem",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_CZLOWIEKZWANYKONIEM",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_TEXAS",
+      "effects": "Jesteś silny jak wół, zwinny jak puma i twardy jak głaz. Kiedy idziesz po górach, powodujesz lawinę. Kiedy dosiadasz konia, to koń... Co Ja cl zresztą będę opowiadał? Wybierz pakiet Umiejętności Sprawność albo Jeździectwo. Poziom trudności każdego testu Umiejętności z wybranej grupy jest obniżany o Jeden poziom.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 14,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t8b9a414baf63952",
+    "name": "Doktor Quinn",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_DOKTORQUINN",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_TEXAS",
+      "effects": "Nigdy nie słyszałeś o doktor Quinn? Żona \"człowieka obrusa\", najsłynniejsza felczerka z Teksasu. Jeździ i leczy. Zresztą nie tylko ona! Każda kobieta pochodząca z Teksasu posiada wszystkie Umiejętności z pakietu Medycyna na poziomie 4. Każda, dasz wiarę?",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 15,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tc4a622daf3fc322",
+    "name": "Zdrowa okolica",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZDROWAOKOLICA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_TEXAS",
+      "effects": "Wychowałeś się w zdrowej. nieskażonej okolicy. Jesteś dobrze odżywiony i nie zostałeś napromieniowany. Na etapie tworzenia postaci nie musisz wykonywać rzutu określającego choroby, jakich się nabawiłeś. I jak? Teraz zastanów się, po co cl żona felczerka, panie Quinn...",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 16,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t975e161016e25d6",
+    "name": "Szlachetnie urodzony",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SZLACHETNIEURODZONY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_FEDERACJAAPALLACHOW",
+      "effects": "Urodziłeś się, by panować nad innymi. Wiesz jak traktować ludzi. Wybierz sobie jeden pakiet Umiejętności opartych o Charakter. Każdą z Umiejętności w pakiecie posiadasz na poziomie +2.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 17,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tf54d2dbbf6a81a3",
+    "name": "Pojedynkowicz",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_POJEDYNKOWICZ",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_FEDERACJAAPALLACHOW",
+      "effects": "Nigdy nie przepuściłeś okazji, by zmierzyć się z przeciwnlklem. Dawałeś wrogom nauczkę i sam się czegoś nauczyłeś. Najważniejsza nauka Jaką wyciągnąłeś to ta, iż każdego można pokonać. Podczas walki sam na sam ignorujesz pierwszą Lekką ranę lub Draśnięcie. Żaden przeciwnik nie zdoła cię przerazić, i dlatego właśnie jesteś twardzielem.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 18,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t28bf86f09799cef",
+    "name": "Wychuchana spluwa",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WYCHUCHANASPLUWA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_FEDERACJAAPALLACHOW",
+      "effects": "Wybierz jedną z broni palnych, którą nosisz przy sobie. Każdego wieczoru czyścisz ją, chuchasz, dmuchasz i w efekcie możesz dla niej zawsze powtórzyć rzut na efekt zacięcia się broni",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 19,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tfb762f23d95ecb3",
+    "name": "Człowiek-aligator",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_CZLOWIEKALIGATOR",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_MIAMI",
+      "effects": "Połowę życia spędziłeś w wodzie, na trzęsawiskach lub w tropiku. W czasie każdej walki, w której wykorzyrzystujesz do ukrycia się zbiornik wodny lub bagno (gdy jesteś zanurzony), osłona maskuje clę o dwa poziomy lepiej. Dodatkowo, w przypadku błyskawicznego ataku z zaskoczenia na terenie wodnym lub bagiennym, twoi przeciwnicy są automatycznie zaskoczeni.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 20,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tb12aead3cc20a87",
+    "name": "Ja Już swoje odchorowałem",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_JAJUZSWOJEODCHOROWALEM",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_MIAMI",
+      "effects": "Ja Już swoje odchorowałem\r\n\r\nŻyłeś w niezdrowej okolicy Miami I uodporniłeś się na wiele chorób i Jadów. Możesz powtórzyć każdy rzut odpornościowy przeciw chorobom l truciznom pochodzenia organicznego.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 21,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t8cd5e46ae047c11",
+    "name": "Wakabout",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WALKABOUT",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_MIAMI",
+      "effects": "Siedzisz sobie w knajpie i nagle postanawiasz iść na mały walkabout. Wychodzisz i przez mlesiąc włóczysz się po okolicy. Wracasz do knajpy, patrzysz, a twoje ziółka na stole wystygły Myślisz sobie - nie będę pił zimnych. I idziesz odwiedzić kumpla w Vegas.\n\nMożesz powtórzyć każdy test Kondycji. Zaczynasz ze Sztuczką „Dom na plecach\".",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 22,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tbfa25a1059df236",
+    "name": "Wszechstronność",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WSZECHSTRONNOSC",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_UNKNOWN",
+      "effects": "Złaziłeś już spory kawał świata. Aby przetrwać, uczyłeś slę wszystkiego po trochu. Wszystkie Umiejętności oparte na najwyższej z twoich cech, a których nie wykupiłeś, mają wartość 1. Znasz się nu wszystkim I tak naprawdę gówno umiesz, ot, moja opinia.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 23,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t9558d3616b8b268",
+    "name": "Wszechstronność do kwadratu",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WSZECHSTRONNOSCDOKWADRATU",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_UNKNOWN",
+      "effects": "Możesz wybrać dowolną z cech innych nacji. Dowolną. No, jeśli Jesteś facetem, to umówmy się. że zapomnisz o \"doktor Quinn\", OK?",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 24,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t3ec924aee4c1529",
+    "name": "Cholerny kaznodzieja",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_CHOLERNYKAZNODZIEJA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_SALTLAKECITY",
+      "effects": "Potrafisz walnąć taki monolog, że słuchacze nie wiedzą, co mają ze sobą zrobić. Jeżeli próbujesz przekonać kogoś do racji, w które sam wierzysz (sprawy wiary), w testach Perswazji odrzucasz kostkę, która najmniej ci odpowiada, i mówisz. że wypadało na niej tyle, co na innej. Trochę to skomplikowane, nie? Ale wiesz, sprawy wiary to trudny temat.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 25,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t31da164acb0c9ec",
+    "name": "Wierzę",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WIERZE",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_SALTLAKECITY",
+      "effects": "Chłopie, nie będę lazł pięćset metrów do tej głupiej stacji tylko dlatego, że przez lornetkę widzisz tam automat z Cola. On nie działa, to me ma sensu. Co? Co znaczy, że wierzysz, że działa?\r\n\r\nI co, chcesz, bym teraz tam poszedł? Bo ty wierzysz?! No bez jaj. To, że raz w ciągu sesji, w sytuacji zagrożenia. możesz powiedzieć MG \"wierzę\" i wtedy MG powinien dać ci szansę wykaraskanla się z sytuacji, nie oznacza. że da nam teraz tę Colę! Zrozum! Tylko w sytuacji zagrożenia! I w dodatku ostateczna decyzja należy do MG! A przecież wiesz, że on jest złośliwy! Nie da nam tej Colt, mówię ci...",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 26,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t7ceda4cd915877b",
+    "name": "Przed wojną wszystko było lepsze",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_PRZEDWOJNAWSZYSTKOBYLOLEPSZE",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_SALTLAKECITY",
+      "effects": "Przysłuchiwałeś się opowieściom doświadczonych wojowników i mądrych starców. Chłonąłeś historie o czasach sprzed wojny. Wszystkie testy Sprytu związane z wiedzą o czasach przed Apokalipsą mogą być dla ciebie co najwyżej Trudne. Co najwyżej, łapiesz? Mistrz Gry może sobie bełkotać o Bardzo Trudnym. o Cholernie trudnym... Wiesz co? Pokaż mu tą apkę, otwórz te okienko i daj mu to przeczytać \"Mistrzu Gry, do ciebie mówię. Ten facet, co dał cl teraz telefon, wie o czasach sprzed wojny wszystko. Łapiesz to? Więc nie smuć o Bardzo trudnym teście!\"",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 27,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tf77f827f3e25a60",
+    "name": "Coś ml tu śmierdzi",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_COSMITUSMIERDZI",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_MISSISIPI",
+      "effects": "Dorastałeś na terenach opanowanych przez mutków. Wyczuwasz ich inność, choćby nie wiem Jak się maskowali. Za każdym razem, gdy stajesz wobec osoby dotkniętej niewidocznymi mutacjami, MG powinien wykonać sekretny rzut na Percepcję (Trudny) l w razie powodzenia testu, poinformować clę, że czujesz się nieswojo. Rączki świerzbią, nie? Spluwa się gotuje...",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 28,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t2b1c31b984c5a30",
+    "name": "Chodźmy, na pewno juz utonął",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_CHODZMYNAPEWNOJUZUTONAL",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_MISSISIPI",
+      "effects": "Masz płuca jak miechy, Jesteś w stanie wytrzymać pod wodą dwa razy dłużej, niż przeciętny człowiek.\r\n\r\nTo znaczy ile? Pól minuty za każde 4 punkty Budowy. Właśnie tyle.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 29,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tf1e9aec31fd31b1",
+    "name": "Kwas w żyłach, chlor w płucach",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KWASWZYLACHCHLORWPLUCACH",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_MISSISIPI",
+      "effects": "Urodziłeś się i mieszkałeś przy Wielkiej Rzece. Jesteś tak przesiąknięty płynącą w niej trucizną, że żadna nowa franca Już w ciebie nie wejdzie. Możesz powtórzyć każdy rzut odpornościowy przeciw trującym chemikaliom l substancjom żrącym.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 30,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t40940172850bd21",
+    "name": "Na symulatorze to działało...",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_NASYMULATORZETODZIALALO",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_POSTERUNEK",
+      "effects": "Jak to spokojnie! Jak grałeś w to?! W co grałeś? Symulator?! O czym ty człowieku pieprzysz, strzelają do nas, nie rozumiesz?! Ja też przeszedłem służbę wojskową, w dodatku na froncie i jakoś nie jestem taki spokojny, Miałeś dostęp do komputerowych symulatorów pojazdów l pola walki? No popatrz, to po prostu wspaniale. Grałeś sobie w Quake, kiedy do mnie strzelali na froncie, tak? I każesz ml być spokojny?! I co, trochę się z nich nauczyłeś?! Możesz przerzucić jedną kostkę w testach Wozów bojowych, Maszyn Ciężkich i Komputerów? Super. To lepiej przerzucaj, bo mamy kłopoty!!!",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 31,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t919f45057cb5656",
+    "name": "Hi-Tech",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_HITECH",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_POSTERUNEK",
+      "effects": "Od maleńkości rosłeś w otoczeniu wytworów zaawansowanej technologii. Mikser do pomarańczy, czasem suszarka do włosów. Co więcej, było i radio a nawet jakiś wykrywacz ruchu. No dobra, koniec jaj. Posterunek to najlepiej wyposażony w sprzęt elektroniczny przyczółek ludzkości. W każdym teście związanym z obsługą urządzenia elektronicznego możesz przerzucić jedną z kostek, właśnie dlatego, że dawno temu za grzechotkę robił cl słoik z procesorami, a za łopatkę płyta główna.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 32,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t0ced32b2d2dfc07",
+    "name": "Moloch? Coś o nim słyszałem",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_MOLOCHCOSONIMSLYSZALEM",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_POSTERUNEK",
+      "effects": "Miałeś kontakt z Molochem i jego tworami. Znasz slangowe nazwy określające maszyny, potrafisz rozpoznawać je i wiesz, czego możesz się spodziewać po każdym z tworów Bestii. Każdy test związany z maszynami Molocha może być dla ciebie co najwyżej Bardzo Trudny.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 33,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tf9357045081255e",
+    "name": "JeślI ma silnik to ruszy",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_JESLIMASILNIKTORUSZY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_DETROIT",
+      "effects": "W czasie nie dłuższym niż 30 sekund jesteś w stanie uruchomić dowolny pojazd z silnikiem spalinowym, pod warunkiem. że Jest on zdatny do Jazdy, i o Ile ma paliwo. Jeśil MG uważa. że wóz może Jeździć. ty go uruchomisz. Tak to działa.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 34,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t0c15c7c291007aa",
+    "name": "Siódme poty",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SIODMEPOTY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_DETROIT",
+      "effects": "Jeżeli prowadzisz dowolny pojazd z silnikiem spalinowym, jesteś w stanie wycisnąć z niego 25% ponad maksymalną prędkość, balansując na granicy zatarcia silnika, a nawet rozpadnlęcia się całej konstrukcji maszyny. Kiedy pojazd zatrzyma się, nie ruszy ponownie, aż do momentu naprawienia uszkodzeń (Bardzo Trudny Test Mechaniki).",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 35,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "te381c4bfa745546",
+    "name": "Ale jazda!",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ALEJAZDA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "ORIGIN_DETROIT",
+      "effects": "Lata spędzone na ulicach Detroit zrobiły swoje. Jeżeli strzelasz w ruchu z pędzącego pojazdu, wierzchowca. spadając itp... - nie doliczasz sobie żadnych utrudnień za strzał w ruchu.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 36,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tae59b03392f7074",
+    "name": "Smakuje jak arszenik",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SMAKUJEJAKARSZENIK",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_CHEMIK",
+      "effects": "Lata babrania się w toksycznych świństwach zrobiły swoje. Łykasz uran jak czekoladki, popijasz naftą. Nie zatrudnią cię w kopalni jako detektor gazu, bo jesteś odporny. Otrzymujesz modyfikator -30% w testach Kondycji na skażenie i radiację.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 37,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tac82f2c9ac6faf9",
+    "name": "Farmaceuta",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_FARMACEUTA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_CHEMIK",
+      "effects": "Jesteś Mesjaszem Nowej Ery. Potrafisz produkować środki błyskawicznego leczenia: Painkillery, Medpaki i Deadline. PT testów są odpowiednio: \nPainkiller - Trudny. \nMedpak - Bardzo Trudny \nDeadline - Cholernie trudny. \nMusisz dysponować laboratorium i składnikami. Produkcja jednej działki zajmie ci około 4h.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 38,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t27ca969c6dfc418",
+    "name": "Kwas i zasada",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KWASIZASADA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_CHEMIK",
+      "effects": "Patrzysz na czarną kałużę i mówisz: olej. Wąchasz i dodajesz: z domieszką benzyny. Zamaczasz palec i smakujesz – ołowiowa kiepskiej jakości. Chodzi o to, że potrafisz rozpoznać substancję po wyglądzie, zapachu i smaku. Proste i często spotykane chemikalia rozpoznajesz automatycznie, zaś te rzadsze za pomocą testu Chemii (pakiet Wiedza ogólna) o Poziomie Trudności ustalonym przez MG. Za każdy użyty zmysł (wzrok, zapach, smak) otrzymujesz w teście bonus +1 do Sprytu.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 39,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t706511b2fb04ddc",
+    "name": "Rozcieńczanie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ROZCIENCZANIE",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_CHEMIK",
+      "effects": "Byłby z ciebie świetny handlarz prochami albo paliwem. Wyciągasz 10% z dowolnego specyfiku, dodajesz szczyn, kredy, pieprzu lub aspiryny i nawet nałogowiec nie zauważy. Żeby rozpoznać, że substancja została rozcieńczona, trzeba zdaćtest Percepcji: Cholernie trudny, jeśli wyjąłeś 10%. Bardzo trudny, jeśli przywłaszczyłeś sobie 20% lub Trudny, gdy zabrałeś aż 30%. Poza tym substancja odpowiednio słabiej działa (słabsza benzyna, narkotyki, alkohol, leki, proch itd.) lub powoduje niechciane skutki uboczne (dolegliwości, szybsze zużycie silnika itd.)",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 40,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t57a7ae4ebe9e51e",
+    "name": "Jeden z nich",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_JEDENZNICH",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_GANGER",
+      "effects": "Posiadasz widoczny symbol przynależności do siejącego grozę gangu. Nikt, kto nie ma jaj ze stali ci nie podskoczy. Byle kto nie będzie ci pyskować, ani się z tobą sprzeczać, nie odważą się spojrzeć ci w oczy, będą też bali się ciebie tak po prostu olać. ALE. Ale ci z jajami ze stali mogą przerobić cię na pasztet - za to tylko, że jesteś jednym z nich. Dodatkowe 100 gambli na znajomości w Gangach.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 41,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t34211582dd27d3f",
+    "name": "Odważny czy głupi?",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ODWAZNYCZYGLUPI",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_GANGER",
+      "effects": "Nikt nie jest w stanie cię zastraszyć, przynajmniej do czasu, aż cię poważnie nie zrani. Po prostu nie jesteś w stanie uwierzyć, że ktoś odważyłby ci się podskoczyć. \nMasz jeden automatyczny sukces we wszystkich testach Zastraszania i Morale.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 42,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tc3a771d3d6b1e45",
+    "name": "Dwóch na jednego",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_DWOCHNAJEDNEGO",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_GANGER",
+      "effects": "Jesteś specem od kopania jednego frajera wespół z kolegami. Świetnie się uzupełniacie. Gdy walczysz w grupie, możecie atakować jednego przeciwnika nawet w sześciu (a nie jak normalnie – w pięciu maksymalnie). Poza tym walcząc w przewadze liczebnej możesz przerzucić jedną kość w każdej turze walki.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 43,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ta1cfd23518186b1",
+    "name": "Po prostu killer",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_POPROSTUKILLER",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_GANGER",
+      "effects": "Rwiesz się do bitki jak nikt inny – masz bonus +1 do Zręczności w testach walki wręcz. Ale jeśli trafisz na prawdziwego twardziela, ten szybko może zgasić twój zapał. Gdy tylko zostaniesz zraniony, bez względu na test Odporności na ból otrzymujesz większą karę, a bonus znika.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 44,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tfba1111904217f9",
+    "name": "Nie do zdarcia",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_NIEDOZDARCIA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_GLADIATOR",
+      "effects": "Ten fragment o pompowaniu posoko to nie była poezja, mam rację? To cholerna prawda. Ciężko cię wyłączyć z gry. Mówię \"wyłączyćz gry\", bo o tym by po prostu cię zabić nawet nie myślę. Reguła dotycząca zwiększania obrażeń (1 lub 2 na kościach, trafienie w głowę itp) nie dotyczy cię w walce wręcz. Choćby przeciwnik rzucił i trzy jedynki nie oznacza to, że przebił ci serce.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 45,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "td343bbc31c0b3d9",
+    "name": "Łyżeczka",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_LYZECZKA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_GLADIATOR",
+      "effects": "Co gorsza, z tą łyżeczką też nie przesadziłem, wiem o tym doskonale. Gladiator to taki facet, który walczy tym, co wpadnie mu w łapska. Sieć, hydrant, gazrurka, siekiera strażacka. Cokolwiek weźmiesz w łapska - MG musi traktować to tak, jakbyś miał umiejętność walki tym czymś na poziomie +4. Nawet jeśli to ta zasrana łyżeczka... \r\nTo gwarantowane +4 nie sumuje się z Umiejętnością. \r\nCecha nie dotyczy oczywiście broni palnej!",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 46,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ta8c5958cef181d2",
+    "name": "Wystarczy jedna ręka",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WYSTARCZYJEDNAREKA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_GLADIATOR",
+      "effects": "Ciężka broń w twoich rękach jest jeszcze groźniejsza. Wymagana Budowa dla każdej broni ręcznej jest w twoim przypadku mniejsza o 4. Dodatkowo gdy zadawne obrażenia dla danej broni zależą od Budowy (nie dotyczy pięści), twoja Budowa traktowana jest tak, jakby była większa o 2.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 47,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t5cb330633e381b1",
+    "name": "Zawołajcie kolegów",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZAWOLAJCIEKOLEGOW",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_GLADIATOR",
+      "effects": "Gdy walczysz z wieloma przeciwnikami, wtedy jakakolwiek broń w twoich rękach daje ci dodatkowy bonus +2 do Zręczności w testach walki wręcz.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 48,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t33dc85527376876",
+    "name": "Trakt handlowy",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_TRAKTHANDLOWY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_HANDLARZ",
+      "effects": "Nie jesteś jakimś tam stacjonarnym straganiarzem sprzedającym ogórki, bliżej ci do twardzieli pokroju wędrownego sprzedawcy bojlerów. Zdeptałeś kawał świata i poznałeś niejedno miejsce, więc wielu ludzi cię rozpoznaje, a na niektórych możesz nawet liczyć. Zaczynasz z dodatkowymi 150 gamblami na Znajomych. (nie Wojowników)",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 49,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t279c261abfd61fc",
+    "name": "Szklarz",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SZKLARZ",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_HANDLARZ",
+      "effects": "Szklarz to taki facet, co bawi się kitem. Głównie wciskaniem kitu. Stad przydomek szklarz - bo świetnie wciskasz kit. Handlując, kiedy próbujesz wcisnąć komuś jakiś kit (testy Perswazji i Blefu), twój Spryt wzrasta o 2.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 50,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "teaf8804a3dea2fe",
+    "name": "Umysł kupca",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_UMYSLKUPCA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_HANDLARZ",
+      "effects": "Budzisz się i mówisz sobie: dziś jest pierwszy dzień reszty mojego życia, dziś zbiję fortunę, taki jestem szczęśliwy, kocham wszystkich ludzi. Każdego dnia decydujesz czy chcesz być zwyczajnym łajzą, jak każdy, czy też dokonujesz metamorfozy w wesołego akwizytora. Lata ćwiczeń i tysiące afirmacji sprawiają, że tego dnia otrzymujesz bonus +2 do Sprytu i Charakteru, ale pozostałe Współczynniki spadają o 1. Stan ten utrzyma się do czasu aż prześpisz noc.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 51,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t2ff903dfe055be9",
+    "name": "Lepsza cena",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_LEPSZACENA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_HANDLARZ",
+      "effects": "Gdy chcesz coś tanio kupić, sam idziesz na zakupy. Gdy twoi koledzy chcąc coś tanio kupić, również… wysyłają ciebie. Automatycznie płacisz o 10% mniej, niż trzeba (czyli 90% ceny), chyba, że sprzedawca posiada tę samą Cechę. Ma się gadane, co nie? Niestety, nie znaczy to, że sprzedajesz za 110% ceny!",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 52,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tcdafd68d6b74934",
+    "name": "Spójrz mi w oczy",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SPOJRZMIWOCZY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_KAZNODZIEJANOWEJERY",
+      "effects": "Kaznodzieja potrafi wyczuć kłamstwo na kilometr. To tajemnica jego władzy nad ludźmi. Zabobonni wierzą nawet, że potrafi czytać w myślach. \r\nW trakcie dłuższej rozmowy, Kaznodzieja oraz jego rozmówca wykonują Trudne testy Charakteru. Jeśli Kaznodzieja zda test, a rozmówca nie, lub jeśli Kaznodzieja uzyska przewagę w teście Przeciwstawnym, wtedy klecha odkryje kłamstwo.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 53,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tc04ee890f0542cb",
+    "name": "Amen.",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_AMEN",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_KAZNODZIEJANOWEJERY",
+      "effects": "Jeśli podczas testu na jednej z kości wypadnie jedynka, liczy się ona jako dwa sukcesy. (a w walce zmienia inną kość w sukces z wynikiem 1) jedynka to znak od tego z góry, że jesteś na dobrej drodze. Wypatruj znaków. Możesz tego użyć maksymalnie 3 razy na sesję. A decydujesz już po rzucie.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 54,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tb7549fed083bd94",
+    "name": "Wierni",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WIERNI",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_KAZNODZIEJANOWEJERY",
+      "effects": "Gdy otwierasz usta, natychmiast wypływają słowa mądrości, dzięki czemu co głupsi słuchacze postanowią zostać twoimi uczniami i podążać za tobą. W każdym kwadransie przemowy na temat wiary wybierasz jednego konkretnego słuchacza (BN) i wykonujesz przeciwstawny test swojej Perswazji: przeciwko jego Charakterowi. Każdy Punkt Przewagi powyżej 10 zamienia się na punkt Powiązać – właśnie zwerbowałeś nowego wiernego! Przy Powiązaniach powyżej 3 wierny może z tobą wędrować. \r\nJednak kij ma dwa końce. Każdy dodatkowy słuchacz o bardzo słabym Charakterze (poniżej 8 – najczęściej będą to nędzarze, dzieci, staruszki itp.) może się do ciebie przyłączyć nawet wbrew twojej woli. Rzuć za każdego takiego patałacha k20 – przy wyniku 20, chcesz czy nie chcesz, zdobywasz wiernego z Powiązaniami ustalonymi przez MG!",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 55,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "te8e3c53baead4bf",
+    "name": "Moc wiary",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_MOCWIARY",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_KAZNODZIEJANOWEJERY",
+      "effects": "Bądź przewodnikiem duchowym i dla siebie, i dla innych. Doradzaj, podtrzymuj na duchu, szerz swoją wiarę, a kiedy trzeba, ukręć łeb opornym. Przy testach umiejętności z pakietu Empatia i Siła woli otrzymujesz bonus +1 do Charakteru, zaś przy testach umiejętności z pakietu Negocjacje aż +2 do Charakteru. Ponadto, jeśli zechcesz, za pomocą przemowy dodajesz każdemu słuchaczowi bonus +1 do przeprowadzanego właśnie przez niego testu umiejętności z pakietu Siła woli.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 56,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tab0926f6da75981",
+    "name": "W imię Ojca",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WIMIEOJCA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_KAZNODZIEJANOWEJERY",
+      "effects": "Ktoś kiedyś opowiadał mi o kapłanach i ich dziwnych zdolnościach… Też kiedyś widziałem takiego. Stanął na środku drogi, wyjął Biblię i zaczął czytać. Wszystko nie było by dziwne, gdyby nie to, że trzymając Księgę w lewej dłoni prawą zaczął wyjmować pistolet. Gdy skończył czytać, zamknął Pismo, i strzelił jakby nigdy nić w kant budynku nie patrząc co robi. Stał tam facet, który akurat chciał go podejść i zastrzelić, poprostu nie lubił księży. Kapłan tylko się uśmiechnął schował Książkę do kieszeni płaszcza i poszedł dalej.\r\nRaz na sesję, w przypadku gdy nie wiesz już co robić możesz spytać MG (twojego Boga) aby podpowiedział ci, co dalej robić lub gdzie się udać.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 57,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t23f4e6c3edbd780",
+    "name": "Rewolwerowiec",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_REWOLWEROWIEC",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_KOWBOJ",
+      "effects": "Wyciągasz pistolet z kabury w mgnieniu oka. \r\nJeśli używasz broni palnej krótkiej, pistolet w kaburze traktuj tak, jakbyś miał go już dobytego w dłoni.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 58,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "td8a9df3b9917fda",
+    "name": "Ostatnia kula",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_OSTATNIAKULA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_KOWBOJ",
+      "effects": "Jeśli w twoim rewolwerze została jeszcze tylko jedna kula, strzał ten będzie dla ciebie łatwiejszy o jeden poziom trudności testu",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 59,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tfa1090d2f647a66",
+    "name": "Pojedynek",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_POJEDYNEK",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_KOWBOJ",
+      "effects": "Billy Kid, Jessie James – każdy z nich posiadał tę Sztuczkę. Test pierwszego strzału po dobyciu broni krótkiej (pistolet, rewolwer) możesz przerzucić. Przerzucasz cały test, a nie wybrane kości. Wynik przerzuconego testu musisz zaakceptować.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 60,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tce5eded0a1fd38c",
+    "name": "Koleś zwany koniem",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KOLESZWANYKONIEM",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_KOWBOJ",
+      "effects": "Gdy ktoś cię zezłości – tupiesz, gdy rozśmieszy – rżysz. Ale koniem zwą cię z innego powodu. Wszystkie umiejętności z pakietu Jeździectwo posiadasz od razu na poziomie 2, dodatkowo każdy z testów tych umiejętności możesz przerzucić raz na sesję. To jeszcze nie wszystko! Testy Opieki nad zwierzętami są dla ciebie łatwiejsze o poziom, jeśli dotyczą twojego wierzchowca.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 61,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t0e132a28bfcb7c8",
+    "name": "Znajomości",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZNAJOMOSCI",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_KURIER",
+      "effects": "Szybka bryka czy worek granatów nie zawsze pomogą przejść przez terytorium gangów, w końcu kiedyś powinie ci się noga i staniesz z zepsutą chłodnicą w samym centrum ziemi Brain Dogs. Wtedy warto znać szefa, nie sądzisz? Zaczynasz z dodatkowymi 150 gamblami, które możesz przeznaczyć na Znajomych. (nie Wojowników)",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 62,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tb3e76c51601f268",
+    "name": "Skrytka",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SKRYTKA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_KURIER",
+      "effects": "Otwierasz drzwi, rzucasz okiem na wnętrze bryki, chwilę gmerasz i już masz swój tajny schowek. Nawet sam właściciel tego samochodu go nie znajdzie. W każdym pojeździe rozmiarów minimum samochodu, Kurier potrafi w kilka minut znaleźć lub spreparować skrytkę, którą bardzo trudno odkryć podczas przeszukiwania. Skrytka może mieć rozmiary pudełka papierosów (test Wypatrywania na Fart), dwa razy większe (Cholernie Trudny test Wypatrywania), na pistolet (Bardzo Trudny test Wypatrywania) lub małą walizkę. (Trudny test Wypatrywania).",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 63,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t3bd379de1978d7b",
+    "name": "Ze wschodu na zachód",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZEWSCHODUNAZACHOD",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_KURIER",
+      "effects": "Gdy kierujesz jakąś dłuższą, co najmniej kilkudniową wyprawą, gdzie liczy się wybór drogi, skrótów, noclegów, postojów itd., pokazujesz co potrafisz. W ciągu każdych trzech dni podróży przebywacie drogę, jaka normalnie zajęłaby cztery dni. Czyli co trzy dni możecie sobie posiedzieć nad rzeczką łowiąc rybki, a i tak dotrzecie na czas.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 64,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tcddf02486016234",
+    "name": "Trakt",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_TRAKT",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_KURIER",
+      "effects": "Wybierz jedną zaznaczoną na mapie trasę o długości do 1000 km (wynotuj, jakie łączy ona miasta). Tę wybraną trasę znasz jak własną kieszeń, wiesz co się znajduje na 6 km w każdą stronę od niej. Na tej trasie nigdy się nie zgubisz, znasz tu osady, kryjówki, skróty i wiesz do jakich miast prowadzą odchodzące od niej drogi.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 65,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t477c885f372057c",
+    "name": "Fotograficzna pamięć",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_FOTOGRAFICZNAPAMIEC",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_LOWCA",
+      "effects": "Jesteś jak aparat cyfrowy, podłączony do 40 gigowego twardziela. Masz wielką bibliotekę obrazów, wystarczy, że wejdziesz do pomieszczenia, by jego obraz utkwił na zawsze w twojej pamięci i byś potem mógł go w spokoju trawić i oglądać, dokładnie tak, jak gdyby ktoś zrobił tam zdjęcie. W czasie gry masz prawo do wykonania Trudnego testu Percepcji, za każdym razem kiedy chcesz sobie przypomnieć wygląd jakiegoś pomieszczenia. Zdaj test, a Mistrz Gry wyśpiewa wszystko jak na spowiedzi. Choćby minął miesiąc. Ba! Choćby i minął rok. Albo dwa lata!",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 66,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "td492bd7c0ef02c5",
+    "name": "Nieugięty",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_NIEUGIETY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_LOWCA",
+      "effects": "Kiedy masz przed nosem swój cel, przestaje się liczyć cokolwiek innego. Przesz do przodu jak czołg, niepomny na rany, zmęczenie i strach. Jesteś łowcą, złamany obojczyk, stado mutantów czy trzecia nieprzespana noc nie mogą ci przeszkodzić w dopadnięciu zwierzyny. Zwiększasz swój Charakter i Budowę o 2 punkty podczas wszystkich testów, kiedy niepowodzenie oddaliłoby cię od dopadnięcia celu.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 67,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t1af2b6acf48f05e",
+    "name": "Kto szuka ten znajdzie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KTOSZUKATENZNAJDZIE",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_LOWCA",
+      "effects": "Stanowilibyście świetny tandem z Handlarzem. Ty znajdziesz każdy towar, on załatwi lepszą cenę. Dodajesz +10% do Dostępności towarów, których szukasz, z wyjątkiem tych o Dostępności 0%. Cecha dotyczy szukania towaru w okolicy, a nie w konkretnym sklepie.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 68,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tf7a312a426cfd87",
+    "name": "Zdobywanie informacji",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZDOBYWANIEINFORMACJI",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_LOWCA",
+      "effects": "Dobry Łowca to taki, który zawsze, wszędzie i od każdego dowie się tego, co zechce. Po nitce do kłębka – to dewiza najlepszych. Zawsze, gdy wypytujesz o informacje, zwiększasz swoją Perswazję o 4.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 69,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t1048df670a600e5",
+    "name": "Bez tajemnic",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_BEZTAJEMNIC",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_LOWCAMUTANTOW",
+      "effects": "Znasz się na mutantach, nie da się zaprzeczyć. Gdy zdasz Trudny test Sprytu, MG musi ci zdradzić słabe punkty napotkanego mutanta. MG może również zdradzić ci niektóre współczynniki mutanta.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 70,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "te7b5edc9a388468",
+    "name": "Mutant na śniadanie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_MUTANTNASNIADANIE",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_LOWCAMUTANTOW",
+      "effects": "Co prawda pacyfistą w ogóle nazwać cię nie można, to jednak twoja agresja najczęściej dotyczy mutantów. Załatwiłeś już tony tego tałatajstwa i ciągle nie masz dość. Za to doświadczenie w walce z wszelkimi odmieńcami ciągle rośnie. Otrzymujesz bonus -20% do walki z mutantami. (testy Charakteru, Inicjatywy, ataku, obrony.)",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 71,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t4f5850e5583d202",
+    "name": "Klucz do Teksasu",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KLUCZDOTEKSASU",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_LOWCAMUTANTOW",
+      "effects": "Nietolerancyjni ludzie czują do siebie pewną słabość. Zawsze fajnie jest wspólnie ponarzekać na cały brud świata i kląć na tych, którzy winni są wszelkiemu nieszczęściu. Dlatego Teksańczycy lubią Łowców mutantów. To swoje chłopy, dobrze czynią i niech im Bóg przyświeca kagankiem. Jako Łowca mutantów otrzymujesz bonus +4 do Charakteru w kontaktach z Teksańczykami. A tak poza tym, to po prostu cię lubią i już.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 72,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tc907457c913ea11",
+    "name": "Szczepionka",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SZCZEPIONKA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_LOWCAMUTANTOW",
+      "effects": "Wieloletnie przepychanki z mutantami zszarpały ci zdrowie, ale jednak żyjesz do dziś, a to znaczy, żeś twardziel i byle radioaktywne splunięcie czy zmutowany świerzb cię nie załatwi. Posiadasz większą odporność na jady mutantów i choroby roznoszone przez mutki. Świństwa te działają na ciebie zawsze z mniejszą siłą, tak jakbyś automatycznie zdał test Kondycji.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 73,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t15c72289f8c6fa4",
+    "name": "Mutek? Coś o nim słyszałem",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_MUTEKCOSONIMSLYSZALEM",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_LOWCAMUTANTOW",
+      "effects": "Skojarzenie z Cechą z pochodzenia Posterunkowca jest jak najbardziej właściwe. Oni lubują się w maszynach, ty puszczasz się w tango z mutantami. Masz do tego jakiś dar – intuicyjnie czujesz, czego się po danym egzemplarzu spodziewać. \r\nKażdy test związany z mutantami może być dla ciebie co najwyżej Bardzo Trudny, a w przypadku testów walki – Cholernie Trudny.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 74,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tb99dea281dcc6d4",
+    "name": "Hycel",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_HYCEL",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_LOWCAMUTANTOW",
+      "effects": "Wiesz, kto to hycel? To taka profesja jeszcze sprzed wojny. Zajmowali się oni wyłapywaniem i usuwaniem bezpańskich zwierząt. Każdy potrafił złapać kundla i wepchnąć do klatki, a i z odstrzeleniem nie miał większych problemów. Ale kiedyś było kiedyś a teraz jest teraz – psy miewają rozmiary konia i są po dziesięciokroć bardziej agresywne od swoich przodków. No i gamble za nie są kiepskie, lepiej więc złapać mutka, który i wody nanosi i w kiblu posprząta, a w ostateczności zdechnie na arenie. Jeżeli zadeklarujesz przed polowaniem chęć pojmania mutanta żywcem, testy z tym związane łatwiejsze będą o -30%. Każda decyzja, jaką podejmuje się w życiu, ma swoje minusy. Jeśli sprawy przyjmą zły obrót i będziesz chciał go załatwić, czeka cię modyfikator +30%.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 75,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tf0dd66ed66c4d42",
+    "name": "Bezlitosny",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_BEZLITOSNY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_MAFIOZO",
+      "effects": "Z ludzi, którzy cię zawiedli żyje tylko Marc. Twoi ludzie właśnie montują mu betonowe obuwie. To jego ostatnie minuty. Z ludzi, którzy stanęli na twej drodze, do wczoraj żył Długi Johny i Szybki Pa ul. Dziś już nie masz wrogów. Z ludzi, którzy... Zaczynasz z jednym punktem sławy (złej). Reputacja kosztuje cię tylko 20 PD i zawsze jest to zła sława.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 76,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t72582576f775d14",
+    "name": "Klasa",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KLASA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_MAFIOZO",
+      "effects": "Trzeba mieć klasę. Nie można strzelić człowiekowi w głowę, mając na nogach zabłocone buty. Czy ty chciałbyś, aby ktoś stuknął cię rozklekotanym, nieumytym Pontiakiem? Trzeba mieć poziom. Trzeba szanować klientów i wrogów. Szczególnie dziś, w tych podłych czasach. Trudno nie uwierzyć facetowi takiemu jak ty. Facetowi z klasą... Możesz przerzucić każdy test Perswazji i Zastraszania.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 77,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t5bb7a717e245f0b",
+    "name": "Twardy",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_TWARDY",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_MAFIOZO",
+      "effects": "Nie ważne, co tak naprawdę potrafisz. Ważne, czy w krytycznej sytuacji zachowasz się jak twardziel, czy narobisz w majtki. Na szczęscie ty jesteś twardy. Nie można cię w żaden sposób zastraszyć, a testy psychologiczne (pakiety Negocjacje, Empatia, Siła woli) są przeciw tobie trudniejsze o poziom.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 78,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t3225910cf63417d",
+    "name": "Reputacja",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_REPUTACJA_CLASS_MEDYK",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_MEDYK",
+      "effects": "Gdy wjeżdżacie do jakiejkolwiek osady, najlepiej zacząć gadkę od prostego stwierdzenia: \"Widzicie tamtego faceta? To lekarz.\" Nie trzeba nic więcej, Wystarczy, że zdasz Trudny test Perswazji, a miejscowi zaczną się wokół was uwijać, jakby przybyli z dawna oczekiwani goście. Jeśli w osadzie jest już lekarz, musisz zdać Bardzo Trudny test Perswazji.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 79,
+        "importWarnings": [
+          "Kod TRAIT_REPUTACJA występuje w arkuszu więcej niż raz; rozszerzono go o wymaganie CLASS_MEDYK."
+        ],
+        "originalSourceCode": "TRAIT_REPUTACJA"
+      }
+    }
+  },
+  {
+    "_id": "t67ae94d671a7d1a",
+    "name": "Sanitariusz polowy",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SANITARIUSZPOLOWY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_MEDYK",
+      "effects": "Eksplozje, świszczące kule, krzyki i bieganina? To dla ciebie chleb powszedni. Że trochę trzęsie? Żaden problem. Że za ciemno? Chrzanienie. Ignorujesz wszelkie utrudnienia do testów leczenia, wynikające z warunków panujących w otoczeniu.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 80,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tace07219f945496",
+    "name": "Specjalista",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SPECJALISTA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_MEDYK",
+      "effects": "Gdy przyjdzie do ciebie ktoś ze złamaniem albo oparzeniem, musisz sobie porządnie golnąć whiskey, żeby wymyślić , co z tym fantem zrobić. Ale jeśli zjawi się koleś z raną postrzałową, nawet nie muszą cię budzić, opatrzysz to przez sen. Wybierz jedną ze specjalizacji: choroby, zatrucia, rany cięte i szarpane, postrzały. Otrzymujesz dla niej bonus – 20% w testach leczenia.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 81,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t6e1791eff99bc03",
+    "name": "Gwarancja bezpieczeństwa",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_GWARANCJABEZPIECZENSTWA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_MEDYK",
+      "effects": "Czyste rączki, gumowe rękawiczki i tak dalej. Można się śmiać, ale fakty są takie, że nigdy nikomu nie spaprałeś rany. Nawet jeśli nie zdasz testu Pierwszej pomocy lub Leczenia ran, nie spowodujesz przez to zwiększenia się kary od rany.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 82,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tec74b138f8f11cb",
+    "name": "Zapałki i agrafka",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZAPALKIIAGRAFKA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_MONTER",
+      "effects": "Na agregat czekałeś dwa miesiące, a oni przywieźli ci frezarkę z fabryki łodzi podwodnych. Nawet nie mrugnąłeś. Od tygodnia wszystko gra i buczym a ty masz pewność, że jeśli cię wywalą albo nie dadzą premii, nikt nie będzie widział jak funkcjonuje ta walcownia blachy. Po prostu masz talent to scalania najróżniejszych urządzeń w jeden mechanizm. Dostajesz bonus +2 do Sprytu podczas testów technicznych (gdy montujesz, naprawiasz lub przerabiasz jakieś urządzenie mechaniczne lub elektroniczne). Zawsze? Nie, tylko wtedy gdy coś montujesz... no tak, czyli prawie zawsze.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 83,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tdf787c850a148dc",
+    "name": "Kłopotliwy nadmiar",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KLOPOTLIWYNADMIAR",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_MONTER",
+      "effects": "Kiedy byłeś mały, znalazłeś budzik. Rozebrałeś go i złożyłeś ponownie, a skurczybyk dalej chodził. Zostało ci w ręku garść części. Potrafisz powtórzyć ten numer na niemal każdej maszynie, wystarczy, że zdasz Trudny test Mechaniki lub Elektroniki. Zostaje ci garść części, o wartości 20% całego urządzenia.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 84,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t66532cc2ba5025d",
+    "name": "Raz, dwa, gotowe",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_RAZDWAGOTOWE",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_MONTER",
+      "effects": "Z reguły, gdy zaczniesz poganiać mechanika, to jedynie go wkurzysz i albo spieprzy to co robił, albo zdzieli cię kluczem francuskim przez łeb. Jeden na stu rzeczywiście przyśpieszy i zrobi wszystko jak trzeba. Jesteś takim właśnie wyjątkiem. Możesz spróbować naprawić (zmontować itp.) daną rzecz dwa razy szybciej (czyli w połowie wymaganego czasu), ale za to Suwak w tym teście wędruje o poziom w górę.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 85,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t0ac88c715354ef1",
+    "name": "Cały świat jest drucikiem",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_CALYSWIATJESTDRUCIKIEM",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_MONTER",
+      "effects": "A gdy ciebie ktoś pogania, nie musisz go nawet walić po łbie kluczem francuskim. Po prostu olewasz go, jak i wszystko inne, co się wokół dzieje. Pożary, wybuchy, świszczące kule, beczące kozy i tajfuny, wszystko to jest tylko odległym tłem. Dla ciebie cały świat jest drucikiem, który akurat skręcasz Naprawiając lub montując cokolwiek, nie otrzymujesz kary za przeszkadzające w pracy warunki.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 86,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t8cb14728f89aa56",
+    "name": "Reputacja",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_REPUTACJA_CLASS_NAJEMNIK",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_NAJEMNIK",
+      "effects": "Nie nawalasz. Nie wystawiasz klienta do wiatru. Nie wycofujesz się ze zleceń. Dlatego właśnie możesz zażądać więcej od dowolnego innego jełopa - a pracodawca i tak wybierze ciebie. Zwiększ o 15 punktów Reputację - już na starcie jesteś kimś uznanym w tej branży. Ponadto punkt reputacji kosztuje cię tylko 20 pd.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 87,
+        "importWarnings": [
+          "Kod TRAIT_REPUTACJA występuje w arkuszu więcej niż raz; rozszerzono go o wymaganie CLASS_NAJEMNIK."
+        ],
+        "originalSourceCode": "TRAIT_REPUTACJA"
+      }
+    }
+  },
+  {
+    "_id": "t3ad926414bef8ba",
+    "name": "Maszyna do zabijania",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_MASZYNADOZABIJANIA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_NAJEMNIK",
+      "effects": "Mówisz sobie \"teraz albo nigdy!\" i wchodzisz w tryb maszyny do zabijania. Najemnik może tymczasowo zwiększyć o 2 punkty wartość dowolnego Współczynnika, ale bonus ten może wykorzystać tylko w walce. Ma to swoją cenę - po upływie godziny lub po 10 testach tego Współczynnika bonus znika, zaś Najemnik otrzymuje karę +50% ze zmęczenia (zmniejszaną o 10% co godzinę). Cechy tej można ponownie użyć dopiero gdy postać wypocznie (czyli całkowicie zniknie kara ze zmęczenia).",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 88,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t37737fa82169a0d",
+    "name": "Czwarty bieg",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_CZWARTYBIEG",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_NAJEMNIK",
+      "effects": "Każde dziecko wie, że trudniej trafić w ruchomy cel, niż w nieruchomą tarczę. Dlatego podczas strzelanin kolesie pod obstrzałem śmigają ile sił w nogach, klucząc przy tym jak się da. Świetna technika, tylko coś za coś: o celnym strzelaniu w biegu można zapomnieć. He, he, to znaczy większość frajerów może zapomnieć, bo ciebie to nie dotyczy. Gdy biegniesz, nie otrzymujesz kary (+30%) do testów strzelania. Zaś gdy pędzisz na złamanie karku, możesz strzelać, otrzymujesz tylko +30% kary.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 89,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t2117fc5afe2ee9a",
+    "name": "Swoje przeszedłem",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SWOJEPRZESZEDLEM",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_NAJEMNIK",
+      "effects": "Koleś, który potrafi jedynie plewić grządki albo zbudować radio z rupieci, nie zostaje najemnikiem. Możesz być dobrym snajperem albo umięśnionym szturmowcem, czy nawet szurniętym saperem, ale podstawy tego fachu znać musisz. Wszystkie umiejętności z pakietów Walka wręcz i Siła woli otrzymujesz od razu na poziomie 1.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 90,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t22a13004da947fe",
+    "name": "Wyciszenie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WYCISZENIE",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_OCHRONIARZ",
+      "effects": "Potrafisz odciąć się od hałasu, zamieszania, błysku fleszów, huku muzyki i skoncentrować się na zadaniu - ochronie klienta. Cały szum jest gdzieś w tle, a ty wchodzisz w stan innego postrzegania świata, wyczulony na zagrożenie. Gdy ochraniasz swojego klienta, nie otrzymujesz ujemnych modyfikatorów za półmrok, hałas i inne trudne warunki podczas dowolnych testów Percepcji.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 91,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tca027b7ca29d602",
+    "name": "Zanim on",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZANIMON",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_OCHRONIARZ",
+      "effects": "Potrafisz oddać strzał swojego życia w sytuacji, kiedy życie osoby którą ochraniasz jest zagrożone - wtedy automatycznie wygrywasz Inicjatywę i zaczynasz pierwszy.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 92,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "td0f37494f11cc34",
+    "name": "Łapacz kul",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_LAPACZKUL",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_OCHRONIARZ",
+      "effects": "Jak to możliwe, że dobry ochroniarz w krytycznej sekundzie skacze zasłaniając sobą swego klienta i zbiera na siebie postrzał przeznaczony dla tamtego? Czy jest szybszy od kuli? Na pewno nie jest, a przecież historia zna takie przypadki. Odpowiedź jest prosta: każdy z nich posiadał tę Cechcę. Gdy znajdujesz się w odległości do 5 metrów od osoby, którą chcesz zasłonić i do tego widzisz strzelca, który właśnie naciska spust, możesz zebrać kulę na siebie (o ile ta była celna). W takiej sytuacji zawsze dostajesz w tułów, więc zawczasu załatw sobie mocną kamizelkę.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 93,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t5c9d5cc23741089",
+    "name": "Mam cię",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_MAMCIE",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_OCHRONIARZ",
+      "effects": "Z tobą naprawdę nie ma żartów. Gdy ktoś zbyt szybko poruszy się w twoim pobliżu, najpierw go przewracasz i unieruchamiasz, a dopiero potem pytasz, o co chodzi. Posiadasz Sztuczkę Obezwładnianie, a dodatkowo otrzymujesz bonus +2 do Budowy podczas jej stosowania. Musisz jednak spełniać Wymagania dla tej Sztuczki.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 94,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t9fdd697647aad81",
+    "name": "Mundur i odznaka",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_MUNDURIODZNAKA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_SEDZIA",
+      "effects": "Prawdziwego gliniarza poznasz, choćby się przebrał za stonogę albo Czerwonego Kapturka. Niezbyt giętkie zasady, harde spojrzenie, kiepskie poczucie humoru i pączki. Ma to swoje plusy, bo wszystkim łachmytom trochę mięknie rura. Podczas testów Morale (reguła Najpierw spójrz mi w oczy) twoi przeciwnicy zdają o poziom trudniejszy test. \r\nZa to dobrzy ludzie odnoszą się do ciebie z większym szacunkiem i zaufaniem: w kontaktach z postaciami nie nastawionymi do ciebie wrogo otrzymujesz bonus +2 do Perswazji i Zdolności przywódczych. Niestety, gangerzy, mutki i wszelkie inne ścierwo mniej cię lubią.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 95,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t86d98f7c7b6395f",
+    "name": "Jeden z nas",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_JEDENZNAS",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_SEDZIA",
+      "effects": "Nie musisz za każdym razem gdy ustrzelisz jakiegoś gangera czy złodzieja tracić czasu na dyskusje i przekonywanie innych stróżów prawa, że to było konieczne, a ty też jesteś z policji. Oni od razu widzą, coś za jeden. Dodatkowo 150 gambli na Znajomości wśród sędziów i egzekutorów.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 96,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t86f50f421428aec",
+    "name": "Ja w tym nawet śpię",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_JAWTYMNAWETSPIE",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_SEDZIA",
+      "effects": "Kamizelka kuloodporna to twoje ubranie robocze, strój odświętny oraz pidżama. Zdejmujesz ją tylko po to , żeby załatać dziury lub założyć nową. Nosząc pancerz pokrywający tylko tułów i o Redukcji nie większej niż 2, nie otrzymujesz za niego żadnej kary do testów. Jednak jeśli założysz cięższy pancerz albo jakikolwiek pancerz na inne lokacje, wtedy otrzymasz całą, nie zmniejszoną karę za noszenie pancerza.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 97,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "te98643f2d5509e6",
+    "name": "Rentgen",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_RENTGEN",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_SEDZIA",
+      "effects": "Okłamywać można każdego, jednak w przypadku Sędziego to strata czasu, a w dodatku można go tym zdenerwować. W trakcie rozmowy możesz przerzucić test Postrzegania emocji dotyczący rozmówcy. Ponadto testy Blefu przeciwko tobie są trudniejsze o poziom.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 98,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t88571455fd06c72",
+    "name": "Wykształcenie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WYKSZTALCENIE",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_SPEC",
+      "effects": "W pakiecie Wiedza ogólna masz wszystkie umiejętności na poziomie +2. Pamiętaj, nie trzy wybrane, ale wszystkie!",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 99,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t906835f793d3a3d",
+    "name": "Skupienie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SKUPIENIE",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_SPEC",
+      "effects": "\"Dobra, zaczynam!\" Gdy zasiadasz do swojego zadania (czynności oparte na Sprycie), potrafisz odciąć się od wszelkich zewnętrznych zakłóceń. Olewasz kary wynikające z hałasu, tłoku i zamieszania. Koncentrujesz się i dodatkowo jeszcze otrzymujesz bonus +2 do Sprytu. Jednak coś za coś. W tym momencie dostajesz karę +30% do testów wszystkich innych Współczynników. Kara zmniejsza się od 10% co kwadrans po zakończeniu lub przerwaniu twojego zadania. Po prostu wracasz powoli na planetę Ziemia.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 100,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ta5b212df14e2ef9",
+    "name": "Doktor Brain",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_DOKTORBRAIN",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_SPEC",
+      "effects": "Masz jedyną i niepowtarzalną szansę stać się jajogłowym mutantem, geniuszem na miarę swoich czasów. Tylko tu i teraz dostaniesz 4 punkty do Sprytu w zamian za głupie 2 punkty z dowolnego fizycznego Współczynnika (lub po jednym z dwóch różnych fizycznych Współczynników). Mowa o Zręczności, Budowie i Percepcji, żeby nie było niedomówień. Jest jeden warunek: to właśnie na Spryt musisz przeznaczyć największy wynik podczas ustalania poziomów Współczynników. Ale tylko pomyśl, może uda ci się nawet wyjść poza dwudziestkę!",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 101,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "te0d9604efc78ff4",
+    "name": "Wiedza pewna",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WIEDZAPEWNA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_SPEC",
+      "effects": "Przy korzystaniu z porad teoretyków należy stosować zasadę ograniczonego zaufania. Gdy nie ma wyboru, można jajogłowego posłuchać, ale gdy się taki zaklina, że trzeba przeciąć czerwony drucik a nie zielony, to niech mądrala sam przecina. Ty należysz do chlubnych wyjątków, jesteś człowiekiem, który doradza tylko wtedy, gdy jest pewien tego, co mówi. Przy testach wiedzy w celu wspomagania testów umiejętności praktycznych nieudany test wiedzy nie powoduje kary do testu umiejętności praktycznej.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 102,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tda7787224bfdae4",
+    "name": "Duchy przemówiły",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_DUCHYPRZEMOWILY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_SZAMAN",
+      "effects": "Przy pasie masz manierkę, a w niej własnoręcznie przygotowany wyciąg z kaktusa. Ostatecznie może być dobry grass, bo po grzybkach masz czkawkę. To jest twój most do świata duchów. A duchy wiedzą wiele... potrafisz odjechać w transie i MG powinien zdradzić ci wtedy dodatkowe informacje dotyczące wybranej osoby lub miejsca. Czeka cię jednak Trudny test Budowy, albo cały dzień będziesz chodził jak pieprznięty kolbą w łeb. I nie pomoże ci aspiryna...",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 103,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t9ed318f924b6f18",
+    "name": "Totem",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_TOTEM",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_SZAMAN",
+      "effects": "Kiedy wszedłeś w wiek męski, prowadzić zaczął cię duch. Po rytuale przejścia stopniowo zacząłeś nabierać jego cech. Jesteś wężem, niedźwiedziem, wiewiórką, wilkiem, może zającem. \r\nWybierz jeden z totemów: \r\n- Budowa: Niedźwiedź \r\n- Percepcja: Sokół \r\n- Spryt: Kojot \r\n- Zręczność: Kot (a jakże...) \r\n- Charakter: Wilk. \r\nGdy tylko zechcesz, upodabniasz się do totemicznego zwierzęcia. Musisz zdać Problematyczny test współczynnika związanego z totemem, a otrzymasz do niego modyfikator +2. W tym czasie wszystkie inne Współczynniki spadają o 1. \r\nTen dziwny stan kończy się gdy zechcesz (po minimum godzinie), lub podczas snu. Kara do wszystkich Współczynników utrzymuje się przez tyle godzin, ile przebywałeś w tym stanie. (godziny snu nie liczą się)",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 104,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t09fe7773cf31df4",
+    "name": "Kapłan Tornado",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KAPLANTORNADO",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_SZAMAN",
+      "effects": "Bedąc Kapłanem Tornado, należysz do ekstraklasy zarówno wśród ćpunów, jak i wśród szamanów. Po pierwsze, nie uzależniasz się od Tornado. Po drugie, efekty kaca po zażyciu Tornado działają na ciebie tylko z połową mocy. Po trzecie, potrafisz dwukrotnie wydłużyć czas działania działki. W końcu po czwarte, potrafisz przenieść się z kimś zażywającym w pobliżu Tornado, samemu nie biorąc niczego! To ostatnie pod warunkiem, że zażyłeś czarny proszek nie dalej niż przed tygodniem. Coś jeszcze? Tak, ty po prostu naprawdę lubisz Tornado.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 105,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tc3a13f884a1c5e3",
+    "name": "Wyczulony",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WYCZULONY",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_SZAMAN",
+      "effects": "Zmiany w środowisku, promieniowanie, mutageny, eksperymenty Molocha i pomysłowość ludzi odpowiedzialne są za pojawienie się w naszym świecie wielu nowych fenomenów. I ty się do nich zaliczasz. Masz szósty zmysł, dzięki któremu wyczuwasz w pobliżu silną agresję – np. czających się bandytów, bestie, mutki, czatujące zwierzęta itd. Ale pamiętaj – tylko agresję, a nie np. wszystkich ludzi o podłym charakterze czy wałęsające się bez celu dzikie zwierzęta. Im bardziej agresywne, im bliżej, im bardziej dotyczy ciebie, tym łatwiej i wyraźniej to poczujesz. I oczywiście nie wywęszysz swoim szóstym zmysłem żadnych robotów, chyba, że wściekłego juggernauta.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 106,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t66445e3cae47e7a",
+    "name": "A co mi tam",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ACOMITAM",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_SZCZUR",
+      "effects": "Wszelkie choroby i trucizny masz gdzieś. Automatycznie zdajesz wszystkie testy Kondycji przeciwko chorobom, truciznom i radiacji. (otrzymujesz zawsze mniejszą karę) \r\nMożesz jeść spleśniałe mięso i konserwy z 2019 i tylko się obliżesz. \r\nAle widać od razu, żeś szczur i żaden garnitur tego nie zamaskuje. \r\nAha, żeby nie było nieporozumień. Chorobę przewlekłą w kroku 7 losujesz normalnie.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 107,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tcee3bf90ef855b2",
+    "name": "Szary",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SZARY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_SZCZUR",
+      "effects": "Szczurów jest pełno. Żebracy, włóczędzy, ludzkie wraki. Nikt z nimi nie gada. Oni też z nikim nie gadają. Dzięki temu nikt nie zwraca na nich uwagi. \r\nZ czasem ludzie tak przywykli do ich widoku, że przestali zupełnie traktować ich jak ludzi. W ten sposób szczur stał się niczym, stał się \"niewidzialny\". \r\nJeśli szczur zda Trudny test Sprytu, to może się poruszać niezauważony, ale tylko w otoczeniu pasującym do Szczura.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 108,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t3d847aa3f160a0b",
+    "name": "Worek na śmieci",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WOREKNASMIECI",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_SZCZUR",
+      "effects": "Gdy inni przymierają głodem i przeszukują ruiny w poszukiwaniu czegoś zdatnego do jedzenia, ty zadowalasz się rzeczami dla nich niejadalnymi. Nie napiszę tu, co to za rzeczy, bo jeszcze przeczytają to inni i nigdy ci już nie podadzą ręki. Innych ludzi tym swoim „jedzeniem” nie wyżywisz, ale siebie, owszem. Ważne, że jeśli tylko nie zamkną cięw czterech sterylnie czystych ścianach, z głodu nie umrzesz. Wystarczy trochę ruin czy zwykła łąka i zawsze coś tam znajdziesz. Wystarczy by przeżyć.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 109,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t94880da55e39ce4",
+    "name": "Post",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_POST",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_SZCZUR",
+      "effects": "Każdy Szczur na swój sposób przystosował się do nędznego życia. I wiesz, nie można nazwać słabeuszami tych wszystkich obszarpańców szperającyhc po ruinach, bo widzisz wszyscy słabi dawno już pomarli. Ty sam jesteś na tyle zahartowany trudnymi warunkami, że otrzymujesz tylko połowę wszelkich kar za głód, pragnienie i senność.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 110,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t00d15bb72d9fdde",
+    "name": "Bestia",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_BESTIA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_TRESERBESTII",
+      "effects": "Zaczynasz grę posiadając jedną wytresowaną bestię, na którą zgodzi się MG. Ponadto potrafisz oswajać i tresować dzikie zwierzęta. Podejść do dzikiego zwierzęcia w taki sposób, żeby nie rzucił ci się od razu do gardła. Wiesz, co je drażni. \r\nTakiemu towarzyszowi możesz wydawać kilka rodzajów poleceń, jak np. \"Bierz go\", \"Do nogi\", \"Cicho\", \"Leżeć\" itp.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 111,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t28c50fbfba29f3a",
+    "name": "Wilczy kieł",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WILCZYKIEL",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_TRESERBESTII",
+      "effects": "Walcząc wręcz potrafisz gryźć i drapać jak zwierzę. Jeśli nie używasz broni i pancerza, zadajesz o poziom wyższe obrażenia, gdy na kostce wypadnie 1, 2 lub 3. Czyli 5% częściej niż typowy człowiek.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 112,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tab2410ed7a44d06",
+    "name": "Przyjaciel zwierząt",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_PRZYJACIELZWIERZAT",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_TRESERBESTII",
+      "effects": "Gdy, wędrując przez dżunglę, wdepniesz z kolegami prosto w stado głodnych wilków, jedno jest pewne – masz większe szanse od pozostałych na pozostanie w jednym kawałku. Gdy MG testuje Agresję napotkanych stworzeń, dla ciebie testuje tylko połowę ich Agresji (MG nie rzuca kośćmi dwa razy, a jedynie raz!). Może się zdarzyć, że wredne bydlęta zaatakują twoich kumpli, jednak ciebie zostawią w spokoju dopóki nie zajdziesz im za skórę.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 113,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t17a351fa8fe3d60",
+    "name": "W plecy",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WPLECY",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_TRESERBESTII",
+      "effects": "Ludzie z miasta nie lubią walczyć z wszelakimi Mowglimi i Tarzanami z lasów. Łupów toto ma przy sobie niewiele, a w dodatku potrafi czasem zaskoczyć jakąś sztuczką wyniesioną ze świata dzikich bestii. Sęk w tym, że ty właśnie jesteś takim Mowglim i rzeczywiście znasz parę brudnych chwytów. Podczas walki, bez względu na inicjatywę możesz przeznaczyć jedną ze swoich kości na atak w sąsiedniego przeciwnika walczącego z kimś innym. Musisz zadeklarować taką akcję przed rzutem kośćmi.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 114,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t3c786d70dd17300",
+    "name": "Wyczulone zmysły",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WYCZULONEZMYSLY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_TROPICIEL",
+      "effects": "Można nauczyć się odczytywać ślady i wyszukiwać ukryte tropy. Ale nic nie zastąpi doskonałego wzroku, czułego węchu i słuchu. Może dlatego jesteś taki dobry, że zawsze zwiększasz swoją Percepcję o 3 podczas wszystkich testów Wypatrywania i Nasłuchiwania na otwartym terenie?",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 115,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t113fa2347fc4859",
+    "name": "Rozpoznawanie stworzeń",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ROZPOZNAWANIESTWORZEN",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_TROPICIEL",
+      "effects": "Wiesz, że to, co szarżuje na samochód to piaskowy diabeł i wiesz, że należy spieprzać. Potrafisz rozróżniać niedźwiedzie i poznasz też niedźwiedzia mutanta. Problem polega na tym, żeby dostrzec to, gdy będą wystarczająco daleko. W innym wypadku twoja wiedza nie przyda się nikomu. Masz bonus do wszelkich testów Łowiectwa i Tropienia podczas identyfikacji wszelakiego cholerstwa pałętającego się po ulicy. Powiedzmy zawsze jeden automatyczny sukces, dobra? MG może podać ci niektóre Współczynniki zwierzęcia.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 116,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tdc9a04a76368a23",
+    "name": "Po prostu tropiciel",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_POPROSTUTROPICIEL",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_TROPICIEL",
+      "effects": "Wiesz czego przede wszystkim wymaga się od dobrego Tropiciela? Przede wszystkim świetnej zdolności tropienia. Dlatego weź sobie teraz bonus +4 do Tropienia, a nie będziesz narzekać. Bonus ten działa pod warunkiem, że poruszasz się na piechotę. Ale chyba nie miałeś zamiaru bawić się w tropienie z pokładu samolotu, co nie?",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 117,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t3d0bff58226f7bd",
+    "name": "Na bank",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_NABANK",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_TROPICIEL",
+      "effects": "Chrzanić odcyfrowywanie odcisków bucików na pustyni albo analizowanie zgiętych gałązek w lesie. Twoją specjalnością są miasta. Gdy trafisz do jakichkolwiek ruin przedwojennego miasta, czy to w świetnym stanie, czy ledwie rozpoznawalnym, zarośniętym czy zatopionym w błocie, zawsze wiesz gdzie powinny być ważne i kluczowe miejsca, jak bank, kościół, szpital czy nawet hipermarket. A to już połowa sukcesu, sam przyznasz.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 118,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t5497f241bfec623",
+    "name": "Drzwi w drzwi",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_DRZWIWDRZWI",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_WOJOWNIKAUTOSTRADY",
+      "effects": "Potrafisz używać swojej maszyny jak broni i z tej właśnie okazji w czasie walki na autostradzie, podczas wszelkich manewrów samochodem masz +2 do Zręczności.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 119,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t0d07e8f9a55349a",
+    "name": "Osłona samochodu",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_OSLONASAMOCHODU",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_WOJOWNIKAUTOSTRADY",
+      "effects": "Wiraż, odskok, uderzenie w zderzak, zjazd na pobocze, przyspieszenie... To dla ciebie normalny styl jazdy. Potrafisz wykorzystać swój samochód jako osłonę przed wrogimi atakami. Nie otrzymujesz kary do prowadzenia samochodu za to, że kryjesz się i pochylasz, uzyskując 60% osłony. Wszyscy pasażerowie w prowadzonym przez ciebie aucie otrzymują dodatkowe 20% osłony.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 120,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t0d37b22c7df5d3e",
+    "name": "Uff, było blisko",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_UFFBYLOBLISKO",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_WOJOWNIKAUTOSTRADY",
+      "effects": "Dobry kierowca plus odrobina szczęścia może zdziałać cuda. Raz na sesję, zamiast zaliczyć kraksę, możesz po prostu w efektowny sposób zatrzymać pojazd. Trochę tobą zarzuci, obróci, szarpnie, prędkość się wyzeruje, ale tobie ani bryce nic się nie stanie. Tylko nie zapomnij o tym, że twoje szczęście ma wyraźny limit!",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 121,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tfe55c3f1c2b7d77",
+    "name": "Koncentracja",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KONCENTRACJA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_WOJOWNIKAUTOSTRADY",
+      "effects": "Gdybyś się zobaczył w lusterku podczas największego skupienia za kierownicą, padłbyś z wrażenia. Oczy zmieniają się w szparki, żyły na skroniach wyłażą jak u zapaśnika, a ty szarpiesz kierownicą w bullettime. Efekty są zdumiewajace. Otrzymujesz bonus -30% do Prowadzenia pojazdów, ale za każdy test z użyciem tego bonusu otrzymujesz karę +5% do wszystkich testów ze zmęczenia.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 122,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t639ca21dc896437",
+    "name": "My i oni",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_MYIONI",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_WOJOWNIKKLANU",
+      "effects": "Może nie poczujesz się zbyt pewnie w Vegas, ale jeśli w okolicy pojawi się facet z dzidą, inni zobaczą tylko frajera z dzidą. ty będziesz wiedział, że to człowiek Jastrzębi. On będzie wiedział, kim jesteś ty. Wiesz sporo o klanach i potrafisz dogadać się z ludźmi pustyni. Masz jeden automatyczny sukces we wszystkich testach Charakteru dotyczących czerwonoskórych i ludzi pustyni.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 123,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tca7a140003ae341",
+    "name": "To mój dom",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_TOMOJDOM",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_WOJOWNIKKLANU",
+      "effects": "Przypomnij sobie tego twardziela, który przez tydzień trząsł całym Whitehorn. Kiedy w końcu przyszli po niego, zdychał samotnie jak pies. Ty zawsze masz gdzie wrócić. Masz kogo poprosić o radę i o pomoc. Jesteś członkiem grupy. Otrzymujesz 150 gambli na wykupienie czerwonoskórych Znajomych.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 124,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tf8ad4f3977e2cb9",
+    "name": "Dzikus",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_DZIKUS",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_WOJOWNIKKLANU",
+      "effects": "Może twój styl walki nie należy do najpiękniejszych, ale za to jest cholernie skuteczny i niespotykany. W końcu przez całe życie sparingowałeś się z krokodylami, niedźwiedziami, pumami i innym dzikim świństwem. W walce z każdym przeciwnikiem masz do dyspozycji pulę 3 oczek, za pomocą których możesz w dowolnej chwili popsuć wyniki na kościach przeciwnika. Od ciebie zależy, czy zużyjesz wszystkie 3 oczka na jedną kość, czy też będziesz odejmował po jednym oczku od kilku kości, czy w końcu użyjesz po jednym oczku w różnych turach walki, czy nawet w kolejnych walkach z tym samym przeciwnikiem. Po prostu masz 3 oczka i gdy je zużyjesz, tego przeciwnika już nie zaskoczysz.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 125,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tca4d759d60ff7d7",
+    "name": "Sprężyna",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SPRZEZYNA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_WOJOWNIKKLANU",
+      "effects": "Co z tego, że chodzisz wiecznie przygarbiony i węszysz wokół jak pies. Ważne, że nie da się ciebie zaskoczyć. Posiadasz Sztuczkę Pittbull i to bez względu na to, czy spełniasz wymagania dla niej.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 126,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t1c2832497d9439c",
+    "name": "Koniec zlecenia",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KONIECZLECENIA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_ZABOJCA",
+      "effects": "Jeśli masz swój cel (zakontraktowane zlecenie) w zasięgu wzroku, dodaj sobie jeden sukces do każdej akcji, która jest związana z zakończeniem zlecenia. Jesteś skoncentrowany i bardzo bliski zamknięcia kontraktu. Nie ma już miejsca na błędy... \r\nZlecenie musi pochodzić od BNa, a nie od drugiego gracza i to MG decyduje, czy uznać to za kontrakt godny użycia cechy \"Koniec zlecenia\".",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 127,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tddbbc5e00675bc9",
+    "name": "Jeden strzał",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_JEDENSTRZAL",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_ZABOJCA",
+      "effects": "Nieważne, czy dobrze radzisz sobie pod gradem kul, czy świetnie walczysz w pojedynkach, czy podnosisz się po zarobieniu kulki i idziesz dalej. Dla ciebie ważne jest, by dobrze przygotować się do zadania, poczekać na okazję i załatwić sprawę jednym ruchem. W sytuacji, gdy ofiara niczego się nie spodziewa, możesz lepiej przygotować się do oddania pierwszego strzału. Otrzymujesz bonus +2 do Umiejętności strzelania, rzucania albo walki, ale tylko na czas pierwszego testu, zaś obrażenia zadane w tym pierwszym ciosie/strzale są o poziom wyższe.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 128,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t889453e2c3f8b3c",
+    "name": "Cień",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_CIEN",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_ZABOJCA",
+      "effects": "Zamachnąć się młotkiem i porządnie zdzielić przez łeb nic nie spodziewającą się ofiarę potrafi byle dureń. Cała sztuka polega na tym, żeby najpierw zakraść się cicho i niezauważenie na odległość młotka. Gdy skradasz się do ofiary, wszelkie testy Wypatrywania i Nasłuchiwania przeciwko tobie są dla niej o stopień trudniejsze. Cecha łączy się z działaniem Sztuczki Ciszej niż cień.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 129,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t0dccd0f26b584eb",
+    "name": "Zamachowiec",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ZAMACHOWIEC",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_ZABOJCA",
+      "effects": "Każdy dobry Zabójca powinien mieć swojego konika, coś w czym jest naprawdę w dechę. Jeden jest świetny w rzucaniu nożem, inny w skradaniu, jeszcze inny w truciznach. Ty jesteś snajperem. Jeśli przygotowałeś się do strzału i mierzyłeś w cel co najmniej pół minuty, wtedy utrudnienia za odległość powyżej 200m są dla ciebie mniejsze o -20%. Dodatkowo, gdy po pół minutowym mierzeniu celujesz w głowę, otrzymujesz za to tylko +60% utrudnienia, a nie +80%.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 130,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tf18ef25598ad40c",
+    "name": "Słaby punkt",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_SLABYPUNKT",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_ZABOJCAMASZYN",
+      "effects": "Każda maszyna jest trudnym przeciwnikiem. Ale każda też ma swój słaby punkt. Różnisz się tym od innych ludzi, że znasz te słabe punkty. \r\nJeśli zdasz Trudny test Percepcji, MG musi ci zdradzić słaby punkt danej maszyny. MG może ci także zdradzić niektóre Współczynniki robota.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 131,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t164c84cbbbb82fc",
+    "name": "Empiryk",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_EMPIRYK",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_ZABOJCAMASZYN",
+      "effects": "To jest tak: gdyby jakiś frajer zechciał sobie naprawić bojler, łatwo może wylecieć w powietrze. Gdy laik zaczyna grzebać w kabelkach wysokiego napięcia, może zatańczyć breakdance a głowa zaświeci mu się jak żarówka. Podobnie, gdy jacyś narwańcy szykują się do walki z maszyną, jedną nogą są już w grobie. Ciebie to nie dotyczy. Znasz się na maszynach. Otrzymujesz bonus -30% do walki z robotami. (testy Inicjatywy, Charakteru, ataku, obrony)",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 132,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "td1c03bb637d1c3e",
+    "name": "Hak na maszynę",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_HAKNAMASZYNE",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_ZABOJCAMASZYN",
+      "effects": "Widziałeś kiedyś, jak łowcy krokodyli łażą sobie pomiędzy tymi głodnymi gadami i nic im się nie dzieje? Tak samo łowcy węży depczą sobie po wijących się kłębowiskach i nic. Gdybyś ty tak zrobił, zostałyby z ciebie buty i może kapelusz. Sekret polega na tym, że oni robią to przez całe życie i wiedzą, jak nie dać się zeżreć swoim pupilom. A ty masz podobny talent, tyle że dotyczy maszyn Molocha. Gdy zechcesz, możesz sprawić, by maszyna zaatakowała właśnie ciebie zamiast kogoś innego, albo odwrotnie, żeby zaatakowała kogokolwiek innego (jednak nie możesz dokładnie wybrać celu) ze swoich wrogów, a nie ciebie. Warunkiem jest, by maszyna miała taką samą, nie utrudnioną możliwość zaatakowania wybranego celu. I jeszcze jedno: Cecha nie dotyczy maszyn o Zaawansowaniu programu powyżej 3.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 133,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tb55806608c0f8ab",
+    "name": "Poznaj swego wroga",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_POZNAJSWEGOWROGA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_ZABOJCAMASZYN",
+      "effects": "Co by nie mówić, o robotach wiesz wszystko. Prawie wszystko. No, po prostu sporo. Dobra, konkretnie chodzi o to, że otrzymujesz bonus +2 do Sprytu i Percepcji w testach dotyczących maszyn Molocha.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 134,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tdfc76cbcd56c8bf",
+    "name": "Napięta sytuacja",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_NAPIETASYTUACJA",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_ZABOJCAMASZYN",
+      "effects": "Od dziecka ciągnie cię do żelastwa i elektroniki. Zamiast bawić się klockami, wsadzałeś paluchy do różnych urządzeń i nie odstraszały cię tabliczki z czaszkami i piorunami. Nawet laboratoryjnego szczura można nauczyć, że w pewne miejsca łapek się nie wkłada, a choć wysokie napięcie zatrzęsło tobą niezliczoną ilość razy, nie mogłeś jakoś zajarzyć tej zależności. Wykształcił ci się jakiś dodatkowy zmysł. Kiedy zbliżasz się do urządzenia pod napięciem, czujesz ciepło. Wraz ze wzrostem napięcia, wzrasta odległość, z jakiej możesz je wyczuć. Możesz też określić mniej więcej jego wysokość. Im większe, tym margines błędu jest większy. Napięcie poniżej 10 volt wyczuwasz z odległości 5 cm. 220V poczujesz pewnie z metra, a jeśli natrafisz gdzieś na działającą linię wysokiego napięcia, będziesz o tym wiedział co najmniej sto metrów wcześniej. Jeśli MG uzna, że z jakiegoś powodu wyczucie tej emanacji jest utrudnione, powinieneś wykonać test Percepcji, jednak o PT nie wyższym niż Trudny.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 135,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ta855f69797b0e49",
+    "name": "Nieprzewidywalny",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_NIEPRZEWIDYWALNY",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_ZABOJCAMASZYN",
+      "effects": "Mówiłem ci już o Ricku? Wyskakuje na nas suszarka do grzybków, a ten do mnie: „Pokażę ci sztuczkę”. Dał kilka kroków do przodu i zaczął… tańczyć jakąś makarenę. Mógłbym przysiąc, że blaszak zrobił zdziwioną minę. Rick stwierdził, że jej program nie przewidział reakcji na takie zachowanie. \r\nZa każdy punkt Elektroniki Bohatera powyżej Zaawansowania programu maszyny otrzymuje ona utrudnienie +10% do testów akcji podejmowanych względem tego Bohatera.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 136,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t8c6d6f79c6a579c",
+    "name": "Elektronik",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_ELEKTRONIK",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_ZLODZIEJ",
+      "effects": "Nie, żebyś swojego czasu pracował jako spec od zabezpieczeń, ale trzeba przyznać, że znasz te systemy. Wiesz jak działają. Potrafisz je rozgryźć i unieszkodliwić, bez względu na to, czy mamy do czynienia z powojenną bazą wojskową czy z ruinami Muzeum Wojny z Islamem. Rozbroisz je, nie ma obaw. Zawsze, kiedy stajesz naprzeciw elektronicznego systemu zabezpieczeń, zwiększasz swój spryt o 4 punkty. Nieźle, co?",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 137,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t4df930d9f0bf48b",
+    "name": "Kot",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KOT",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "requirements": "CLASS_ZLODZIEJ",
+      "effects": "Czasy się zmieniły, mówią ludzie. Finezja nie jest już w modzie. Może i nie - ale wciąż jest skuteczna. Więc działasz jak kot, niemal niewyczuwalny, niemal niewidzialny. Żadnych strzelanin,żadnego huku - to zbędne. Tylko ty i cel. I strażnicy. Ale oni przecież o niczym nie wiedzą, prawda? Zawsze, gdy będziesz się skradał, ukrywał albo coś maskował, zwiększ przeciwnikowi PT testów Wypatrywania/Nasłuchiwania o dwa stopnie.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 138,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t4f54d6ea86e2877",
+    "name": "Ukrycie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_UKRYCIE",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_ZLODZIEJ",
+      "effects": "Dopóki cię nie złapią, jesteś niewinny. A twoja w tym głowa, żeby cię nie złapali. Jesteś w stanie po chwili rozglądania się znaleźć dla siebie najlepszą możliwą kryjówkę. Jeśli gdzieś w pobliżu jest duża nora, ty ją znajdziesz, jeśli gdzieś stoi wrak samochodu – schowasz się do bagażnika. Jeśli jest rów, już w nim siedzisz. Po prostu masz gwarancję, że lepszej kryjówki tu nie ma. Mowa tylko o tym, jak dobrze kryjówka cię ukryje, a nie np. czy ma tylne wyjście, czy jest wygodna itp.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 139,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ta8bc0aa543c0d91",
+    "name": "Kasiarz",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_KASIARZ",
+      "ruleset": "Motorazor",
+      "requirements": "CLASS_ZLODZIEJ",
+      "effects": "Zamki to twoja specjalność, ale prawdziwe mistrzostwo pokazujesz dopiero wtedy, gdy wszyscy wokół zamkną gęby, przestaną się wiercić i zapanuje idealna cisza. Każde najmniejsze pstryknięcie i szurnięcie rysuje ci przed oczami obraz zamka, niczym rentgen. A reguła? Zawsze, gdy wokół panuje cisza i spokój, a ty się nie śpieszysz i poświęcasz na otwarcie zamka co najmniej dwa razy więcej czasu, niż wymaga MG, otrzymujesz bonus – 30% do testu.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 140,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "tab978576f64e129",
+    "name": "Wyszkolenie",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WYSZKOLENIE",
+      "ruleset": "",
+      "requirements": "",
+      "effects": "Wszystkie Umiejętności z pakietów Broń Strzelecka i Pirotechnika masz od razu na poziomie 1.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 141,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "td02aa712e3b2376",
+    "name": "Rutyna",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_RUTYNA",
+      "ruleset": "",
+      "requirements": "",
+      "effects": "Podczas testowania Morale poprzedzających walkę (reguła \"Najpierw spójrz mi w oczy\"), Żołnierz automatycznie zdaje test.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 142,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t7d6db478b170f5d",
+    "name": "Walka pozycyjna",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_WALKAPOZYCYJNA",
+      "ruleset": "",
+      "requirements": "",
+      "effects": "Na polu walki, gdy kule świstają wokół, nie ma nic ważniejszego niż dobra kryjówka. Większość strzelców wyściubia tylko głowy, ale otrzymuje za to +20% utrudnienia do strzelania. Ty masz lepiej, bo żadnej kary za to nie dostajesz.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 143,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "t9516a474373ea96",
+    "name": "Pompki w zbroi",
+    "type": "trait",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "TRAIT_POMPKIWZBROI",
+      "ruleset": "",
+      "requirements": "",
+      "effects": "Gdy lata temu musiałeś trzaskać pompki z kowadłem na plecach marzyłeś o uduszeniu sierżanta. Dzisiaj jesteś mu za to wdzięczny. Za noszenie pancerzy otrzymujesz mniejszą karę niż inni – każde 20% kary z pancerza oznacza dla ciebie tylko 15%.",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "TRAIT",
+        "sourceRow": 144,
+        "importWarnings": []
+      }
+    }
+  }
+]

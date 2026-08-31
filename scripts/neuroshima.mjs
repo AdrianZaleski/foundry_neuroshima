@@ -139,7 +139,7 @@ Hooks.on("preCreateItem", (item) => {
   });
 });
 
-// Wariant prototypowy tworzy dwie światowe biblioteki na podstawie źródeł
+// Wariant prototypowy tworzy światowe biblioteki na podstawie źródeł
 // JSON przechowywanych w repozytorium. Docelowo zastąpią je paczki systemowe.
 Hooks.once("ready", async () => {
   await initializeCatalogCompendia();
