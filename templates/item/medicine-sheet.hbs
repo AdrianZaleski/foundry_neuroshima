@@ -4,9 +4,12 @@
   </header>
 
   <h2>Lek</h2>
-  <label>Kod leczonej choroby
-    <input type="text" name="system.diseaseSourceCode" value="{{system.diseaseSourceCode}}">
+  <label>Leczona choroba
+    <select name="system.diseaseSourceCode">
+      {{selectOptions diseaseOptions selected=system.diseaseSourceCode}}
+    </select>
   </label>
+  {{#if linkedDiseaseName}}<p><strong>Leczy:</strong> {{linkedDiseaseName}}</p>{{/if}}
   <label>Wielkość pełnego opakowania
     <input type="number" name="system.packageSize" value="{{system.packageSize}}" min="0" step="1">
   </label>

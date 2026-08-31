@@ -30,6 +30,17 @@
   {{/each}}
 
   <h2>Leczenie</h2>
+  <h3>Powiązane leki</h3>
+  {{#if linkedMedicines.length}}
+    <ul>
+      {{#each linkedMedicines}}
+        <li><strong>{{this.name}}</strong></li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>Brak konkretnych leków powiązanych w katalogu.</p>
+  {{/if}}
+
   <label>Opis leków i leczenia
     <textarea name="system.medicationDescription" rows="6">{{system.medicationDescription}}</textarea>
   </label>

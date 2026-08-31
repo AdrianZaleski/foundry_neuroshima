@@ -5,6 +5,10 @@ import {
   damageNamesBySymbol,
   describeAttackTypes
 } from "../catalogs/combat-reference.mjs";
+import {
+  prepareDiseaseCatalog,
+  prepareMedicinesByDisease
+} from "../catalogs/health-reference.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -79,18 +83,6 @@ async function changeDiseaseStage(characterSheet, target, direction) {
   if (nextIndex === currentIndex) return;
 
   await diseaseItem.update({ "system.currentStage": diseaseStageOrder[nextIndex] });
-}
-
-async function prepareDiseaseNameCatalog() {
-  const compendium = game.packs.get("world.neuroshima-diseases");
-  if (!compendium) return {};
-
-  await compendium.getIndex({ fields: ["system.sourceCode"] });
-  return Object.fromEntries(
-    [...compendium.index.values()]
-      .filter((entry) => entry.system?.sourceCode)
-      .map((entry) => [entry.system.sourceCode, entry.name])
-  );
 }
 
 function describeMeleeDamageProfile(damageByBuild) {
@@ -271,7 +263,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       originCatalog,
       professionCatalog,
       specializationCatalog,
-      diseaseNameBySourceCode
+      diseaseCatalog,
+      medicinesByDisease
     ] = await Promise.all([
       prepareBackgroundCatalog(
         "world.neuroshima-origins",
@@ -285,7 +278,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         "world.neuroshima-specializations",
         this.actor.system.background.specializationSourceCode
       ),
-      prepareDiseaseNameCatalog()
+      prepareDiseaseCatalog(),
+      prepareMedicinesByDisease()
     ]);
 
     context.originOptions = originCatalog.options;
@@ -310,6 +304,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
           currentStageDescription: currentStage?.description ?? "",
           currentStageEffect: currentStage?.effect ?? "",
           medicationDescription: item.system.medicationDescription,
+          linkedMedicines: medicinesByDisease[item.system.sourceCode] ?? [],
           canMoveBack: diseaseStageOrder.indexOf(item.system.currentStage) > 0,
           canMoveForward: diseaseStageOrder.indexOf(item.system.currentStage)
             < diseaseStageOrder.length - 1
@@ -321,7 +316,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       .map((item) => ({
         id: item.id,
         name: item.name,
-        diseaseName: diseaseNameBySourceCode[item.system.diseaseSourceCode]
+        diseaseName: diseaseCatalog.namesBySourceCode[item.system.diseaseSourceCode]
           ?? item.system.diseaseSourceCode
           ?? "",
         quantity: item.system.quantity,

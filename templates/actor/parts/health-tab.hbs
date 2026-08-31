@@ -8,6 +8,16 @@
       {{#if this.currentStageSummary}}<p><strong>Zasady:</strong> {{this.currentStageSummary}}</p>{{/if}}
       {{#if this.currentStageDescription}}<p>{{this.currentStageDescription}}</p>{{/if}}
       {{#if this.currentStageEffect}}<p><small>Kod efektu: {{this.currentStageEffect}}</small></p>{{/if}}
+      {{#if this.linkedMedicines.length}}
+        <p>
+          <strong>Leki:</strong>
+          {{#each this.linkedMedicines}}
+            {{this.name}}{{#unless @last}}, {{/unless}}
+          {{/each}}
+        </p>
+      {{else}}
+        <p><strong>Leki:</strong> brak konkretnych pozycji w katalogu.</p>
+      {{/if}}
       {{#if this.medicationDescription}}
         <details>
           <summary>Leczenie</summary>

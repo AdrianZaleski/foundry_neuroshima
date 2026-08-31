@@ -210,5 +210,7 @@
 - Dla każdego etapu zachowujemy osobno krótkie podsumowanie zasad, opis fabularny i surowy kod efektu.
 - Kody efektów chorób i leków nie są jeszcze wykonywane automatycznie. Arkusz zawiera je tylko w części rekordów, a ich składnia nie jest jednolita.
 - Lek przechowuje kod powiązanej choroby, wielkość opakowania, aktualną liczbę dawek, cenę, dostępność, opis i czas działania.
+- Interfejs pokazuje nazwy powiązanych chorób i leków. Stabilne kody pozostają ukrytym kluczem relacji i są widoczne wyłącznie w danych technicznych.
+- Karta choroby oraz zakładka Zdrowie pobierają listę konkretnych leków z Compendium. Karta leku pozwala wybrać leczoną chorobę po nazwie.
 - Trzy leki ogólne nie są związane z żadną konkretną chorobą. Jest to prawidłowy stan danych, a nie błąd importu.
 - Użycie leku na karcie postaci zmniejsza liczbę dawek o jeden, lecz opisane działanie nadal rozstrzyga gracz lub MG.

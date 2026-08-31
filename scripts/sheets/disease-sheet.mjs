@@ -1,3 +1,5 @@
+import { prepareMedicinesByDisease } from "../catalogs/health-reference.mjs";
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -24,6 +26,8 @@ export class NeuroshimaDiseaseSheet extends HandlebarsApplicationMixin(ItemSheet
     context.item = this.item;
     context.system = this.item.system;
     context.diseaseStageOptions = diseaseStageOptions;
+    const medicinesByDisease = await prepareMedicinesByDisease();
+    context.linkedMedicines = medicinesByDisease[this.item.system.sourceCode] ?? [];
     return context;
   }
 }
