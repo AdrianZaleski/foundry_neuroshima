@@ -1,0 +1,32 @@
+<section class="neuroshima-background-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header>
+    <label>
+      Nazwa
+      <input type="text" name="name" value="{{item.name}}">
+    </label>
+  </header>
+
+  <h2>{{backgroundTypeName}}</h2>
+
+  <label>
+    Zestaw zasad
+    <input type="text" name="system.ruleset" value="{{system.ruleset}}">
+  </label>
+
+  <label>
+    Bonus
+    <textarea name="system.bonus" rows="3">{{system.bonus}}</textarea>
+  </label>
+
+  <label>
+    Opis
+    <textarea name="system.description" rows="12">{{system.description}}</textarea>
+  </label>
+
+  <label>
+    Tekst fabularny
+    <textarea name="system.flavorText" rows="8">{{system.flavorText}}</textarea>
+  </label>
+
+  <p><small>Kod źródłowy: {{system.sourceCode}}</small></p>
+</section>

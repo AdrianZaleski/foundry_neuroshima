@@ -5,7 +5,15 @@ import { compilePack } from "@foundryvtt/foundryvtt-cli";
 
 // Każda nazwa odpowiada jednemu czytelnemu katalogowi JSON oraz przyszłej
 // systemowej paczce LevelDB.
-const compendiumNames = ["weapons", "ammunition", "perks", "traits"];
+const compendiumNames = [
+  "weapons",
+  "ammunition",
+  "perks",
+  "traits",
+  "origins",
+  "professions",
+  "specializations"
+];
 const projectDirectory = process.cwd();
 
 for (const compendiumName of compendiumNames) {

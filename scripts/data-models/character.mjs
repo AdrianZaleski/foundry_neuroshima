@@ -50,13 +50,16 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         lastName: new StringField({ required: true, nullable: false, initial: "" })
       }),
 
-      // Na pierwszym etapie pola pochodzenia, profesji i specjalizacji są
-      // tekstowe. Później będzie można zasilać je katalogami z Compendium bez
-      // utraty możliwości wpisania własnego wariantu postaci.
+      // Nazwy tekstowe zachowują własne warianty użytkownika. Osobne kody
+      // wskazują wpisy katalogowe i pozwolą później automatycznie stosować
+      // bonusy oraz proponować cechy wynikające z dokonanego wyboru.
       background: new SchemaField({
         origin: new StringField({ required: true, nullable: false, initial: "" }),
+        originSourceCode: new StringField({ required: true, nullable: false, initial: "" }),
         profession: new StringField({ required: true, nullable: false, initial: "" }),
-        specialization: new StringField({ required: true, nullable: false, initial: "" })
+        professionSourceCode: new StringField({ required: true, nullable: false, initial: "" }),
+        specialization: new StringField({ required: true, nullable: false, initial: "" }),
+        specializationSourceCode: new StringField({ required: true, nullable: false, initial: "" })
       }),
 
       development: new SchemaField({

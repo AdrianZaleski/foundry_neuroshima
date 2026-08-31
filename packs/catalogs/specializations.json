@@ -1,0 +1,106 @@
+[
+  {
+    "_id": "s3e85d3210772e09",
+    "name": "Technik",
+    "type": "specialization",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "SPEC_TECH",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Tak brachu, urodziłeś się ze śrubokrętem w ręce. Potrafisz naprawić dosłownie wszystko, od samochodu, przez system sterowania pociskami, na mikserze kończąc. Wystarczy, że spojrzysz na jakieś plany, a już wiesz, co przedstawiają. Wystarczy, że dotkniesz, a już działa. To dar. Nie lekceważ go.",
+      "flavorText": "",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "SPECIALIZATION",
+        "sourceRow": 2,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "sb951a3a00ab3892",
+    "name": "Wojownik",
+    "type": "specialization",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "SPEC_WARRIOR",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Różne są umiejętności, jedni wspaniale gotują, inni potrafią grać na gitarze. Ty potrafisz walczyć. Jesteś w tym dobry. Jeden z najlepszych. Rozwalić ośmiu palantów bez zmiany magazynka? To proste. Odstrzelić łeb facetowi ochranianemu przez zgraję ochroniarzy, mając w Glocku jeden pocisk? To da się zrobić. Wylatując z piątego piętra obrócić się w powietrzu i odstrzelić łby dwójce kretynów, nim zrzucą za tobą granat? Tak...",
+      "flavorText": "",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "SPECIALIZATION",
+        "sourceRow": 3,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "s56ecf57be3ab834",
+    "name": "Ranger",
+    "type": "specialization",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "SPEC_RANGER",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Pustynia, chłopcze, to twój żywioł. I powiem ci, nie wiem co widzisz w tej kupie piachu, co podnieca cię w przedzieraniu się przez krzaczory, łażeniu po lesie i polowaniu na zwierzaki. Nie mam bladego pojęcia, ale trzeba ci przyznać: jesteś w tym dobry. Potrafisz wytropić nawet mrówkę. Znaleźć żródło czystej wody na środku Mohawe. Rozpalisz ogień, rozbijesz obóz, przygotujesz posiłek i będziesz się świetnie bawił w warunkach, w których ja zdechłym z głodu. Nie bądź taki zadowolony. To wciąż ja mam w ręce gnata. Więc nawet nie próbuj się głupio uśmiechać.",
+      "flavorText": "",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "SPECIALIZATION",
+        "sourceRow": 4,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "s3cdf0045f0d6e74",
+    "name": "Cwaniak",
+    "type": "specialization",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "SPEC_ROGUE",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Wchodzisz do nieznanej ci dotąd osady i zawsze, ale to zawsze, trafiasz do właściwej knajpy, rozmawiasz z właściwym barmanem i rozpoczynasz rozmowę tak, że facet od razu staje się twoim przyjacielem.",
+      "flavorText": "",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "SPECIALIZATION",
+        "sourceRow": 5,
+        "importWarnings": []
+      }
+    }
+  }
+]

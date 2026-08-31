@@ -1,0 +1,782 @@
+[
+  {
+    "_id": "c1d88ecce1b46a18",
+    "name": "Chemik",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_CHEMIK",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Słyszałeś już, że każdy napotkany człowiek jest chory? A o tym, że dodatkowo połowa z nich jest lekomanami? A o tym, że wszyscy biorą Tornado? A słyszałeś, że Moloch atakuje głównie gazami bojowymi? I wiesz też o tym, że główny problem to zatruta woda i skażona gleba? \r\nNo dobra, obok Mechanika jesteś najbardziej cenioną osobą w dzisiejszych czasach. Każda wiocha marzy o tym, by zamieszkał tam chemik, facet lub kobita, którzy potrafią wyczuć, który śluz jest śmiertelnie zabójczy, a który zajebiście śmiertelnie zabójczy. Chemik potrafi zbadać wodę, glebę, oczyścić znaleziony sprzęt gdzieś z okolic Missisipi i jeszcze zamienić to w paliwo do kosiarki. \r\nChemik potrafi wiele. Zna się na truciznach, jadach, wie jak bronić się przed gazem, które rękawice naprawdę chronią przed kwasem, a które tylko tak wyglądają. Cóż, jeżeli lubisz babrać się w smrodzie, to robota Chemika jest dla ciebie idealnym zajęciem.",
+      "flavorText": "\"Zatkajcie uszy, po wymieszaniu tych substancji może być trochę huku...\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 2,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c03cf5cfba727c5b",
+    "name": "Ganger",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_GANGER",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Ganger to ten facet na motorze, o którym mówi się na każdym kroku. To najpopularniejsza fucha dzisiejszych czasów. Wystarczy mieć maszynę, kilku kumpli i skórzaną kurtkę. I już jesteś gangerem. \r\nOczywiście dobrze jest mieć trochę szajby, duże umiłowanie do zabawy i nie bać się strzelanin. Raczej nie licz na to, że będziesz uwielbiany - gangerów mało kto lubi. Wiesz, ci goście zazwyczaj uprzykrzają wszystkim życie, więc jeśli raz na jakiś czas odłączysz się od swojej grupy i zostaniesz sam, możesz być pewien, że znajdzie się cały tabun ludzi, którzy zechcą odwdzięczyć ci się za wszystkie twoje grzechy i jeszcze kilka grzechów kumpli. \r\nNo dobrze, ale jak już wszystkim skroisz tyłki, fajnie będzie się pochwalić się przed resztą gangu, nie? \r\nNo więc wsiadaj na brykę, repetuj broń i ruszaj w drogę. Życie gangera na pewno nie będzie nudne!",
+      "flavorText": "\"To jest spluwa. To moi kumple. Przywitajcie się...\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 3,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c545414f025cb4ce",
+    "name": "Gladiator",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_GLADIATOR",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "To, że żyjesz z mordowania innych nie musi oznaczać, że pochodzisz z południa. To, że od ostatnich piętnastu lat łamiesz ludziom karki, wbijasz w plecy kolce i ostrza wcale nie musi oznaczać, że jesteś zły. To, że ostatniego z przyjaciół zadusiłeś jego własnym łańcuchem, bo takie było losowanie par w turnieju wcale nie musi oznaczać, że nie masz uczuć. \r\nTo, że jesteś gladiatorem musi natomiast oznaczać, że cholernie ciężko zrobić ci krzywdę. Także to, że zawzięty i twardy z ciebie sukinsyn. Oraz to, że nawet jeżeli weźmiesz do ręki łyżeczkę do cukru, powinienem czuć się tak, jakbyś trzymał w łapie kilof, bo potrafisz robić krzywdę dosłownie każdym przedmiotem. Coś jeszcze? Na przykład do, że jeśli rozpieprzę ci obojczyk, złamię rękę w dwóch miejscach i wbiję bagnet w udo, absolutnie nie powinienem uważać, że z tobą skończyłem. Bo jeżeli cieknie ci posoka to znaczy, że twoje serce wciąż pompuje. A jeżeli twoje serce wciąż pompuje to znaczy, że wciąż jestem w niebezpieczeństwie.",
+      "flavorText": "\"Pokonałeś dwójkę mutantów, łał! No co ty nie powiesz?...",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 4,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ce36b8647790f796",
+    "name": "Handlarz",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_HANDLARZ",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Mówi się, żę nastały dobre czasy dla handlarzy. Padły sieci sklepów, hipermarkety i cała reszta - został tylko inteligentny facet i towar w bagażniku. W pojedynku kupców na przestrzeni dziejów zwyciężyli akwizytorzy. Dziś nigdzie nie uświadczysz karteczki \"Akwizytorów nie wpuszczamy\". \r\nFajnie jest pokonać Tesco, co? \r\nNo dobra, nie myśl jednak, że handlowanie jest takie proste. Trzeba mieć niezłe \"Gadane\" i dużo dobrego towaru, względnie rewelacyjne \"Gadane\" i sporo towaru gównianego. A do tego nerwy jak ze stali. Kiedy targujesz się z szefem Black Cats trzeba być twardzielem, by nie dać się zleszczyć. No i musisz umieć kłamać. To się przydaje, gdy odkupujesz świetny towar od jakiegoś frajera za dziesiątą część ceny, oraz wtedy, gdy sprzedajesz niedziałający toster, wmawiając gościowi, że to część suszarki do włosów. \r\nNo dobrze, ale jak już umiesz kłamać, masz niezłe \"Gadane\" i do tego stalowe nerwy - będzie ci się dobrze żyło. Pamiętaj tylko by kupować bez VATu, sprzedawać z VATem i wszystko będzie się kręcić.",
+      "flavorText": "\"Zróbmy tak: ja panu dam te dwie chłodnice i piecyk, a wezmę tę skrzynkę części, dobrze?\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 5,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c2bc57fa612ce2f0",
+    "name": "Kaznodzieja Nowej Ery",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_KAZNODZIEJANOWEJERY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Nastały ciężkie czasy - świat runął i cywilizacja chyli się ku upadkowi. Resztki dawnego porządku przebijają spośród gruzów miast i miasteczek. Ludzie próbują odnaleźć się w nowych realiach. Potrzeba im wsparcia, pomocy i kogoś, kto wskaże cel i da nową siłę. \nDobrze, że mają ciebie. \nBo to ty jesteś tym facetem od wskazywania drogi. Przekonaj ich, że nie jest tak źle. Pokaż ludziom, że świat się jeszcze nie skończył, a Aniołki z oddziału Stróżów wciąż stoją za naszymi plecami. Czasem musisz zganić grzesznika, innym razem pocieszyć zagubionego, raz stanąć po stronie słabszych, innym razem na wszelki wypadek stanąć po stronie silniejszych. Dobrze, byś potrafił przemówić do tłumu, pocieszyć przerażonego, otoczyć ramieniem płaczącą kobietę. \nMusisz mieć \"Gadane\", by przekonać okoliczne męty do właściwego wyboru. \"Gadane\", lub przynajmniej szpadel, by pieprznąć w łeb tych, którzy mają kłopoty ze słuchem.\nWięc jeśli masz jakiś pomysł na wskazywanie celu i jeśli masz gadane (lub szpadel), nadajesz się.",
+      "flavorText": "\"No i Amen.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 6,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c2a027602537c089",
+    "name": "Kowbój",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_KOWBOJ",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "No dobra, może czasy Doca Holidaya minęły, ale Stany to wciąż miejsce, gdzie prawdziwy kowboj znajdzie dla siebie zajęcie. Jak widać na załączonym obrazku, historia zatoczyła potężne koło i dziś nasze ziemie przypominają te z dawnych czasów. Ponownie można założyć kapelusz, kamizelkę, w olstra wsadzić karabin i ruszyć w podróż. \r\nWięc jeśli lubisz przygody, nastał raj. Możesz przemierzać Stany wzdłuż i wszerz, budować swoją legendę, pędzić bydło czy nawet założyć ranczo. Oczywiście prócz bandytów, jak dawniej, będą najeżdżać na nie mutanty i maszyny Molocha, ale co tam, w końcu rewolwery masz lepsze niż twoi przodkowie. Dasz sobie radę. A jak nie lubisz rancho, zawsze możesz wsiąść na konia i ruszyć w podróż. Jeśli będziesz miał farta, odwiedzisz wiele miast i miasteczek, spotkasz ciekawych ludzi, a może nawet zbudujesz legendę, Legendę, która będzie opowiadać o pewnym facecie, pochodzącym z małej dziury... \r\nSkąd pochodzisz?",
+      "flavorText": "\"Nazywam się Bourbonblade. Pewnie o mnie słyszałeś, co?\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 7,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "cde462be9940d5fe",
+    "name": "Kurier",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_KURIER",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "W świecie pociętym ciężko rannymi autostradami, bez kolei, samolotów i autokarów, do łask wrócili Kurierzy. Ludzie, którzy dotrą w każde miejsce i zawsze będą na czas. Wyposażeni w najdokładniejsze mapy, znający każdą dziurę, skrót, znający teren lepiej niż jego rodowici mieszkańcy. Kurier musi wiedzieć, gdzie można natknąć się na mutantów, a gdzie na pole minowe. Musi wiedzieć który teren jest skażony i jak walczyć ze zmutowanymi zwierzętami. Kurier musi umieć naprawić swoją maszynę i wiedzieć, gdzie zdobyć paliwo. \r\nI zawsze, powtarzam, zawsze musi zdążyć na czas. Kurier nie może pozwolić sobie na fuszerkę.",
+      "flavorText": "\"Piątek, 20:00? Będę na czas. Uznaj to za załatwione.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 8,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c61d1ad7d0fa0c51",
+    "name": "Łowca",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_LOWCA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Odnaleźć chłodnicę do Forda Buicka z '76? Wykopać skądś komplet płyt Santany? Zdobyć dokumentację do magnetowidu Sony model SP34-98? To twój chleb powszedni. Wiesz czego i gdzie szukać. Masz fotograficzną pamięć i olbrzymią, wszechstronną wiedzę. Przyjmujesz zlecenie, spędzasz miesiąc czasu na doczytywaniu informacji i douczasz się, łazisz po archiwach, potem rozmawiasz ze specami i przyjaciółmi. W końcu, kiedy już jesteś pewien, że dokładnie wiesz gdzie szukać, ruszasz w drogę. \r\nTo nie jest prosta praca. Trzeba być cholernie bystrym i ostrożnym. Trzeba mieć pewność i siłę przebicia. Musisz umieć rozmawiać z ludźmi, być wytrwały i nieugięty. Kochać historię, badania i szperanie. Bądź gotowy na przekopywanie się przez złomowiska, na eksplorację opuszczonych bunkrów i na wykradanie sprzętu mafiozom w Vegas. \r\nW zasadzie, jeżeli chcesz być łowcą, musisz być gotowy na wszystko.",
+      "flavorText": "\"To będzie kosztowało, ale da się zrobić. Znajdę to. Umówmy się za szęść miesięcy, tu, wczesnym wieczorem. Powiedzmy o 18'tej, może być?\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 9,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ca2ae34785673f35",
+    "name": "Łowca mutantów",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_LOWCAMUTANTOW",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "No dobra, przyznam, że na początku kojarzyło mi się to z tymi facetami, co dawniej łapali niewolników. Teraz wiem już więcej. \r\nŻaden niewolnik w historii świata nie był tak niebezpieczny jak co drugi z mutantów, na których polujesz. To jest niezaprzeczalny fakt, który tłumaczy po co ci karabin, trzy spluwy, nóż bardziej przypominający maczetę i jeszcze maczeta na wszelki wypadek. Domyślam się, że ta skórzana torba pełna jest medykamentów i odtrutek, na wszelkie trucizny i jady, jakimi poczęstują cię mutki. \r\nW zasadzie tak jak tropiciel musisz być uparty i nieustępliwy, konsekwentny i zawzięty, itepe itede, a do tego jeszcze powinieneś być tym typem człowieka, na którego mówi się \"sukinsyn\". \r\nBez litości. Mutanci to zwierzęta. Jeżeli jesteś o tym przekonany, witaj w zawodzie.",
+      "flavorText": "\"Mutant to prawie człowiek. Zasługuje na szybką śmierć.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 10,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "cf59474ce17dc0c1",
+    "name": "Mafiozo",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_MAFIOZO",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Nastały dobre czasy. Nie ma policji. Nie ma FBI. Nie ma CIA ani US Army. Ani żadnej innej organizacji zajmującej się ochranianiem nieprzystosowanych do życia frajerów. W miastach wreszcie żyje się ciekawie, Teraz można się sprawdzić i ocenić, kto zasługuje na miano szefa dzielnicy, czy nawet całego miasta. \r\nTak, wybrałeś drogę kariery. To dość pracochłonne i trudne, ale poradzisz sobie. Wysłuchaj tylko tych kilku rad: Nigdy nie ufaj przyjaciołom. Prędzej czy później zostawią cię na lodzie, więc lepiej byś był na to przygotowany. Nigdy nie pożyczaj kasy ludziom, którzy mogą ci ją oddać. Zastanów się, nic na tym nie zyskujesz. Nigdy nie cofaj się. Nigdy się nie zatrzymuj. Nigdy nie odpuszczaj. Nawet jednej uliczki. Nawet jednej bramy. Jeśli walczysz o władzę w mieście, ważne jest wszystko. Nawet ten cholerny hydrant.",
+      "flavorText": "\"To jest moje miasto.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 11,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c2da9e865425ed78",
+    "name": "Medyk",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_MEDYK",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Przede wszystkim, dobry medyk powinien być głuchy. Środków przeciwbólowych jest jak na lekarstwo, więc pacjenci drą się jak opętani, więc jak masz wrażliwy słuch to się bracie nie skupisz i pacjent ci zejdzie. Głuchota jest w cenie. Taa... Dobry felczer... wiesz, co? Najlepiej głuchy i nieczuły. Widzisz, pacjenci będą ci schodzić hurtowi, jednego uratujesz, trzech nie, statystyki nie kłamią, więc lepiej, żebyś się zbyt często nie rozklejał. Ma gość rozwaloną nogę, ucinaj, a jak się nie udało to bierz się za kolejnego. Jest wojna, nie ma zmiłuj. \r\nMedyk musi być twardym biznesmenem, bez litości zarabiającym na swych usługach, gdzie tylko go nogi poniosą. Jak będziesz miękki i będziesz leczył biednych, to zdechniesz z głodu, to jasne. Bo widzisz, medyka szanują i potrzebują wszyscy. Dopóki nie odmówisz komuś pomocy, nikt nie tknie cię palcem. No dobra, chyba że masz w okolicy konkurencję, a z konkurencją to wiesz, co się robi, nie? \r\nJeszcze jedno. Medyk nie jest maszynką do skręcania leków z piasku. Gościu nie jesteś biologiem czy zoologiem, bez jaj! Gówno się znasz na chemii i farmakologii. Jesteś po prostu krawcem. Umiesz połatać i poreperować człowieka. Kumasz? Nieczuły, twardy dupek znający swoją wartość. Tak, będzie z ciebie idealny lekarz.",
+      "flavorText": "\"Zamknij się albo utnę ci też drugą nogę, jasne?\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 12,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ca620708e9dd1d8e",
+    "name": "Monter",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_MONTER",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Wyobraź sobie, że pracujesz w fabryce Forda w Detroit. Jakieś 5 lat po tym, jak ją ostatecznie zamknęli. Twoja fucha to przywrócenie jej do działania, bo jakiś szejk z południa kupił ją wnukowi. Łapiesz skalę? No to teraz wiesz, na czym polega zawód Montera w dzisiejszych czasach. \r\nPo wojnie, jak mówią niektórzy, pozostał tylko radioaktywny pył i kurz. Wszystko się wzięło i schrzaniło. Więc jeśli jesteś panem Złota Rączka i potrafisz to naprawić, jesteś tu bogiem. Wiesz jak przepchać klop, jak naprawić bojler, jak wymienić chłodnicę w wozie i jak przy pomocy spieprzonego tostera naprawić lodówkę. Powiedz jeszcze, że potrafisz ocieplić dom, wymienić oświetlenie i wstawić nowe okna. Powiedz coś jeszcze, a kupię obrączkę i ci się oświadczę. Wyjdziesz za mnie?...",
+      "flavorText": "\"No i się zesrało... \"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 13,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c4c14a0c0fbc5aee",
+    "name": "Najemnik",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_NAJEMNIK",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Co i za ile? - motto najemników, chleb powszedni ich życia i filozofia działania. Przez półtora miesiąca siedzisz w knajpie, czekając na frajera w potrzebie. Gościa, który potrzebuje pomocy, bo wdepnął w gówno przerastające dawny stan Alabama. Facet zjawia się. Zwierza się z problemów. Ty podajesz kwotę. I od tej pory siedzicie w tym gównie razem. Cokolwiek by nie było, zrobisz wszystko by osiągnąć cel. Dlaczego? Bo ci za to płacą. Bo taki masz zawód. Robić to, co każe pracodawca.",
+      "flavorText": "\"Powiedz co, a ja ci powiem za ile.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 14,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c2fcb17d7847aca6",
+    "name": "Ochroniarz",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_OCHRONIARZ",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Prędzej czy później każdy narobi sobie wrogów. Są ludzie, którzy mają ich naprawdę wielu. Wtedy proszą o pomoc takich jak ty, speców od chronienia dupska. \r\nNie myśl, że to jakaś wyjątkowo romantyczna fucha, nic z tych rzeczy. To ciężka praca. Odpowiadasz za życie człowieka, kogoś, kto wkurzył kilku kolesi, którzy teraz robią wszystko, by wykopać go z tego świata. Jeśli wchodzicie do knajpy to nie patrzysz na laski, lecz na faceta, który trzyma rękę pod płaszczem. Gdy włazicie do hotelu nie patrzysz na kelnerki, lecz na uchylone drzwi naprzeciwko. Gdy jedziecie przez pustynię, nie gapisz się na zachód słońca, lecz na dwa cienie przemykające w oddali. \r\nMusisz dostrzec kulę, nim zostanie wystrzelona. Musisz usłyszeć lecący nóż, nim ktoś wypuści go z ręki. Musisz dostrzec kawałek plastiku, nim ktoś naciśnie czerwony przycisk. I nie wolno ci się pomylić. Jeśli twój klient wyciągnie kopyta, jesteś bezrobotny. Nikt już ci nie zaufa.",
+      "flavorText": "\"Od tej chwili nic już panu nie grozi.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 15,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c85a5d3298c5fedc",
+    "name": "Sędzia",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_SEDZIA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Dawniej pracowałbyś w policji, nosił odznakę i jeździł wozem na sygnale. Cóż, świat się zmienił. Odznaka jest nic niewarta, policja nie istnieje i tylko sygnał wyje jak dawniej. \r\nWięc chłopie, jeśli jesteś tym gościem, który zajmuje się egzekucją prawa, to musisz mieć naprawdę stalowe nerwy. No i zdrowo rozregulowany system współczesnej wartości. Oprócz ciebie i kilku podobnych frajerów, dziś już nikt nie przestrzega prawa. Nie ma sądów, więzień, nie ma Texas Rangers czy FBI ani nic z tych rzeczy. Dlatego właśnie niektórzy mówią na takich jak ty Sędziowie. Działacie jak Sędzia Dredd - słyszałeś o tym gościu? Pościg, odczytanie wyroku i egzekucja. Tak dziś działa wymiar sprawiedliwości. Jak w komiksie. \r\nCóż, taki świat. Trochę szalony, nie?",
+      "flavorText": "\"Jesteś aresztowany.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 16,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c3324c4926b09e3e",
+    "name": "Spec",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_SPEC",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Jeśli na czymś naprawdę się znasz, to jesteś praktycznie nietykalny. Spece w dzisiejszym świecie mają się po prostu świetnie. Wreszcie nastał ich czas. Dawniej nietykalność była domeną dziennikarzy i reporterów, teraz to Spec może czuć się bezpiecznie niemal w każdej sytuacji. Nawet najgłupszy ganger wie, że Speca lepiej trzymać przy życiu.\r\nMasz wiedzę z większości dziedzin nauki, takich jak biologia, fizyka, chemia czy geografia - na poziomie tego, czego dawniej nauczano dzieciaków w liceum. Gdybyś się teraz chłopie przeniósł do liceum, miałbyś świadectwo z paskiem jak nic. No, a to przecież nie wszystko - w kilku z tych dziedzin jesteś po prostu cholernym czempionem, profesorkiem, po prostu Specem. Znasz je na poziomie akademickim, bo poświęciłeś temu całe swoje parszywe życie. I co to oznacza? \r\nOznacza to tyle, że w przeciętnej wsi, osadzie czy dowolnej grupie ludzi jesteś traktowany jak półbóg. Słuchają każdego twojego słowa, próbują zatrzymać cię przy sobie, dbają o ciebie jak o złote jajo. Fajnie ci kujonie, co?",
+      "flavorText": "\"To może być wirusowe zapalenie opon mózgowych. Ukąszenie kleszcza, lub...\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 17,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c1daad1027901401",
+    "name": "Szaman",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_SZAMAN",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Nazywają cię zafajdanym ćpunem albo śmierdzącym grzybojadem? Może otacza cię kult i powszechny szacunek plemienia? A może mało cię obchodzi co sądzą inni, bo i tak widzisz więcej niż oni? Twoja jaźń otworzyła się na świat duchów. Był to rytuał przejścia lub wyciek z reaktora. Od tego czasu słyszysz głosy, rozpoznajesz złe miejsca i patrzysz przez ludzi na wylot. \r\nKrzyczą \"Spieprzać!\" - ty czujesz l ewie delikatny dotyk radiacji. Nie raz pytali cię, dlaczego nie wszedłeś do tego budynku tuż przed tym, gdy wybuchła w nim bomba. Zastanawiali się jak przeżyłeś noc w mieście zombiaków. Przyzwyczaiłeś się, że proszą cię, byś pobłogosławił Harleya i że radzą się w ważnych przedsięwzięciach handlowych. Nie strzelają do ciebie, bo to przynosi pecha. \r\nTak naprawdę jednak czujesz się jak święty w piekle dopiero wtedy, gdy walniesz sobie działkę Tornado, a odwiedzające cię anioły mają twarze ludzi z pożółkłych fotografii, którymi targa wiatr...",
+      "flavorText": "\"Nie chciałem cię zabić, ale w moim Magnum mieszka ktoś, kogo zawsze słucham.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 18,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c2c7020e340e6e3a",
+    "name": "Szczur",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_SZCZUR",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Podobno dawniej szczura nazywano kloszardem. Dziwne. Co to jest kloszard? Niby ja? Jaki tam ze mnie kloszard, ot prosty człowiek jestem, zwyczajnie. Mieszkam w norze, w ruinach jednego z budynków w miasteczku, żyję ze zbieractwa, jem co znajduję lub upoluję, ubieram się w co ciepłe, do fryzjera nie chodzę. \r\nLubię pomyszkować, odwiedzać domy, knajpy, szukać różnych ciekawych przedmiotów z dawnych czasów. Od razu zaznaczam - karabiny i shotguny to nie są tajne przedmioty, choć trzeba przyznać, że można jest potem wymienić na żarcie lub trochę gorzałki. Nie potrzebuję być ani odważny, ani dobrze walczyć, nie muszę mieć żadnych przymiotów, bez których nie mógłby się obejść ochroniarz czy zabójca. Jestem prostym człowiekiem, całkiem nieźle radzę sobie w dzisiejszych - ponoć trudnych - czasach. \r\nChcesz się przyłączyć?",
+      "flavorText": "\"Chodźmy do mnie, mam trochę zapasów.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 19,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "cec4d56662b1e37e",
+    "name": "Treser Bestii",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_TRESERBESTII",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Ilość zmutowanych zwierząt, które produkuje Moloch jest zatrważająca. Większość z nich to maszyny do zabijania, potężne stwory łaknące krwi i niczego więcej. Są jednak wśród nich i takie, które da się okiełznać i zamienić w przyjaciela człowieka. \r\nTak, to trudne. Tak, nie ma zbyt wielu takich stworzeń. Ale jeżeli już ci się uda, masz prawdziwego sprzymierzeńca. \r\nA jeśli są bestie, to są i ludzie, którzy specjalizują się w tresowaniu tych bestii. Jedne doskonale nadają się na wierzchowce, inne jako obrońcy, czy nawet zwierzęta pociągowe. Po całych szopkach z eksperymentami biologicznymi Molocha, wybór jest całkiem interesujący. Więc jeśli masz dar nawiązywania kontaktu ze zwierzęciem, dużo cierpliwości i akurat nie masz nic lepszego do roboty - zacznij tresować bestie. Znajdziesz na nie kupca w każdym mieście.",
+      "flavorText": "\"Spokojnie piesku, ten pan na pewno nam nie grozi. Zapewne się przejęzyczył, prawda?\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 20,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c3a735399f021a8a",
+    "name": "Tropiciel",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_TROPICIEL",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Musiałeś się wychować na pustyni, innej rady nie ma. Nie próbuj mi nawet wmówić, że nauczyłeś się tego z książek! to nie-moż-li-we! Nie wiem, jak to robisz, dla mnie to magia i jedyne co mogę, to śmiać się, kiedy widzę, jak tacy jak ty przykucają na chwilę, a potem wstają i rzucają tekst w stylu \"Czterech pieszych, jedna kobieta, zmęczeni, jeden ranny, zgubili się, jeden dobry wojownik, prawdopodobnie gladiator...\" Dobry tropiciel zawsze znajdzie robotę. W gangu, w firmie kurierskiej, gdziekolwiek. Każdy, kto chce się przemieszczać, powinien to robić z tropicielem, facetem, który wyciągnie go z najgorszych opresji, który ostrzeże przed niebezpieczeństwem, oceni siły przeciwnika i zdoła wystrychnąć go na dudka. Zatrzeć ślady, zmylić, przygotować zasadzkę... \r\nMogę się z ciebie śmiać, ale obaj wiemy, że nie ruszę bez ciebie w teren, mam rację?",
+      "flavorText": "\"Trzech ludzi, dwie godziny przed nami. Starają się zatrzeć ślady. Co robimy?\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 21,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c695a2c247ea618a",
+    "name": "Wojownik autostrady",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_WOJOWNIKAUTOSTRADY",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Mieszkańcy Vegas mogą mówić, że w mieście jest niebezpiecznie. Że miasto to dżungla, w której przetrwa tylko najsilniejszy. Miastowi... Nie widzieli prawdziwego niebezpieczeństwa. Nigdy nie byli ścigani przez zgraję żądnych krwi renegatów. Nie natknęli się na Keer Stonesów czy Black Cats. Nie stali na środku Mohawe z pustym bakiem, przebitą komorą silnika i stadem czerwonoskórych na horyzoncie. Prawda jest taka, że jeżeli miasto to dżungla, to autostrada jest piekłem. \r\nJeśli chcesz żyć na autostradzie, jeśli kochasz prędkość, tyk silnika i prawdziwe emocje - witaj na trasie. Ale wiedz jedno, od razu musisz podjąć decyzję: albo dasz się wciągnąć do jednego z gangów - lecz wiedz, że prędzej czy później trafisz na mnie i pożałujesz tej decyzji - albo naprawdę masz jaja i postanowisz działać w pojedynkę, sprzątając te bandy szumowin na rozklekotanych maszynach. W tym wypadku lepiej byś celnie strzelał, bo ich zawsze będzie zdecydowanie zbyt wielu, byś mógł pozwolić sobie na pudło. Lepiej, byś cholernie dobrze prowadził swoją maszynę - bo zawsze te palanty spróbują rozbić cię w drobny mak. I wreszcie, lepiej byś miał ciepły koc. \r\nA co, chcesz marznąć po nocach?",
+      "flavorText": "\"Nienawidzę tego ścierwa. Więc jeżdżę i sprzątam.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 22,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "ce87393ab9ccacc6",
+    "name": "Wojownik klanu",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_WOJOWNIKKLANU",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Masz się czym pochwalić - posiadasz rodzinę. Niewielu ma takie szczęście. Klan wychował cię, karmił i szkolił. Za każdego z tych ludzi dałbyś się zabić. Bronisz terytorium, pastwisk, wody, złomu. Jeśli w okolicy pojawi się niedźwiedź - upolujesz go. Jeśli twoim ludziom wkrótce potrzebny będzie nowy generator, ruszysz na rok czy dwa na mały walkabout i wrócisz ze sprzętem. Jeśli wybuchnie wojna z sąsiadami, pójdziesz na wojnę i walczył będziesz w barwach swojego klanu. Nigdy nie mówisz \"ja\" - zawsze mówisz \"my\". \r\nBądź przygotowany na atak Black Cats i na ucieczkę z cielakiem na plecach, gdy nad ziemie klanu wiatr przywieje nuklearny pył. Na tobie polegają słabsi. Bądź wilkiem gdy trzeba, gdy trzeba szczurem, ale stado zawsze liczy się przede wszystkim. \r\nW tym świecie nie opowiesz nikomu o mistycznej sile, która kieruje twoimi krokami i twoim ramieniem. Nie zwierzysz się nikomu z zaufania i podziwu, jakim się cieszysz. Nikt cię nie będzie słuchał. Zostałeś wybrany nie po to, by przekonywać innych. Twoje życie i śmierć nie są w twoich rękach - zostałeś powołany, by służyć.",
+      "flavorText": "\"To barwy Kojotów. Od zeszłej zimy są naszymi Braćmi Piasku.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 23,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c332b6f025548144",
+    "name": "Zabójca",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_ZABOJCA",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Dziś zabójca w większym stopniu przypomina tropiciela niż mordercę. Dużo trudniej dopaść ofiarę, niż ją potem zlikwidować. Twój cel zazwyczaj wie, że nadepnął komuś na odcisk, a wtedy ucieka. Zaciera ślady, walczy o każdy dzień i każdą godzinę. Zasadniczo robi wszystko, by utrudnić ci robotę. \r\nWiele z ofiar liczy na to, że zarzucisz zlecenie. Dla ciebie choć cień takiej myśli to obraza. \r\nZabójca nigdy nie porzuca celu. Nigdy się nie wycofuje. Bez względu na okoliczności i wszelkie kłopoty, dąży do wykonania zlecenia. Ściga ofiarę, a potem zabija. Nie ma odwołania, nie ma szansy na uniknięcie wyroku. Cel musi zginąć. \r\nPotem inkasujesz wynagrodzenie i przyjmujesz kolejne zlecenie. Rozpoczyna się nowy pościg. Nie ma ofiary, która zdołałaby umknąć. Nie da się uciec przed wyrokiem śmierci.",
+      "flavorText": "\"Pozdrowienia od Pana Browna.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 24,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c00aae44db2a0daf",
+    "name": "Zabójca maszyn",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_ZABOJCAMASZYN",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Jeśli ktoś ogłosiłby konkurs na najniebezpieczniejsze zajęcie w dzisiejszych czasach, ty i twoi kumple po fachu zajęlibyście pierwsze miejsce. \r\nNo dobra, ale musisz przyznać, że trzeba mieć mocno nie po kolei w głowie, by chodzić po froncie i rozwalać maszyny Molocha. To, że masz nadludzki refleks, by unikać jego ognia niczego nie tłumaczy. To, że masz płuca jak miechy i cholernie dużą odporność na gaz, którym Moloch zasnuwa pole bitwy też nie jest dla mnie argumentem. Tak, precyzyjne oko które pozwala ci kilkoma strzałami wyłączyć z gry Mobsprzęt też mnie nie przekona. \r\nSłuchaj, jak dla mnie możesz być dodatkowo nadludzko opanowany i dokładny, nie ulegać panice i wyłączać się z całego tego chaosu bitwy, możesz nawet być genialnym inżynierem, który wie, jak skutecznie jednym strzałem wrogą maszynę, możesz nawet... \r\nPotrafisz to wszystko? \r\nŚwietnie. Dosłownie super. A ja i tak uważam, że jesteś chory. Możesz byc nawet Supermenem. Jeśli na froncie czujesz się dobrze, jesteś chory.",
+      "flavorText": "\"Wszystko zaczęło się od budzika. Potem poszło już z górki.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 25,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "cf94cc294033153c",
+    "name": "Złodziej",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_ZLODZIEJ",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Dawniej była policja, sądy, więzienia. Gdy tacy jak ty włamali się gdzieś i próbowali coś wykraść to albo im się udawało, albo wpadali w ręce wymiaru sprawiedliwości. Mogli mieć znajomości w policji i wyjść na wolność. Mogli mieć doskonałego adwokata i wyjść na wolność. Mogli przekupić sędziego i wyjść na... \r\nDziś nie ma policji. Nie ma adwokatów. Dziś nie mamy ławy przysięgłych. Jeśli wleziesz komuś do domu i popełnisz jeden błąd, będzie to ostatni błąd w twoim życiu. W dzisiejszych czasach ludzie nie lubią być okradani. Jeśli chcesz być złodziejem, musisz być diabelnie odważny. Musisz mieć stalowe nerwy. I musisz być naprawdę cholernie dobry. Cichy, sprytny, spostrzegawczy.",
+      "flavorText": "\"To jakieś potworne nieporozumienie. Zgubiłem się i szukałem właśnie wyjścia!\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 26,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c8262c0ba5abeed6",
+    "name": "Żołnierz",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_ZOLNIERZ",
+      "ruleset": "Neuroshima Edycja 1.5",
+      "description": "Wojna jeszcze się nie skończyła, żołnierzu. To, że na południu nie słychać wybuchów, nie widać dywizji czołgów czy regimentów piechoty nie znaczy, że to koniec. Na północy mamy regularny front. Nasz kraj nie poddał się. Nie upadł na kolana. Nigdy nie podpiszemy układu, który narzucałby na nas więzy i kradł nasze najcenniejsze dobro - wolność. Żołnierzu, twoi rodzice żyli w wolnym kraju i w takim kraju wychowają się twoje dzieci. Zniszczymy wroga, który atakuje nasz kraj. \r\nŻołnierzu, postawa! \r\nPrzed nami wiele pracy. Zabierajcie broń, ruszamy na północ, do boju...",
+      "flavorText": "\"Żołnierzu, to był rozkaz!\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 27,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "cd498302d940b6f3",
+    "name": "Frajer",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_FRAJER",
+      "ruleset": "XZG",
+      "description": "Czy to dlatego, że jesteś młody, czy to dlatego, że głupi, nie masz profesji.",
+      "flavorText": "\"Fiu fiu, jaka pogoda.\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 28,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c502e4df1cbc2da7",
+    "name": "Kierowca",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_KIEROWCA",
+      "ruleset": "Neuroshima Wyscig",
+      "description": "W tej branży najważniejszy jest kierowca. Nie musiałbym tego mówić, bo to oczywista sprawa. Tak na wszelki wypadek wolałem to jednak powiedzieć - tak, byś miał stu procentową pewność. To od ciebie zależy z jaką prędkością wchodzisz w zakręt. To ty wiesz, jak ściąć i kiedy przyspieszyć lub odpuścić. Co więcej, nikt inny nie wygląda tak dobrze za kierownicą. Byle tłuczek z Hegemoni w życiu nie będzie kierowcą, nawet choćby go ktoś przypiął pasami do siedzenia i wytłumaczył. że ta pałka pod ręką nie służy do napierdalania. Trzeba mieć nieco finezji i klasy, bo kiedy siedzisz za kierownicą to nie po to, by odparzyć sobie dupsko, lecz właśnie, by pokazać klasę. To ty masz za jebisty refleks, to ty masz szósty zmysł i to ty masz farta, nikt inny. Ani nie mechanik, ani tym bardziej ten sęp, menadżer. No dobra, niech będzie, może i mają farta... W końcu mają pracują z najlepszym kierowcą w tym mieście, nie? Farciarze.",
+      "flavorText": "\"Patrzcie, jadę bez trzymanki!\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 29,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c22bf365fafe2a2a",
+    "name": "Mechanik",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_MECHANIK",
+      "ruleset": "Neuroshima Wyscig",
+      "description": "Ludzie mogą mówić różne rzeczy. ale prawda jest jedna: w tej branży najważniejszy jest mechanik. Nie ten kretyn, którego sadza się za kółkiem i mówi mu, by deptał w ten pedał po prawej. Nie ten gość, co bierze prowizję od każdej nagrody, którą zdobyłeś. Najważniejszy jest mechanik. To ty regulujesz wydech. To ty tuningujesz silnik. To ty montujesz niespodzianki. Jak się zesra, to wołają ciebie. Jak ten idiota wejdzie w zakręt zbyt szybko i przywali w słup, wołają ciebie. Jak się okazuje, że pocą mu się ręce i potrzebuje klimy, wołają ciebie, jak za dużo pali, wołają ciebie, jak ma zbyt małe przyspieszenie na III biegu, wołają ciebie. Można by na jednej ręce wymienić sytuacje, kiedy debil od kółka radzi sobie sam. Szczanie, dymanie i zmiana spodni, no bo już z kaskiem to nie zawsze da radę sam, szczególnie jak dachował. Wracając jednak do fuchy mechanika - do twoich zadań należy przygotowanie wozu do wyścigu, pełny serwis podczas wyścigu, jeśli coś się zesra i wreszcie remont generalny po wyścigu. No bo nie ma bata, rajdy w Detroit nigdy nie kończą się bez znaczącego pokancerowania wozu.",
+      "flavorText": "\"To się pewno da naprawić. Tylko niech mi pan powie, co to jest?\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 30,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "c2daa2acf7c89386",
+    "name": "Menadzer",
+    "type": "profession",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "CLASS_MENADZER",
+      "ruleset": "Neuroshima Wyscig",
+      "description": "By okiełznać tych szaleńców i jeszcze zarobić trochę kasy to trzeba mieć łeb nie od parady. Gdyby nie ty, ci idioci już by nie żyli – ten pierwszy dawno roztrzaskałby się, a drugi wciąż naprawiał bojlery… Powiedzmy sobie wprost – to ty tu jesteś najważniejszy. Ty decydujesz o kolejności startów w poszczególnych rajdach i etapach – a od tych decyzji zależą wasze finanse, od nich zaś udoskonalanie wozu, od tego zaś szansa na zajęcie wyższego miejsca i udział w wyższej klasie rajdów, by potem… Mało kto zdaje sobie z tego sprawę, ale udział w Lidze i rajdach to strategia i taktyka, a nie swawolne brum brum. Dlatego kretyni z pijanymi menadżerami zajmują ostatnie miejsce w lidze. A twój zespół nigdy nie wypadł z pierwszej dziesiątki, co?",
+      "flavorText": "\"Słuchajcie, załatwiłem nam biopaliwo!\"",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "CLASS",
+        "sourceRow": 31,
+        "importWarnings": []
+      }
+    }
+  }
+]

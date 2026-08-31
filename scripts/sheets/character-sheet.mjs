@@ -43,6 +43,61 @@ const injuryTypeNames = {
   critical: "Rana krytyczna"
 };
 
+// Actor zapisuje wyłącznie stabilny kod wybranego wpisu. Czytelne nazwy oraz
+// opisy pobieramy z indeksu Compendium, dzięki czemu aktualizacja katalogu nie
+// wymaga przepisywania danych wszystkich postaci w świecie.
+async function prepareBackgroundCatalog(compendiumId, selectedSourceCode) {
+  const customOptionLabel = "Własne / brak wyboru katalogowego";
+  const compendium = game.packs.get(compendiumId);
+
+  if (!compendium) {
+    return {
+      options: { "": customOptionLabel },
+      selectedEntry: null
+    };
+  }
+
+  await compendium.getIndex({
+    fields: [
+      "system.sourceCode",
+      "system.ruleset",
+      "system.description",
+      "system.flavorText",
+      "system.bonus"
+    ]
+  });
+
+  const entries = [...compendium.index.values()]
+    .map((entry) => ({
+      name: entry.name,
+      sourceCode: entry.system?.sourceCode ?? "",
+      ruleset: entry.system?.ruleset ?? "",
+      description: entry.system?.description ?? "",
+      flavorText: entry.system?.flavorText ?? "",
+      bonus: entry.system?.bonus ?? ""
+    }))
+    .filter((entry) => entry.sourceCode)
+    .sort((leftEntry, rightEntry) => leftEntry.name.localeCompare(
+      rightEntry.name,
+      "pl"
+    ));
+
+  const options = { "": customOptionLabel };
+  for (const entry of entries) options[entry.sourceCode] = entry.name;
+
+  const selectedEntry = entries.find(
+    (entry) => entry.sourceCode === selectedSourceCode
+  ) ?? null;
+
+  // Nie usuwamy kodu, którego nie ma już w katalogu. Taki wpis pozostaje
+  // widoczny na liście i może zostać świadomie zmieniony przez użytkownika.
+  if (selectedSourceCode && !selectedEntry) {
+    options[selectedSourceCode] = `Nieznany wpis (${selectedSourceCode})`;
+  }
+
+  return { options, selectedEntry };
+}
+
 export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   // DEFAULT_OPTIONS opisuje zachowanie okna karty wspólne dla każdej postaci.
   static DEFAULT_OPTIONS = {
@@ -132,6 +187,28 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     // Udostępniamy szablonowi kartę Actora oraz jej dane systemowe.
     context.actor = this.actor;
     context.system = this.actor.system;
+
+    const [originCatalog, professionCatalog, specializationCatalog] = await Promise.all([
+      prepareBackgroundCatalog(
+        "world.neuroshima-origins",
+        this.actor.system.background.originSourceCode
+      ),
+      prepareBackgroundCatalog(
+        "world.neuroshima-professions",
+        this.actor.system.background.professionSourceCode
+      ),
+      prepareBackgroundCatalog(
+        "world.neuroshima-specializations",
+        this.actor.system.background.specializationSourceCode
+      )
+    ]);
+
+    context.originOptions = originCatalog.options;
+    context.professionOptions = professionCatalog.options;
+    context.specializationOptions = specializationCatalog.options;
+    context.selectedOrigin = originCatalog.selectedEntry;
+    context.selectedProfession = professionCatalog.selectedEntry;
+    context.selectedSpecialization = specializationCatalog.selectedEntry;
 
     // Słownik zasila listy wyboru współczynnika przy własnych umiejętnościach.
     // Klucz jest zapisywany w danych, a polska nazwa jest wyświetlana użytkownikowi.

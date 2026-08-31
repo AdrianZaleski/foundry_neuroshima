@@ -157,8 +157,11 @@
 ## Dane osobowe, sztuczki i cechy
 
 - Ksywa postaci jest standardową nazwą dokumentu Actor w Foundry.
-- Imię, nazwisko, pochodzenie, profesja, specjalizacja i Punkty Doświadczenia są zapisywane bezpośrednio w danych systemowych Actora.
-- Pochodzenie, profesja i specjalizacja są obecnie polami tekstowymi, dzięki czemu można wpisać wariant spoza katalogu.
+- Imię, nazwisko i Punkty Doświadczenia są zapisywane bezpośrednio w danych systemowych Actora.
+- Actor przechowuje kod wybranego pochodzenia, profesji i specjalizacji, a ich nazwy oraz opisy pobiera z odpowiednich Compendiów.
+- Obok wyborów katalogowych pozostają pola tekstowe, dzięki czemu można wpisać własny wariant pochodzenia, profesji albo specjalizacji.
+- Compendia `Neuroshima: Pochodzenia`, `Neuroshima: Profesje` oraz `Neuroshima: Specjalizacje` są synchronizowane odpowiednio z zakładkami `ORIGIN`, `CLASS` i `SPECIALIZATION`.
+- Stabilne kody wyborów przygotowują podstawę pod późniejsze automatyczne bonusy oraz dopasowywanie dostępnych cech i sztuczek.
 - Opis postaci, reputacja oraz przyjaciele i kontakty są osobnymi polami notatek Actora.
 - Sztuczki są osadzonymi Itemami typu `perk`, a cechy osadzonymi Itemami typu `trait`.
 - Oba typy korzystają ze wspólnego modelu obejmującego kod źródłowy, zestaw zasad, wymagania, działanie i opis.

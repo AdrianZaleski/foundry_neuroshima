@@ -18,19 +18,67 @@
   </label>
 
   <label>
-    Pochodzenie
+    Pochodzenie z katalogu
+    <select name="system.background.originSourceCode">
+      {{selectOptions originOptions selected=system.background.originSourceCode}}
+    </select>
+  </label>
+
+  <label>
+    Własne pochodzenie
     <input type="text" name="system.background.origin" value="{{system.background.origin}}">
   </label>
 
+  {{#if selectedOrigin}}
+    <article>
+      <h3>{{selectedOrigin.name}}</h3>
+      {{#if selectedOrigin.bonus}}
+        <p><strong>Bonus:</strong> {{selectedOrigin.bonus}}</p>
+      {{/if}}
+      <p>{{selectedOrigin.description}}</p>
+    </article>
+  {{/if}}
+
   <label>
-    Profesja
-    <input type="text" name="system.background.profession" value="{{system.background.profession}}">
+    Profesja z katalogu
+    <select name="system.background.professionSourceCode">
+      {{selectOptions professionOptions selected=system.background.professionSourceCode}}
+    </select>
   </label>
 
   <label>
-    Specjalizacja
+    Własna profesja
+    <input type="text" name="system.background.profession" value="{{system.background.profession}}">
+  </label>
+
+  {{#if selectedProfession}}
+    <article>
+      <h3>{{selectedProfession.name}}</h3>
+      {{#if selectedProfession.flavorText}}
+        <p><em>{{selectedProfession.flavorText}}</em></p>
+      {{/if}}
+      <p>{{selectedProfession.description}}</p>
+    </article>
+  {{/if}}
+
+  <label>
+    Specjalizacja z katalogu
+    <select name="system.background.specializationSourceCode">
+      {{selectOptions specializationOptions selected=system.background.specializationSourceCode}}
+    </select>
+  </label>
+
+  <label>
+    Własna specjalizacja
     <input type="text" name="system.background.specialization" value="{{system.background.specialization}}">
   </label>
+
+  {{#if selectedSpecialization}}
+    <article>
+      <h3>{{selectedSpecialization.name}}</h3>
+      <p>{{selectedSpecialization.description}}</p>
+    </article>
+  {{/if}}
 
   <label>
     Punkty Doświadczenia

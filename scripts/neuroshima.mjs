@@ -1,11 +1,13 @@
 import { NeuroshimaCharacterDataModel } from "./data-models/character.mjs";
 import { NeuroshimaAmmunitionDataModel } from "./data-models/ammunition.mjs";
+import { NeuroshimaBackgroundDataModel } from "./data-models/background.mjs";
 import { NeuroshimaEquipmentDataModel } from "./data-models/equipment.mjs";
 import { NeuroshimaFeatureDataModel } from "./data-models/feature.mjs";
 import { NeuroshimaInjuryDataModel } from "./data-models/injury.mjs";
 import { NeuroshimaWeaponDataModel } from "./data-models/weapon.mjs";
 import { NeuroshimaCharacterSheet } from "./sheets/character-sheet.mjs";
 import { NeuroshimaAmmunitionSheet } from "./sheets/ammunition-sheet.mjs";
+import { NeuroshimaBackgroundSheet } from "./sheets/background-sheet.mjs";
 import { NeuroshimaEquipmentSheet } from "./sheets/equipment-sheet.mjs";
 import { NeuroshimaFeatureSheet } from "./sheets/feature-sheet.mjs";
 import { NeuroshimaInjurySheet } from "./sheets/injury-sheet.mjs";
@@ -50,6 +52,12 @@ Hooks.once("init", () => {
   // typami Itemu, aby można je było niezależnie filtrować w Compendium.
   CONFIG.Item.dataModels.perk = NeuroshimaFeatureDataModel;
   CONFIG.Item.dataModels.trait = NeuroshimaFeatureDataModel;
+
+  // Pochodzenia, profesje i specjalizacje korzystają ze wspólnego modelu,
+  // ale są osobnymi typami, aby każdy katalog tworzył własne Compendium.
+  CONFIG.Item.dataModels.origin = NeuroshimaBackgroundDataModel;
+  CONFIG.Item.dataModels.profession = NeuroshimaBackgroundDataModel;
+  CONFIG.Item.dataModels.specialization = NeuroshimaBackgroundDataModel;
 
   // Rejestrujemy własny wygląd karty i ustawiamy go jako domyślny
   // dla wszystkich Actorów typu "character".
@@ -119,20 +127,43 @@ Hooks.once("init", () => {
       makeDefault: true
     }
   );
+
+  // Wspólna karta udostępnia opisy i dane katalogowe wszystkich trzech
+  // elementów historii postaci.
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.Item,
+    game.system.id,
+    NeuroshimaBackgroundSheet,
+    {
+      types: ["origin", "profession", "specialization"],
+      makeDefault: true
+    }
+  );
 });
 
 // Kod źródłowy identyfikuje dokładny wariant broni, amunicji albo zdolności.
 // Dla Itemów tworzonych ręcznie generujemy go automatycznie, aby użytkownik
 // nie musiał wymyślać technicznego i unikalnego oznaczenia.
 Hooks.on("preCreateItem", (item) => {
-  if (!["weapon", "ammunition", "perk", "trait"].includes(item.type)) return;
+  if (![
+    "weapon",
+    "ammunition",
+    "perk",
+    "trait",
+    "origin",
+    "profession",
+    "specialization"
+  ].includes(item.type)) return;
   if (item.system.sourceCode) return;
 
   const codePrefixByType = {
     weapon: "CUSTOM_WEAPON",
     ammunition: "CUSTOM_AMMO",
     perk: "CUSTOM_PERK",
-    trait: "CUSTOM_TRAIT"
+    trait: "CUSTOM_TRAIT",
+    origin: "CUSTOM_ORIGIN",
+    profession: "CUSTOM_PROFESSION",
+    specialization: "CUSTOM_SPECIALIZATION"
   };
   item.updateSource({
     "system.sourceCode": `${codePrefixByType[item.type]}_${foundry.utils.randomID()}`

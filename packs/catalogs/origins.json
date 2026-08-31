@@ -1,0 +1,340 @@
+[
+  {
+    "_id": "oa940b39dd01908f",
+    "name": "Południowa Hegemonia",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_POLUDNIOWAHEGEMONIA",
+      "ruleset": "Neuroshima 1.5",
+      "description": "W świecie rządzonym przez mordercę, reguły są jasne i proste. Trzeba umieć walczyć, by przeżyć. Jeśli ktoś coś ci ukradł, to znaczy, że źle tego strzegłeś. Jeśli ktoś obił cl mordę, to znaczy, że ci się należało.\nNie ma sądów. Nie ma dziesięciu przykazań. Nie ma gadki o nie pożądaniu żony bliźniego swego. Go się tak gapisz?! Tak, pochodzę z Hegemoni 1 Jakoś nie narzekam. To twarda szkoła życia, ale wierz ml, nie chciałbym urodzić się gdzie indziej Nasz świat Jest prosty: albo ktoś mówi d prawdę, albo strzelasz mu w łeb. Albo potrafisz udowodnić, że jesteś mężczyzną, albo kopiesz w kalendarz nim dożyjesz dwudziestki.\nDlatego Hegemonia się rozrasta, a ty szczasz na mój widok l kulisz za każdym razem, kiedy podnoszę głos. Pochodzę z Hegemonii 1 we mnie Jest siła\nJeśli spotkasz kogoś, kto wychował się u nas, nie zadzieraj z nim Nie próbuj go oszukać, ani okłamać. Nie próbuj być cwany. Nie warto.",
+      "flavorText": "",
+      "bonus": "ATR_BUD_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 2,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "of109dcde9f11fba",
+    "name": "Vegas",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_VEGAS",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Vegas to mieszanka maflozów spcxl ciemnej gwiazdy i świrów. Gdy widzę - bez urazy • takich palantów Jak ty, spluwa sama wskakuje mi do ręki. Wszędzie węszycie interes l zysk, a najlepiej, gdy można jeszcze w coś zagrać i zgarnąć podwójną pulę. To Jakaś choroba, nie wiem czym pieprznął w was Moloch, ale siadło wam na mózg I zlasowało go bez reszty. Nie potraficie żyć bez ryzyka.\nNo dobra, ale kilku rzeczy nie można wam odmówić. Macie farta, zasrańcy, o tym wiedzą wszyscy. Nie wiem, czy to Jakieś promieniowanie, czy inna cholera, ale to działa Wtedy, dwa lata temu, zanim rozwaliłem tego palanta od drabiny, dwa razy pod rząd zaciął ml się Glock. Chłopcze, to się nie zdarza. No chyba, że akurat walisz do kogoś z Vegas.\nA nie uważasz tego za śmieszne, że wy wszyscy wierzycie w każdy głupi przesąd i dziecinne opowieści o duchach?\nA wiesz, co najbardziej mnie wkurza? Brak zasad. Wasze podejście do życia, ciągłe kantowanie i matactwa Kombinowanie, jak zrobić krzywdę drugiemu, Jak podłożyć mu nogę i zająć Jego miejsce. Fakt. to daje wam niezłą odporność na działania innycłi. Fakt, zrobić w wała kogoś z Vegas, to sztuka. Fakt. często wychodzi na twoje, bo potrafisz ściemniać Jak nikt inny. Ale nie myśl, że cię za to szanuję. Ani trochę, cholerny, zakłamany, wierzący w duchy, palancie.",
+      "flavorText": "",
+      "bonus": "ATR_ZRE_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 3,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "o0cd0dd5d168cfda",
+    "name": "Człowiek pustyni",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_CZLOWIEKPUSTYNI",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Wtedy, gdy zrzucali bomby, nikt, ale to nikt nie celował w rezerwaty ozerwonoskó-ryoh. Indiańce przetrwali wojnę niemal nie ruszeni. I wiesz co? Gdy wszystko ucichło. wylezli z rezerwatów 1 zaczęli dyktować warunki. Nie wleźli do ruin Vegas, ani nie zapędzili się w okolice Miami Są na pustyni. I mają się tam cholernie dobrze.\nŁatwo Ich rozpoznać- smagła cera i spokojne podejście do życia. Nie wszyscy są czerwonoskorzy. Teraz po pustyniach łazi od groma ludzi, którzy lubią przestrzeń i spokój. Białych, czarnych, nawet żółtych. Nie liczy się kolor skóry, ale filozofia życia, a głównie to, że wojna wcale Ich nie zmartwiła. Łażą sobie po ś wiecie 1 delektują się przyrodą, popaprahcy. Wyglądają na szczęśliwych, słowo daję. Nigdzie się nie spieszą. Są zadowoleni z siebie 1 pewni tego, że na pustyni są czeinpionaml przetrwania.\nWędrowałem kiedyś z jednym takim 1 powiem ci, w końcu kazałem mu się wynosić w diabły. Polubiłem go trochę 1 tylko dlatego nie władowałem mu kuli w łeb. Był Irytujący. Nie Jedz tyle. marnujesz .jedzenie. Nie pij tyle, przecież nie chce ol się pić. Sugerował nawet bym zostawił na pustyni swój karabin. Jest ciężki, po co go nosisz? Tracisz niepotrzebnie siły. Doprowadzał mnie tym do pasji. Cokolwiek robiłem, mar nowałem energię, siły, sprzęt. Raz rozbił mnie Już zupełnie Wyskoczył zza załomu jakiś mutant, więc władowałem mu serię prosto w bebechy. Biały Sokół spojrząi na mnie i mówi, że jestem głupcom. „Wystarczyła jedna kula. Marnujesz amunicję”.\nKazałem mu wy pieprząc. No 1 poszedł sobie. Zostawił mnie na tej cholernej pusty ni 1 omal się nie upiekłem. Cudem doczołgałem się do jakiejś osady Jak go kiedyś spotkam...",
+      "flavorText": "",
+      "bonus": "ATR_PER_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 4,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "oe3e75a31e080db6",
+    "name": "Nowy Jork",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_NOWYJORK",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Wszyscy Nowojorczycy, jak jeden mąż, są zawzięci jak diabli, do tego są patetyczni do obrzydliwości. Dziw, że nie łażą ubrani w amerykańską flagę. Trzydzieści lat temu chyba najbardziej oberwał Waszyngton l właśnie Nowy Jork. Dziś Waszyngton to czarna dziura, NJ zaś rozwija się 1 zadziornie wymachuje flagą w kierunku Molocha. Nowojorczycy jeszcze przed wojną dostali srogo po dupie, bo to zawsze było miasto, w które każdy chciał uderzyć. Kiedy wybuchła wojna, mieszkańcy mieli już serdecznie dość wszelkich ataków.\nTeraz są świetnie zorganizowani. Ogłosili NJ stolicą Stanów, a ich przywódca mianował się prezydentem. Zbroją się i odbudowują. Nigdzie indziej nie ma takiej mocy 1 energii, żadne inne miasto nie ma takiej ochoty stanąć na nowo na nogi 1 skopać dupsko Molochowi. Nowojorczycy zmienili się w niewiarygodnym stopniu. Wzięli na siebie ciężar podniesienia państwa na nogi l harują jak woły, by to się powiodło. Wykopali Tornado z granic miasta, walczą z przestępczością, Inwestują w edukację. Uczą o historii Stanów i wielkich bohaterach dawnych dni.\nPowiem cl, można puścić pawia słuchając tych Ich przemów, widząc świętowanie Dnia Niepodległości, race i transparenty. Gdy usłyszałem, że zrobili paradę z jakiejś tam okazji, omal nie padłem. Są naprawdę mocno przejęci swoją rolą 1 znaczeniem. Oni naprawdę wierzą, że uratują Stany i spuszczą lanie Molochowi. Wiesz, że budują kolej? Uruchomili kilka fabryk, elektrownie, mają nawet szkoły dla dzieciaków! Śmieję się z nich, ale tak szczerze mówiąc, szanuję ich za wolę walki i odwagę Jeśli ktoś spuści Molochowi wpieprz, to będą to właśnie Nowojorczycy. Nikt inny.",
+      "flavorText": "",
+      "bonus": "ATR_CHA_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 5,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "o45c8d6ac268f267",
+    "name": "Texas",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_TEXAS",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Rodzina to świętość. Ziemia to świętość. Zwierzęta to świętość. Własność prywatna to świętość i prawo gościnności bo także świętość.\nTeksańczycy to przesympatyczni ludzie o bardzo silnych, ugruntowanych regułach ź.ycla i niesamowicie stabilnym światopoglądzie. Wierzą w oo wierzą 1 nie dają się łatwo z tej wiary wybić. Najważniejsza Jest dla nich rodzina l dom. To jedyni ludzie na ziemi, którzy ugoszczą cię, nakarmią, pomodlą się za. ciebie przed enem 1 jeszcze dadzą prowiant, gdy będziesz odjeżdżał. Pomogą naprawić wóz, dadzą trochę leków na drogę. Zrobią to wszystko 1 jeszcze więcej. Zrobią to, Jeśli oczywiście me jesteś Chińczykiem. lub murzynem. Teksańczycy nie przepadają za kolorowymi Prawdę mówiąc, nie lubią też mormonów. No 1 oczywiście arabów, tych to nawet bardzo nie lubią Mają pewien uraz do mutacji, więc Jeśli masz jakieś kłopoty z ciałem, lepiej jednak się nie zapędzaj w tamte strony. Mam nadzieję, że nie jesteś też zboczeńcem, to nie moja sprawa, ale onL. Aha, i lepiej, byś nie miał jakiegoś przewlekłego, zaraźliwego choróbska Teksańczycy mają takie powiedzenie: „Chore bydło trzeba odstrzelić dla dobra całego stada.'*\nPoza tym są całkiem tolerancyjni. To bardzo mili ludzie. Pomogą, doradzą-. Aha, zapomniałbym, nie ćpaj Tornado. Tego też nie uznają",
+      "flavorText": "",
+      "bonus": "ATR_BUD_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 6,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "o008b2434c789b35",
+    "name": "Federacja Appalachów",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_FEDERACJAAPALLACHOW",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Gościa z Federacji poznasz na kilometr albo i dwa. Łazi wyprostowany, głowa podniesiona wysoko. Facet taksuje wszystkich wokół, jak jakiś wizytator. Tam, w Federacji, mają system kastowy jest szlachta, magnaci, są też chłopi, którzy harują jak niewolnicy. Mają też kastę żołnierzy, którym nadano ziemię i tytuły. Czujesz to? Pół Stanów rozpieprzonych w drobny mak. a ci nadają sobie ziemię.\nNiezłe jaja. nie? Zadrwij z kogoś z Federacji, a uzna, że go obraziłeś i zechce się z tobą pojedynkować. Wyciągnie z bagażnika szpadę, lub dwa rewolwery, a jeśli będziesz wybrzydzał, bez mrugnięcia okiem położy cię serią z kałacha. Są honorowi i wzorują się na dawnych, oficerskich tradycjach Przystosowali Jednak dawne prawa do nowego świata Stare reguły i zwyczaje stosują, gdy można, lecz jeśli trzeba, być elastycznym, bez zastanowienia działają po nowemu, kałachem lub granatnikiem. Dryg oficerski, zasady, honor i szacunek pomiędzy sobą, a dla pospólstwa granat. Goście mają fantazję, trzeba im przyznać.\nJeśli spotkasz kogoś z Federacji, bądź ostrożny, to facet lub babka, którzy pochodzą z autonomicznego księstewka, pełnego zasad i zwyczajów. A ponieważ nie do każdego z tych frajerów dociera, że poza Federacją ich kasty i tytuły mogą sobie „wsadzić”, zawsze ciągną się za nimi kłopoty.",
+      "flavorText": "",
+      "bonus": "ATR_CHA_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 7,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "oc5dd17e6aae59c2",
+    "name": "Miami",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_MIAMI",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Widziałeś kiedyś Miami? Gdybyś tam był, to wiedziałbyś wszystko. Dużo błota 1 zmutowane aligatory * tak wyglądałaby widokówka, którą mógłbyś wysłać kum ploiri Gdybym chciał cl polecić jakiś film o tym mieście, zaproponowałbym „.Krokodyla Dundee”. Widziałeś może?\nGoście 2 Miami to prawdziwi twardziele. Cl z Hegemonii, czy Nowego Jorku to też nie mięczaki, sam wiem. co ci o nich opowiadałem, ale tam. w Miami, żyją najprawdziwsi twardziele. Nie ma bardziej prawdziwych twardziel!.\nFaceta z tych bagien poznasz bardzo prosto, wystarczy się przyjrzeć. Zacięta twarz, cygaro w zębach, kapelusz opuszczony na oczy. Kiedyś nawet zastanawiałem się, czy ściany ich domów są wyklejone zdjęciami Glin ta Eastwooda To, że każdy z nich udaje tego gościa, widać już z odległości pół mili. Czym będzie podchodził bliżej, tym jego poza będzie bardziej widoczna. Wiesz, kocie ruchy, niby od niechcenia, niby na luzie, a przecież dobrze wiesz, że jeden niewłaściwy ruch l masz nóż w bebechach. A tam. w Miami, noszą największe noże współczesnego świata.\nSiedzi taki potem przy barze, nagie spluwa, kohczy drinka i rzuca tekstem w stylu- „Ale mnie łeb łupi. Idę ubić Jakieś cholerstwo ” I wychodzi z knajpy. Wraca po tygodniu. Pytasz ga „I jak?r. a on, jak gdyby nigdy nic, odpowiada „Ubiłem gada” Nigdy nie wiesz, czy żartuje, czy mówi poważnie, dopiero później, jak będziesz wy jeźdźał, zobaczysz ścierwo wielkości mamuta leżące przed granicą mieściny. Znak. że gość nie żartował l naprawdę polazł w teren ubić coś dużego.\nTacy są właśnie ludzie z Miami. Dlatego właśnie ich lubię. To nie są mięczaki, ani\nświrusy. Po prostu dobrze grają swoją rolę A wiesz, ja uwielbiam stare filmy z Clintem Bastwoodem...",
+      "flavorText": "",
+      "bonus": "ATR_PER_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 8,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "obca1abcc55a36a8",
+    "name": "Człowiek z... nie twój zasrany interes",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_UNKNOWN",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Z nimi jest najgorzej, Jeżdżą od miasta do miasta, nie mogąc usiedzieć na dupsku. Nie mają bliskich, rodziny ani przyjaciół. Mają wielu wrogów, bo zawsze, jak się pojawiają w nowym miejscu, to brużdżą, by w końcu się wynieść. Kłopot z nimi polega na tym. że nigdy nie wiesz, czego się po nich spodziewać. Cholerni internacja* łowię, jeśli wiesz, co mam na myśli. Szybko się uczą, łapią nawyki, mają dryg do nauki języków 1 gwar. Wiedzą, co żre się w Vega& jakie są reguły walk gladiatorów na południu l co to Jest Korkcity. Jeżdżą l oglądają. Trzeba przyznać, że ta wieczna podróż hartuje ich jak mało co. Każdy z takich wędrowców wyszedł już z niejednej opresji, każdy z nich ma dom na piecach, w każdej chwili może podnieść dupsko, wyjść z knajpy 1 ruszyć w dwumiesięczną podróż.\nTo ich styl. Ludzie z nikąd.",
+      "flavorText": "",
+      "bonus": "ATR_ANY_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 9,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "o9981b0a63e0019f",
+    "name": "Salt Lake City",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_SALTLAKECITY",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Czas na dobrą wiadomość. W porównaniu do wieśniaków z Salt Lake jesteś całkiem równym gościem Jak wiesz, nie przepadam za Vegas, ale to, co doprowadza mnie do białej gorączki, to właśnie palant z Salt Lake Nie żebym miał coś do mormonów, kilka ich pomysłów na życie jest całkiem OK. Nie jestem fanatykiem religijnym i nikogo do niczego nie zmuszam, niech sobie wierzą w co chcą.\n\nAle do cholery! Niech nie przekonują mnie, że ich pomysły na życie są lepsze od moich! Najchętniej wysadziłbym ruiny Salt Lake w powietrze. Tylu kultów i sekt, ile tam znajdziesz, nie ma nigdzie indziej. Jeśli pochodzisz z Salt Lake, to znaczy, że masz zdrowo nasrane we łbie, bo już wpadłeś w sidła jakiejś sekty, Jesteś wyznawcą Jednej z nowych religii, wierzysz w boga skarpetek, albo będziesz mnie przekonywał, że \n\nmutanci to takie anioły, tylko bez skrzydeł.\n\nUważaj na nich, nieopatrznie dasz sobie postawić drinka i już masz wieczór z głowy. Przysiada się taki i nawija, pyta, wyjaśnia, przekonuje. To jest obłęd jakiś, każdy ma inne wisiory i znaki, jeden ma tatuaż na dupie, inny przekuł sobie nos, a każdy z nich w jakimś celu. Mroczni goście, słowo daję. Mają tysiąc teorii i odpowiedzi \n\nna najbardziej mroczne pytania. Czytają książki, oglądają jakieś kasety, robią sobie seanse i dużo ćpają.\n\nSekta i tyle. Najlepiej ich wszystkich wysłać do Molocha, może jego przekonają do zmiany spojrzenia na życie.",
+      "flavorText": "",
+      "bonus": "ATR_SPR_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 10,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "o3560ecf37f11e73",
+    "name": "Missisipi",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_MISSISIPI",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Ci, co żyją w okolicach Missisipi, to w zasadzie mutanci. Niby wyglądają normalnie... To tylko pozory. Łażą w ciężkich przeciwdeszczowych płaszczach, noszą maski przeciwgazowe i mają grube rękawice. Z daleka wyglądają o wiele gorzej niż mutanci.\nZ drugiej strony, trudno im się dziwić. Missisipi to dziś najbardziej niebezpieczny teren, ta rzeka niemal gotuje się od syfu, który zawiera. Pieni się i bulgocze.\nPomyśl, właziłbyś do niej bez dobrych gumowców?! Tak więc ci, którzy pracują na Missisipi, to skubańcy łażący w naprawdę grubych gumowcach.\nSą odporni dosłownie na wszystko. Co prawda, rzadko opuszczają swój ukochany ściek, ale jak już ruszą swe twarde dupska możesz być pewien dwóch rzeczy. Po pierwsze, nigdy nie wysyłaj ich do sprawdzania, czy teren jest skażony. To, że gość z Missisipi rozbił gdzieś namiot, nie oznacza, że ty przetrwasz tam choć pięć minut. A po drugie, możesz być pewien, że koleś, który wychował się na tej rzece, widział naprawdę wszystko. Możesz go pytać i na każdy temat usłyszysz historyjkę. Ich opowieści są naprawdę przekonujące, no ale jeśli każda minuta historyjki poparta jest prezentacją kolejnej blizny, trudno nie uwierzyć, nie?\nJa pierniczę, ale oni wyglądają! Życie na rzece to nie bajka, tego jestem pewien.",
+      "flavorText": "",
+      "bonus": "ATR_PER_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 11,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "occb83ee5fc03b05",
+    "name": "Posterunek",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_POSTERUNEK",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Posterunek to schronienie tych, którzy poświęcili się badaniu i zwalczaniu Molocha. Słyną z naukowców i techników, choć zamieszkują tam również żołnierze 1 ludzie nie związani z wojną. Władzę w mieście pełnią naukowcy - są najwyższą kastą l to oni decydują o stylu życia i sposobie prowadzenia wojny. Druga, kasta, - żołnierze • odpowiedzialna jest za zapewnienie bezpieczeństwa, kołnierze przelewają krew w zmaganiach na froncie, służą Jako zwiadowcy oraz kurierzy. Najniższa kasta Jest odpowiedzialna za wyżywienie miasta i kontakty handlowe.\nPosterunek przenosi się z miejsca na miejsce, aby uniknąć ataku skumulowanych sił najgroźniejszego z nieprzyjaciół Molocha. Wydawać by się mogło, że życie w bezustannej podróży nie sprzyja rozwojowi nauki i edukacji, lecz zaawansowana technologia jest kluczem do potęgi Wędrownego Miasta. Najbardziej olśniewające konstrukcje techniczne powstały poprzez podpatrywanie dzieł Molocha. Nic dziwnego, że dzieci wyrosłe w stechnicyzowanym otoczeniu od urodzenia, zapoznają się ze wszelkimi tajnikami nauk inżynierskich. Nawet jeżeli przeznaczono dziecko do ka sty żołnierzy, potrafi ono wykazać się wiedzą techniczną.\nStereotypowy mieszkaniec Wędrownej Osady Jest odludkiem pochłoniętym wyznaczonymi mu zadaniami. Rygor nauczył go lakoniczności, sumienności 1 posłuszeństwa wobec przełożonych. 1 cały czas pamiętają, że Ich nieprzyjacielem jest Maszyna. Część z nich. zmęczona niekończącym się uciekaniem, lubi na pewien czas opuścić osadę. „Urlop” wiąże się przeważnie z koniecznością, wypełnienia jakiejś misji, bowiem w Posterunku nikt nie może zostać bezużyteczny.",
+      "flavorText": "",
+      "bonus": "ATR_SPR_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 12,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "oe8e6e04d96eb516",
+    "name": "Detroit",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_DETROIT",
+      "ruleset": "Neuroshima 1.5",
+      "description": "Goście z Detroit są popieprzeni Jeśli spotkasz na swej drodze Jakiegoś popieprzeńca, spytaj go wprost: „Co tam ciekawego w Detroit?”. Idę o zakład, że będzie znal od po* wiedz.\nTo chyba jedyni ludzie na świecie, którym wojna się spodobała.\nOlewają Molocha, bunt maszyn i kłopoty z zakupem Snlckersów. Jedyne, co robią, to Jeżdżenie po mieście najszybciej Jak się da i strzelanie do siebie nawzajem. Ja wiem, że to fajna rozrywka, pognać ulicami miasta z prędkością LOO mil na godzinę 1 jeszcze sobie postrzelać do Innych „uczestników ruchu”. Z drugiej strony... robić to od trzydziestu lat?\nZycie w Detroit przypomina nieustanną balangę, a jego mieszkańcy zachowują się jak osiem nastolatek, który dostał na urodziny nowy wóz. To zwyczajna dziecina* da. Wiesz, moim zdaniem... Co ci się tak mordka cieszy? Chłopie, ja tu mówię o poważnych sprawach, a tobie co w głowie?! Wyścigi?! No nie mów, że to cl się podoba?! Człowieku, oni są nieprzystosowani do życia! Są Jak ten konik polny z tej bajki, co grał latem, a w zimie tak mu piżdziało, że do mrówki polazł.\nBrak ml luzu?! Co?! Brak ini czego?!\nNo chłopie, teraz to przegiąłeś, My tu mamy wojnę! Mamy katastrofę ekologiczną. Mamy biedę 1 głód, za pięć lat Moloch zeżre nas wszystkich i jeszcze dopchnie nas Meksykańcaml...\nCo?! Jak to, dlaczego więc sobie nie poszaleć?!\nWiesz co, spadaj. Jedź do Detroit,\nZnajdziesz tam kumpli w sam raz dla ciebie. Im nie brak luzu. o nie!",
+      "flavorText": "",
+      "bonus": "ATR_ZRE_BONUS:1"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 13,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "o1c18050d396829d",
+    "name": "Jestem nikim",
+    "type": "origin",
+    "img": "icons/svg/book.svg",
+    "system": {
+      "sourceCode": "ORIGIN_NOBODY",
+      "ruleset": "XZG",
+      "description": "W życiu w dupie byłeś i gówno widziałeś. Nie dostajesz żadnego bonusu. Ani cech z pochodzenia. Nikogo tak na prawdę nie interesuje twoja historia życiowa, a MG nie planuje żebyś przeżył tej sesji...",
+      "flavorText": "",
+      "bonus": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "ORIGIN",
+        "sourceRow": 14,
+        "importWarnings": []
+      }
+    }
+  }
+]
