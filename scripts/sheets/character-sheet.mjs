@@ -43,6 +43,26 @@ const injuryTypeNames = {
   critical: "Rana krytyczna"
 };
 
+const meleeDamageThresholdNames = {
+  below10: "Budowa < 10",
+  below12: "Budowa < 12",
+  below13: "Budowa < 13",
+  below14: "Budowa < 14",
+  below15: "Budowa < 15",
+  below16: "Budowa < 16",
+  below18: "Budowa < 18",
+  below19: "Budowa < 19"
+};
+
+function describeMeleeDamageProfile(damageByBuild) {
+  return Object.entries(meleeDamageThresholdNames)
+    .filter(([damageKey]) => damageByBuild[damageKey])
+    .map(([damageKey, thresholdName]) => (
+      `${thresholdName}: ${damageByBuild[damageKey]}`
+    ))
+    .join(" | ");
+}
+
 // Actor zapisuje wyłącznie stabilny kod wybranego wpisu. Czytelne nazwy oraz
 // opisy pobieramy z indeksu Compendium, dzięki czemu aktualizacja katalogu nie
 // wymaga przepisywania danych wszystkich postaci w świecie.
@@ -129,6 +149,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       editWeapon: this.#onEditWeapon,
       deleteWeapon: this.#onDeleteWeapon,
       reloadWeapon: this.#onReloadWeapon,
+
+      createMeleeWeapon: this.#onCreateMeleeWeapon,
+      editMeleeWeapon: this.#onEditMeleeWeapon,
+      deleteMeleeWeapon: this.#onDeleteMeleeWeapon,
 
       // Zapas amunicji jest niezależny od nabojów znajdujących się w broni.
       createAmmunition: this.#onCreateAmmunition,
@@ -283,6 +307,29 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     );
     context.totalEquipmentWeight = Math.round(equipmentWeightSum * 1000) / 1000;
 
+    context.meleeWeaponItems = this.actor.items
+      .filter((item) => item.type === "meleeWeapon")
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        armorPenetration: item.system.armorPenetration,
+        attackBonus: item.system.attackBonus,
+        defenseBonus: item.system.defenseBonus,
+        multipleOpponentsBonus: item.system.multipleOpponentsBonus,
+        requiredBuild: item.system.requiredBuild,
+        initiativeBonus: item.system.initiativeBonus,
+        damageProfileDescription: describeMeleeDamageProfile(
+          item.system.damageByBuild
+        ),
+        weight: item.system.weightInKilograms
+      }));
+
+    const meleeWeaponWeightSum = context.meleeWeaponItems.reduce(
+      (currentSum, item) => currentSum + item.weight,
+      0
+    );
+    context.totalMeleeWeaponWeight = Math.round(meleeWeaponWeightSum * 1000) / 1000;
+
     // Broń również jest osadzonym Itemem, ale pokazujemy ją na osobnej liście,
     // ponieważ posiada magazynek oraz parametry potrzebne później w walce.
     context.weaponItems = this.actor.items
@@ -336,9 +383,13 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     );
     context.totalAmmunitionPrice = Math.round(ammunitionPriceSum * 100) / 100;
 
-    // Łączne obciążenie obejmuje obecnie zwykły ekwipunek, broń i amunicję.
+    // Łączne obciążenie obejmuje obecnie zwykły ekwipunek, oba rodzaje broni
+    // oraz amunicję.
     // Kolejne typy przedmiotów, na przykład pancerz, dołączymy później.
-    const carriedWeightSum = equipmentWeightSum + weaponWeightSum + ammunitionWeightSum;
+    const carriedWeightSum = equipmentWeightSum
+      + meleeWeaponWeightSum
+      + weaponWeightSum
+      + ammunitionWeightSum;
     context.totalCarriedWeight = Math.round(carriedWeightSum * 1000) / 1000;
 
     return context;
@@ -527,6 +578,52 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     ]);
 
     await createdWeapon.sheet.render({ force: true });
+  }
+
+  static async #onCreateMeleeWeapon() {
+    const [createdWeapon] = await this.actor.createEmbeddedDocuments("Item", [
+      {
+        name: "Nowa broń ręczna",
+        type: "meleeWeapon"
+      }
+    ]);
+
+    await createdWeapon.sheet.render({ force: true });
+  }
+
+  static async #onEditMeleeWeapon(event, target) {
+    const itemId = target.dataset.itemId;
+    const meleeWeaponItem = this.actor.items.get(itemId);
+
+    if (!meleeWeaponItem || meleeWeaponItem.type !== "meleeWeapon") {
+      ui.notifications.warn("Nie znaleziono tej broni ręcznej na karcie postaci.");
+      return;
+    }
+
+    await meleeWeaponItem.sheet.render({ force: true });
+  }
+
+  static async #onDeleteMeleeWeapon(event, target) {
+    const itemId = target.dataset.itemId;
+    const meleeWeaponItem = this.actor.items.get(itemId);
+
+    if (!meleeWeaponItem || meleeWeaponItem.type !== "meleeWeapon") {
+      ui.notifications.warn("Nie znaleziono tej broni ręcznej na karcie postaci.");
+      return;
+    }
+
+    const safeWeaponName = foundry.utils.escapeHTML(meleeWeaponItem.name);
+    const deletionConfirmed = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: "Usuwanie broni ręcznej"
+      },
+      content: `<p>Czy na pewno usunąć broń <strong>${safeWeaponName}</strong>?</p>`,
+      modal: true
+    });
+
+    if (!deletionConfirmed) return;
+
+    await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
   }
 
   static async #onEditWeapon(event, target) {

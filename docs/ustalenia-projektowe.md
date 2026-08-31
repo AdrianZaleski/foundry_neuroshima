@@ -184,6 +184,16 @@
 - Kolumnę `5E obrażenia` z zakładki `RANGED` świadomie pomijamy.
 - Nowa broń otrzymuje stały kod źródłowy w repozytorium.
 
+## Broń ręczna
+
+- Broń ręczna jest osobnym typem Itemu `meleeWeapon`, niezależnym od broni dystansowej typu `weapon`.
+- Compendium `Neuroshima: Broń ręczna` jest synchronizowane z katalogiem utworzonym z zakładki `MELEE` arkusza referencyjnego.
+- Importujemy wyłącznie nazwane rekordy. Wiersze posiadające sam numer ID i pustą nazwę traktujemy jako niewypełnione rezerwy arkusza.
+- Model przechowuje Punkty Przebicia, bonus w ataku, bonus w obronie, bonus przeciw wielu przeciwnikom, wymaganą Budowę oraz bonus do Inicjatywy.
+- Profile obrażeń zachowujemy jako surowy tekst dla każdego progu Budowy. Arkusz używa niejednolitej i miejscami niepełnej notacji, dlatego na tym etapie nie normalizujemy jej automatycznie.
+- Masa, cena, dostępność i opis nie występują w źródłowej zakładce. Pozostają edytowalnymi danymi konkretnego Itemu.
+- Masa broni ręcznej jest doliczana do łącznego obciążenia postaci.
+
 ## Słowniki obrażeń i rodzajów ataku
 
 - Zakładka `DAMAGE` definiuje osiem symboli obrażeń, ich nazwy, modyfikatory i opisy ran według lokacji.

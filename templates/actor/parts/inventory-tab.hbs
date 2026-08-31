@@ -4,13 +4,68 @@
   {{!-- Ta wartość jest sumą masy ekwipunku, broni oraz zapasów amunicji. --}}
   <p><strong>Łączna masa noszonych przedmiotów:</strong> {{totalCarriedWeight}} kg</p>
 
-  <h2>Broń</h2>
+  <h2>Broń ręczna</h2>
+
+  <div class="melee-weapons">
+    <button type="button" data-action="createMeleeWeapon">Dodaj broń ręczną</button>
+
+    <p><strong>Masa broni ręcznej:</strong> {{totalMeleeWeaponWeight}} kg</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Broń</th>
+          <th>Atak i obrona</th>
+          <th>Wymagania</th>
+          <th>Obrażenia</th>
+          <th>Masa</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each meleeWeaponItems}}
+          <tr>
+            <td>
+              <strong>{{this.name}}</strong><br>
+              <small>PP: {{this.armorPenetration}}</small>
+            </td>
+            <td>
+              Atak: {{this.attackBonus}}, obrona: {{this.defenseBonus}}<br>
+              <small>Wielu przeciwników: {{this.multipleOpponentsBonus}}</small>
+            </td>
+            <td>
+              Budowa: {{this.requiredBuild}}<br>
+              <small>Inicjatywa: {{this.initiativeBonus}}</small>
+            </td>
+            <td>
+              {{#if this.damageProfileDescription}}
+                {{this.damageProfileDescription}}
+              {{else}}
+                Brak danych w katalogu
+              {{/if}}
+            </td>
+            <td>{{this.weight}} kg</td>
+            <td>
+              <button type="button" data-action="editMeleeWeapon" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteMeleeWeapon" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="6">Postać nie posiada jeszcze żadnej broni ręcznej.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Broń dystansowa</h2>
 
   {{!-- Każda broń jest osobnym Itemem należącym do tej postaci. --}}
   <div class="weapons">
     <button type="button" data-action="createWeapon">Dodaj broń</button>
 
-    <p><strong>Masa broni:</strong> {{totalWeaponWeight}} kg</p>
+    <p><strong>Masa broni dystansowej:</strong> {{totalWeaponWeight}} kg</p>
 
     <table>
       <thead>

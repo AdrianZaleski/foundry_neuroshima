@@ -1,0 +1,103 @@
+<section class="neuroshima-melee-weapon-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header>
+    <label>
+      Nazwa broni
+      <input type="text" name="name" value="{{item.name}}">
+    </label>
+  </header>
+
+  <h2>Broń ręczna</h2>
+
+  <label>
+    Typ
+    <input type="text" name="system.weaponType" value="{{system.weaponType}}">
+  </label>
+
+  <label>
+    Punkty przebicia pancerza
+    <input type="number" name="system.armorPenetration" value="{{system.armorPenetration}}" min="0" step="1">
+  </label>
+
+  <label>
+    Bonus w ataku
+    <input type="number" name="system.attackBonus" value="{{system.attackBonus}}" step="1">
+  </label>
+
+  <label>
+    Bonus w obronie
+    <input type="number" name="system.defenseBonus" value="{{system.defenseBonus}}" step="1">
+  </label>
+
+  <label>
+    Bonus przeciw wielu przeciwnikom
+    <input type="number" name="system.multipleOpponentsBonus" value="{{system.multipleOpponentsBonus}}" step="1">
+  </label>
+
+  <label>
+    Wymagana Budowa
+    <input type="number" name="system.requiredBuild" value="{{system.requiredBuild}}" min="0" step="1">
+  </label>
+
+  <label>
+    Bonus do inicjatywy
+    <input type="number" name="system.initiativeBonus" value="{{system.initiativeBonus}}" step="1">
+  </label>
+
+  <h3>Obrażenia według Budowy</h3>
+
+  {{!-- Wartości pozostają surowym zapisem z arkusza MELEE. --}}
+  <table>
+    <thead>
+      <tr>
+        <th>Próg Budowy</th>
+        <th>Zapis obrażeń</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>&lt; 10</td><td><input type="text" name="system.damageByBuild.below10" value="{{system.damageByBuild.below10}}"></td></tr>
+      <tr><td>&lt; 12</td><td><input type="text" name="system.damageByBuild.below12" value="{{system.damageByBuild.below12}}"></td></tr>
+      <tr><td>&lt; 13</td><td><input type="text" name="system.damageByBuild.below13" value="{{system.damageByBuild.below13}}"></td></tr>
+      <tr><td>&lt; 14</td><td><input type="text" name="system.damageByBuild.below14" value="{{system.damageByBuild.below14}}"></td></tr>
+      <tr><td>&lt; 15</td><td><input type="text" name="system.damageByBuild.below15" value="{{system.damageByBuild.below15}}"></td></tr>
+      <tr><td>&lt; 16</td><td><input type="text" name="system.damageByBuild.below16" value="{{system.damageByBuild.below16}}"></td></tr>
+      <tr><td>&lt; 18</td><td><input type="text" name="system.damageByBuild.below18" value="{{system.damageByBuild.below18}}"></td></tr>
+      <tr><td>&lt; 19</td><td><input type="text" name="system.damageByBuild.below19" value="{{system.damageByBuild.below19}}"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Pozostałe dane</h3>
+
+  <label>
+    Masa
+    <input type="number" name="system.weight" value="{{system.weight}}" min="0" step="0.01">
+  </label>
+
+  <label>
+    Jednostka masy
+    <select name="system.weightUnit">
+      {{selectOptions weightUnitOptions selected=system.weightUnit}}
+    </select>
+  </label>
+
+  <p><strong>Masa w kilogramach:</strong> {{system.weightInKilograms}} kg</p>
+
+  <label>
+    Cena
+    <input type="number" name="system.price" value="{{system.price}}" min="0" step="0.01">
+  </label>
+
+  <label>
+    Dostępność w procentach
+    <input type="number" name="system.availability" value="{{system.availability}}" min="0" max="100" step="1">
+  </label>
+
+  <label>
+    Kod źródłowy
+    <input type="text" name="system.sourceCode" value="{{system.sourceCode}}" readonly>
+  </label>
+
+  <label>
+    Reguły i opis
+    <textarea name="system.description" rows="8">{{system.description}}</textarea>
+  </label>
+</section>

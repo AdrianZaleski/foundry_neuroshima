@@ -12,7 +12,8 @@ const compendiumNames = [
   "traits",
   "origins",
   "professions",
-  "specializations"
+  "specializations",
+  "melee-weapons"
 ];
 const projectDirectory = process.cwd();
 

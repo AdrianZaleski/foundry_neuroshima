@@ -4,6 +4,7 @@ import { NeuroshimaBackgroundDataModel } from "./data-models/background.mjs";
 import { NeuroshimaEquipmentDataModel } from "./data-models/equipment.mjs";
 import { NeuroshimaFeatureDataModel } from "./data-models/feature.mjs";
 import { NeuroshimaInjuryDataModel } from "./data-models/injury.mjs";
+import { NeuroshimaMeleeWeaponDataModel } from "./data-models/melee-weapon.mjs";
 import { NeuroshimaWeaponDataModel } from "./data-models/weapon.mjs";
 import { NeuroshimaCharacterSheet } from "./sheets/character-sheet.mjs";
 import { NeuroshimaAmmunitionSheet } from "./sheets/ammunition-sheet.mjs";
@@ -11,6 +12,7 @@ import { NeuroshimaBackgroundSheet } from "./sheets/background-sheet.mjs";
 import { NeuroshimaEquipmentSheet } from "./sheets/equipment-sheet.mjs";
 import { NeuroshimaFeatureSheet } from "./sheets/feature-sheet.mjs";
 import { NeuroshimaInjurySheet } from "./sheets/injury-sheet.mjs";
+import { NeuroshimaMeleeWeaponSheet } from "./sheets/melee-weapon-sheet.mjs";
 import { NeuroshimaWeaponSheet } from "./sheets/weapon-sheet.mjs";
 import {
   initializeCatalogCompendia
@@ -58,6 +60,10 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.origin = NeuroshimaBackgroundDataModel;
   CONFIG.Item.dataModels.profession = NeuroshimaBackgroundDataModel;
   CONFIG.Item.dataModels.specialization = NeuroshimaBackgroundDataModel;
+
+  // Broń ręczna ma parametry ataku, obrony i obrażeń zależnych od Budowy,
+  // dlatego pozostaje osobnym typem od broni dystansowej.
+  CONFIG.Item.dataModels.meleeWeapon = NeuroshimaMeleeWeaponDataModel;
 
   // Rejestrujemy własny wygląd karty i ustawiamy go jako domyślny
   // dla wszystkich Actorów typu "character".
@@ -139,6 +145,16 @@ Hooks.once("init", () => {
       makeDefault: true
     }
   );
+
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.Item,
+    game.system.id,
+    NeuroshimaMeleeWeaponSheet,
+    {
+      types: ["meleeWeapon"],
+      makeDefault: true
+    }
+  );
 });
 
 // Kod źródłowy identyfikuje dokładny wariant broni, amunicji albo zdolności.
@@ -152,7 +168,8 @@ Hooks.on("preCreateItem", (item) => {
     "trait",
     "origin",
     "profession",
-    "specialization"
+    "specialization",
+    "meleeWeapon"
   ].includes(item.type)) return;
   if (item.system.sourceCode) return;
 
@@ -163,7 +180,8 @@ Hooks.on("preCreateItem", (item) => {
     trait: "CUSTOM_TRAIT",
     origin: "CUSTOM_ORIGIN",
     profession: "CUSTOM_PROFESSION",
-    specialization: "CUSTOM_SPECIALIZATION"
+    specialization: "CUSTOM_SPECIALIZATION",
+    meleeWeapon: "CUSTOM_MELEE_WEAPON"
   };
   item.updateSource({
     "system.sourceCode": `${codePrefixByType[item.type]}_${foundry.utils.randomID()}`

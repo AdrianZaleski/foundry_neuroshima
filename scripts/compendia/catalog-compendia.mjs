@@ -42,12 +42,18 @@ const catalogCompendiumDefinitions = [
     label: "Neuroshima: Specjalizacje",
     itemType: "specialization",
     catalogFile: "packs/catalogs/specializations.json"
+  },
+  {
+    name: "neuroshima-melee-weapons",
+    label: "Neuroshima: Broń ręczna",
+    itemType: "meleeWeapon",
+    catalogFile: "packs/catalogs/melee-weapons.json"
   }
 ];
 
 // Zwiększamy numer po zmianie danych katalogowych. MG wykona wtedy jednorazową
 // synchronizację istniejących Kompendiów ze źródłami JSON w repozytorium.
-export const catalogRevision = 4;
+export const catalogRevision = 5;
 
 // Katalog jest tablicą kompletnych dokumentów Item. Pobieramy go przez serwer
 // Foundry jednym żądaniem zamiast odczytywać setki małych plików osobno.

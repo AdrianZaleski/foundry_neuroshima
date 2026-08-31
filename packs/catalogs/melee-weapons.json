@@ -1,0 +1,815 @@
+[
+  {
+    "_id": "mb2676698f89b088",
+    "name": "Pięści",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_1",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 0,
+      "defenseBonus": 0,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 0,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "D_sD/D_sD/D_sD",
+        "below12": "D_sD/D_sD/D_sL",
+        "below13": "",
+        "below14": "D_sD/D_sL/D_sL",
+        "below15": "",
+        "below16": "D_sD/D_sL/D_sC",
+        "below18": "D_sL/D_sL/D_sC",
+        "below19": "D_sL/D_sC/D_sC"
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 2,
+        "sourceId": "1",
+        "importWarnings": [
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "mbd2c1ceb4d23037",
+    "name": "Kastet",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_2",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 0,
+      "defenseBonus": 0,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 0,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "D_D/D_L/D_L",
+        "below12": "D_L/",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 3,
+        "sourceId": "2",
+        "importWarnings": [
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "mfeb43e2e5678e89",
+    "name": "Nóż",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_3",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 1,
+      "defenseBonus": 1,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 0,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "D/L/L",
+        "below12": "",
+        "below13": "",
+        "below14": "L/L/C",
+        "below15": "L/C/C",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 4,
+        "sourceId": "3",
+        "importWarnings": [
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "md9118a47f0d53e3",
+    "name": "Sztylet",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_4",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 1,
+      "defenseBonus": 1,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 0,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 5,
+        "sourceId": "4",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "m33dec135bcfe34d",
+    "name": "Pałka",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_5",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 2,
+      "defenseBonus": 1,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 0,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 6,
+        "sourceId": "5",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "mf7fd57905773133",
+    "name": "Ciężka pałka",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_6",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 2,
+      "defenseBonus": 1,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 10,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 7,
+        "sourceId": "6",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "m33a7c2887823bc0",
+    "name": "Miecz",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_7",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 1,
+      "defenseBonus": 1,
+      "multipleOpponentsBonus": 1,
+      "requiredBuild": 12,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 8,
+        "sourceId": "7",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "mf225fecf7607c27",
+    "name": "Katana",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_8",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 2,
+      "defenseBonus": 1,
+      "multipleOpponentsBonus": 1,
+      "requiredBuild": 0,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 9,
+        "sourceId": "8",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "m44927f11a4dd18f",
+    "name": "Łańcuch",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_9",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 1,
+      "defenseBonus": 0,
+      "multipleOpponentsBonus": 2,
+      "requiredBuild": 10,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 10,
+        "sourceId": "9",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "m68b105c28a3af69",
+    "name": "Topór",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_10",
+      "weaponType": "",
+      "armorPenetration": 1,
+      "attackBonus": 3,
+      "defenseBonus": 1,
+      "multipleOpponentsBonus": 1,
+      "requiredBuild": 13,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 11,
+        "sourceId": "10",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "mf7580222acf7d97",
+    "name": "Młot",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_11",
+      "weaponType": "",
+      "armorPenetration": 1,
+      "attackBonus": 1,
+      "defenseBonus": 0,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 13,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 12,
+        "sourceId": "11",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "m58bd835cb95c1da",
+    "name": "Cieżki młot",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_12",
+      "weaponType": "",
+      "armorPenetration": 1,
+      "attackBonus": 1,
+      "defenseBonus": 0,
+      "multipleOpponentsBonus": 1,
+      "requiredBuild": 15,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 13,
+        "sourceId": "12",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "mbb4ec60cb3aa0df",
+    "name": "Włócznia",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_13",
+      "weaponType": "",
+      "armorPenetration": 1,
+      "attackBonus": 0,
+      "defenseBonus": 0,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 10,
+      "initiativeBonus": 2,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 14,
+        "sourceId": "13",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "mb954380813cbca7",
+    "name": "Karabin z Bagnetem",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_14",
+      "weaponType": "",
+      "armorPenetration": 1,
+      "attackBonus": 0,
+      "defenseBonus": 0,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 0,
+      "initiativeBonus": 1,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 15,
+        "sourceId": "14",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "m78bd280c2ace492",
+    "name": "Lekka Tarcza",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_15",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 0,
+      "defenseBonus": 3,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 10,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 16,
+        "sourceId": "15",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "mc651ea7d4c760ea",
+    "name": "Cieżka Tarcza",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_16",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 0,
+      "defenseBonus": 3,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 14,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 17,
+        "sourceId": "16",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  },
+  {
+    "_id": "md1769aa73b0ae72",
+    "name": "Broń improwizowana",
+    "type": "meleeWeapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "MELEE_17",
+      "weaponType": "",
+      "armorPenetration": 0,
+      "attackBonus": 1,
+      "defenseBonus": 0,
+      "multipleOpponentsBonus": 0,
+      "requiredBuild": 0,
+      "initiativeBonus": 0,
+      "damageByBuild": {
+        "below10": "",
+        "below12": "",
+        "below13": "",
+        "below14": "",
+        "below15": "",
+        "below16": "",
+        "below18": "",
+        "below19": ""
+      },
+      "weight": 0,
+      "weightUnit": "kg",
+      "price": 0,
+      "availability": 0,
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "MELEE",
+        "sourceRow": 18,
+        "sourceId": "17",
+        "importWarnings": [
+          "Brak profilu obrażeń w źródłowej zakładce MELEE.",
+          "Brak wartości w kolumnie Typ w źródłowej zakładce MELEE."
+        ]
+      }
+    }
+  }
+]
