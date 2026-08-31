@@ -160,10 +160,13 @@ export const ammunitionCompatibilityOptions = [
   {
     "value": "AMMO_ARROW",
     "label": "Strzała"
+  },
+  {
+    "value": "AMMO_277F",
+    "label": "6.8x51 mm"
   }
 ];
 
 export const ammunitionNamesBySymbol = Object.fromEntries(
   ammunitionCompatibilityOptions.map((option) => [option.value, option.label])
 );
-

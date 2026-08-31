@@ -1,6 +1,10 @@
 import { rollAttribute } from "../rolls/attribute-roll.mjs";
 import { rollSkill } from "../rolls/skill-roll.mjs";
 import { ammunitionNamesBySymbol } from "../catalogs/ammunition-compatibility.mjs";
+import {
+  damageNamesBySymbol,
+  describeAttackTypes
+} from "../catalogs/combat-reference.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -22,11 +26,21 @@ const weaponClassNames = {
   SHOTGUN: "Śrutówka"
 };
 
-const damageNames = {
-  D_D: "Draśnięcie",
-  D_L: "Lekkie",
-  D_C: "Ciężkie",
-  D_K: "Krytyczne"
+const injuryLocationNames = {
+  general: "Ogólne / inny efekt",
+  head: "Głowa",
+  torso: "Tułów",
+  leftArm: "Lewa ręka",
+  rightArm: "Prawa ręka",
+  leftLeg: "Lewa noga",
+  rightLeg: "Prawa noga"
+};
+
+const injuryTypeNames = {
+  abrasion: "Draśnięcie",
+  light: "Rana lekka",
+  serious: "Rana ciężka",
+  critical: "Rana krytyczna"
 };
 
 export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
@@ -38,6 +52,11 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // posiadającego atrybut data-action="rollAttribute".
       rollAttribute: this.#onRollAttribute,
       rollSkill: this.#onRollSkill,
+
+      // Każda rana jest osobnym Itemem osadzonym w postaci.
+      createInjury: this.#onCreateInjury,
+      editInjury: this.#onEditInjury,
+      deleteInjury: this.#onDeleteInjury,
 
       // Te trzy akcje obsługują przedmioty zapisane wewnątrz konkretnej postaci.
       createEquipment: this.#onCreateEquipment,
@@ -91,6 +110,29 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       budowa: "Budowa"
     };
 
+    // Kary wszystkich ran sumujemy przy każdym wyświetleniu karty.
+    // Nie zapisujemy sumy, ponieważ zawsze wynika z aktualnej listy ran.
+    context.injuryItems = this.actor.items
+      .filter((item) => item.type === "injury")
+      .map((item) => ({
+        id: item.id,
+        name: item.name,
+        locationName: injuryLocationNames[item.system.location] ?? item.system.location,
+        injuryTypeName: injuryTypeNames[item.system.injuryType] ?? item.system.injuryType,
+        damageValue: item.system.damageValue,
+        penaltyPercent: item.system.penaltyPercent
+      }));
+
+    context.totalWoundPenaltyPercent = context.injuryItems.reduce(
+      (currentSum, injury) => currentSum + injury.penaltyPercent,
+      0
+    );
+
+    context.totalDamageValue = context.injuryItems.reduce(
+      (currentSum, injury) => currentSum + injury.damageValue,
+      0
+    );
+
     // Actor może posiadać różne typy Itemów. Ta lista zawiera wyłącznie
     // zwykły ekwipunek; broń przygotowujemy osobno poniżej.
     context.equipmentItems = this.actor.items
@@ -126,7 +168,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
           ?? item.system.ammunitionCode,
         currentAmmunition: item.system.currentAmmunition,
         magazineCapacity: item.system.magazineCapacity,
-        damageName: damageNames[item.system.damageCode] ?? item.system.damageCode,
+        damageName: damageNamesBySymbol[item.system.damageCode]
+          ?? item.system.damageCode,
+        attackTypeNames: describeAttackTypes(item.system.attackTypes),
         range: item.system.range,
         armorPenetration: item.system.armorPenetration,
         weight: item.system.totalWeight
@@ -183,6 +227,52 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   static async #onRollSkill(event, target) {
     const skillKey = target.dataset.skill;
     await rollSkill(this.actor, skillKey);
+  }
+
+  static async #onCreateInjury() {
+    const [createdInjury] = await this.actor.createEmbeddedDocuments("Item", [
+      {
+        name: "Nowa rana",
+        type: "injury"
+      }
+    ]);
+
+    await createdInjury.sheet.render({ force: true });
+  }
+
+  static async #onEditInjury(event, target) {
+    const itemId = target.dataset.itemId;
+    const injuryItem = this.actor.items.get(itemId);
+
+    if (!injuryItem || injuryItem.type !== "injury") {
+      ui.notifications.warn("Nie znaleziono tej rany na karcie postaci.");
+      return;
+    }
+
+    await injuryItem.sheet.render({ force: true });
+  }
+
+  static async #onDeleteInjury(event, target) {
+    const itemId = target.dataset.itemId;
+    const injuryItem = this.actor.items.get(itemId);
+
+    if (!injuryItem || injuryItem.type !== "injury") {
+      ui.notifications.warn("Nie znaleziono tej rany na karcie postaci.");
+      return;
+    }
+
+    const safeInjuryName = foundry.utils.escapeHTML(injuryItem.name);
+    const deletionConfirmed = await foundry.applications.api.DialogV2.confirm({
+      window: {
+        title: "Usuwanie rany"
+      },
+      content: `<p>Czy na pewno usunąć ranę <strong>${safeInjuryName}</strong>?</p>`,
+      modal: true
+    });
+
+    if (!deletionConfirmed) return;
+
+    await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
   }
 
   // Tworzymy nowy Item bezpośrednio wewnątrz Actora. Taki przedmiot należy

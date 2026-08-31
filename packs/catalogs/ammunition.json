@@ -1455,6 +1455,36 @@
         "importWarnings": []
       }
     }
+  },
+  {
+    "_id": "JFS4LMHdTbAONhnv",
+    "name": "6.8x51 mm",
+    "type": "ammunition",
+    "img": "icons/svg/item-bag.svg",
+    "system": {
+      "sourceCode": "AMMO_277F",
+      "ammunitionSymbol": "AMMO_277F",
+      "quantity": 1,
+      "unitPrice": 6,
+      "availability": 15,
+      "craftingDifficulty": "XHARD",
+      "description": ".277 Fury ",
+      "effectCode": "",
+      "unitWeight": 0,
+      "weightUnit": "g"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "AMMO",
+        "sourceRow": 49,
+        "importWarnings": []
+      }
+    }
   }
 ]
-

@@ -130,6 +130,20 @@
 - Wyniki masy zachowują dokładność do `0,001 kg`, czyli jednego grama.
 - Jednostka wybrana przez użytkownika jest daną zapisywaną. Wartości przeliczone i sumy są polami wyliczanymi, których użytkownik nie edytuje ręcznie.
 
+## Rany i procentowe utrudnienia
+
+- Każda rana jest osobnym Itemem typu `injury` należącym do postaci.
+- Rana przechowuje nazwę, lokację, rodzaj, karę procentową oraz opis skutków.
+- Rodzaje ran odpowiadają zapisowi z karty referencyjnej: Draśnięcie, Lekka, Ciężka i Krytyczna.
+- Wartości obrażeń `1`, `3`, `9` i `27` są wyliczane z rodzaju rany i nie są wpisywane osobno.
+- Suma kar z ran jest wyliczana z aktualnej listy ran. Nie zapisujemy jej jako niezależnej wartości.
+- Kara pancerza jest obecnie wpisywana ręcznie na Actorze. Docelowo będzie wyliczana z założonych Itemów pancerza.
+- Przed rzutem użytkownik decyduje, czy test uwzględnia rany i pancerz.
+- W tym samym oknie można podać dodatkowe utrudnienie sytuacyjne w procentach. Wartość ujemna oznacza ułatwienie.
+- Procenty dodajemy do początkowej wartości wybranego PT, a otrzymany wynik ponownie przypisujemy do przedziału tabeli PT.
+- Przykład: test Przeciętny zaczyna od `0%`. Łączna kara `74%` daje PT Bardzo trudny.
+- Dopiero później stosujemy Suwak umiejętności oraz wpływ naturalnych wyników `1` i `20`.
+
 ## Katalog broni dystansowej i amunicji
 
 - Źródłowe katalogi JSON zawierają dane z zakładek `RANGED` i `AMMO` arkusza referencyjnego.
@@ -139,3 +153,13 @@
 - Kilka wariantów amunicji może mieć różne kody źródłowe i ten sam symbol kompatybilności.
 - Karty broni i amunicji pokazują listę znanych rodzin, ale pozwalają też wpisać nowy symbol.
 - Na karcie postaci pokazujemy czytelną nazwę amunicji, zachowując techniczny symbol w danych.
+- Aktualna zakładka `RANGED` nie zawiera kodów źródłowych. Istniejące kody zachowujemy w repozytorium, a rekordy arkusza dopasowujemy po unikalnej nazwie broni.
+- Kolumnę `5E obrażenia` z zakładki `RANGED` świadomie pomijamy.
+- Nowa broń otrzymuje stały kod źródłowy w repozytorium.
+
+## Słowniki obrażeń i rodzajów ataku
+
+- Zakładka `DAMAGE` definiuje osiem symboli obrażeń, ich nazwy, modyfikatory i opisy ran według lokacji.
+- Zakładka `ATTACK` definiuje symbole rodzajów ataku i manewrów wraz z opisami.
+- Na obecnym etapie dane te służą do wyświetlania zrozumiałych nazw na kartach.
+- Samo zapisanie słowników nie uruchamia jeszcze mechaniki walki ani automatycznego zadawania ran.

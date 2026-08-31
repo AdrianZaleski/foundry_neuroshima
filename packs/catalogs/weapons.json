@@ -10162,5 +10162,50 @@
         "importWarnings": []
       }
     }
+  },
+  {
+    "_id": "vmxVWOJxyfY0MYnm",
+    "name": "Sig Sauer MCX Spear 16\" .277 Fury",
+    "type": "weapon",
+    "img": "icons/svg/sword.svg",
+    "system": {
+      "sourceCode": "WP_SIG_MCX_SPEAR_277F",
+      "weaponClass": "ARIFLE",
+      "ammunitionCode": "AMMO_277F",
+      "magazineCapacity": 20,
+      "currentAmmunition": 0,
+      "loadedAmmunitionSourceCode": "",
+      "loadedAmmunitionUnitWeight": 0,
+      "misfireRoll": 17,
+      "accuracyModifier": -10,
+      "range": 600,
+      "fireRate": 2,
+      "attackTypes": "S,A",
+      "reloadTime": 3,
+      "armorPenetration": 3,
+      "damageCode": "D_C",
+      "requiredStrength": 14,
+      "holsterCode": "N",
+      "price": 150,
+      "availability": 10,
+      "weight": 0,
+      "weightUnit": "kg",
+      "actions": "",
+      "description": ""
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "RANGED",
+        "sourceRow": 233,
+        "sourceCodeOrigin": "repository",
+        "importWarnings": []
+      }
+    }
   }
 ]

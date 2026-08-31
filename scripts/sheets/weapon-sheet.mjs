@@ -1,5 +1,9 @@
 import { weightUnitOptions } from "../utils/weight.mjs";
 import { ammunitionCompatibilityOptions } from "../catalogs/ammunition-compatibility.mjs";
+import {
+  damageOptions,
+  describeAttackTypes
+} from "../catalogs/combat-reference.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -32,6 +36,7 @@ export class NeuroshimaWeaponSheet extends HandlebarsApplicationMixin(ItemSheetV
     context.weightUnitOptions = weightUnitOptions;
     context.ammunitionCompatibilityOptions = ammunitionCompatibilityOptions;
     context.ammunitionCompatibilityListId = `weapon-ammunition-${this.item.id}`;
+    context.attackTypeDescription = describeAttackTypes(this.item.system.attackTypes);
 
     // Klucze pochodzą z zakładki WEAPON, a polskie nazwy są przeznaczone
     // dla użytkownika karty. Sam klucz pozostaje zapisany w danych Itemu.
@@ -50,13 +55,9 @@ export class NeuroshimaWeaponSheet extends HandlebarsApplicationMixin(ItemSheetV
       SHOTGUN: "Śrutówka"
     };
 
-    // Zakładka RANGED używa czterech podstawowych kodów obrażeń od broni.
-    context.damageOptions = {
-      D_D: "Draśnięcie",
-      D_L: "Obrażenia lekkie",
-      D_C: "Obrażenia ciężkie",
-      D_K: "Obrażenia krytyczne"
-    };
+    // Lista zawiera wszystkie symbole z zakładki DAMAGE, w tym obrażenia
+    // tępe oznaczone symbolami rozpoczynającymi się od „S_”.
+    context.damageOptions = damageOptions;
 
     return context;
   }

@@ -50,6 +50,18 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         budowa: createAttributeSchema()
       }),
 
+      // Kara pancerza jest na razie wpisywana ręcznie. Gdy powstanie typ Item
+      // dla pancerza, pole zastąpimy sumą wyliczaną z założonych elementów.
+      testPenalties: new SchemaField({
+        armorPercent: new NumberField({
+          required: true,
+          nullable: false,
+          integer: true,
+          min: 0,
+          initial: 0
+        })
+      }),
+
       // Zaczynamy od jednej niewielkiej grupy umiejętności przypisanych do Zręczności.
       // Kolejne grupy dodamy po sprawdzeniu tego modelu w działającym świecie.
       skills: new SchemaField({

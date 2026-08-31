@@ -13,6 +13,10 @@ const catalogCompendiumDefinitions = [
   }
 ];
 
+// Zwiększamy numer po zmianie danych katalogowych. MG wykona wtedy jednorazową
+// synchronizację istniejących Kompendiów ze źródłami JSON w repozytorium.
+export const catalogRevision = 2;
+
 // Katalog jest tablicą kompletnych dokumentów Item. Pobieramy go przez serwer
 // Foundry jednym żądaniem zamiast odczytywać setki małych plików osobno.
 async function loadCatalog(relativePath) {
@@ -50,7 +54,7 @@ async function getOrCreateWorldCompendium(definition) {
   });
 }
 
-async function fillCompendium(compendium, definition) {
+async function synchronizeCompendium(compendium, definition, updateExistingDocuments) {
   // Indeks zawiera lekką listę wpisów bez otwierania wszystkich dokumentów.
   await compendium.getIndex();
 
@@ -58,8 +62,9 @@ async function fillCompendium(compendium, definition) {
   const missingDocuments = sourceDocuments.filter(
     (sourceDocument) => !compendium.index.has(sourceDocument._id)
   );
-
-  if (missingDocuments.length === 0) return 0;
+  const existingDocuments = updateExistingDocuments
+    ? sourceDocuments.filter((sourceDocument) => compendium.index.has(sourceDocument._id))
+    : [];
 
   // Dzielimy pierwszy import na mniejsze partie, aby pojedyncza operacja
   // sieciowa nie musiała przenosić wszystkich opisów broni naraz.
@@ -79,7 +84,23 @@ async function fillCompendium(compendium, definition) {
     });
   }
 
-  return missingDocuments.length;
+  for (let startIndex = 0; startIndex < existingDocuments.length; startIndex += importBatchSize) {
+    const documentBatch = existingDocuments.slice(
+      startIndex,
+      startIndex + importBatchSize
+    );
+
+    // Aktualizujemy tylko wzorce w Compendium. Itemy wcześniej przeciągnięte
+    // do Actorów są niezależnymi kopiami i zachowują własny stan.
+    await foundry.documents.Item.updateDocuments(documentBatch, {
+      pack: compendium.collection
+    });
+  }
+
+  return {
+    createdDocumentCount: missingDocuments.length,
+    updatedDocumentCount: existingDocuments.length
+  };
 }
 
 export async function initializeCatalogCompendia() {
@@ -88,15 +109,35 @@ export async function initializeCatalogCompendia() {
 
   try {
     let createdDocumentCount = 0;
+    let updatedDocumentCount = 0;
+    const savedCatalogRevision = game.settings.get(
+      game.system.id,
+      "catalogRevision"
+    );
+    const updateExistingDocuments = savedCatalogRevision < catalogRevision;
 
     for (const definition of catalogCompendiumDefinitions) {
       const compendium = await getOrCreateWorldCompendium(definition);
-      createdDocumentCount += await fillCompendium(compendium, definition);
+      const synchronizationResult = await synchronizeCompendium(
+        compendium,
+        definition,
+        updateExistingDocuments
+      );
+      createdDocumentCount += synchronizationResult.createdDocumentCount;
+      updatedDocumentCount += synchronizationResult.updatedDocumentCount;
     }
 
-    if (createdDocumentCount > 0) {
+    if (updateExistingDocuments) {
+      await game.settings.set(
+        game.system.id,
+        "catalogRevision",
+        catalogRevision
+      );
+    }
+
+    if (createdDocumentCount > 0 || updatedDocumentCount > 0) {
       ui.notifications.info(
-        `Neuroshima: dodano ${createdDocumentCount} wpisów do Kompendiów.`
+        `Neuroshima: dodano ${createdDocumentCount} i zaktualizowano ${updatedDocumentCount} wpisów Kompendiów.`
       );
     }
   } catch (error) {

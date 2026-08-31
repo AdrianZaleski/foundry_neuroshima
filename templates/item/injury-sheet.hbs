@@ -1,0 +1,37 @@
+<section class="neuroshima-injury-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header>
+    <label>
+      Nazwa rany lub efektu
+      <input type="text" name="name" value="{{item.name}}">
+    </label>
+  </header>
+
+  <h2>Rana</h2>
+
+  <label>
+    Lokacja
+    <select name="system.location">
+      {{selectOptions locationOptions selected=system.location}}
+    </select>
+  </label>
+
+  <label>
+    Rodzaj rany
+    <select name="system.injuryType">
+      {{selectOptions injuryTypeOptions selected=system.injuryType}}
+    </select>
+  </label>
+
+  {{!-- Liczba wynika z rodzaju rany: D = 1, L = 3, C = 9, K = 27. --}}
+  <output>Wartość obrażeń: {{system.damageValue}}</output>
+
+  <label>
+    Kara do testów w procentach
+    <input type="number" name="system.penaltyPercent" value="{{system.penaltyPercent}}" min="0" step="1">
+  </label>
+
+  <label>
+    Opis skutków
+    <textarea name="system.description" rows="8">{{system.description}}</textarea>
+  </label>
+</section>

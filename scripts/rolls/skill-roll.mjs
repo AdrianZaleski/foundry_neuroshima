@@ -101,15 +101,24 @@ const SKILL_CONFIGURATION = {
 };
 
 function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, skillLevel) {
+  let calculatedDifficultyIndex;
+
   // Brak umiejętności utrudnia test o jeden poziom.
   if (skillLevel === 0) {
-    return startingDifficultyIndex + 1;
+    calculatedDifficultyIndex = startingDifficultyIndex + 1;
+  } else {
+    // W zwykłym teście każde pełne 4 punkty umiejętności
+    // ułatwiają test o jeden poziom zgodnie z zasadą Suwaka.
+    const numberOfSliderSteps = Math.floor(skillLevel / 4);
+    calculatedDifficultyIndex = startingDifficultyIndex - numberOfSliderSteps;
   }
 
-  // W zwykłym teście każde pełne 4 punkty umiejętności
-  // ułatwiają test o jeden poziom zgodnie z zasadą Suwaka.
-  const numberOfSliderSteps = Math.floor(skillLevel / 4);
-  return startingDifficultyIndex - numberOfSliderSteps;
+  // Najpierw zatrzymujemy Suwak na skrajnej pozycji tabeli. Dopiero od tego
+  // miejsca naturalne jedynki i dwudziestki zmienią trudność testu.
+  return Math.max(
+    0,
+    Math.min(calculatedDifficultyIndex, DIFFICULTY_LABELS.length - 1)
+  );
 }
 
 function prepareSliderDescription(skillLevel) {
@@ -241,13 +250,22 @@ export async function rollSkill(actor, skillKey) {
 
   const customSkillName = skillConfiguration.usesCustomName ? skill.name.trim() : "";
   const displayedSkillName = customSkillName || skillConfiguration.label;
-  const testConfiguration = await selectTestConfiguration();
+  const testConfiguration = await selectTestConfiguration(actor);
 
   if (testConfiguration === null) {
     return;
   }
 
-  const { testType, startingDifficultyIndex } = testConfiguration;
+  const {
+    testType,
+    startingDifficultyIndex,
+    includedWoundPenaltyPercent,
+    includedArmorPenaltyPercent,
+    customPenaltyPercent,
+    totalPenaltyPercent,
+    difficultyPercentageAfterPenalties,
+    difficultyIndexAfterPercentagePenalties
+  } = testConfiguration;
   const testTitle = testType === "open"
     ? `Otwarty test umiejętności: ${displayedSkillName}`
     : `Test umiejętności: ${displayedSkillName}`;
@@ -255,7 +273,7 @@ export async function rollSkill(actor, skillKey) {
   // Wartość końcowa może być zmieniana przez efekty, ale nie może spaść poniżej zera.
   const skillLevel = Math.max(0, skill.value);
   const difficultyIndexBeforeCriticalResults = calculateDifficultyIndexBeforeCriticalResults(
-    startingDifficultyIndex,
+    difficultyIndexAfterPercentagePenalties,
     skillLevel
   );
 
@@ -317,6 +335,10 @@ export async function rollSkill(actor, skillKey) {
       `Poziom umiejętności: ${skillLevel}`,
       `Suwak: ${prepareSliderDescription(skillLevel)}`,
       `Początkowy poziom trudności: ${DIFFICULTY_LABELS[startingDifficultyIndex]}`,
+      `Kary procentowe: rany ${includedWoundPenaltyPercent}%, pancerz ${includedArmorPenaltyPercent}%, inne ${customPenaltyPercent}%`,
+      `Suma kar procentowych: ${totalPenaltyPercent}%`,
+      `Wartość procentowa PT po karach: ${difficultyPercentageAfterPenalties}%`,
+      `Poziom trudności po karach: ${DIFFICULTY_LABELS[difficultyIndexAfterPercentagePenalties]}`,
       `Ostateczny poziom trudności: ${DIFFICULTY_LABELS[finalDifficultyIndex]}`,
       `Próg sukcesu: ${successThreshold}`,
       ...resultDescriptionLines

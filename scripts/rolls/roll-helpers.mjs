@@ -15,10 +15,62 @@ export const DIFFICULTY_LABELS = [
   "Arcymistrzowski"
 ];
 
+// Każdy poziom trudności ma początkową wartość procentową. Dodanie kar
+// przesuwa wynik do odpowiedniego przedziału z tabeli PT.
+export const DIFFICULTY_STARTING_PERCENTAGES = [
+  -20,
+  0,
+  11,
+  31,
+  61,
+  91,
+  121,
+  161,
+  201
+];
+
+const DIFFICULTY_MAXIMUM_PERCENTAGES = [
+  -1,
+  10,
+  30,
+  60,
+  90,
+  120,
+  160,
+  200,
+  Number.POSITIVE_INFINITY
+];
+
 // Po otwarciu okna jako domyślny zaznaczamy poziom "Przeciętny".
 const DEFAULT_DIFFICULTY_INDEX = 1;
 
-export async function selectTestConfiguration() {
+export function calculateDifficultyIndexFromPercentage(difficultyPercentage) {
+  const matchingIndex = DIFFICULTY_MAXIMUM_PERCENTAGES.findIndex(
+    (maximumPercentage) => difficultyPercentage <= maximumPercentage
+  );
+
+  // Ostatni przedział nie ma górnej granicy, więc zabezpieczenie powinno być
+  // potrzebne wyłącznie w przypadku nieprawidłowej wartości wejściowej.
+  return matchingIndex === -1 ? DIFFICULTY_LABELS.length - 1 : matchingIndex;
+}
+
+export function calculateWoundPenaltyPercent(actor) {
+  return actor.items
+    .filter((item) => item.type === "injury")
+    .reduce(
+      (currentSum, injuryItem) => currentSum + injuryItem.system.penaltyPercent,
+      0
+    );
+}
+
+function checkboxIsSelected(fieldValue) {
+  return fieldValue === true || fieldValue === "true" || fieldValue === "on";
+}
+
+export async function selectTestConfiguration(actor) {
+  const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
+  const armorPenaltyPercent = actor.system.testPenalties?.armorPercent ?? 0;
+
   // Tworzymy pozycje listy na podstawie tej samej tabeli,
   // której później użyjemy podczas obliczania progu testu.
   const difficultyOptions = DIFFICULTY_LABELS
@@ -44,6 +96,24 @@ export async function selectTestConfiguration() {
           <option value="open">Otwarty</option>
         </select>
       </div>
+      <hr>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="includeWounds" checked>
+          Uwzględnij rany (${woundPenaltyPercent}%)
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="includeArmor" checked>
+          Uwzględnij pancerz (${armorPenaltyPercent}%)
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="neuroshima-custom-penalty">Dodatkowe utrudnienie lub ułatwienie</label>
+        <input id="neuroshima-custom-penalty" type="number" name="customPenaltyPercent" value="0" step="1">
+        <span>%</span>
+      </div>
       <div class="form-group">
         <label for="neuroshima-difficulty">Poziom trudności</label>
         <select id="neuroshima-difficulty" name="difficultyIndex">
@@ -63,9 +133,32 @@ export async function selectTestConfiguration() {
     return null;
   }
 
+  const startingDifficultyIndex = Number(formData.difficultyIndex);
+  const includedWoundPenaltyPercent = checkboxIsSelected(formData.includeWounds)
+    ? woundPenaltyPercent
+    : 0;
+  const includedArmorPenaltyPercent = checkboxIsSelected(formData.includeArmor)
+    ? armorPenaltyPercent
+    : 0;
+  const customPenaltyPercent = Number(formData.customPenaltyPercent) || 0;
+  const totalPenaltyPercent = includedWoundPenaltyPercent
+    + includedArmorPenaltyPercent
+    + customPenaltyPercent;
+  const difficultyPercentageAfterPenalties = DIFFICULTY_STARTING_PERCENTAGES[
+    startingDifficultyIndex
+  ] + totalPenaltyPercent;
+
   return {
     testType: String(formData.testType),
-    startingDifficultyIndex: Number(formData.difficultyIndex)
+    startingDifficultyIndex,
+    includedWoundPenaltyPercent,
+    includedArmorPenaltyPercent,
+    customPenaltyPercent,
+    totalPenaltyPercent,
+    difficultyPercentageAfterPenalties,
+    difficultyIndexAfterPercentagePenalties: calculateDifficultyIndexFromPercentage(
+      difficultyPercentageAfterPenalties
+    )
   };
 }
 

@@ -48,6 +48,54 @@
     <button type="button" data-action="rollAttribute" data-attribute="budowa">Rzuć 3k20</button>
   </div>
 
+  <h2>Rany i utrudnienia</h2>
+
+  {{!-- Rany są osobnymi Itemami, dlatego ich liczba nie jest z góry ograniczona. --}}
+  <div class="injuries">
+    <button type="button" data-action="createInjury">Dodaj ranę</button>
+
+    <p><strong>Suma kar z ran:</strong> {{totalWoundPenaltyPercent}}%</p>
+    <p><strong>Łączna wartość obrażeń:</strong> {{totalDamageValue}}</p>
+
+    <label>
+      Kara pancerza do testów
+      <input type="number" name="system.testPenalties.armorPercent" value="{{system.testPenalties.armorPercent}}" min="0" step="1"> %
+    </label>
+    <small>Na tym etapie wpisujemy ją ręcznie. Później wyliczą ją założone elementy pancerza.</small>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rana</th>
+          <th>Lokacja</th>
+          <th>Rodzaj</th>
+          <th>Obrażenia</th>
+          <th>Kara</th>
+          <th>Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each injuryItems}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{this.locationName}}</td>
+            <td>{{this.injuryTypeName}}</td>
+            <td>{{this.damageValue}}</td>
+            <td>{{this.penaltyPercent}}%</td>
+            <td>
+              <button type="button" data-action="editInjury" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteInjury" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="6">Postać nie ma jeszcze zapisanych ran.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
   <h2>Umiejętności — Zręczność</h2>
   <h3>Walka wręcz</h3>
 
@@ -643,7 +691,8 @@
           <tr>
             <td>
               <strong>{{this.name}}</strong><br>
-              <small>{{this.weaponClassName}}</small>
+              <small>{{this.weaponClassName}}</small><br>
+              <small>{{this.attackTypeNames}}</small>
             </td>
             <td>
               {{this.currentAmmunition}} / {{this.magazineCapacity}}<br>

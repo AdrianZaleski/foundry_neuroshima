@@ -17,7 +17,8 @@
     "Item": {
       "equipment": {},
       "weapon": {},
-      "ammunition": {}
+      "ammunition": {},
+      "injury": {}
     }
   }
 }

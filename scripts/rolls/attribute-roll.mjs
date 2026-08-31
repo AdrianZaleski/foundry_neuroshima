@@ -40,13 +40,22 @@ export async function rollAttribute(actor, attributeKey) {
 
   // Najpierw pytamy użytkownika o rodzaj i trudność testu.
   // Zamknięcie okna przerywa cały test.
-  const testConfiguration = await selectTestConfiguration();
+  const testConfiguration = await selectTestConfiguration(actor);
 
   if (testConfiguration === null) {
     return;
   }
 
-  const { testType, startingDifficultyIndex } = testConfiguration;
+  const {
+    testType,
+    startingDifficultyIndex,
+    includedWoundPenaltyPercent,
+    includedArmorPenaltyPercent,
+    customPenaltyPercent,
+    totalPenaltyPercent,
+    difficultyPercentageAfterPenalties,
+    difficultyIndexAfterPercentagePenalties
+  } = testConfiguration;
   const testTitle = testType === "open"
     ? `Otwarty test: ${attributeLabel}`
     : `Test: ${attributeLabel}`;
@@ -56,8 +65,14 @@ export async function rollAttribute(actor, attributeKey) {
 
   // Pierwszy element tablicy "dice" zawiera wszystkie trzy wyniki z zapisu 3d20.
   const dieResults = roll.dice[0].results.map((dieResultData) => dieResultData.result);
-  const finalDifficultyIndex = calculateFinalDifficultyIndex(dieResults, startingDifficultyIndex);
+  const finalDifficultyIndex = calculateFinalDifficultyIndex(
+    dieResults,
+    difficultyIndexAfterPercentagePenalties
+  );
   const startingDifficultyLabel = DIFFICULTY_LABELS[startingDifficultyIndex];
+  const difficultyLabelAfterPenalties = DIFFICULTY_LABELS[
+    difficultyIndexAfterPercentagePenalties
+  ];
   const finalDifficultyLabel = DIFFICULTY_LABELS[finalDifficultyIndex];
   const successThreshold = attribute.value - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
   let resultDescriptionLines;
@@ -99,6 +114,10 @@ export async function rollAttribute(actor, attributeKey) {
       `<strong>${testTitle}</strong>`,
       `Wartość współczynnika: ${attribute.value}`,
       `Początkowy poziom trudności: ${startingDifficultyLabel}`,
+      `Kary procentowe: rany ${includedWoundPenaltyPercent}%, pancerz ${includedArmorPenaltyPercent}%, inne ${customPenaltyPercent}%`,
+      `Suma kar procentowych: ${totalPenaltyPercent}%`,
+      `Wartość procentowa PT po karach: ${difficultyPercentageAfterPenalties}%`,
+      `Poziom trudności po karach: ${difficultyLabelAfterPenalties}`,
       `Ostateczny poziom trudności: ${finalDifficultyLabel}`,
       `Próg sukcesu: ${successThreshold}`,
       ...resultDescriptionLines
