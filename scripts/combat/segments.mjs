@@ -1,3 +1,8 @@
+import {
+  prepareCombatActionOptions,
+  resolveCombatAction
+} from "./action-catalog.mjs";
+
 const SYSTEM_ID = "neuroshima";
 const COMBAT_SEGMENT_FLAG = "combatSegment";
 const COMBATANT_ACTION_FLAG = "segmentAction";
@@ -85,6 +90,10 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
         : `${action.duration} segmenty`,
       isCurrent: consumesCurrentSegment,
       isPending: consumesCurrentSegment && action.endsAtTick > currentTick,
+      canResolveShot: isActiveTurn
+        && consumesCurrentSegment
+        && action.actionCode === "shot"
+        && !action.resolved,
       timingDescription: consumesCurrentSegment
         ? describeActionTiming(action, currentTick)
         : "Poprzednia akcja jest zakończona."
@@ -114,7 +123,7 @@ async function requireActiveCombatant(actor) {
   return { combat, combatant };
 }
 
-export async function declareSegmentAction(actor, actionName, duration) {
+export async function declareSegmentAction(actor, actionName, duration, metadata = {}) {
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
 
@@ -139,6 +148,9 @@ export async function declareSegmentAction(actor, actionName, duration) {
   const action = {
     name: safeName,
     duration: safeDuration,
+    actionCode: metadata.actionCode ?? "custom",
+    requiresTest: Boolean(metadata.requiresTest),
+    isCustom: Boolean(metadata.isCustom),
     startedRound: round,
     startedSegment: segment,
     startedAtTick: currentTick,
@@ -153,14 +165,18 @@ export async function declareSegmentAction(actor, actionName, duration) {
   await createCombatMessage([
     `<strong>${escapeForChat(actor.name)}: ${escapeForChat(safeName)}</strong>`,
     `Runda ${round}, segment ${segment}.`,
-    endingDescription
+    endingDescription,
+    action.requiresTest ? "Rozstrzygnięcie wymaga testu." : "Akcja nie wymaga testu."
   ].join("<br>"), actor);
 
   return true;
 }
 
 export async function passSegment(actor) {
-  return declareSegmentAction(actor, "Pas", 1);
+  return declareSegmentAction(actor, "Pas", 1, {
+    actionCode: "pass",
+    requiresTest: false
+  });
 }
 
 async function changeCurrentAction(actor, changeType) {
@@ -203,23 +219,43 @@ export async function interruptSegmentAction(actor) {
   return changeCurrentAction(actor, "interrupted");
 }
 
+export async function markCurrentSegmentActionResolved(actor, resolution) {
+  const combat = game.combat;
+  const combatant = findActorCombatant(combat, actor);
+  const action = getSegmentAction(combatant);
+  if (!combatant || !action) return;
+
+  await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, {
+    ...action,
+    resolved: true,
+    resolution
+  });
+}
+
 export async function selectSegmentAction(actor) {
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Akcja: ${actor.name}` },
     content: `
       <div class="form-group">
-        <label for="neuroshima-segment-action-name">Nazwa akcji</label>
-        <input id="neuroshima-segment-action-name" type="text" name="actionName"
-          placeholder="np. Celowanie, dobycie broni, przeładowanie" autofocus>
+        <label for="neuroshima-segment-action-code">Akcja</label>
+        <select id="neuroshima-segment-action-code" name="actionCode" autofocus>
+          ${prepareCombatActionOptions()}
+        </select>
       </div>
       <div class="form-group">
-        <label for="neuroshima-segment-action-duration">Koszt</label>
+        <label for="neuroshima-segment-action-duration">Koszt celowania lub własnej akcji</label>
         <select id="neuroshima-segment-action-duration" name="duration">
           <option value="1" selected>1 segment</option>
           <option value="2">2 segmenty</option>
           <option value="3">3 segmenty</option>
         </select>
       </div>
+      <div class="form-group">
+        <label for="neuroshima-segment-action-name">Nazwa własnej akcji</label>
+        <input id="neuroshima-segment-action-name" type="text" name="customName"
+          placeholder="Wypełnij tylko dla opcji Własna akcja">
+      </div>
+      <p><small>Przy akcjach o stałym koszcie wybór liczby segmentów jest ignorowany.</small></p>
     `,
     ok: {
       label: "Zadeklaruj",
@@ -230,7 +266,17 @@ export async function selectSegmentAction(actor) {
   });
 
   if (!formData) return false;
-  return declareSegmentAction(actor, formData.actionName, formData.duration);
+  const selectedAction = resolveCombatAction(
+    String(formData.actionCode),
+    formData.customName,
+    formData.duration
+  );
+  return declareSegmentAction(
+    actor,
+    selectedAction.name,
+    selectedAction.duration,
+    selectedAction
+  );
 }
 
 async function announceSegment(combat) {

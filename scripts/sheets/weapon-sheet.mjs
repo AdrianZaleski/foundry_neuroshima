@@ -37,6 +37,12 @@ export class NeuroshimaWeaponSheet extends HandlebarsApplicationMixin(ItemSheetV
     context.ammunitionCompatibilityOptions = ammunitionCompatibilityOptions;
     context.ammunitionCompatibilityListId = `weapon-ammunition-${this.item.id}`;
     context.attackTypeDescription = describeAttackTypes(this.item.system.attackTypes);
+    context.jamStateOptions = {
+      ready: "Sprawna",
+      minor: "Lekkie zacięcie",
+      serious: "Poważne zacięcie",
+      critical: "Krytyczne zacięcie"
+    };
 
     // Klucze pochodzą z zakładki WEAPON, a polskie nazwy są przeznaczone
     // dla użytkownika karty. Sam klucz pozostaje zapisany w danych Itemu.

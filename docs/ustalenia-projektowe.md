@@ -152,6 +152,25 @@
 - Akcję wielosegmentową można zakończyć wcześniej albo przerwać. W obu przypadkach bieżący segment pozostaje wykorzystany.
 - Pas jest traktowany jak akcja zajmująca jeden segment.
 - Pierwsza wersja pozwala wpisywać dowolną nazwę akcji. Powiązanie konkretnych działań z testami, bronią i amunicją nastąpi w kolejnych etapach.
+- Deklaracja udostępnia katalog podstawowych akcji z podręcznika oraz opcję własnej akcji. Serie i rzuty granatem są świadomie pominięte.
+- Akcje katalogowe mają stały koszt jednego, dwóch albo trzech segmentów oraz informację, czy wymagają testu.
+- Celowanie i własna akcja pozwalają wybrać koszt od jednego do trzech segmentów.
+- Oznaczenie „wymaga testu” uruchamia obecnie właściwy rzut tylko dla pojedynczego strzału. Pozostałe testowane akcje zostaną podłączone osobno.
+
+### Pojedynczy strzał
+
+- Akcję `Strzał` za jeden segment rozstrzyga się pojedynczą kością k20.
+- Strzelec wybiera broń, odpowiednią Umiejętność oraz dokładnie jeden token wskazany jako cel.
+- Test jest oparty na Zręczności i rozpoczyna się na PT Przeciętnym. Uwzględnia kary z ran, pancerza strzelca, celność broni i ręcznie wpisane warunki takie jak odległość, ruch oraz osłona.
+- Suwak Umiejętności nie działa. Punkty Umiejętności można wydać po zobaczeniu naturalnego wyniku kości.
+- Pula punktów Umiejętności jest wspólna dla całej rundy. Przy użyciu dwóch różnych Umiejętności każda ma połowę wartości, a przy trzech każda ma jedną trzecią wartości, z zaokrągleniem w dół.
+- Naturalna `20` jest automatyczną porażką kości i nie można jej naprawić punktami Umiejętności.
+- Strzał bez zacięcia zużywa jeden nabój niezależnie od trafienia.
+- Jeżeli wynik uruchamia zacięcie, system nie odejmuje naboju. Decyzja o jego ewentualnym ręcznym zużyciu pozostaje po stronie MG.
+- Naturalny wynik kości porównujemy niezależnie z progiem niezawodności broni. Wynik równy albo niższy jest bezpieczny, a wynik wyższy uruchamia dodatkowy rzut k20 na zacięcie.
+- Wynik zacięcia `1–10` oznacza lekkie zacięcie, `11–18` poważne zacięcie, a `19–20` krytyczne zacięcie.
+- Stan zacięcia jest zapisywany na konkretnym egzemplarzu broni. Zaciętej broni nie można wybrać do kolejnego strzału.
+- Usuwanie zacięć, obrażenia i lokalizacja trafienia będą kolejnymi etapami mechaniki.
 
 ## Rany i procentowe utrudnienia
 

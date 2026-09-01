@@ -17,6 +17,10 @@ import {
   prepareActorCombatStatus,
   selectSegmentAction
 } from "../combat/segments.mjs";
+import {
+  JAM_STATE_LABELS,
+  resolveSingleShot
+} from "../combat/ranged-shot.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -171,6 +175,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       passSegment: this.#onPassSegment,
       finishSegmentAction: this.#onFinishSegmentAction,
       interruptSegmentAction: this.#onInterruptSegmentAction,
+      resolveSingleShot: this.#onResolveSingleShot,
       saveActorName: this.#onSaveActorName,
 
       // Każda rana jest osobnym Itemem osadzonym w postaci.
@@ -456,6 +461,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         attackTypeNames: describeAttackTypes(item.system.attackTypes),
         range: item.system.range,
         armorPenetration: item.system.armorPenetration,
+        isJammed: item.system.jamState !== "ready",
+        jamStateLabel: JAM_STATE_LABELS[item.system.jamState]
+          ?? item.system.jamState,
         weight: item.system.totalWeight
       }));
 
@@ -550,6 +558,11 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   static async #onInterruptSegmentAction() {
     await interruptSegmentAction(this.actor);
+    this.render();
+  }
+
+  static async #onResolveSingleShot() {
+    await resolveSingleShot(this.actor);
     this.render();
   }
 

@@ -24,7 +24,20 @@
             Akcja: <strong>{{combatStatus.action.name}}</strong>
             (koszt: {{combatStatus.action.durationLabel}})
           </p>
+          {{#if combatStatus.action.canResolveShot}}
+            <button type="button" data-action="resolveSingleShot">Rozstrzygnij strzał</button>
+          {{/if}}
+          {{#if combatStatus.action.resolution}}
+            <p><strong>Rozstrzygnięcie:</strong> {{combatStatus.action.resolution}}</p>
+          {{/if}}
           <p>{{combatStatus.action.timingDescription}}</p>
+          <p>
+            {{#if combatStatus.action.requiresTest}}
+              Rozstrzygnięcie wymaga testu.
+            {{else}}
+              Akcja nie wymaga testu.
+            {{/if}}
+          </p>
           {{#if combatStatus.action.isPending}}
             {{#if combatStatus.isActiveTurn}}
               <button type="button" data-action="finishSegmentAction">Zakończ wcześniej</button>

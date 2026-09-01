@@ -89,6 +89,7 @@
             <td>
               {{this.currentAmmunition}} / {{this.magazineCapacity}}<br>
               <small>{{this.ammunitionName}}</small>
+              {{#if this.isJammed}}<br><strong>{{this.jamStateLabel}}</strong>{{/if}}
             </td>
             <td>{{this.damageName}}</td>
             <td>

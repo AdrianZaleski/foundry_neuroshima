@@ -67,6 +67,20 @@ export class NeuroshimaWeaponDataModel extends foundry.abstract.TypeDataModel {
         max: 20,
         initial: 20
       }),
+      jamState: new StringField({
+        required: true,
+        nullable: false,
+        choices: ["ready", "minor", "serious", "critical"],
+        initial: "ready"
+      }),
+      jamSeverityRoll: new NumberField({
+        required: true,
+        nullable: false,
+        integer: true,
+        min: 0,
+        max: 20,
+        initial: 0
+      }),
       accuracyModifier: new NumberField({
         required: true,
         nullable: false,

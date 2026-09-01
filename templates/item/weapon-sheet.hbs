@@ -51,9 +51,18 @@
   <h3>Parametry strzału</h3>
 
   <label>
-    Wynik zacięcia
+    Próg niezawodności
     <input type="number" name="system.misfireRoll" value="{{system.misfireRoll}}" min="1" max="20" step="1">
   </label>
+  <small>Naturalny wynik strzału równy lub niższy jest bezpieczny. Wyższy uruchamia rzut na zacięcie.</small>
+
+  <label>
+    Stan broni
+    <select name="system.jamState">
+      {{selectOptions jamStateOptions selected=system.jamState}}
+    </select>
+  </label>
+  <p><strong>Ostatni rzut na zacięcie:</strong> {{system.jamSeverityRoll}}</p>
 
   <label>
     Modyfikator celności w procentach
