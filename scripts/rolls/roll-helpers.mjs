@@ -1,4 +1,5 @@
 // Wspólne dane i funkcje używane przez różne rodzaje testów Neuroshimy.
+import { calculateArmorPenaltyPercent } from "../combat/armor.mjs";
 
 // Liczba określa, o ile obniżamy współczynnik podczas obliczania progu testu.
 export const DIFFICULTY_MODIFIERS = [-2, 0, 2, 5, 8, 11, 15, 20, 24];
@@ -69,10 +70,10 @@ function checkboxIsSelected(fieldValue) {
 
 export async function selectTestConfiguration(
   actor,
-  { fixedTestType = "", windowTitle = "Ustawienia testu" } = {}
+  { fixedTestType = "", windowTitle = "Ustawienia testu", attributeKey = "" } = {}
 ) {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
-  const armorPenaltyPercent = actor.system.testPenalties?.armorPercent ?? 0;
+  const armorPenaltyPercent = calculateArmorPenaltyPercent(actor, attributeKey);
 
   // Tworzymy pozycje listy na podstawie tej samej tabeli,
   // której później użyjemy podczas obliczania progu testu.

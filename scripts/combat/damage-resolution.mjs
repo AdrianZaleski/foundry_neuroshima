@@ -92,7 +92,7 @@ export function resolveDamage({
       ? INJURY_TYPES_BY_SEVERITY[finalSeverityCode]
       : null,
     locationDescription: getLocationDescription(finalDefinition, location),
-    armorDurabilityLoss: incomingSeverityIndex >= 3
+    armorDurabilityLoss: parsedDamage.damageKind === "S" ? 0 : incomingSeverityIndex >= 3
       ? 3
       : incomingSeverityIndex >= 2 ? 1 : 0
   };

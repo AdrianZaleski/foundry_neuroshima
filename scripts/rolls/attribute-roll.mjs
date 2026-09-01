@@ -40,7 +40,7 @@ export async function rollAttribute(actor, attributeKey) {
 
   // Najpierw pytamy użytkownika o rodzaj i trudność testu.
   // Zamknięcie okna przerywa cały test.
-  const testConfiguration = await selectTestConfiguration(actor);
+  const testConfiguration = await selectTestConfiguration(actor, { attributeKey });
 
   if (testConfiguration === null) {
     return;

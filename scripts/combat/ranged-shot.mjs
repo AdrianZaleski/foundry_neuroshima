@@ -17,7 +17,12 @@ import {
   promptToCreateInjuryFromRoll,
   rollPainResistanceForInjury
 } from "../rolls/injury-roll.mjs";
-import { resolveDamage } from "./damage-resolution.mjs";
+import { getHitLocation, resolveDamage } from "./damage-resolution.mjs";
+import {
+  applyArmorDurabilityLoss,
+  calculateArmorPenaltyPercent,
+  selectArmorForHit
+} from "./armor.mjs";
 
 const SYSTEM_ID = "neuroshima";
 const SKILL_USAGE_FLAG = "combatSkillUsage";
@@ -218,7 +223,7 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
   }
 
   const woundPenalty = calculateWoundPenaltyPercent(actor);
-  const armorPenalty = actor.system.testPenalties?.armorPercent ?? 0;
+  const armorPenalty = calculateArmorPenaltyPercent(actor, "zrecznosc");
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Strzał: ${actor.name} → ${target.name}` },
     content: `
@@ -403,38 +408,30 @@ async function selectHitDie(evaluatedDice) {
   ) ?? defaultDie;
 }
 
-async function selectTargetArmorReduction(target, weapon, hitDie) {
-  const formData = await foundry.applications.api.DialogV2.input({
-    window: { title: `Pancerz celu: ${target.name}` },
-    content: `
-      <p>
-        Naturalny wynik trafienia: <strong>${hitDie.naturalResult}</strong><br>
-        Obrażenia broni: <strong>${damageNamesBySymbol[weapon.system.damageCode] ?? weapon.system.damageCode}</strong><br>
-        Przebicie Pancerza broni: <strong>${weapon.system.armorPenetration}</strong>
-      </p>
-      <div class="form-group">
-        <label for="neuroshima-target-armor-reduction">Redukcja pancerza w trafionej lokacji</label>
-        <input id="neuroshima-target-armor-reduction" type="number"
-          name="armorReduction" value="0" min="0" max="4" step="1">
-      </div>
-      <p><small>Wartość 0 oznacza brak pancerza. PP najpierw obniży wpisaną Redukcję.</small></p>
-    `,
-    ok: { label: "Rozpatrz obrażenia", icon: "fas fa-shield-halved" },
-    rejectClose: false,
-    modal: true
-  });
-  return Math.max(0, Math.min(4, Math.trunc(Number(formData?.armorReduction) || 0)));
-}
-
-async function publishDamageResolution(shooter, target, weapon, hitDie, damageResult) {
+async function publishDamageResolution(
+  shooter,
+  target,
+  weapon,
+  hitDie,
+  damageResult,
+  armorSelection,
+  appliedDurabilityLoss
+) {
   const baseDamageName = damageNamesBySymbol[damageResult.baseDamageCode]
     ?? damageResult.baseDamageCode;
   const finalDamageDescription = damageResult.prevented
     ? "<strong>Pancerz zatrzymał obrażenia — brak rany.</strong>"
     : `<strong>Końcowy skutek: ${foundry.utils.escapeHTML(damageResult.finalDamageName)}</strong>`;
+  const armorName = armorSelection?.covered
+    ? foundry.utils.escapeHTML(armorSelection.item.name)
+    : "brak ochrony";
+  const coverageDescription = armorSelection?.coverageRoll !== null
+    && armorSelection?.coverageRoll !== undefined
+    ? `Test osłony pancerza: k20 = ${armorSelection.coverageRoll} — ${armorSelection.covered ? "chroni" : "nie chroni"}`
+    : null;
   const armorDurabilityDescription = damageResult.armorReduction > 0
     && damageResult.armorDurabilityLoss > 0
-    ? `Wytrzymałość pancerza: −${damageResult.armorDurabilityLoss} (do ręcznego naniesienia)`
+    ? `Wytrzymałość pancerza: −${appliedDurabilityLoss}${appliedDurabilityLoss < damageResult.armorDurabilityLoss ? " (pełne zużycie elementu)" : ""}`
     : "Wytrzymałość pancerza: bez zmiany";
 
   await foundry.documents.ChatMessage.create({
@@ -445,6 +442,8 @@ async function publishDamageResolution(shooter, target, weapon, hitDie, damageRe
       `Lokacja: <strong>${damageResult.locationLabel}</strong>`,
       `Obrażenia broni: ${foundry.utils.escapeHTML(baseDamageName)}`,
       damageResult.headBonus ? "Trafienie w głowę: obrażenia zwiększone o 1 poziom" : null,
+      `Pancerz: ${armorName}`,
+      coverageDescription,
       `Redukcja pancerza: ${damageResult.armorReduction}`,
       `Przebicie Pancerza: ${damageResult.armorPenetration}`,
       `Skuteczna Redukcja: ${damageResult.effectiveArmorReduction}`,
@@ -460,7 +459,12 @@ async function publishDamageResolution(shooter, target, weapon, hitDie, damageRe
 async function resolveHitConsequences(shooter, target, weapon, shotResult) {
   const hitDie = await selectHitDie(shotResult.evaluatedDice);
   if (!hitDie) return;
-  const armorReduction = await selectTargetArmorReduction(target, weapon, hitDie);
+  const location = getHitLocation(hitDie.naturalResult);
+  const targetActor = target.actor;
+  const armorSelection = targetActor && location
+    ? await selectArmorForHit(targetActor, location, "ballistic")
+    : null;
+  const armorReduction = armorSelection?.covered ? armorSelection.reduction : 0;
   const damageResult = resolveDamage({
     damageCode: weapon.system.damageCode,
     naturalResult: hitDie.naturalResult,
@@ -472,10 +476,24 @@ async function resolveHitConsequences(shooter, target, weapon, shotResult) {
     return;
   }
 
-  await publishDamageResolution(shooter, target, weapon, hitDie, damageResult);
+  const appliedDurabilityLoss = targetActor?.isOwner
+    ? await applyArmorDurabilityLoss(
+      armorSelection,
+      damageResult.location,
+      damageResult.armorDurabilityLoss
+    )
+    : 0;
+  await publishDamageResolution(
+    shooter,
+    target,
+    weapon,
+    hitDie,
+    damageResult,
+    armorSelection,
+    appliedDurabilityLoss
+  );
   if (damageResult.prevented) return;
 
-  const targetActor = target.actor;
   if (!targetActor || targetActor.type !== "character") {
     ui.notifications.warn("Cel nie jest Aktorem postaci — ranę rozpatrzono tylko w czacie.");
     return;

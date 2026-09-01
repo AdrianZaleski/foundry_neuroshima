@@ -4,6 +4,36 @@
   {{!-- Ta wartość jest sumą masy ekwipunku, broni oraz zapasów amunicji. --}}
   <p><strong>Łączna masa noszonych przedmiotów:</strong> {{totalCarriedWeight}} kg</p>
 
+  <h2>Pancerze</h2>
+  <div class="armors">
+    <button type="button" data-action="createArmor">Dodaj pancerz</button>
+    <p>
+      <strong>Masa pancerzy:</strong> {{totalArmorWeight}} kg<br>
+      <strong>Kara za założone pancerze:</strong> Zręczność {{equippedDexterityArmorPenalty}}%, Percepcja {{equippedPerceptionArmorPenalty}}%
+    </p>
+    <table>
+      <thead><tr><th>Pancerz</th><th>Stan</th><th>Chronione lokacje</th><th>Kara</th><th>Masa</th><th>Akcje</th></tr></thead>
+      <tbody>
+        {{#each armorItems}}
+          <tr>
+            <td><strong>{{this.name}}</strong></td>
+            <td>{{#if this.equipped}}Założony{{else}}Niezłożony{{/if}}</td>
+            <td>{{#if this.protectedLocations}}{{this.protectedLocations}}{{else}}Brak{{/if}}</td>
+            <td>{{this.penaltyPercent}}%</td>
+            <td>{{this.weight}} kg</td>
+            <td>
+              <button type="button" data-action="toggleArmor" data-item-id="{{this.id}}">{{#if this.equipped}}Zdejmij{{else}}Załóż{{/if}}</button>
+              <button type="button" data-action="editArmor" data-item-id="{{this.id}}">Edytuj</button>
+              <button type="button" data-action="deleteArmor" data-item-id="{{this.id}}">Usuń</button>
+            </td>
+          </tr>
+        {{else}}
+          <tr><td colspan="6">Postać nie posiada jeszcze pancerza.</td></tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
   <h2>Broń ręczna</h2>
 
   <div class="melee-weapons">

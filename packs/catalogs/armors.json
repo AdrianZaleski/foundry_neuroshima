@@ -1,0 +1,108 @@
+[
+  {
+    "_id": "ArmorTrashPoor01",
+    "name": "Kiepska zbroja śmieciowa",
+    "type": "armor",
+    "system": {
+      "sourceCode": "ARMOR_TRASH_POOR", "equipped": false, "armorClass": "custom", "penaltyScope": "dexterity", "penaltyPercent": 30,
+      "price": 0, "availabilityPercent": 0, "unitWeight": 0, "weightUnit": "kg",
+      "description": "Elementy złomu, kiepsko połączone. Dane według przykładu z podręcznika.",
+      "head": { "protected": true, "reduction": 2, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 2, "currentDurability": 2 },
+      "torso": { "protected": true, "reduction": 3, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 2, "currentDurability": 2 },
+      "leftArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "leftLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 }
+    }
+  },
+  {
+    "_id": "ArmorTrashGood01",
+    "name": "Dobra zbroja śmieciowa",
+    "type": "armor",
+    "system": {
+      "sourceCode": "ARMOR_TRASH_GOOD", "equipped": false, "armorClass": "custom", "penaltyScope": "dexterity", "penaltyPercent": 20,
+      "price": 0, "availabilityPercent": 0, "unitWeight": 0, "weightUnit": "kg", "description": "Dobrze wykonana zbroja śmieciowa. Dane według przykładu z podręcznika.",
+      "head": { "protected": true, "reduction": 2, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 5, "currentDurability": 5 },
+      "torso": { "protected": true, "reduction": 3, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 5, "currentDurability": 5 },
+      "leftArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "leftLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 }
+    }
+  },
+  {
+    "_id": "ArmorFragVest001",
+    "name": "Kamizelka przeciwodłamkowa",
+    "type": "armor",
+    "system": {
+      "sourceCode": "ARMOR_FRAG_VEST", "equipped": false, "armorClass": "light", "penaltyScope": "dexterity", "penaltyPercent": 5,
+      "price": 0, "availabilityPercent": 0, "unitWeight": 0, "weightUnit": "kg", "description": "Lekka kamizelka cywilna lub policyjna. Redukcja nie dotyczy obrażeń tnących.",
+      "head": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "torso": { "protected": true, "reduction": 2, "cuttingReduction": 0, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 2, "currentDurability": 2 },
+      "leftArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "leftLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 }
+    }
+  },
+  {
+    "_id": "ArmorRifleVest01",
+    "name": "Kamizelka strzelecka",
+    "type": "armor",
+    "system": {
+      "sourceCode": "ARMOR_RIFLE_VEST", "equipped": false, "armorClass": "medium", "penaltyScope": "dexterity", "penaltyPercent": 10,
+      "price": 0, "availabilityPercent": 0, "unitWeight": 0, "weightUnit": "kg", "description": "Kamizelka wojskowa. Na tułowiu Redukcja 3, a przeciw obrażeniom tnącym Redukcja 1.",
+      "head": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "torso": { "protected": true, "reduction": 3, "cuttingReduction": 1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 3, "currentDurability": 3 },
+      "leftArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "leftLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 }
+    }
+  },
+  {
+    "_id": "ArmorRiotSuit001",
+    "name": "Pancerz RIOT",
+    "type": "armor",
+    "system": {
+      "sourceCode": "ARMOR_RIOT", "equipped": false, "armorClass": "medium", "penaltyScope": "dexterity", "penaltyPercent": 25,
+      "price": 0, "availabilityPercent": 0, "unitWeight": 0, "weightUnit": "kg", "description": "Chroni tułów, ręce i nogi. Redukcja nie dotyczy obrażeń tnących.",
+      "head": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "torso": { "protected": true, "reduction": 2, "cuttingReduction": 0, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 3, "currentDurability": 3 },
+      "leftArm": { "protected": true, "reduction": 2, "cuttingReduction": 0, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 3, "currentDurability": 3 },
+      "rightArm": { "protected": true, "reduction": 2, "cuttingReduction": 0, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 3, "currentDurability": 3 },
+      "leftLeg": { "protected": true, "reduction": 2, "cuttingReduction": 0, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 3, "currentDurability": 3 },
+      "rightLeg": { "protected": true, "reduction": 2, "cuttingReduction": 0, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 3, "currentDurability": 3 }
+    }
+  },
+  {
+    "_id": "ArmorArmyHelmet1",
+    "name": "Hełm wojskowy",
+    "type": "armor",
+    "system": {
+      "sourceCode": "ARMOR_MILITARY_HELMET", "equipped": false, "armorClass": "light", "penaltyScope": "perception", "penaltyPercent": 5,
+      "price": 0, "availabilityPercent": 0, "unitWeight": 0, "weightUnit": "kg", "description": "Lekki kevlar. Kara dotyczy wyłącznie testów Percepcji.",
+      "head": { "protected": true, "reduction": 2, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 5, "currentDurability": 5 },
+      "torso": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "leftArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightArm": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "leftLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 }
+    }
+  },
+  {
+    "_id": "ArmorGloves00001",
+    "name": "Opancerzone rękawice",
+    "type": "armor",
+    "system": {
+      "sourceCode": "ARMOR_ARMORED_GLOVES", "equipped": false, "armorClass": "light", "penaltyScope": "dexterity", "penaltyPercent": 5,
+      "price": 5, "availabilityPercent": 50, "unitWeight": 0, "weightUnit": "kg", "description": "Po trafieniu w rękę chronią przy wyniku 1–5 na k20. Wytrzymałość traci się według obrażeń przed redukcją.",
+      "head": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "torso": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "leftArm": { "protected": true, "reduction": 1, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 25, "maxDurability": 2, "currentDurability": 2 },
+      "rightArm": { "protected": true, "reduction": 1, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 25, "maxDurability": 2, "currentDurability": 2 },
+      "leftLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 },
+      "rightLeg": { "protected": false, "reduction": 0, "cuttingReduction": -1, "ballisticReduction": -1, "coverageChance": 100, "maxDurability": 0, "currentDurability": 0 }
+    }
+  }
+]

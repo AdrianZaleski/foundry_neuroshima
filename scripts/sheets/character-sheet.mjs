@@ -35,6 +35,7 @@ import {
   handleWeaponJam,
   resolveMinorJamClearing
 } from "../combat/weapon-jam.mjs";
+import { calculateArmorPenaltyPercent } from "../combat/armor.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -211,6 +212,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       createEquipment: this.#onCreateEquipment,
       editEquipment: this.#onEditEquipment,
       deleteEquipment: this.#onDeleteEquipment,
+      createArmor: this.#onCreateArmor,
+      editArmor: this.#onEditArmor,
+      deleteArmor: this.#onDeleteArmor,
+      toggleArmor: this.#onToggleArmor,
 
       // Broń jest osobnym typem Itemu, dlatego otrzymuje osobne akcje.
       createWeapon: this.#onCreateWeapon,
@@ -462,6 +467,38 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         price: item.system.price
       }));
 
+    context.armorItems = this.actor.items
+      .filter((item) => item.type === "armor")
+      .map((item) => {
+        const protectedLocations = [
+          ["head", "głowa"], ["torso", "tułów"],
+          ["leftArm", "lewa ręka"], ["rightArm", "prawa ręka"],
+          ["leftLeg", "lewa noga"], ["rightLeg", "prawa noga"]
+        ].filter(([key]) => item.system[key]?.protected)
+          .map(([key, label]) => `${label}: Red. ${item.system[key].reduction}, Wyt. ${item.system[key].currentDurability}/${item.system[key].maxDurability}`);
+        return {
+          id: item.id,
+          name: item.name,
+          equipped: item.system.equipped,
+          penaltyPercent: item.system.penaltyPercent,
+          protectedLocations: protectedLocations.join(" | "),
+          weight: item.system.weightInKilograms
+        };
+      });
+    const armorWeightSum = context.armorItems.reduce(
+      (sum, item) => sum + item.weight,
+      0
+    );
+    context.totalArmorWeight = Math.round(armorWeightSum * 1000) / 1000;
+    context.equippedDexterityArmorPenalty = calculateArmorPenaltyPercent(
+      this.actor,
+      "zrecznosc"
+    );
+    context.equippedPerceptionArmorPenalty = calculateArmorPenaltyPercent(
+      this.actor,
+      "percepcja"
+    );
+
     // Łączna masa ekwipunku jest informacją wyliczaną. Nie zapisujemy jej
     // osobno, ponieważ zawsze można ją odtworzyć z przedmiotów postaci.
     const equipmentWeightSum = context.equipmentItems.reduce(
@@ -555,7 +592,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     const carriedWeightSum = equipmentWeightSum
       + meleeWeaponWeightSum
       + weaponWeightSum
-      + ammunitionWeightSum;
+      + ammunitionWeightSum
+      + armorWeightSum;
     context.totalCarriedWeight = Math.round(carriedWeightSum * 1000) / 1000;
 
     return context;
@@ -895,6 +933,42 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
     // Po utworzeniu od razu otwieramy kartę przedmiotu do uzupełnienia.
     await createdItem.sheet.render({ force: true });
+  }
+
+  static async #onCreateArmor() {
+    const [createdArmor] = await this.actor.createEmbeddedDocuments("Item", [
+      { name: "Nowy pancerz", type: "armor" }
+    ]);
+    await createdArmor.sheet.render({ force: true });
+  }
+
+  static async #onEditArmor(event, target) {
+    const armor = this.actor.items.get(target.dataset.itemId);
+    if (!armor || armor.type !== "armor") {
+      ui.notifications.warn("Nie znaleziono tego pancerza na karcie postaci.");
+      return;
+    }
+    await armor.sheet.render({ force: true });
+  }
+
+  static async #onToggleArmor(event, target) {
+    const armor = this.actor.items.get(target.dataset.itemId);
+    if (!armor || armor.type !== "armor") return;
+    await armor.update({ "system.equipped": !armor.system.equipped });
+  }
+
+  static async #onDeleteArmor(event, target) {
+    const armor = this.actor.items.get(target.dataset.itemId);
+    if (!armor || armor.type !== "armor") {
+      ui.notifications.warn("Nie znaleziono tego pancerza na karcie postaci.");
+      return;
+    }
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: "Usuwanie pancerza" },
+      content: `<p>Czy na pewno usunąć pancerz <strong>${foundry.utils.escapeHTML(armor.name)}</strong>?</p>`,
+      modal: true
+    });
+    if (confirmed) await this.actor.deleteEmbeddedDocuments("Item", [armor.id]);
   }
 
   // Identyfikator z przycisku pozwala odnaleźć właściwy Item należący do Actora.

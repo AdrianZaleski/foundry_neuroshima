@@ -12,6 +12,7 @@ import {
   rewindSegmentTurn,
   startSegmentCombat
 } from "./segments.mjs";
+import { calculateArmorPenaltyPercent } from "./armor.mjs";
 
 const INITIATIVE_SKILLS = {
   bijatyka: "Bijatyka",
@@ -138,7 +139,8 @@ export function calculateInitiativeResult({
 
 async function selectInitiativeConfiguration(actor) {
   const woundPenalty = calculateWoundPenaltyPercent(actor);
-  const armorPenalty = actor.system.testPenalties?.armorPercent ?? 0;
+  const dexterityArmorPenalty = calculateArmorPenaltyPercent(actor, "zrecznosc");
+  const perceptionArmorPenalty = calculateArmorPenaltyPercent(actor, "percepcja");
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Inicjatywa: ${actor.name}` },
     content: `
@@ -171,7 +173,7 @@ async function selectInitiativeConfiguration(actor) {
       <div class="form-group">
         <label>
           <input type="checkbox" name="includeArmor" checked>
-          Uwzględnij pancerz (${armorPenalty}%)
+          Uwzględnij pancerz (<span data-armor-penalty>${dexterityArmorPenalty}</span>%)
         </label>
       </div>
       <div class="form-group">
@@ -206,7 +208,9 @@ async function selectInitiativeConfiguration(actor) {
       ? woundPenalty
       : 0,
     includedArmorPenalty: checkboxIsSelected(formData.includeArmor)
-      ? armorPenalty
+      ? (String(formData.attributeKey) === "percepcja"
+        ? perceptionArmorPenalty
+        : dexterityArmorPenalty)
       : 0,
     customPenalty: Number(formData.customPenaltyPercent) || 0
   };

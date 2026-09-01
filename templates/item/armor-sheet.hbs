@@ -1,0 +1,32 @@
+<section class="neuroshima-armor-sheet" style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header><label>Nazwa pancerza <input type="text" name="name" value="{{item.name}}"></label></header>
+  <h2>Pancerz</h2>
+  <label><input type="checkbox" name="system.equipped" {{checked system.equipped}}> Założony</label>
+  <label>Klasa <select name="system.armorClass">{{selectOptions armorClassOptions selected=system.armorClass}}</select></label>
+  <label>Kara <input type="number" name="system.penaltyPercent" value="{{system.penaltyPercent}}" min="0" step="1">%</label>
+  <label>Zakres kary <select name="system.penaltyScope">{{selectOptions penaltyScopeOptions selected=system.penaltyScope}}</select></label>
+
+  <h3>Chronione lokacje</h3>
+  <p><small>Redukcja specjalna −1 oznacza: użyj zwykłej Redukcji. Wytrzymałość jest śledzona osobno dla każdej lokacji.</small></p>
+  <table>
+    <thead><tr><th>Lokacja</th><th>Chroni</th><th>Red.</th><th>Tnące</th><th>Balistyczne</th><th>Szansa</th><th>Wytrzymałość</th></tr></thead>
+    <tbody>
+      {{#each locations}}
+        <tr>
+          <td>{{this.label}}</td>
+          <td><input type="checkbox" name="system.{{this.key}}.protected" {{checked this.data.protected}}></td>
+          <td><input type="number" name="system.{{this.key}}.reduction" value="{{this.data.reduction}}" min="0" step="1"></td>
+          <td><input type="number" name="system.{{this.key}}.cuttingReduction" value="{{this.data.cuttingReduction}}" min="-1" step="1"></td>
+          <td><input type="number" name="system.{{this.key}}.ballisticReduction" value="{{this.data.ballisticReduction}}" min="-1" step="1"></td>
+          <td><input type="number" name="system.{{this.key}}.coverageChance" value="{{this.data.coverageChance}}" min="0" max="100" step="1">%</td>
+          <td><input type="number" name="system.{{this.key}}.currentDurability" value="{{this.data.currentDurability}}" min="0" step="1"> / <input type="number" name="system.{{this.key}}.maxDurability" value="{{this.data.maxDurability}}" min="0" step="1"></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <h3>Dane przedmiotu</h3>
+  <label>Masa <input type="number" name="system.unitWeight" value="{{system.unitWeight}}" min="0" step="0.01"> <select name="system.weightUnit">{{selectOptions weightUnitOptions selected=system.weightUnit}}</select></label>
+  <label>Cena <input type="number" name="system.price" value="{{system.price}}" min="0" step="0.01"></label>
+  <label>Dostępność <input type="number" name="system.availabilityPercent" value="{{system.availabilityPercent}}" min="0" max="100" step="1">%</label>
+  <label>Opis <textarea name="system.description" rows="6">{{system.description}}</textarea></label>
+</section>

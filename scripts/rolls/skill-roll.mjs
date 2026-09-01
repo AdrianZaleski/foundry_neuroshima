@@ -252,7 +252,8 @@ export async function rollSkill(actor, skillKey, options = {}) {
   const displayedSkillName = customSkillName || skillConfiguration.label;
   const testConfiguration = await selectTestConfiguration(actor, {
     fixedTestType: options.fixedTestType ?? "",
-    windowTitle: options.configurationTitle ?? "Ustawienia testu"
+    windowTitle: options.configurationTitle ?? "Ustawienia testu",
+    attributeKey: selectedAttributeKey
   });
 
   if (testConfiguration === null) {
