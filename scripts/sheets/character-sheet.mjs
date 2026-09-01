@@ -10,6 +10,13 @@ import {
   prepareMedicinesByDisease
 } from "../catalogs/health-reference.mjs";
 import { rollNeuroshimaInitiative } from "../combat/initiative.mjs";
+import {
+  finishSegmentAction,
+  interruptSegmentAction,
+  passSegment,
+  prepareActorCombatStatus,
+  selectSegmentAction
+} from "../combat/segments.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -160,6 +167,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       rollAttribute: this.#onRollAttribute,
       rollSkill: this.#onRollSkill,
       rollInitiative: this.#onRollInitiative,
+      declareSegmentAction: this.#onDeclareSegmentAction,
+      passSegment: this.#onPassSegment,
+      finishSegmentAction: this.#onFinishSegmentAction,
+      interruptSegmentAction: this.#onInterruptSegmentAction,
       saveActorName: this.#onSaveActorName,
 
       // Każda rana jest osobnym Itemem osadzonym w postaci.
@@ -260,6 +271,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     // Udostępniamy szablonowi kartę Actora oraz jej dane systemowe.
     context.actor = this.actor;
     context.system = this.actor.system;
+    context.combatStatus = prepareActorCombatStatus(this.actor);
 
     const [
       originCatalog,
@@ -519,6 +531,26 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     ui.notifications.info(
       "Actor nie uczestniczy w aktywnej walce. Wynik zapisano tylko na czacie."
     );
+  }
+
+  static async #onDeclareSegmentAction() {
+    await selectSegmentAction(this.actor);
+    this.render();
+  }
+
+  static async #onPassSegment() {
+    await passSegment(this.actor);
+    this.render();
+  }
+
+  static async #onFinishSegmentAction() {
+    await finishSegmentAction(this.actor);
+    this.render();
+  }
+
+  static async #onInterruptSegmentAction() {
+    await interruptSegmentAction(this.actor);
+    this.render();
   }
 
   static async #onSaveActorName(event, target) {

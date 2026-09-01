@@ -143,7 +143,15 @@
 - Wynik, także ujemny w przypadku Punktów Porażki, jest zapisywany jako liczba Inicjatywy uczestnika. Dzięki temu Foundry może prawidłowo uporządkować również postacie, którym test się nie udał.
 - Przy identycznych wynikach system zgłasza remis. Remisujący wykonują ponowne rzuty albo rozstrzygają oddanie Inicjatywy poza automatyzacją.
 - Przycisk na karcie Actora zapisuje wynik w aktywnej walce, jeżeli Actor jest jej uczestnikiem. Poza walką publikuje wyłącznie wynik testu na czacie.
-- Segmenty, deklarowanie akcji i pozostałe testy walki będą osobnym etapem. Serie i granaty pozostają odłożone.
+- Serie, granaty i automatyczne rozstrzyganie konkretnych akcji pozostają odłożone.
+- Jedna runda walki składa się z trzech globalnych segmentów. W każdym segmencie uczestnicy otrzymują kolejno moment działania zgodnie z Inicjatywą.
+- Natywna kolejność uczestników w Combat Trackerze nie jest duplikowana. Dodatkowy licznik zapisany na walce określa aktualny segment.
+- Akcja ma nazwę, koszt od jednego do trzech segmentów oraz wyliczony moment zakończenia.
+- Akcja może rozpocząć się w trzecim segmencie i zakończyć w kolejnej rundzie.
+- Segment, w którym akcja się kończy, nadal jest przez nią zajęty. Nową akcję można rozpocząć dopiero podczas następnego momentu działania postaci.
+- Akcję wielosegmentową można zakończyć wcześniej albo przerwać. W obu przypadkach bieżący segment pozostaje wykorzystany.
+- Pas jest traktowany jak akcja zajmująca jeden segment.
+- Pierwsza wersja pozwala wpisywać dowolną nazwę akcji. Powiązanie konkretnych działań z testami, bronią i amunicją nastąpi w kolejnych etapach.
 
 ## Rany i procentowe utrudnienia
 

@@ -13,6 +13,38 @@
     Rzuć inicjatywę
   </button>
 
+  {{#if combatStatus.inCombat}}
+    <section>
+      <h2>Walka</h2>
+      {{#if combatStatus.started}}
+        <p><strong>Runda {{combatStatus.round}} — segment {{combatStatus.segment}} z 3</strong></p>
+
+        {{#if combatStatus.action.isCurrent}}
+          <p>
+            Akcja: <strong>{{combatStatus.action.name}}</strong>
+            (koszt: {{combatStatus.action.durationLabel}})
+          </p>
+          <p>{{combatStatus.action.timingDescription}}</p>
+          {{#if combatStatus.action.isPending}}
+            {{#if combatStatus.isActiveTurn}}
+              <button type="button" data-action="finishSegmentAction">Zakończ wcześniej</button>
+              <button type="button" data-action="interruptSegmentAction">Przerwij akcję</button>
+            {{/if}}
+          {{/if}}
+        {{else}}
+          {{#if combatStatus.isActiveTurn}}
+            <button type="button" data-action="declareSegmentAction">Zadeklaruj akcję</button>
+            <button type="button" data-action="passSegment">Pas</button>
+          {{else}}
+            <p>Postać czeka na swój moment w tym segmencie.</p>
+          {{/if}}
+        {{/if}}
+      {{else}}
+        <p>Postać jest w Combat Trackerze. Rozpocznij walkę po ustaleniu Inicjatywy.</p>
+      {{/if}}
+    </section>
+  {{/if}}
+
   <h2>Współczynniki</h2>
 
   {{!-- Każdy przycisk przekazuje do JavaScriptu klucz właściwego współczynnika. --}}

@@ -21,6 +21,7 @@ import { NeuroshimaWeaponSheet } from "./sheets/weapon-sheet.mjs";
 import {
   NeuroshimaCombat
 } from "./combat/initiative.mjs";
+import { initializeSegmentCombatInterface } from "./combat/segments.mjs";
 import {
   initializeCatalogCompendia
 } from "./compendia/catalog-compendia.mjs";
@@ -46,6 +47,7 @@ Hooks.once("init", () => {
   // standardowego pojedynczego rzutu opartego na formule.
   CONFIG.Combat.documentClass = NeuroshimaCombat;
   CONFIG.Combat.initiative.decimals = 0;
+  initializeSegmentCombatInterface();
 
   // Łączymy typ Itemu "equipment" z modelem danych zwykłego ekwipunku.
   CONFIG.Item.dataModels.equipment = NeuroshimaEquipmentDataModel;

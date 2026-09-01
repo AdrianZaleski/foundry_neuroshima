@@ -5,6 +5,13 @@ import {
   calculateFinalDifficultyIndex,
   calculateWoundPenaltyPercent
 } from "../rolls/roll-helpers.mjs";
+import {
+  advanceSegmentRound,
+  advanceSegmentTurn,
+  rewindSegmentRound,
+  rewindSegmentTurn,
+  startSegmentCombat
+} from "./segments.mjs";
 
 const INITIATIVE_SKILLS = {
   bijatyka: "Bijatyka",
@@ -269,6 +276,26 @@ export async function rollNeuroshimaInitiative(actor, { messageOptions = {} } = 
 }
 
 export class NeuroshimaCombat extends foundry.documents.Combat {
+  async startCombat() {
+    return startSegmentCombat(this);
+  }
+
+  async nextTurn() {
+    return advanceSegmentTurn(this);
+  }
+
+  async previousTurn() {
+    return rewindSegmentTurn(this);
+  }
+
+  async nextRound() {
+    return advanceSegmentRound(this);
+  }
+
+  async previousRound() {
+    return rewindSegmentRound(this);
+  }
+
   async rollInitiative(ids, options = {}) {
     const combatantIds = Array.isArray(ids) ? ids : [ids];
 
