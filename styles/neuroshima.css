@@ -1,0 +1,15 @@
+.neuroshima.character-sheet .specialization-skill {
+  background: rgba(125, 84, 32, 0.16);
+  box-shadow: inset 3px 0 0 #8a5b20;
+}
+
+.neuroshima.character-sheet label.specialization-skill,
+.neuroshima.character-sheet output.specialization-skill {
+  padding-left: 6px;
+}
+
+.neuroshima.character-sheet .specialization-skill-heading {
+  background: rgba(125, 84, 32, 0.25);
+  border-left: 3px solid #8a5b20;
+  padding: 3px 6px;
+}

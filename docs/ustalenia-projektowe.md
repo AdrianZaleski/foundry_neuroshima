@@ -154,12 +154,15 @@
 - Pierwsza wersja pozwala wpisywać dowolną nazwę akcji. Powiązanie konkretnych działań z testami, bronią i amunicją nastąpi w kolejnych etapach.
 - Deklaracja udostępnia katalog podstawowych akcji z podręcznika oraz opcję własnej akcji. Serie i rzuty granatem są świadomie pominięte.
 - Akcje katalogowe mają stały koszt jednego, dwóch albo trzech segmentów oraz informację, czy wymagają testu.
-- Celowanie i własna akcja pozwalają wybrać koszt od jednego do trzech segmentów.
+- Celowanie występuje w dwóch wariantach: jeden segment daje jedną dodatkową k20, a dwa segmenty dają dwie dodatkowe k20. Własna akcja pozwala wybrać koszt od jednego do trzech segmentów.
 - Oznaczenie „wymaga testu” uruchamia obecnie właściwy rzut tylko dla pojedynczego strzału. Pozostałe testowane akcje zostaną podłączone osobno.
 
 ### Pojedynczy strzał
 
-- Akcję `Strzał` za jeden segment rozstrzyga się pojedynczą kością k20.
+- Akcję `Strzał` za jeden segment rozstrzyga się standardowo pojedynczą kością k20.
+- Ukończone celowanie zwiększa liczbę kości następnego strzału do 2k20 albo 3k20. Niezależnie od liczby kości do trafienia wystarczy jeden sukces.
+- Celowanie jest przypisane do konkretnej broni i tokena celu. Zmiana broni, celu albo wykonanie innej akcji usuwa przygotowaną premię.
+- Punkty Umiejętności rozdziela się po rzucie pomiędzy dowolne kości użyte w teście. Suma wydanych punktów nie może przekroczyć dostępnej puli rundy.
 - Strzelec wybiera broń, odpowiednią Umiejętność oraz dokładnie jeden token wskazany jako cel.
 - Test jest oparty na Zręczności i rozpoczyna się na PT Przeciętnym. Uwzględnia kary z ran, pancerza strzelca, celność broni i ręcznie wpisane warunki takie jak odległość, ruch oraz osłona.
 - Suwak Umiejętności nie działa. Punkty Umiejętności można wydać po zobaczeniu naturalnego wyniku kości.

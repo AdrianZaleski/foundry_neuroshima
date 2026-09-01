@@ -19,6 +19,15 @@
       {{#if combatStatus.started}}
         <p><strong>Runda {{combatStatus.round}} — segment {{combatStatus.segment}} z 3</strong></p>
 
+        {{#if combatStatus.aimingPreparation}}
+          <p>
+            <strong>Przygotowane celowanie:</strong>
+            {{combatStatus.aimingPreparation.weaponName}}
+            → {{combatStatus.aimingPreparation.targetName}}
+            (+{{combatStatus.aimingPreparation.bonusDice}}k20)
+          </p>
+        {{/if}}
+
         {{#if combatStatus.action.isCurrent}}
           <p>
             Akcja: <strong>{{combatStatus.action.name}}</strong>
@@ -26,6 +35,15 @@
           </p>
           {{#if combatStatus.action.canResolveShot}}
             <button type="button" data-action="resolveSingleShot">Rozstrzygnij strzał</button>
+          {{/if}}
+          {{#if combatStatus.action.canConfigureAiming}}
+            <button type="button" data-action="configureAiming">Wybierz broń i cel</button>
+          {{/if}}
+          {{#if combatStatus.action.aimingConfiguration}}
+            <p>
+              Celowanie: <strong>{{combatStatus.action.aimingConfiguration.weaponName}}</strong>
+              → <strong>{{combatStatus.action.aimingConfiguration.targetName}}</strong>
+            </p>
           {{/if}}
           {{#if combatStatus.action.resolution}}
             <p><strong>Rozstrzygnięcie:</strong> {{combatStatus.action.resolution}}</p>

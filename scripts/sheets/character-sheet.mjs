@@ -2,6 +2,10 @@ import { rollAttribute } from "../rolls/attribute-roll.mjs";
 import { rollSkill } from "../rolls/skill-roll.mjs";
 import { ammunitionNamesBySymbol } from "../catalogs/ammunition-compatibility.mjs";
 import {
+  SPECIALIZATION_LABELS,
+  getSpecializedSkillKeys
+} from "../catalogs/skill-specializations.mjs";
+import {
   damageNamesBySymbol,
   describeAttackTypes
 } from "../catalogs/combat-reference.mjs";
@@ -19,6 +23,7 @@ import {
 } from "../combat/segments.mjs";
 import {
   JAM_STATE_LABELS,
+  configureAiming,
   resolveSingleShot
 } from "../combat/ranged-shot.mjs";
 
@@ -175,6 +180,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       passSegment: this.#onPassSegment,
       finishSegmentAction: this.#onFinishSegmentAction,
       interruptSegmentAction: this.#onInterruptSegmentAction,
+      configureAiming: this.#onConfigureAiming,
       resolveSingleShot: this.#onResolveSingleShot,
       saveActorName: this.#onSaveActorName,
 
@@ -268,6 +274,38 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       template: "systems/neuroshima/templates/actor/parts/inventory-tab.hbs"
     }
   };
+
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    const specializationCode = this.actor.system.background.specializationSourceCode;
+    const specializedSkillKeys = getSpecializedSkillKeys(specializationCode);
+    const specializationLabel = SPECIALIZATION_LABELS[specializationCode];
+    if (!specializationLabel || specializedSkillKeys.size === 0) return;
+
+    for (const button of this.element.querySelectorAll("[data-action='rollSkill'][data-skill]")) {
+      if (!specializedSkillKeys.has(button.dataset.skill)) continue;
+
+      const title = `Umiejętność specjalizacji: ${specializationLabel}`;
+      button.classList.add("specialization-skill");
+      button.title = title;
+
+      // Pola jednej umiejętności znajdują się między jej przyciskiem a
+      // poprzednim przyciskiem (lub nagłówkiem grupy). Obejmuje to również
+      // dodatkowe pole nazwy w Wiedzy ogólnej.
+      let skillPart = button.previousElementSibling;
+      while (skillPart && !["BUTTON", "H3"].includes(skillPart.tagName)) {
+        skillPart.classList.add("specialization-skill");
+        skillPart.title = title;
+        skillPart = skillPart.previousElementSibling;
+      }
+
+      if (skillPart?.tagName === "H3") {
+        skillPart.classList.add("specialization-skill-heading");
+        skillPart.title = title;
+      }
+    }
+  }
 
   async _prepareContext(options) {
     // Najpierw pobieramy standardowe dane przygotowane przez Foundry.
@@ -563,6 +601,11 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   static async #onResolveSingleShot() {
     await resolveSingleShot(this.actor);
+    this.render();
+  }
+
+  static async #onConfigureAiming() {
+    await configureAiming(this.actor);
     this.render();
   }
 

@@ -6,6 +6,8 @@ import {
 const SYSTEM_ID = "neuroshima";
 const COMBAT_SEGMENT_FLAG = "combatSegment";
 const COMBATANT_ACTION_FLAG = "segmentAction";
+const AIMING_PREPARATION_FLAG = "aimingPreparation";
+const SKILL_USAGE_FLAG = "combatSkillUsage";
 const SEGMENTS_PER_ROUND = 3;
 
 function clampSegment(segment) {
@@ -34,6 +36,10 @@ export function getCombatSegment(combat) {
 
 export function getSegmentAction(combatant) {
   return combatant?.getFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG) ?? null;
+}
+
+export function getAimingPreparation(combatant) {
+  return combatant?.getFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG) ?? null;
 }
 
 function findActorCombatant(combat, actor) {
@@ -71,6 +77,7 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
   const round = Math.max(1, Number(combat.round) || 1);
   const currentTick = calculateSegmentTick(round, segment);
   const action = getSegmentAction(combatant);
+  const aimingPreparation = getAimingPreparation(combatant);
   const consumesCurrentSegment = actionConsumesTick(action, currentTick);
   const isActiveTurn = combat.started && combat.combatant?.id === combatant.id;
 
@@ -83,6 +90,7 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
     isActiveTurn,
     canDeclareAction: isActiveTurn && !consumesCurrentSegment,
     consumesCurrentSegment,
+    aimingPreparation,
     action: action ? {
       ...action,
       durationLabel: action.duration === 1
@@ -94,6 +102,10 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
         && consumesCurrentSegment
         && action.actionCode === "shot"
         && !action.resolved,
+      canConfigureAiming: isActiveTurn
+        && consumesCurrentSegment
+        && action.effectCode === "aiming"
+        && !action.aimingConfiguration,
       timingDescription: consumesCurrentSegment
         ? describeActionTiming(action, currentTick)
         : "Poprzednia akcja jest zakończona."
@@ -151,11 +163,19 @@ export async function declareSegmentAction(actor, actionName, duration, metadata
     actionCode: metadata.actionCode ?? "custom",
     requiresTest: Boolean(metadata.requiresTest),
     isCustom: Boolean(metadata.isCustom),
+    effectCode: metadata.effectCode ?? "",
+    aimingBonusDice: Number(metadata.aimingBonusDice) || 0,
     startedRound: round,
     startedSegment: segment,
     startedAtTick: currentTick,
     endsAtTick: currentTick + safeDuration - 1
   };
+
+  // Każda czynność inna niż przygotowywany strzał przerywa wcześniej
+  // zachowane celowanie. Sam strzał zużyje premię podczas rozstrzygnięcia.
+  if (action.actionCode !== "shot") {
+    await combatant.unsetFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG);
+  }
 
   await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, action);
 
@@ -202,6 +222,19 @@ async function changeCurrentAction(actor, changeType) {
   };
   await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, changedAction);
 
+  if (
+    changeType === "finished"
+    && changedAction.effectCode === "aiming"
+    && changedAction.aimingConfiguration
+  ) {
+    const elapsedSegments = currentTick - changedAction.startedAtTick + 1;
+    await saveAimingPreparation(
+      combatant,
+      changedAction,
+      Math.min(changedAction.aimingBonusDice, elapsedSegments)
+    );
+  }
+
   const resultLabel = changeType === "finished" ? "zakończona wcześniej" : "przerwana";
   await createCombatMessage(
     `<strong>${escapeForChat(actor.name)}</strong>: akcja „${escapeForChat(action.name)}” została ${resultLabel}.`,
@@ -232,6 +265,62 @@ export async function markCurrentSegmentActionResolved(actor, resolution) {
   });
 }
 
+async function saveAimingPreparation(combatant, action, bonusDice) {
+  if (!action.aimingConfiguration || bonusDice <= 0) return;
+
+  await combatant.setFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG, {
+    ...action.aimingConfiguration,
+    bonusDice,
+    preparedRound: game.combat?.round ?? action.startedRound,
+    preparedSegment: getCombatSegment(game.combat)
+  });
+  await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, {
+    ...action,
+    aimingPrepared: true,
+    resolved: true,
+    resolution: `Przygotowano +${bonusDice}k20`
+  });
+  await createCombatMessage([
+    `<strong>${escapeForChat(combatant.name)} kończy celowanie</strong>`,
+    `${escapeForChat(action.aimingConfiguration.weaponName)} → ${escapeForChat(action.aimingConfiguration.targetName)}`,
+    `Następny zgodny strzał otrzyma +${bonusDice}k20.`
+  ].join("<br>"), combatant.actor);
+}
+
+export async function configureCurrentAiming(actor, aimingConfiguration) {
+  const activeParticipant = await requireActiveCombatant(actor);
+  if (!activeParticipant) return false;
+
+  const { combat, combatant } = activeParticipant;
+  const action = getSegmentAction(combatant);
+  const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
+  if (
+    !actionConsumesTick(action, currentTick)
+    || action.effectCode !== "aiming"
+  ) {
+    ui.notifications.warn("Bieżąca akcja nie jest celowaniem.");
+    return false;
+  }
+
+  const configuredAction = { ...action, aimingConfiguration };
+  await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, configuredAction);
+
+  if (configuredAction.endsAtTick === currentTick) {
+    await saveAimingPreparation(
+      combatant,
+      configuredAction,
+      configuredAction.aimingBonusDice
+    );
+  }
+
+  return true;
+}
+
+export async function consumeAimingPreparation(combatant) {
+  if (!getAimingPreparation(combatant)) return;
+  await combatant.unsetFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG);
+}
+
 export async function selectSegmentAction(actor) {
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Akcja: ${actor.name}` },
@@ -243,7 +332,7 @@ export async function selectSegmentAction(actor) {
         </select>
       </div>
       <div class="form-group">
-        <label for="neuroshima-segment-action-duration">Koszt celowania lub własnej akcji</label>
+        <label for="neuroshima-segment-action-duration">Koszt własnej akcji</label>
         <select id="neuroshima-segment-action-duration" name="duration">
           <option value="1" selected>1 segment</option>
           <option value="2">2 segmenty</option>
@@ -255,7 +344,7 @@ export async function selectSegmentAction(actor) {
         <input id="neuroshima-segment-action-name" type="text" name="customName"
           placeholder="Wypełnij tylko dla opcji Własna akcja">
       </div>
-      <p><small>Przy akcjach o stałym koszcie wybór liczby segmentów jest ignorowany.</small></p>
+      <p><small>Przy akcjach katalogowych wybór liczby segmentów jest ignorowany.</small></p>
     `,
     ok: {
       label: "Zadeklaruj",
@@ -293,6 +382,14 @@ async function announceCompletedAction(combat) {
   const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
   if (action.endsAtTick !== currentTick) return;
 
+  if (
+    action.effectCode === "aiming"
+    && action.aimingConfiguration
+    && !action.aimingPrepared
+  ) {
+    await saveAimingPreparation(combatant, action, action.aimingBonusDice);
+  }
+
   await createCombatMessage(
     `<strong>${escapeForChat(combatant.name)}</strong> kończy akcję „${escapeForChat(action.name)}”. Bieżący segment jest przez nią zajęty.`,
     combatant.actor
@@ -305,11 +402,11 @@ export async function startSegmentCombat(combat) {
     return combat;
   }
 
-  const actionResets = combat.combatants
-    .filter((combatant) => getSegmentAction(combatant))
-    .map((combatant) => ({
+  const actionResets = combat.combatants.map((combatant) => ({
       _id: combatant.id,
-      [`flags.${SYSTEM_ID}.-=${COMBATANT_ACTION_FLAG}`]: null
+      [`flags.${SYSTEM_ID}.-=${COMBATANT_ACTION_FLAG}`]: null,
+      [`flags.${SYSTEM_ID}.-=${AIMING_PREPARATION_FLAG}`]: null,
+      [`flags.${SYSTEM_ID}.-=${SKILL_USAGE_FLAG}`]: null
     }));
 
   if (actionResets.length > 0) {

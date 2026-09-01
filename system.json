@@ -10,6 +10,9 @@
   "esmodules": [
     "scripts/neuroshima.mjs"
   ],
+  "styles": [
+    "styles/neuroshima.css"
+  ],
   "documentTypes": {
     "Actor": {
       "character": {}

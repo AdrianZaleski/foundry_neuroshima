@@ -6,6 +6,9 @@ import {
   calculateWoundPenaltyPercent
 } from "../rolls/roll-helpers.mjs";
 import {
+  configureCurrentAiming,
+  consumeAimingPreparation,
+  getAimingPreparation,
   getSegmentAction,
   markCurrentSegmentActionResolved
 } from "./segments.mjs";
@@ -44,10 +47,20 @@ function prepareSkillOptions(actor) {
   }).join("");
 }
 
-function prepareWeaponOptions(weapons) {
+function prepareWeaponOptions(weapons, selectedWeaponId = "") {
   return weapons.map((weapon) => (
-    `<option value="${weapon.id}">${foundry.utils.escapeHTML(weapon.name)} — ${weapon.system.currentAmmunition}/${weapon.system.magazineCapacity}</option>`
+    `<option value="${weapon.id}" ${weapon.id === selectedWeaponId ? "selected" : ""}>${foundry.utils.escapeHTML(weapon.name)} — ${weapon.system.currentAmmunition}/${weapon.system.magazineCapacity}</option>`
   )).join("");
+}
+
+function getUsableFirearms(actor) {
+  return actor.items.filter((item) => (
+    item.type === "weapon"
+    && item.system.weaponClass !== "LAUNCHER"
+    && item.system.weaponClass !== "PROJECTILE"
+    && item.system.currentAmmunition > 0
+    && item.system.jamState === "ready"
+  ));
 }
 
 function getCurrentSkillUsage(combatant, round) {
@@ -112,6 +125,31 @@ export function calculateSingleShotResult({
   spentSkillPoints,
   reliabilityThreshold
 }) {
+  const rangedResult = calculateRangedShotResult({
+    dexterity,
+    naturalResults: [naturalResult],
+    difficultyPercentage,
+    skillLevel,
+    spentSkillPointsByDie: [spentSkillPoints],
+    reliabilityThreshold
+  });
+  const [evaluatedDie] = rangedResult.evaluatedDice;
+
+  return {
+    ...rangedResult,
+    adjustedResult: evaluatedDie.adjustedResult,
+    automaticFailure: evaluatedDie.automaticFailure
+  };
+}
+
+export function calculateRangedShotResult({
+  dexterity,
+  naturalResults,
+  difficultyPercentage,
+  skillLevel,
+  spentSkillPointsByDie,
+  reliabilityThreshold
+}) {
   const difficultyAfterPercentage = calculateDifficultyIndexFromPercentage(
     difficultyPercentage
   );
@@ -119,22 +157,44 @@ export function calculateSingleShotResult({
     ? difficultyAfterPercentage
     : Math.min(difficultyAfterPercentage + 1, DIFFICULTY_LABELS.length - 1);
   const finalDifficultyIndex = calculateFinalDifficultyIndex(
-    [naturalResult],
+    naturalResults,
     difficultyBeforeNaturalResult
   );
   const successThreshold = dexterity - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
-  const adjustedResult = naturalResult - spentSkillPoints;
-  const automaticFailure = naturalResult === 20;
-  const testPassed = !automaticFailure && adjustedResult <= successThreshold;
+  const evaluatedDice = naturalResults.map((naturalResult, dieIndex) => {
+    const spentSkillPoints = Math.max(0, spentSkillPointsByDie[dieIndex] ?? 0);
+    const adjustedResult = naturalResult - spentSkillPoints;
+    const automaticFailure = naturalResult === 20;
+    const succeeded = !automaticFailure && adjustedResult <= successThreshold;
+    return {
+      naturalResult,
+      adjustedResult,
+      spentSkillPoints,
+      automaticFailure,
+      succeeded,
+      pointsDifference: successThreshold - adjustedResult
+    };
+  });
+  const successfulDice = evaluatedDice.filter((die) => die.succeeded);
+  const ordinaryFailedDice = evaluatedDice.filter(
+    (die) => !die.succeeded && !die.automaticFailure
+  );
+  const testPassed = successfulDice.length > 0;
+  const pointsDifference = testPassed
+    ? Math.max(...successfulDice.map((die) => die.pointsDifference))
+    : ordinaryFailedDice.length > 0
+      ? Math.max(...ordinaryFailedDice.map((die) => die.pointsDifference))
+      : 0;
 
   return {
-    adjustedResult,
-    automaticFailure,
+    evaluatedDice,
     testPassed,
-    pointsDifference: successThreshold - adjustedResult,
+    pointsDifference,
     successThreshold,
     finalDifficultyIndex,
-    requiresJamRoll: naturalResult > reliabilityThreshold
+    requiresJamRoll: naturalResults.some(
+      (naturalResult) => naturalResult > reliabilityThreshold
+    )
   };
 }
 
@@ -144,14 +204,8 @@ export function classifyJamSeverity(jamRollResult) {
   return "critical";
 }
 
-async function selectShotConfiguration(actor, target) {
-  const weapons = actor.items.filter((item) => (
-    item.type === "weapon"
-    && item.system.weaponClass !== "LAUNCHER"
-    && item.system.weaponClass !== "PROJECTILE"
-    && item.system.currentAmmunition > 0
-    && item.system.jamState === "ready"
-  ));
+async function selectShotConfiguration(actor, target, aimingPreparation) {
+  const weapons = getUsableFirearms(actor);
 
   if (weapons.length === 0) {
     ui.notifications.warn("Postać nie ma sprawnej, załadowanej broni palnej.");
@@ -160,13 +214,16 @@ async function selectShotConfiguration(actor, target) {
 
   const woundPenalty = calculateWoundPenaltyPercent(actor);
   const armorPenalty = actor.system.testPenalties?.armorPercent ?? 0;
+  const aimingDescription = aimingPreparation
+    ? `<p>Przygotowane celowanie: <strong>${foundry.utils.escapeHTML(aimingPreparation.weaponName)}</strong> → <strong>${foundry.utils.escapeHTML(aimingPreparation.targetName)}</strong> (+${aimingPreparation.bonusDice}k20). Premia działa tylko dla tej broni i celu.</p>`
+    : "";
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Strzał: ${actor.name} → ${target.name}` },
     content: `
       <div class="form-group">
         <label for="neuroshima-shot-weapon">Broń</label>
         <select id="neuroshima-shot-weapon" name="weaponId">
-          ${prepareWeaponOptions(weapons)}
+          ${prepareWeaponOptions(weapons, aimingPreparation?.weaponId)}
         </select>
       </div>
       <div class="form-group">
@@ -186,9 +243,10 @@ async function selectShotConfiguration(actor, target) {
         <label for="neuroshima-shot-modifier">Odległość, ruch, osłona i inne warunki</label>
         <input id="neuroshima-shot-modifier" type="number" name="customModifier" value="0" step="1"> %
       </div>
+      ${aimingDescription}
     `,
     ok: {
-      label: "Rzuć 1k20",
+      label: "Rzuć",
       icon: "fas fa-crosshairs"
     },
     rejectClose: false,
@@ -208,27 +266,98 @@ async function selectShotConfiguration(actor, target) {
   };
 }
 
-async function selectSpentSkillPoints(actor, skillName, availablePoints, naturalResult) {
-  if (availablePoints <= 0 || naturalResult === 20) return 0;
+async function selectSpentSkillPoints(actor, skillName, availablePoints, naturalResults) {
+  if (availablePoints <= 0 || naturalResults.every((result) => result === 20)) {
+    return naturalResults.map(() => 0);
+  }
+
+  const dieInputs = naturalResults.map((naturalResult, dieIndex) => {
+    const disabled = naturalResult === 20 ? "disabled" : "";
+    return `
+      <div class="form-group">
+        <label for="neuroshima-shot-skill-points-${dieIndex}">Kość ${dieIndex + 1}: ${naturalResult}</label>
+        <input id="neuroshima-shot-skill-points-${dieIndex}" type="number"
+          name="die${dieIndex}Points" value="0" min="0" max="${availablePoints}" step="1" ${disabled}>
+      </div>
+    `;
+  }).join("");
 
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Umiejętność: ${skillName}` },
     content: `
-      <p>Naturalny wynik strzału: <strong>${naturalResult}</strong></p>
+      <p>Naturalne wyniki strzału: <strong>${naturalResults.join(", ")}</strong></p>
       <p>Dostępne punkty Umiejętności w tej rundzie: <strong>${availablePoints}</strong></p>
-      <div class="form-group">
-        <label for="neuroshima-shot-skill-points">Użyte punkty</label>
-        <input id="neuroshima-shot-skill-points" type="number" name="spentPoints"
-          value="0" min="0" max="${availablePoints}" step="1">
-      </div>
+      <p>Rozdziel maksymalnie tę pulę pomiędzy kości. Naturalnej 20 nie można poprawić.</p>
+      ${dieInputs}
     `,
     ok: { label: "Zastosuj" },
     rejectClose: false,
     modal: true
   });
 
-  if (!formData) return 0;
-  return Math.max(0, Math.min(Number(formData.spentPoints) || 0, availablePoints));
+  if (!formData) return naturalResults.map(() => 0);
+
+  let remainingPoints = availablePoints;
+  return naturalResults.map((naturalResult, dieIndex) => {
+    if (naturalResult === 20) return 0;
+    const requestedPoints = Math.max(0, Number(formData[`die${dieIndex}Points`]) || 0);
+    const assignedPoints = Math.min(requestedPoints, remainingPoints);
+    remainingPoints -= assignedPoints;
+    return assignedPoints;
+  });
+}
+
+export async function configureAiming(actor) {
+  const combatant = getActorCombatant(actor);
+  const action = getSegmentAction(combatant);
+  if (!combatant || game.combat?.combatant?.id !== combatant.id) {
+    ui.notifications.warn("Celowanie może ustawić tylko aktualnie działająca postać.");
+    return false;
+  }
+  if (action?.effectCode !== "aiming" || action.aimingConfiguration) {
+    ui.notifications.warn("Bieżąca akcja nie oczekuje ustawienia celowania.");
+    return false;
+  }
+
+  const targets = [...game.user.targets];
+  if (targets.length !== 1) {
+    ui.notifications.warn("Wskaż dokładnie jeden token jako cel celowania.");
+    return false;
+  }
+
+  const weapons = getUsableFirearms(actor);
+  if (weapons.length === 0) {
+    ui.notifications.warn("Postać nie ma sprawnej, załadowanej broni palnej.");
+    return false;
+  }
+
+  const target = targets[0];
+  const formData = await foundry.applications.api.DialogV2.input({
+    window: { title: `Celowanie: ${actor.name} → ${target.name}` },
+    content: `
+      <div class="form-group">
+        <label for="neuroshima-aiming-weapon">Broń</label>
+        <select id="neuroshima-aiming-weapon" name="weaponId">
+          ${prepareWeaponOptions(weapons)}
+        </select>
+      </div>
+      <p>Premia po zakończeniu: <strong>+${action.aimingBonusDice}k20</strong>.</p>
+    `,
+    ok: { label: "Rozpocznij celowanie", icon: "fas fa-crosshairs" },
+    rejectClose: false,
+    modal: true
+  });
+  if (!formData) return false;
+
+  const weapon = actor.items.get(String(formData.weaponId));
+  if (!weapon || !weapons.includes(weapon)) return false;
+
+  return configureCurrentAiming(actor, {
+    weaponId: weapon.id,
+    weaponName: weapon.name,
+    targetTokenId: target.id,
+    targetName: target.name
+  });
 }
 
 async function rollJamSeverity(actor, weapon) {
@@ -262,10 +391,24 @@ export async function resolveSingleShot(actor) {
   }
 
   const target = targets[0];
-  const configuration = await selectShotConfiguration(actor, target);
+  const aimingPreparation = getAimingPreparation(combatant);
+  const configuration = await selectShotConfiguration(
+    actor,
+    target,
+    aimingPreparation
+  );
   if (!configuration) return false;
 
   const { weapon, skillKey } = configuration;
+  const usesPreparedAiming = Boolean(
+    aimingPreparation
+    && aimingPreparation.weaponId === weapon.id
+    && aimingPreparation.targetTokenId === target.id
+  );
+  const aimingBonusDice = usesPreparedAiming
+    ? Math.max(0, Math.min(aimingPreparation.bonusDice, 2))
+    : 0;
+  const numberOfDice = 1 + aimingBonusDice;
   const skillLevel = Math.max(0, actor.system.skills?.[skillKey]?.value ?? 0);
   const skillUsage = getCurrentSkillUsage(combatant, game.combat.round);
   const skillAvailability = calculateAvailableCombatSkillPoints(
@@ -279,25 +422,29 @@ export async function resolveSingleShot(actor) {
     );
   }
 
-  const shotRoll = await new foundry.dice.Roll("1d20").evaluate();
-  const naturalResult = shotRoll.dice[0].results[0].result;
-  const spentSkillPoints = await selectSpentSkillPoints(
+  const shotRoll = await new foundry.dice.Roll(`${numberOfDice}d20`).evaluate();
+  const naturalResults = shotRoll.dice[0].results.map((die) => die.result);
+  const spentSkillPointsByDie = await selectSpentSkillPoints(
     actor,
     RANGED_SKILLS[skillKey],
     skillAvailability.availablePoints,
-    naturalResult
+    naturalResults
+  );
+  const totalSpentSkillPoints = spentSkillPointsByDie.reduce(
+    (sum, spentPoints) => sum + spentPoints,
+    0
   );
 
   const totalDifficultyPercentage = configuration.woundPenalty
     + configuration.armorPenalty
     + configuration.customModifier
     + weapon.system.accuracyModifier;
-  const result = calculateSingleShotResult({
+  const result = calculateRangedShotResult({
     dexterity: actor.system.attributes.zrecznosc.value,
-    naturalResult,
+    naturalResults,
     difficultyPercentage: totalDifficultyPercentage,
     skillLevel,
-    spentSkillPoints,
+    spentSkillPointsByDie,
     reliabilityThreshold: weapon.system.misfireRoll
   });
   const ammunitionAfterSuccessfulDischarge = Math.max(
@@ -309,7 +456,7 @@ export async function resolveSingleShot(actor) {
     round: game.combat.round,
     spentBySkill: {
       ...skillUsage.spentBySkill,
-      [skillKey]: (skillUsage.spentBySkill[skillKey] ?? 0) + spentSkillPoints
+      [skillKey]: (skillUsage.spentBySkill[skillKey] ?? 0) + totalSpentSkillPoints
     }
   };
   await combatant.setFlag(SYSTEM_ID, SKILL_USAGE_FLAG, updatedSkillUsage);
@@ -326,22 +473,42 @@ export async function resolveSingleShot(actor) {
     });
   }
 
+  const allDiceAreAutomaticFailures = result.evaluatedDice.every(
+    (die) => die.automaticFailure
+  );
   const pointsLabel = result.testPassed
     ? `Punkty Sukcesu: ${Math.max(0, result.pointsDifference)}`
-    : `Punkty Porażki: ${Math.abs(Math.min(0, result.pointsDifference))}`;
+    : allDiceAreAutomaticFailures
+      ? "Automatyczna porażka wszystkich kości"
+      : `Punkty Porażki: ${Math.abs(Math.min(0, result.pointsDifference))}`;
   const resolution = result.testPassed ? "Trafienie" : "Pudło";
+  const diceDescription = result.evaluatedDice.map((die, dieIndex) => {
+    const adjustedDescription = die.spentSkillPoints > 0
+      ? `${die.naturalResult} → ${die.adjustedResult}`
+      : String(die.naturalResult);
+    const verdict = die.automaticFailure
+      ? "pechowa 20"
+      : die.succeeded ? "sukces" : "porażka";
+    return `k${dieIndex + 1}: ${adjustedDescription} (${verdict})`;
+  }).join(", ");
+  const riskyNaturalResults = naturalResults.filter(
+    (naturalResult) => naturalResult > weapon.system.misfireRoll
+  );
   await shotRoll.toMessage({
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
       `<strong>Strzał: ${foundry.utils.escapeHTML(actor.name)} → ${foundry.utils.escapeHTML(target.name)}</strong>`,
       `Broń: ${foundry.utils.escapeHTML(weapon.name)}`,
-      `Umiejętność: ${RANGED_SKILLS[skillKey]} (${skillLevel}), użyto ${spentSkillPoints}`,
+      `Celowanie: ${usesPreparedAiming ? `+${aimingBonusDice}k20` : "brak"}`,
+      `Umiejętność: ${RANGED_SKILLS[skillKey]} (${skillLevel}), użyto ${totalSpentSkillPoints}`,
       `Kary i modyfikatory: ${totalDifficultyPercentage}%`,
       `Ostateczny PT: ${DIFFICULTY_LABELS[result.finalDifficultyIndex]}`,
       `Próg sukcesu: ${result.successThreshold}`,
-      `Kość: ${naturalResult}${spentSkillPoints > 0 ? ` → ${result.adjustedResult}` : ""}`,
-      result.automaticFailure ? "Pechowa 20: automatyczna porażka kości" : pointsLabel,
-      `Niezawodność: wynik ${naturalResult} ${result.requiresJamRoll ? ">" : "≤"} ${weapon.system.misfireRoll}`,
+      `Kości: ${diceDescription}`,
+      pointsLabel,
+      result.requiresJamRoll
+        ? `Niezawodność: ${riskyNaturalResults.join(", ")} > ${weapon.system.misfireRoll}`
+        : `Niezawodność: wszystkie kości ≤ ${weapon.system.misfireRoll}`,
       result.requiresJamRoll
         ? "Amunicja: nie odjęto naboju — decyzja MG"
         : `Amunicja: pozostało ${ammunitionAfterSuccessfulDischarge}`,
@@ -361,6 +528,7 @@ export async function resolveSingleShot(actor) {
     });
   }
 
+  await consumeAimingPreparation(combatant);
   await markCurrentSegmentActionResolved(actor, resolution);
   return true;
 }

@@ -4,10 +4,19 @@ export const COMBAT_ACTIONS = {
     duration: 1,
     requiresTest: true
   },
-  aiming: {
-    name: "Celowanie",
-    duration: null,
-    requiresTest: false
+  aimingOne: {
+    name: "Celowanie (+1k20)",
+    duration: 1,
+    requiresTest: false,
+    effectCode: "aiming",
+    aimingBonusDice: 1
+  },
+  aimingTwo: {
+    name: "Celowanie (+2k20)",
+    duration: 2,
+    requiresTest: false,
+    effectCode: "aiming",
+    aimingBonusDice: 2
   },
   safetyOff: {
     name: "Odbezpieczenie broni",
@@ -110,13 +119,11 @@ export function prepareCombatActionOptions() {
   const groupedActions = new Map([
     [1, []],
     [2, []],
-    [3, []],
-    ["variable", []]
+    [3, []]
   ]);
 
   for (const [actionCode, action] of Object.entries(COMBAT_ACTIONS)) {
-    const groupKey = action.duration ?? "variable";
-    groupedActions.get(groupKey).push({ actionCode, ...action });
+    groupedActions.get(action.duration).push({ actionCode, ...action });
   }
 
   const fixedGroups = [1, 2, 3].map((duration) => {
@@ -127,13 +134,9 @@ export function prepareCombatActionOptions() {
     return `<optgroup label="Akcje za ${duration} ${duration === 1 ? "segment" : "segmenty"}">${options}</optgroup>`;
   });
 
-  const variableOptions = groupedActions.get("variable").map((action) => (
-    `<option value="${action.actionCode}">${action.name} — koszt wybierany</option>`
-  )).join("");
-
   return [
     ...fixedGroups,
-    `<optgroup label="Koszt wybierany">${variableOptions}<option value="custom">Własna akcja</option></optgroup>`
+    '<optgroup label="Koszt wybierany"><option value="custom">Własna akcja</option></optgroup>'
   ].join("");
 }
 
@@ -154,8 +157,10 @@ export function resolveCombatAction(actionCode, customName, selectedDuration) {
   return {
     actionCode,
     name: catalogAction.name,
-    duration: catalogAction.duration ?? variableDuration,
+    duration: catalogAction.duration,
     requiresTest: catalogAction.requiresTest,
+    effectCode: catalogAction.effectCode ?? "",
+    aimingBonusDice: catalogAction.aimingBonusDice ?? 0,
     isCustom: false
   };
 }
