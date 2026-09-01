@@ -38,6 +38,22 @@ export const INJURY_ROLL_CONFIGURATION = {
   }
 };
 
+const INJURY_LOCATION_LABELS = {
+  general: "Ogólne / inne miejsce",
+  head: "Głowa",
+  torso: "Tułów",
+  leftArm: "Lewa ręka",
+  rightArm: "Prawa ręka",
+  leftLeg: "Lewa noga",
+  rightLeg: "Prawa noga"
+};
+
+function describeSuccessCount(numberOfSuccesses) {
+  if (numberOfSuccesses === 1) return "1 sukces";
+  if ([2, 3, 4].includes(numberOfSuccesses)) return `${numberOfSuccesses} sukcesy`;
+  return `${numberOfSuccesses} sukcesów`;
+}
+
 async function selectInjuryType() {
   return foundry.applications.api.DialogV2.input({
     window: { title: "Rzut na ranę" },
@@ -153,4 +169,76 @@ export async function rollPainResistanceForInjury(actor) {
     penaltyPercent,
     numberOfSuccesses
   };
+}
+
+export async function promptToCreateInjuryFromRoll(actor, injuryResult) {
+  const injuryConfiguration = INJURY_ROLL_CONFIGURATION[injuryResult?.injuryType];
+  if (!injuryConfiguration) return null;
+
+  const locationOptions = Object.entries(INJURY_LOCATION_LABELS)
+    .map(([locationKey, locationLabel]) => (
+      `<option value="${locationKey}">${locationLabel}</option>`
+    ))
+    .join("");
+  const testResultDescription = injuryResult.testPassed === null
+    ? "bez testu Odporności na ból"
+    : `test ${injuryResult.testPassed ? "zdany" : "niezdany"}`;
+
+  const formData = await foundry.applications.api.DialogV2.input({
+    window: { title: "Dodaj ranę do postaci" },
+    content: `
+      <p>
+        <strong>${injuryConfiguration.label}</strong><br>
+        ${testResultDescription}, kara ${injuryResult.penaltyPercent}%
+      </p>
+      <div class="form-group">
+        <label for="neuroshima-rolled-injury-name">Nazwa rany</label>
+        <input id="neuroshima-rolled-injury-name" type="text" name="injuryName"
+          value="${injuryConfiguration.label}">
+      </div>
+      <div class="form-group">
+        <label for="neuroshima-rolled-injury-location">Miejsce rany</label>
+        <select id="neuroshima-rolled-injury-location" name="location">
+          ${locationOptions}
+        </select>
+      </div>
+    `,
+    ok: {
+      label: "Dodaj ranę",
+      icon: "fas fa-notes-medical"
+    },
+    rejectClose: false,
+    modal: true
+  });
+
+  if (!formData) return null;
+
+  const location = String(formData.location ?? "");
+  if (!Object.hasOwn(INJURY_LOCATION_LABELS, location)) {
+    ui.notifications.error("Wybrano nieprawidłowe miejsce rany.");
+    return null;
+  }
+
+  const injuryName = String(formData.injuryName ?? "").trim()
+    || injuryConfiguration.label;
+  const description = injuryResult.testPassed === null
+    ? "Rana krytyczna — bez testu Odporności na ból."
+    : `Test Odporności na ból: ${injuryResult.testPassed ? "zdany" : "niezdany"} (${describeSuccessCount(injuryResult.numberOfSuccesses)}).`;
+  const [createdInjury] = await actor.createEmbeddedDocuments("Item", [
+    {
+      name: injuryName,
+      type: "injury",
+      system: {
+        injuryType: injuryResult.injuryType,
+        location,
+        penaltyPercent: injuryResult.penaltyPercent,
+        description
+      }
+    }
+  ]);
+
+  ui.notifications.info(
+    `Dodano ranę: ${injuryName} — ${INJURY_LOCATION_LABELS[location]}, kara ${injuryResult.penaltyPercent}%.`
+  );
+  return createdInjury;
 }

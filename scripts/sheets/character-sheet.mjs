@@ -1,6 +1,9 @@
 import { rollAttribute } from "../rolls/attribute-roll.mjs";
 import { rollSkill } from "../rolls/skill-roll.mjs";
-import { rollPainResistanceForInjury } from "../rolls/injury-roll.mjs";
+import {
+  promptToCreateInjuryFromRoll,
+  rollPainResistanceForInjury
+} from "../rolls/injury-roll.mjs";
 import { ammunitionNamesBySymbol } from "../catalogs/ammunition-compatibility.mjs";
 import {
   SPECIALIZATION_LABELS,
@@ -565,7 +568,11 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   }
 
   static async #onRollInjury() {
-    await rollPainResistanceForInjury(this.actor);
+    const injuryResult = await rollPainResistanceForInjury(this.actor);
+    if (!injuryResult) return;
+
+    const createdInjury = await promptToCreateInjuryFromRoll(this.actor, injuryResult);
+    if (createdInjury) this.render();
   }
 
   static async #onRollInitiative() {
