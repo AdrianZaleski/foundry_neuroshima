@@ -154,14 +154,17 @@
 - Pierwsza wersja pozwala wpisywać dowolną nazwę akcji. Powiązanie konkretnych działań z testami, bronią i amunicją nastąpi w kolejnych etapach.
 - Deklaracja udostępnia katalog podstawowych akcji z podręcznika oraz opcję własnej akcji. Serie i rzuty granatem są świadomie pominięte.
 - Akcje katalogowe mają stały koszt jednego, dwóch albo trzech segmentów oraz informację, czy wymagają testu.
-- Celowanie występuje w dwóch wariantach: jeden segment daje jedną dodatkową k20, a dwa segmenty dają dwie dodatkowe k20. Własna akcja pozwala wybrać koszt od jednego do trzech segmentów.
+- Strzał występuje w trzech wariantach: zwykły kosztuje `1` segment i używa `1k20`, celowany kosztuje `2` segmenty i używa `2k20`, a długo celowany kosztuje `3` segmenty i używa `3k20`.
 - Oznaczenie „wymaga testu” uruchamia obecnie właściwy rzut tylko dla pojedynczego strzału. Pozostałe testowane akcje zostaną podłączone osobno.
 
 ### Pojedynczy strzał
 
-- Akcję `Strzał` za jeden segment rozstrzyga się standardowo pojedynczą kością k20.
-- Ukończone celowanie zwiększa liczbę kości następnego strzału do 2k20 albo 3k20. Niezależnie od liczby kości do trafienia wystarczy jeden sukces.
-- Celowanie jest przypisane do konkretnej broni i tokena celu. Zmiana broni, celu albo wykonanie innej akcji usuwa przygotowaną premię.
+- Przy deklarowaniu każdego wariantu strzału wybiera się broń oraz dokładnie jeden token celu. Wybór jest przypisany do tej akcji.
+- Zwykły `Strzał` system rozstrzyga od razu. Wariant celowany rozstrzyga się w drugim, a długo celowany w trzecim zajętym segmencie.
+- Po wejściu w ostatni segment wielosegmentowego strzału system automatycznie otwiera okno rozstrzygnięcia. Zamknięcie okna pozostawia przycisk `Rozstrzygnij strzał` na karcie.
+- Nie można przejść do kolejnego uczestnika, segmentu ani rundy, dopóki zadeklarowany strzał nie zostanie rozstrzygnięty.
+- Niezależnie od liczby kości do trafienia wystarczy jeden sukces.
+- Przerwanie akcji oznacza brak strzału i nie zużywa amunicji. Zakończenie jej wcześniej uruchamia strzał z liczbą kości odpowiadającą liczbie faktycznie wykorzystanych segmentów.
 - Punkty Umiejętności rozdziela się po rzucie pomiędzy dowolne kości użyte w teście. Suma wydanych punktów nie może przekroczyć dostępnej puli rundy.
 - Strzelec wybiera broń, odpowiednią Umiejętność oraz dokładnie jeden token wskazany jako cel.
 - Test jest oparty na Zręczności i rozpoczyna się na PT Przeciętnym. Uwzględnia kary z ran, pancerza strzelca, celność broni i ręcznie wpisane warunki takie jak odległość, ruch oraz osłona.
@@ -169,11 +172,23 @@
 - Pula punktów Umiejętności jest wspólna dla całej rundy. Przy użyciu dwóch różnych Umiejętności każda ma połowę wartości, a przy trzech każda ma jedną trzecią wartości, z zaokrągleniem w dół.
 - Naturalna `20` jest automatyczną porażką kości i nie można jej naprawić punktami Umiejętności.
 - Strzał bez zacięcia zużywa jeden nabój niezależnie od trafienia.
-- Jeżeli wynik uruchamia zacięcie, system nie odejmuje naboju. Decyzja o jego ewentualnym ręcznym zużyciu pozostaje po stronie MG.
+- Jeżeli wynik uruchamia zacięcie, system nie odejmuje naboju, ponieważ broń nie wystrzeliła.
+- Zacięta broń nie wystrzeliwuje. Nawet jeśli sam test trafienia był udany, system nie określa lokacji, nie zadaje obrażeń i nie uruchamia testu Odporności na ból celu.
 - Naturalny wynik kości porównujemy niezależnie z progiem niezawodności broni. Wynik równy albo niższy jest bezpieczny, a wynik wyższy uruchamia dodatkowy rzut k20 na zacięcie.
 - Wynik zacięcia `1–10` oznacza lekkie zacięcie, `11–18` poważne zacięcie, a `19–20` krytyczne zacięcie.
 - Stan zacięcia jest zapisywany na konkretnym egzemplarzu broni. Zaciętej broni nie można wybrać do kolejnego strzału.
-- Usuwanie zacięć, obrażenia i lokalizacja trafienia będą kolejnymi etapami mechaniki.
+- Usuwanie zacięć pozostaje kolejnym etapem mechaniki.
+
+## Obrażenia po strzale pojedynczym
+
+- Po udanym strzale naturalny wynik wybranej kości wyznacza lokację: `1–2` głowa, `3–4` prawa ręka, `5–6` lewa ręka, `7–15` tułów, `16–17` prawa noga, `18–19` lewa noga.
+- Jeżeli dzięki celowaniu trafiło kilka kości, użytkownik wybiera, która z nich określa lokację trafienia.
+- Trafienie w głowę zwiększa obrażenia o jeden poziom.
+- Krytycznych obrażeń zwiększonych trafieniem w głowę nie ograniczamy przed rozliczeniem pancerza. Dodatkowy poziom stanowi zapas, który może pochłonąć Redukcja.
+- Punkty Przebicia broni najpierw obniżają Redukcję pancerza. Pozostała Redukcja obniża obrażenia o odpowiednią liczbę poziomów.
+- Ponieważ nie ma jeszcze Itemów pancerza przypisanych do lokacji, Redukcję trafionego miejsca podaje się ręcznie w zakresie `0–4`.
+- Przy trafieniu obrażeniami Ciężkimi pancerz traci `1` punkt Wytrzymałości, a Krytycznymi `3` punkty. Do czasu wdrożenia Itemów pancerza system pokazuje tę zmianę informacyjnie.
+- Jeśli po Redukcji pozostaje rana, trafiony Actor wykonuje właściwy test Odporności na ból. Następnie można dopisać ranę do ustalonej już lokacji.
 
 ## Rany i procentowe utrudnienia
 

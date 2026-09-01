@@ -19,15 +19,6 @@
       {{#if combatStatus.started}}
         <p><strong>Runda {{combatStatus.round}} — segment {{combatStatus.segment}} z 3</strong></p>
 
-        {{#if combatStatus.aimingPreparation}}
-          <p>
-            <strong>Przygotowane celowanie:</strong>
-            {{combatStatus.aimingPreparation.weaponName}}
-            → {{combatStatus.aimingPreparation.targetName}}
-            (+{{combatStatus.aimingPreparation.bonusDice}}k20)
-          </p>
-        {{/if}}
-
         {{#if combatStatus.action.isCurrent}}
           <p>
             Akcja: <strong>{{combatStatus.action.name}}</strong>
@@ -37,11 +28,11 @@
             <button type="button" data-action="resolveSingleShot">Rozstrzygnij strzał</button>
           {{/if}}
           {{#if combatStatus.action.canConfigureAiming}}
-            <button type="button" data-action="configureAiming">Wybierz broń i cel</button>
+            <button type="button" data-action="configureAiming">Wybierz broń i cel strzału</button>
           {{/if}}
           {{#if combatStatus.action.aimingConfiguration}}
             <p>
-              Celowanie: <strong>{{combatStatus.action.aimingConfiguration.weaponName}}</strong>
+              Strzał: <strong>{{combatStatus.action.aimingConfiguration.weaponName}}</strong>
               → <strong>{{combatStatus.action.aimingConfiguration.targetName}}</strong>
             </p>
           {{/if}}
@@ -56,11 +47,11 @@
               Akcja nie wymaga testu.
             {{/if}}
           </p>
-          {{#if combatStatus.action.isPending}}
-            {{#if combatStatus.isActiveTurn}}
-              <button type="button" data-action="finishSegmentAction">Zakończ wcześniej</button>
-              <button type="button" data-action="interruptSegmentAction">Przerwij akcję</button>
-            {{/if}}
+          {{#if combatStatus.action.canFinishEarly}}
+            <button type="button" data-action="finishSegmentAction">{{combatStatus.action.finishEarlyLabel}}</button>
+          {{/if}}
+          {{#if combatStatus.action.canInterrupt}}
+            <button type="button" data-action="interruptSegmentAction">{{combatStatus.action.interruptLabel}}</button>
           {{/if}}
         {{else}}
           {{#if combatStatus.isActiveTurn}}

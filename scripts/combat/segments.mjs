@@ -38,10 +38,6 @@ export function getSegmentAction(combatant) {
   return combatant?.getFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG) ?? null;
 }
 
-export function getAimingPreparation(combatant) {
-  return combatant?.getFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG) ?? null;
-}
-
 function findActorCombatant(combat, actor) {
   if (!combat || !actor) return null;
   return combat.getCombatantsByActor(actor)[0] ?? null;
@@ -77,7 +73,6 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
   const round = Math.max(1, Number(combat.round) || 1);
   const currentTick = calculateSegmentTick(round, segment);
   const action = getSegmentAction(combatant);
-  const aimingPreparation = getAimingPreparation(combatant);
   const consumesCurrentSegment = actionConsumesTick(action, currentTick);
   const isActiveTurn = combat.started && combat.combatant?.id === combatant.id;
 
@@ -90,7 +85,6 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
     isActiveTurn,
     canDeclareAction: isActiveTurn && !consumesCurrentSegment,
     consumesCurrentSegment,
-    aimingPreparation,
     action: action ? {
       ...action,
       durationLabel: action.duration === 1
@@ -98,13 +92,29 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
         : `${action.duration} segmenty`,
       isCurrent: consumesCurrentSegment,
       isPending: consumesCurrentSegment && action.endsAtTick > currentTick,
+      canFinishEarly: isActiveTurn
+        && consumesCurrentSegment
+        && action.endsAtTick > currentTick,
+      canInterrupt: isActiveTurn
+        && consumesCurrentSegment
+        && !action.resolved
+        && (action.endsAtTick > currentTick || action.effectCode === "rangedShot"),
+      finishEarlyLabel: action.effectCode === "rangedShot"
+        ? "Zakończ wcześniej i strzel"
+        : "Zakończ wcześniej",
+      interruptLabel: action.effectCode === "rangedShot"
+        ? "Przerwij akcję bez strzału"
+        : "Przerwij akcję",
       canResolveShot: isActiveTurn
         && consumesCurrentSegment
-        && action.actionCode === "shot"
+        && action.effectCode === "rangedShot"
+        && action.endsAtTick === currentTick
+        && Boolean(action.aimingConfiguration)
+        && !action.interrupted
         && !action.resolved,
       canConfigureAiming: isActiveTurn
         && consumesCurrentSegment
-        && action.effectCode === "aiming"
+        && action.effectCode === "rangedShot"
         && !action.aimingConfiguration,
       timingDescription: consumesCurrentSegment
         ? describeActionTiming(action, currentTick)
@@ -171,11 +181,9 @@ export async function declareSegmentAction(actor, actionName, duration, metadata
     endsAtTick: currentTick + safeDuration - 1
   };
 
-  // Każda czynność inna niż przygotowywany strzał przerywa wcześniej
-  // zachowane celowanie. Sam strzał zużyje premię podczas rozstrzygnięcia.
-  if (action.actionCode !== "shot") {
-    await combatant.unsetFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG);
-  }
+  // Stary, osobny zapis przygotowanego celowania nie jest już używany.
+  // Strzał przechowuje broń, cel i liczbę kości we własnej akcji.
+  await combatant.unsetFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG);
 
   await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, action);
 
@@ -208,8 +216,15 @@ async function changeCurrentAction(actor, changeType) {
   const segment = getCombatSegment(combat);
   const round = Math.max(1, Number(combat.round) || 1);
   const currentTick = calculateSegmentTick(round, segment);
+  const canInterruptUnresolvedShotAtEnd = changeType === "interrupted"
+    && action?.effectCode === "rangedShot"
+    && !action.resolved
+    && action.endsAtTick === currentTick;
 
-  if (!actionConsumesTick(action, currentTick) || action.endsAtTick <= currentTick) {
+  if (
+    !actionConsumesTick(action, currentTick)
+    || (action.endsAtTick <= currentTick && !canInterruptUnresolvedShotAtEnd)
+  ) {
     ui.notifications.warn("Postać nie wykonuje obecnie wielosegmentowej akcji.");
     return false;
   }
@@ -218,22 +233,15 @@ async function changeCurrentAction(actor, changeType) {
     ...action,
     endsAtTick: currentTick,
     manuallyFinished: changeType === "finished",
-    interrupted: changeType === "interrupted"
+    interrupted: changeType === "interrupted",
+    ...(action.effectCode === "rangedShot" && changeType === "finished"
+      ? { aimingBonusDice: Math.min(2, currentTick - action.startedAtTick) }
+      : {}),
+    ...(action.effectCode === "rangedShot" && changeType === "interrupted"
+      ? { resolved: true, resolution: "Przerwano — brak strzału" }
+      : {})
   };
   await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, changedAction);
-
-  if (
-    changeType === "finished"
-    && changedAction.effectCode === "aiming"
-    && changedAction.aimingConfiguration
-  ) {
-    const elapsedSegments = currentTick - changedAction.startedAtTick + 1;
-    await saveAimingPreparation(
-      combatant,
-      changedAction,
-      Math.min(changedAction.aimingBonusDice, elapsedSegments)
-    );
-  }
 
   const resultLabel = changeType === "finished" ? "zakończona wcześniej" : "przerwana";
   await createCombatMessage(
@@ -265,28 +273,6 @@ export async function markCurrentSegmentActionResolved(actor, resolution) {
   });
 }
 
-async function saveAimingPreparation(combatant, action, bonusDice) {
-  if (!action.aimingConfiguration || bonusDice <= 0) return;
-
-  await combatant.setFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG, {
-    ...action.aimingConfiguration,
-    bonusDice,
-    preparedRound: game.combat?.round ?? action.startedRound,
-    preparedSegment: getCombatSegment(game.combat)
-  });
-  await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, {
-    ...action,
-    aimingPrepared: true,
-    resolved: true,
-    resolution: `Przygotowano +${bonusDice}k20`
-  });
-  await createCombatMessage([
-    `<strong>${escapeForChat(combatant.name)} kończy celowanie</strong>`,
-    `${escapeForChat(action.aimingConfiguration.weaponName)} → ${escapeForChat(action.aimingConfiguration.targetName)}`,
-    `Następny zgodny strzał otrzyma +${bonusDice}k20.`
-  ].join("<br>"), combatant.actor);
-}
-
 export async function configureCurrentAiming(actor, aimingConfiguration) {
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
@@ -296,29 +282,16 @@ export async function configureCurrentAiming(actor, aimingConfiguration) {
   const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
   if (
     !actionConsumesTick(action, currentTick)
-    || action.effectCode !== "aiming"
+    || action.effectCode !== "rangedShot"
   ) {
-    ui.notifications.warn("Bieżąca akcja nie jest celowaniem.");
+    ui.notifications.warn("Bieżąca akcja nie jest przygotowywanym strzałem.");
     return false;
   }
 
   const configuredAction = { ...action, aimingConfiguration };
   await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, configuredAction);
 
-  if (configuredAction.endsAtTick === currentTick) {
-    await saveAimingPreparation(
-      combatant,
-      configuredAction,
-      configuredAction.aimingBonusDice
-    );
-  }
-
   return true;
-}
-
-export async function consumeAimingPreparation(combatant) {
-  if (!getAimingPreparation(combatant)) return;
-  await combatant.unsetFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG);
 }
 
 export async function selectSegmentAction(actor) {
@@ -376,24 +349,56 @@ async function announceSegment(combat) {
 
 async function announceCompletedAction(combat) {
   const combatant = combat.combatant;
-  const action = getSegmentAction(combatant);
+  let action = getSegmentAction(combatant);
   if (!combatant?.actor || !action || action.duration <= 1) return;
 
   const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
   if (action.endsAtTick !== currentTick) return;
 
   if (
-    action.effectCode === "aiming"
+    action.effectCode === "rangedShot"
     && action.aimingConfiguration
-    && !action.aimingPrepared
+    && !action.interrupted
+    && !action.resolved
   ) {
-    await saveAimingPreparation(combatant, action, action.aimingBonusDice);
+    const { resolveSingleShot } = await import("./ranged-shot.mjs");
+    await resolveSingleShot(combatant.actor);
+    action = getSegmentAction(combatant) ?? action;
   }
 
   await createCombatMessage(
     `<strong>${escapeForChat(combatant.name)}</strong> kończy akcję „${escapeForChat(action.name)}”. Bieżący segment jest przez nią zajęty.`,
     combatant.actor
   );
+}
+
+function currentUnresolvedShot(combat) {
+  const combatant = combat.combatant;
+  const action = getSegmentAction(combatant);
+  const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
+  if (
+    !combatant?.actor
+    || !actionConsumesTick(action, currentTick)
+    || action?.effectCode !== "rangedShot"
+    || action.endsAtTick !== currentTick
+    || action.interrupted
+    || action.resolved
+  ) {
+    return null;
+  }
+  return { actor: combatant.actor, action };
+}
+
+function preventAdvanceForUnresolvedShot(combat) {
+  const unresolvedShot = currentUnresolvedShot(combat);
+  if (!unresolvedShot) return false;
+
+  ui.notifications.warn(
+    `${unresolvedShot.actor.name} musi najpierw rozstrzygnąć zadeklarowany strzał.`
+  );
+  const actorSheet = unresolvedShot.actor.sheet;
+  if (actorSheet?.rendered) actorSheet.render();
+  return true;
 }
 
 export async function startSegmentCombat(combat) {
@@ -421,6 +426,7 @@ export async function startSegmentCombat(combat) {
 
 export async function advanceSegmentTurn(combat) {
   if (!combat.started || combat.turns.length === 0) return combat;
+  if (preventAdvanceForUnresolvedShot(combat)) return combat;
 
   const segment = getCombatSegment(combat);
   const isLastParticipant = combat.turn >= combat.turns.length - 1;
@@ -474,6 +480,7 @@ export async function rewindSegmentTurn(combat) {
 }
 
 export async function advanceSegmentRound(combat) {
+  if (preventAdvanceForUnresolvedShot(combat)) return combat;
   await combat.setFlag(SYSTEM_ID, COMBAT_SEGMENT_FLAG, 1);
   const updatedCombat = await foundry.documents.Combat.prototype.nextRound.call(combat);
   await announceSegment(combat);

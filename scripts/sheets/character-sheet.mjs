@@ -593,7 +593,19 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   }
 
   static async #onDeclareSegmentAction() {
-    await selectSegmentAction(this.actor);
+    const declared = await selectSegmentAction(this.actor);
+    if (declared) {
+      let combatStatus = prepareActorCombatStatus(this.actor);
+      if (combatStatus.action?.canConfigureAiming) {
+        await configureAiming(this.actor);
+        combatStatus = prepareActorCombatStatus(this.actor);
+      }
+      if (combatStatus.action?.canResolveShot) {
+        // Zwykły strzał kończy się w segmencie deklaracji. Warianty celowane
+        // zostaną rozstrzygnięte dopiero po dotarciu do ich ostatniego segmentu.
+        await resolveSingleShot(this.actor);
+      }
+    }
     this.render();
   }
 
@@ -604,6 +616,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   static async #onFinishSegmentAction() {
     await finishSegmentAction(this.actor);
+    const combatStatus = prepareActorCombatStatus(this.actor);
+    if (combatStatus.action?.canResolveShot) {
+      await resolveSingleShot(this.actor);
+    }
     this.render();
   }
 

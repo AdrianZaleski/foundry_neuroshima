@@ -61,12 +61,15 @@ function checkboxIsSelected(fieldValue) {
   return fieldValue === true || fieldValue === "true" || fieldValue === "on";
 }
 
-async function selectInjuryType(actor) {
+async function selectInjuryType(actor, presetInjuryType = "") {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
-
-  return foundry.applications.api.DialogV2.input({
-    window: { title: "Rzut na ranę" },
-    content: `
+  const presetConfiguration = INJURY_ROLL_CONFIGURATION[presetInjuryType];
+  const injuryTypeField = presetConfiguration
+    ? `
+      <p><strong>Rodzaj rany:</strong> ${presetConfiguration.label}</p>
+      <input type="hidden" name="injuryType" value="${presetInjuryType}">
+    `
+    : `
       <div class="form-group">
         <label for="neuroshima-injury-roll-type">Rodzaj rany</label>
         <select id="neuroshima-injury-roll-type" name="injuryType">
@@ -76,6 +79,12 @@ async function selectInjuryType(actor) {
           <option value="critical">Rana krytyczna — bez testu, kara 160%</option>
         </select>
       </div>
+    `;
+
+  return foundry.applications.api.DialogV2.input({
+    window: { title: "Rzut na ranę" },
+    content: `
+      ${injuryTypeField}
       <div class="form-group">
         <label>
           <input type="checkbox" name="includeWoundPenalties" checked>
@@ -111,8 +120,12 @@ async function publishCriticalInjuryResult(actor) {
   };
 }
 
-export async function rollPainResistanceForInjury(actor) {
-  const formData = await selectInjuryType(actor);
+export async function rollPainResistanceForInjury(actor, presetInjuryType = "") {
+  if (presetInjuryType === "critical") {
+    return publishCriticalInjuryResult(actor);
+  }
+
+  const formData = await selectInjuryType(actor, presetInjuryType);
   if (!formData) return;
 
   const injuryType = String(formData.injuryType ?? "");
@@ -198,15 +211,33 @@ export async function rollPainResistanceForInjury(actor) {
   };
 }
 
-export async function promptToCreateInjuryFromRoll(actor, injuryResult) {
+export async function promptToCreateInjuryFromRoll(
+  actor,
+  injuryResult,
+  { location: presetLocation = "", defaultName = "", additionalDescription = "" } = {}
+) {
   const injuryConfiguration = INJURY_ROLL_CONFIGURATION[injuryResult?.injuryType];
   if (!injuryConfiguration) return null;
 
   const locationOptions = Object.entries(INJURY_LOCATION_LABELS)
     .map(([locationKey, locationLabel]) => (
-      `<option value="${locationKey}">${locationLabel}</option>`
+      `<option value="${locationKey}" ${locationKey === presetLocation ? "selected" : ""}>${locationLabel}</option>`
     ))
     .join("");
+  const hasPresetLocation = Object.hasOwn(INJURY_LOCATION_LABELS, presetLocation);
+  const locationField = hasPresetLocation
+    ? `
+      <p><strong>Miejsce rany:</strong> ${INJURY_LOCATION_LABELS[presetLocation]}</p>
+      <input type="hidden" name="location" value="${presetLocation}">
+    `
+    : `
+      <div class="form-group">
+        <label for="neuroshima-rolled-injury-location">Miejsce rany</label>
+        <select id="neuroshima-rolled-injury-location" name="location">
+          ${locationOptions}
+        </select>
+      </div>
+    `;
   const testResultDescription = injuryResult.testPassed === null
     ? "bez testu Odporności na ból"
     : `test ${injuryResult.testPassed ? "zdany" : "niezdany"}`;
@@ -221,14 +252,9 @@ export async function promptToCreateInjuryFromRoll(actor, injuryResult) {
       <div class="form-group">
         <label for="neuroshima-rolled-injury-name">Nazwa rany</label>
         <input id="neuroshima-rolled-injury-name" type="text" name="injuryName"
-          value="${injuryConfiguration.label}">
+          value="${foundry.utils.escapeHTML(defaultName || injuryConfiguration.label)}">
       </div>
-      <div class="form-group">
-        <label for="neuroshima-rolled-injury-location">Miejsce rany</label>
-        <select id="neuroshima-rolled-injury-location" name="location">
-          ${locationOptions}
-        </select>
-      </div>
+      ${locationField}
     `,
     ok: {
       label: "Dodaj ranę",
@@ -248,9 +274,12 @@ export async function promptToCreateInjuryFromRoll(actor, injuryResult) {
 
   const injuryName = String(formData.injuryName ?? "").trim()
     || injuryConfiguration.label;
-  const description = injuryResult.testPassed === null
+  const resistanceDescription = injuryResult.testPassed === null
     ? "Rana krytyczna — bez testu Odporności na ból."
     : `Test Odporności na ból: ${injuryResult.testPassed ? "zdany" : "niezdany"} (${describeSuccessCount(injuryResult.numberOfSuccesses)}).`;
+  const description = [resistanceDescription, String(additionalDescription).trim()]
+    .filter(Boolean)
+    .join(" ");
   const [createdInjury] = await actor.createEmbeddedDocuments("Item", [
     {
       name: injuryName,

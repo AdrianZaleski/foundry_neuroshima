@@ -6,12 +6,18 @@ import {
   calculateWoundPenaltyPercent
 } from "../rolls/roll-helpers.mjs";
 import {
+  calculateSegmentTick,
   configureCurrentAiming,
-  consumeAimingPreparation,
-  getAimingPreparation,
+  getCombatSegment,
   getSegmentAction,
   markCurrentSegmentActionResolved
 } from "./segments.mjs";
+import { damageNamesBySymbol } from "../catalogs/combat-reference.mjs";
+import {
+  promptToCreateInjuryFromRoll,
+  rollPainResistanceForInjury
+} from "../rolls/injury-roll.mjs";
+import { resolveDamage } from "./damage-resolution.mjs";
 
 const SYSTEM_ID = "neuroshima";
 const SKILL_USAGE_FLAG = "combatSkillUsage";
@@ -204,28 +210,22 @@ export function classifyJamSeverity(jamRollResult) {
   return "critical";
 }
 
-async function selectShotConfiguration(actor, target, aimingPreparation) {
-  const weapons = getUsableFirearms(actor);
-
-  if (weapons.length === 0) {
-    ui.notifications.warn("Postać nie ma sprawnej, załadowanej broni palnej.");
+async function selectShotConfiguration(actor, target, shotPreparation) {
+  const weapon = actor.items.get(String(shotPreparation?.weaponId ?? ""));
+  if (!weapon || !getUsableFirearms(actor).includes(weapon)) {
+    ui.notifications.warn("Wybrana broń nie jest już sprawna albo nie ma amunicji.");
     return null;
   }
 
   const woundPenalty = calculateWoundPenaltyPercent(actor);
   const armorPenalty = actor.system.testPenalties?.armorPercent ?? 0;
-  const aimingDescription = aimingPreparation
-    ? `<p>Przygotowane celowanie: <strong>${foundry.utils.escapeHTML(aimingPreparation.weaponName)}</strong> → <strong>${foundry.utils.escapeHTML(aimingPreparation.targetName)}</strong> (+${aimingPreparation.bonusDice}k20). Premia działa tylko dla tej broni i celu.</p>`
-    : "";
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Strzał: ${actor.name} → ${target.name}` },
     content: `
-      <div class="form-group">
-        <label for="neuroshima-shot-weapon">Broń</label>
-        <select id="neuroshima-shot-weapon" name="weaponId">
-          ${prepareWeaponOptions(weapons, aimingPreparation?.weaponId)}
-        </select>
-      </div>
+      <p>
+        Broń: <strong>${foundry.utils.escapeHTML(weapon.name)}</strong><br>
+        Cel: <strong>${foundry.utils.escapeHTML(target.name)}</strong>
+      </p>
       <div class="form-group">
         <label for="neuroshima-shot-skill">Umiejętność</label>
         <select id="neuroshima-shot-skill" name="skillKey">
@@ -243,7 +243,6 @@ async function selectShotConfiguration(actor, target, aimingPreparation) {
         <label for="neuroshima-shot-modifier">Odległość, ruch, osłona i inne warunki</label>
         <input id="neuroshima-shot-modifier" type="number" name="customModifier" value="0" step="1"> %
       </div>
-      ${aimingDescription}
     `,
     ok: {
       label: "Rzuć",
@@ -254,8 +253,6 @@ async function selectShotConfiguration(actor, target, aimingPreparation) {
   });
 
   if (!formData) return null;
-  const weapon = actor.items.get(String(formData.weaponId));
-  if (!weapon || weapon.type !== "weapon") return null;
 
   return {
     weapon,
@@ -311,17 +308,17 @@ export async function configureAiming(actor) {
   const combatant = getActorCombatant(actor);
   const action = getSegmentAction(combatant);
   if (!combatant || game.combat?.combatant?.id !== combatant.id) {
-    ui.notifications.warn("Celowanie może ustawić tylko aktualnie działająca postać.");
+    ui.notifications.warn("Strzał może przygotować tylko aktualnie działająca postać.");
     return false;
   }
-  if (action?.effectCode !== "aiming" || action.aimingConfiguration) {
-    ui.notifications.warn("Bieżąca akcja nie oczekuje ustawienia celowania.");
+  if (action?.effectCode !== "rangedShot" || action.aimingConfiguration) {
+    ui.notifications.warn("Bieżąca akcja nie oczekuje wyboru broni i celu.");
     return false;
   }
 
   const targets = [...game.user.targets];
   if (targets.length !== 1) {
-    ui.notifications.warn("Wskaż dokładnie jeden token jako cel celowania.");
+    ui.notifications.warn("Wskaż dokładnie jeden token jako cel strzału.");
     return false;
   }
 
@@ -333,7 +330,7 @@ export async function configureAiming(actor) {
 
   const target = targets[0];
   const formData = await foundry.applications.api.DialogV2.input({
-    window: { title: `Celowanie: ${actor.name} → ${target.name}` },
+    window: { title: `Przygotowanie strzału: ${actor.name} → ${target.name}` },
     content: `
       <div class="form-group">
         <label for="neuroshima-aiming-weapon">Broń</label>
@@ -341,9 +338,12 @@ export async function configureAiming(actor) {
           ${prepareWeaponOptions(weapons)}
         </select>
       </div>
-      <p>Premia po zakończeniu: <strong>+${action.aimingBonusDice}k20</strong>.</p>
+      <p>
+        Czas akcji: <strong>${action.duration} ${action.duration === 1 ? "segment" : "segmenty"}</strong><br>
+        Rzut po zakończeniu: <strong>${1 + action.aimingBonusDice}k20</strong>
+      </p>
     `,
-    ok: { label: "Rozpocznij celowanie", icon: "fas fa-crosshairs" },
+    ok: { label: "Zapisz broń i cel", icon: "fas fa-crosshairs" },
     rejectClose: false,
     modal: true
   });
@@ -372,6 +372,131 @@ async function rollJamSeverity(actor, weapon) {
   return { jamState, jamRollResult, jamRoll };
 }
 
+async function selectHitDie(evaluatedDice) {
+  const successfulDice = evaluatedDice
+    .map((die, dieIndex) => ({ ...die, dieIndex }))
+    .filter((die) => die.succeeded);
+  if (successfulDice.length <= 1) return successfulDice[0] ?? null;
+
+  const defaultDie = successfulDice.reduce((bestDie, die) => (
+    die.pointsDifference > bestDie.pointsDifference ? die : bestDie
+  ));
+  const options = successfulDice.map((die) => (
+    `<option value="${die.dieIndex}" ${die.dieIndex === defaultDie.dieIndex ? "selected" : ""}>Kość ${die.dieIndex + 1}: naturalne ${die.naturalResult}, PS ${die.pointsDifference}</option>`
+  )).join("");
+  const formData = await foundry.applications.api.DialogV2.input({
+    window: { title: "Wybierz kość trafienia" },
+    content: `
+      <p>Więcej niż jedna kość trafiła. Wybierz kość, której naturalny wynik określi lokację.</p>
+      <div class="form-group">
+        <label for="neuroshima-hit-die">Kość trafienia</label>
+        <select id="neuroshima-hit-die" name="dieIndex">${options}</select>
+      </div>
+    `,
+    ok: { label: "Wybierz" },
+    rejectClose: false,
+    modal: true
+  });
+  if (!formData) return defaultDie;
+  return successfulDice.find(
+    (die) => die.dieIndex === Number(formData.dieIndex)
+  ) ?? defaultDie;
+}
+
+async function selectTargetArmorReduction(target, weapon, hitDie) {
+  const formData = await foundry.applications.api.DialogV2.input({
+    window: { title: `Pancerz celu: ${target.name}` },
+    content: `
+      <p>
+        Naturalny wynik trafienia: <strong>${hitDie.naturalResult}</strong><br>
+        Obrażenia broni: <strong>${damageNamesBySymbol[weapon.system.damageCode] ?? weapon.system.damageCode}</strong><br>
+        Przebicie Pancerza broni: <strong>${weapon.system.armorPenetration}</strong>
+      </p>
+      <div class="form-group">
+        <label for="neuroshima-target-armor-reduction">Redukcja pancerza w trafionej lokacji</label>
+        <input id="neuroshima-target-armor-reduction" type="number"
+          name="armorReduction" value="0" min="0" max="4" step="1">
+      </div>
+      <p><small>Wartość 0 oznacza brak pancerza. PP najpierw obniży wpisaną Redukcję.</small></p>
+    `,
+    ok: { label: "Rozpatrz obrażenia", icon: "fas fa-shield-halved" },
+    rejectClose: false,
+    modal: true
+  });
+  return Math.max(0, Math.min(4, Math.trunc(Number(formData?.armorReduction) || 0)));
+}
+
+async function publishDamageResolution(shooter, target, weapon, hitDie, damageResult) {
+  const baseDamageName = damageNamesBySymbol[damageResult.baseDamageCode]
+    ?? damageResult.baseDamageCode;
+  const finalDamageDescription = damageResult.prevented
+    ? "<strong>Pancerz zatrzymał obrażenia — brak rany.</strong>"
+    : `<strong>Końcowy skutek: ${foundry.utils.escapeHTML(damageResult.finalDamageName)}</strong>`;
+  const armorDurabilityDescription = damageResult.armorReduction > 0
+    && damageResult.armorDurabilityLoss > 0
+    ? `Wytrzymałość pancerza: −${damageResult.armorDurabilityLoss} (do ręcznego naniesienia)`
+    : "Wytrzymałość pancerza: bez zmiany";
+
+  await foundry.documents.ChatMessage.create({
+    speaker: foundry.documents.ChatMessage.getSpeaker({ actor: shooter }),
+    content: [
+      `<strong>Skutek trafienia: ${foundry.utils.escapeHTML(target.name)}</strong>`,
+      `Kość trafienia: ${hitDie.naturalResult}`,
+      `Lokacja: <strong>${damageResult.locationLabel}</strong>`,
+      `Obrażenia broni: ${foundry.utils.escapeHTML(baseDamageName)}`,
+      damageResult.headBonus ? "Trafienie w głowę: obrażenia zwiększone o 1 poziom" : null,
+      `Redukcja pancerza: ${damageResult.armorReduction}`,
+      `Przebicie Pancerza: ${damageResult.armorPenetration}`,
+      `Skuteczna Redukcja: ${damageResult.effectiveArmorReduction}`,
+      armorDurabilityDescription,
+      finalDamageDescription,
+      damageResult.locationDescription
+        ? `Skutek dla lokacji: ${foundry.utils.escapeHTML(damageResult.locationDescription)}`
+        : null
+    ].filter(Boolean).join("<br>")
+  });
+}
+
+async function resolveHitConsequences(shooter, target, weapon, shotResult) {
+  const hitDie = await selectHitDie(shotResult.evaluatedDice);
+  if (!hitDie) return;
+  const armorReduction = await selectTargetArmorReduction(target, weapon, hitDie);
+  const damageResult = resolveDamage({
+    damageCode: weapon.system.damageCode,
+    naturalResult: hitDie.naturalResult,
+    armorReduction,
+    armorPenetration: weapon.system.armorPenetration
+  });
+  if (!damageResult) {
+    ui.notifications.error("Nie można rozpatrzyć obrażeń: broń ma nieprawidłowy kod obrażeń.");
+    return;
+  }
+
+  await publishDamageResolution(shooter, target, weapon, hitDie, damageResult);
+  if (damageResult.prevented) return;
+
+  const targetActor = target.actor;
+  if (!targetActor || targetActor.type !== "character") {
+    ui.notifications.warn("Cel nie jest Aktorem postaci — ranę rozpatrzono tylko w czacie.");
+    return;
+  }
+  if (!targetActor.isOwner) {
+    ui.notifications.warn("Nie masz uprawnień do wykonania testu ani dodania rany temu Aktorowi.");
+    return;
+  }
+
+  const injuryResult = await rollPainResistanceForInjury(
+    targetActor,
+    damageResult.injuryType
+  );
+  if (!injuryResult) return;
+  await promptToCreateInjuryFromRoll(targetActor, injuryResult, {
+    location: damageResult.location,
+    defaultName: damageResult.finalDamageName,
+    additionalDescription: damageResult.locationDescription
+  });
+}
+
 export async function resolveSingleShot(actor) {
   const combatant = getActorCombatant(actor);
   const action = getSegmentAction(combatant);
@@ -379,35 +504,39 @@ export async function resolveSingleShot(actor) {
     ui.notifications.warn("Strzał może rozstrzygnąć tylko aktualnie działająca postać.");
     return false;
   }
-  if (action?.actionCode !== "shot" || action.resolved) {
+  const currentTick = calculateSegmentTick(
+    game.combat?.round,
+    getCombatSegment(game.combat)
+  );
+  if (
+    action?.effectCode !== "rangedShot"
+    || action.resolved
+    || action.interrupted
+    || action.endsAtTick !== currentTick
+  ) {
     ui.notifications.warn("Bieżąca akcja nie jest nierozstrzygniętym strzałem.");
     return false;
   }
 
-  const targets = [...game.user.targets];
-  if (targets.length !== 1) {
-    ui.notifications.warn("Wskaż dokładnie jeden token jako cel strzału.");
+  const shotPreparation = action.aimingConfiguration;
+  if (!shotPreparation) {
+    ui.notifications.warn("Najpierw wybierz broń i cel strzału.");
     return false;
   }
-
-  const target = targets[0];
-  const aimingPreparation = getAimingPreparation(combatant);
+  const target = canvas.tokens?.get(shotPreparation.targetTokenId) ?? null;
+  if (!target) {
+    ui.notifications.warn("Wybrany cel nie jest już dostępny na tej scenie.");
+    return false;
+  }
   const configuration = await selectShotConfiguration(
     actor,
     target,
-    aimingPreparation
+    shotPreparation
   );
   if (!configuration) return false;
 
   const { weapon, skillKey } = configuration;
-  const usesPreparedAiming = Boolean(
-    aimingPreparation
-    && aimingPreparation.weaponId === weapon.id
-    && aimingPreparation.targetTokenId === target.id
-  );
-  const aimingBonusDice = usesPreparedAiming
-    ? Math.max(0, Math.min(aimingPreparation.bonusDice, 2))
-    : 0;
+  const aimingBonusDice = Math.max(0, Math.min(action.aimingBonusDice, 2));
   const numberOfDice = 1 + aimingBonusDice;
   const skillLevel = Math.max(0, actor.system.skills?.[skillKey]?.value ?? 0);
   const skillUsage = getCurrentSkillUsage(combatant, game.combat.round);
@@ -465,9 +594,7 @@ export async function resolveSingleShot(actor) {
   if (result.requiresJamRoll) {
     jamResult = await rollJamSeverity(actor, weapon);
   } else {
-    // Przy zacięciu podręcznik nie rozstrzyga jednoznacznie, czy nabój został
-    // zużyty. W takim przypadku stan magazynka pozostawiamy bez zmian, a
-    // ewentualne ręczne odjęcie naboju jest decyzją MG.
+    // Nabój odejmujemy wyłącznie wtedy, gdy broń rzeczywiście wystrzeliła.
     await weapon.update({
       "system.currentAmmunition": ammunitionAfterSuccessfulDischarge
     });
@@ -481,7 +608,10 @@ export async function resolveSingleShot(actor) {
     : allDiceAreAutomaticFailures
       ? "Automatyczna porażka wszystkich kości"
       : `Punkty Porażki: ${Math.abs(Math.min(0, result.pointsDifference))}`;
-  const resolution = result.testPassed ? "Trafienie" : "Pudło";
+  const shotDischarged = !jamResult;
+  const resolution = jamResult
+    ? "Zacięcie — broń nie wystrzeliła"
+    : result.testPassed ? "Trafienie" : "Pudło";
   const diceDescription = result.evaluatedDice.map((die, dieIndex) => {
     const adjustedDescription = die.spentSkillPoints > 0
       ? `${die.naturalResult} → ${die.adjustedResult}`
@@ -499,7 +629,7 @@ export async function resolveSingleShot(actor) {
     flavor: [
       `<strong>Strzał: ${foundry.utils.escapeHTML(actor.name)} → ${foundry.utils.escapeHTML(target.name)}</strong>`,
       `Broń: ${foundry.utils.escapeHTML(weapon.name)}`,
-      `Celowanie: ${usesPreparedAiming ? `+${aimingBonusDice}k20` : "brak"}`,
+      `Celowanie: ${aimingBonusDice > 0 ? `+${aimingBonusDice}k20` : "brak"}`,
       `Umiejętność: ${RANGED_SKILLS[skillKey]} (${skillLevel}), użyto ${totalSpentSkillPoints}`,
       `Kary i modyfikatory: ${totalDifficultyPercentage}%`,
       `Ostateczny PT: ${DIFFICULTY_LABELS[result.finalDifficultyIndex]}`,
@@ -510,11 +640,12 @@ export async function resolveSingleShot(actor) {
         ? `Niezawodność: ${riskyNaturalResults.join(", ")} > ${weapon.system.misfireRoll}`
         : `Niezawodność: wszystkie kości ≤ ${weapon.system.misfireRoll}`,
       result.requiresJamRoll
-        ? "Amunicja: nie odjęto naboju — decyzja MG"
+        ? "Amunicja: nie odjęto naboju — broń nie wystrzeliła"
         : `Amunicja: pozostało ${ammunitionAfterSuccessfulDischarge}`,
       jamResult ? `Stan broni: ${JAM_STATE_LABELS[jamResult.jamState]}` : "Stan broni: sprawna",
+      jamResult ? "Pocisk nie opuścił broni — wynik trafienia nie zadaje obrażeń." : null,
       `<strong>${resolution}</strong>`
-    ].join("<br>")
+    ].filter(Boolean).join("<br>")
   });
 
   if (jamResult) {
@@ -528,7 +659,10 @@ export async function resolveSingleShot(actor) {
     });
   }
 
-  await consumeAimingPreparation(combatant);
+  if (shotDischarged && result.testPassed) {
+    await resolveHitConsequences(actor, target, weapon, result);
+  }
+
   await markCurrentSegmentActionResolved(actor, resolution);
   return true;
 }

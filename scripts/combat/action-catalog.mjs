@@ -2,20 +2,22 @@ export const COMBAT_ACTIONS = {
   shot: {
     name: "Strzał",
     duration: 1,
-    requiresTest: true
+    requiresTest: true,
+    effectCode: "rangedShot",
+    aimingBonusDice: 0
   },
   aimingOne: {
-    name: "Celowanie (+1k20)",
-    duration: 1,
-    requiresTest: false,
-    effectCode: "aiming",
+    name: "Strzał celowany (+1k20)",
+    duration: 2,
+    requiresTest: true,
+    effectCode: "rangedShot",
     aimingBonusDice: 1
   },
   aimingTwo: {
-    name: "Celowanie (+2k20)",
-    duration: 2,
-    requiresTest: false,
-    effectCode: "aiming",
+    name: "Strzał długo celowany (+2k20)",
+    duration: 3,
+    requiresTest: true,
+    effectCode: "rangedShot",
     aimingBonusDice: 2
   },
   safetyOff: {
