@@ -228,7 +228,7 @@ function applySkillToOpenTestDieResults(dieResults, skillLevel) {
   };
 }
 
-export async function rollSkill(actor, skillKey) {
+export async function rollSkill(actor, skillKey, options = {}) {
   const skillConfiguration = SKILL_CONFIGURATION[skillKey];
   const skill = actor.system.skills[skillKey];
 
@@ -250,7 +250,10 @@ export async function rollSkill(actor, skillKey) {
 
   const customSkillName = skillConfiguration.usesCustomName ? skill.name.trim() : "";
   const displayedSkillName = customSkillName || skillConfiguration.label;
-  const testConfiguration = await selectTestConfiguration(actor);
+  const testConfiguration = await selectTestConfiguration(actor, {
+    fixedTestType: options.fixedTestType ?? "",
+    windowTitle: options.configurationTitle ?? "Ustawienia testu"
+  });
 
   if (testConfiguration === null) {
     return;
@@ -266,9 +269,9 @@ export async function rollSkill(actor, skillKey) {
     difficultyPercentageAfterPenalties,
     difficultyIndexAfterPercentagePenalties
   } = testConfiguration;
-  const testTitle = testType === "open"
+  const testTitle = options.testTitle ?? (testType === "open"
     ? `Otwarty test umiejętności: ${displayedSkillName}`
-    : `Test umiejętności: ${displayedSkillName}`;
+    : `Test umiejętności: ${displayedSkillName}`);
 
   // Wartość końcowa może być zmieniana przez efekty, ale nie może spaść poniżej zera.
   const skillLevel = Math.max(0, skill.value);
@@ -286,6 +289,7 @@ export async function rollSkill(actor, skillKey) {
 
   const successThreshold = attribute.value - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
   let resultDescriptionLines;
+  let rollResult;
 
   if (testType === "open") {
     const openTestResults = applySkillToOpenTestDieResults(dieResults, skillLevel);
@@ -309,6 +313,12 @@ export async function rollSkill(actor, skillKey) {
       `<strong>${pointsDescription}</strong>`,
       prepareTestVerdictMessage(testPassed)
     ];
+    rollResult = {
+      testType,
+      testPassed,
+      pointsDifference,
+      numberOfSuccesses: null
+    };
   } else {
     const evaluatedDieResults = applySkillToDieResults(dieResults, successThreshold, skillLevel);
     const numberOfSuccesses = evaluatedDieResults.filter(
@@ -325,6 +335,12 @@ export async function rollSkill(actor, skillKey) {
       `<strong>Liczba sukcesów: ${numberOfSuccesses}</strong>`,
       prepareTestResultMessage(numberOfSuccesses)
     ];
+    rollResult = {
+      testType,
+      testPassed: numberOfSuccesses >= 2,
+      pointsDifference: null,
+      numberOfSuccesses
+    };
   }
 
   await roll.toMessage({
@@ -344,4 +360,10 @@ export async function rollSkill(actor, skillKey) {
       ...resultDescriptionLines
     ].join("<br>")
   });
+
+  return {
+    ...rollResult,
+    finalDifficultyIndex,
+    successThreshold
+  };
 }

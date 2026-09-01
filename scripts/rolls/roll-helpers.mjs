@@ -67,7 +67,10 @@ function checkboxIsSelected(fieldValue) {
   return fieldValue === true || fieldValue === "true" || fieldValue === "on";
 }
 
-export async function selectTestConfiguration(actor) {
+export async function selectTestConfiguration(
+  actor,
+  { fixedTestType = "", windowTitle = "Ustawienia testu" } = {}
+) {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
   const armorPenaltyPercent = actor.system.testPenalties?.armorPercent ?? 0;
 
@@ -84,11 +87,12 @@ export async function selectTestConfiguration(actor) {
     .join("");
 
   // DialogV2.input zwraca dane formularza albo null, gdy użytkownik zamknie okno.
-  const formData = await foundry.applications.api.DialogV2.input({
-    window: {
-      title: "Ustawienia testu"
-    },
-    content: `
+  const testTypeField = fixedTestType
+    ? `
+      <p><strong>Rodzaj testu:</strong> ${fixedTestType === "open" ? "Otwarty" : "Zamknięty"}</p>
+      <input type="hidden" name="testType" value="${fixedTestType}">
+    `
+    : `
       <div class="form-group">
         <label for="neuroshima-test-type">Rodzaj testu</label>
         <select id="neuroshima-test-type" name="testType">
@@ -96,6 +100,13 @@ export async function selectTestConfiguration(actor) {
           <option value="open">Otwarty</option>
         </select>
       </div>
+    `;
+  const formData = await foundry.applications.api.DialogV2.input({
+    window: {
+      title: windowTitle
+    },
+    content: `
+      ${testTypeField}
       <hr>
       <div class="form-group">
         <label>

@@ -20,6 +20,12 @@ export const COMBAT_ACTIONS = {
     effectCode: "rangedShot",
     aimingBonusDice: 2
   },
+  clearMinorJam: {
+    name: "Usunięcie lekkiego zacięcia",
+    duration: 3,
+    requiresTest: false,
+    effectCode: "clearMinorJam"
+  },
   safetyOff: {
     name: "Odbezpieczenie broni",
     duration: 1,

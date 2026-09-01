@@ -177,7 +177,17 @@
 - Naturalny wynik kości porównujemy niezależnie z progiem niezawodności broni. Wynik równy albo niższy jest bezpieczny, a wynik wyższy uruchamia dodatkowy rzut k20 na zacięcie.
 - Wynik zacięcia `1–10` oznacza lekkie zacięcie, `11–18` poważne zacięcie, a `19–20` krytyczne zacięcie.
 - Stan zacięcia jest zapisywany na konkretnym egzemplarzu broni. Zaciętej broni nie można wybrać do kolejnego strzału.
-- Usuwanie zacięć pozostaje kolejnym etapem mechaniki.
+
+### Usuwanie zacięć
+
+- Lekkie zacięcie (`1–10` na rzucie rodzaju zacięcia) można usunąć podczas walki. Zajmuje to całą turę, czyli `3` segmenty, i nie wymaga testu.
+- Sztuczka `No strzelaj, złomie!` skraca usuwanie lekkiego zacięcia do `1` segmentu.
+- Akcja usuwania lekkiego zacięcia jest przypisana do konkretnego egzemplarza broni. Jej przerwanie pozostawia broń zaciętą.
+- Poza walką lekkie zacięcie można usunąć bez rozgrywania segmentów.
+- Poważne zacięcie (`11–18`) wyłącza broń do końca walki. Po walce można je usunąć bez testu i bez specjalisty.
+- Krytyczne zacięcie (`19–20`) można naprawić dopiero po walce i wymaga zdanego zamkniętego testu Rusznikarstwa opartego na Sprycie.
+- Sztuczka `Sztuka jest sztuka` pozwala zamiast standardowej naprawy przywrócić broń po krytycznym zacięciu do używalności po kilku godzinach pracy.
+- Podstawowa reguła nie wskazuje stałego PT naprawy krytycznego zacięcia, dlatego wybiera go MG w oknie testu.
 
 ## Obrażenia po strzale pojedynczym
 

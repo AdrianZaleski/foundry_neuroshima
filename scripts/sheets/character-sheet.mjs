@@ -30,6 +30,11 @@ import {
   configureAiming,
   resolveSingleShot
 } from "../combat/ranged-shot.mjs";
+import {
+  configureMinorJamClearing,
+  handleWeaponJam,
+  resolveMinorJamClearing
+} from "../combat/weapon-jam.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -187,6 +192,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       interruptSegmentAction: this.#onInterruptSegmentAction,
       configureAiming: this.#onConfigureAiming,
       resolveSingleShot: this.#onResolveSingleShot,
+      configureJamClearing: this.#onConfigureJamClearing,
+      handleWeaponJam: this.#onHandleWeaponJam,
       saveActorName: this.#onSaveActorName,
 
       // Każda rana jest osobnym Itemem osadzonym w postaci.
@@ -600,6 +607,17 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         await configureAiming(this.actor);
         combatStatus = prepareActorCombatStatus(this.actor);
       }
+      if (combatStatus.action?.canConfigureJamClearing) {
+        await configureMinorJamClearing(this.actor);
+        combatStatus = prepareActorCombatStatus(this.actor);
+      }
+      if (
+        combatStatus.action?.effectCode === "clearMinorJam"
+        && !combatStatus.action.isPending
+        && !combatStatus.action.resolved
+      ) {
+        await resolveMinorJamClearing(this.actor);
+      }
       if (combatStatus.action?.canResolveShot) {
         // Zwykły strzał kończy się w segmencie deklaracji. Warianty celowane
         // zostaną rozstrzygnięte dopiero po dotarciu do ich ostatniego segmentu.
@@ -635,6 +653,24 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   static async #onConfigureAiming() {
     await configureAiming(this.actor);
+    this.render();
+  }
+
+  static async #onConfigureJamClearing() {
+    const configured = await configureMinorJamClearing(this.actor);
+    if (configured) await resolveMinorJamClearing(this.actor);
+    this.render();
+  }
+
+  static async #onHandleWeaponJam(event, target) {
+    const weaponItem = this.actor.items.get(target.dataset.itemId);
+    const handled = await handleWeaponJam(this.actor, weaponItem);
+    if (handled) {
+      const combatStatus = prepareActorCombatStatus(this.actor);
+      if (combatStatus.action?.canConfigureJamClearing) {
+        await configureMinorJamClearing(this.actor);
+      }
+    }
     this.render();
   }
 

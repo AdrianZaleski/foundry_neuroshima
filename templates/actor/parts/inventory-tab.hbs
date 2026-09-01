@@ -99,6 +99,9 @@
             <td>{{this.weight}} kg</td>
             <td>
               <button type="button" data-action="reloadWeapon" data-item-id="{{this.id}}">Przeładuj</button>
+              {{#if this.isJammed}}
+                <button type="button" data-action="handleWeaponJam" data-item-id="{{this.id}}">Usuń zacięcie</button>
+              {{/if}}
               <button type="button" data-action="editWeapon" data-item-id="{{this.id}}">Edytuj</button>
               <button type="button" data-action="deleteWeapon" data-item-id="{{this.id}}">Usuń</button>
             </td>

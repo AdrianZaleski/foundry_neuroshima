@@ -94,11 +94,15 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
       isPending: consumesCurrentSegment && action.endsAtTick > currentTick,
       canFinishEarly: isActiveTurn
         && consumesCurrentSegment
-        && action.endsAtTick > currentTick,
+        && action.endsAtTick > currentTick
+        && action.effectCode !== "clearMinorJam",
       canInterrupt: isActiveTurn
         && consumesCurrentSegment
         && !action.resolved
-        && (action.endsAtTick > currentTick || action.effectCode === "rangedShot"),
+        && (
+          action.endsAtTick > currentTick
+          || ["rangedShot", "clearMinorJam"].includes(action.effectCode)
+        ),
       finishEarlyLabel: action.effectCode === "rangedShot"
         ? "Zakończ wcześniej i strzel"
         : "Zakończ wcześniej",
@@ -116,6 +120,10 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
         && consumesCurrentSegment
         && action.effectCode === "rangedShot"
         && !action.aimingConfiguration,
+      canConfigureJamClearing: isActiveTurn
+        && consumesCurrentSegment
+        && action.effectCode === "clearMinorJam"
+        && !action.jamClearingConfiguration,
       timingDescription: consumesCurrentSegment
         ? describeActionTiming(action, currentTick)
         : "Poprzednia akcja jest zakończona."
@@ -217,7 +225,7 @@ async function changeCurrentAction(actor, changeType) {
   const round = Math.max(1, Number(combat.round) || 1);
   const currentTick = calculateSegmentTick(round, segment);
   const canInterruptUnresolvedShotAtEnd = changeType === "interrupted"
-    && action?.effectCode === "rangedShot"
+    && ["rangedShot", "clearMinorJam"].includes(action?.effectCode)
     && !action.resolved
     && action.endsAtTick === currentTick;
 
@@ -294,6 +302,34 @@ export async function configureCurrentAiming(actor, aimingConfiguration) {
   return true;
 }
 
+export async function configureCurrentJamClearing(actor, jamClearingConfiguration) {
+  const activeParticipant = await requireActiveCombatant(actor);
+  if (!activeParticipant) return false;
+
+  const { combat, combatant } = activeParticipant;
+  const action = getSegmentAction(combatant);
+  const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
+  if (
+    !actionConsumesTick(action, currentTick)
+    || action.effectCode !== "clearMinorJam"
+  ) {
+    ui.notifications.warn("Bieżąca akcja nie jest usuwaniem lekkiego zacięcia.");
+    return false;
+  }
+
+  const configuredDuration = Math.max(
+    1,
+    Math.min(Number(jamClearingConfiguration.duration) || action.duration, 3)
+  );
+  await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, {
+    ...action,
+    duration: configuredDuration,
+    endsAtTick: action.startedAtTick + configuredDuration - 1,
+    jamClearingConfiguration
+  });
+  return true;
+}
+
 export async function selectSegmentAction(actor) {
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Akcja: ${actor.name}` },
@@ -333,6 +369,20 @@ export async function selectSegmentAction(actor) {
     formData.customName,
     formData.duration
   );
+  if (selectedAction.effectCode === "clearMinorJam") {
+    const hasMinorJam = actor.items.some((item) => (
+      item.type === "weapon" && item.system.jamState === "minor"
+    ));
+    if (!hasMinorJam) {
+      ui.notifications.warn("Postać nie ma broni z lekkim zacięciem.");
+      return false;
+    }
+    const hasQuickClearingPerk = actor.items.some((item) => (
+      item.type === "perk"
+      && item.system.sourceCode === "PERK_NOSTRZELAJZLOMIE"
+    ));
+    if (hasQuickClearingPerk) selectedAction.duration = 1;
+  }
   return declareSegmentAction(
     actor,
     selectedAction.name,
@@ -363,6 +413,17 @@ async function announceCompletedAction(combat) {
   ) {
     const { resolveSingleShot } = await import("./ranged-shot.mjs");
     await resolveSingleShot(combatant.actor);
+    action = getSegmentAction(combatant) ?? action;
+  }
+
+  if (
+    action.effectCode === "clearMinorJam"
+    && action.jamClearingConfiguration
+    && !action.interrupted
+    && !action.resolved
+  ) {
+    const { resolveMinorJamClearing } = await import("./weapon-jam.mjs");
+    await resolveMinorJamClearing(combatant.actor);
     action = getSegmentAction(combatant) ?? action;
   }
 
@@ -401,6 +462,35 @@ function preventAdvanceForUnresolvedShot(combat) {
   return true;
 }
 
+function currentUnresolvedJamClearing(combat) {
+  const combatant = combat.combatant;
+  const action = getSegmentAction(combatant);
+  const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
+  if (
+    !combatant?.actor
+    || !actionConsumesTick(action, currentTick)
+    || action?.effectCode !== "clearMinorJam"
+    || action.endsAtTick !== currentTick
+    || action.interrupted
+    || action.resolved
+  ) {
+    return null;
+  }
+  return { actor: combatant.actor, action };
+}
+
+function preventAdvanceForUnresolvedJamClearing(combat) {
+  const unresolvedClearing = currentUnresolvedJamClearing(combat);
+  if (!unresolvedClearing) return false;
+
+  ui.notifications.warn(
+    `${unresolvedClearing.actor.name} musi dokończyć usuwanie lekkiego zacięcia.`
+  );
+  const actorSheet = unresolvedClearing.actor.sheet;
+  if (actorSheet?.rendered) actorSheet.render();
+  return true;
+}
+
 export async function startSegmentCombat(combat) {
   if (combat.turns.length === 0) {
     ui.notifications.warn("Nie można rozpocząć walki bez uczestników.");
@@ -427,6 +517,7 @@ export async function startSegmentCombat(combat) {
 export async function advanceSegmentTurn(combat) {
   if (!combat.started || combat.turns.length === 0) return combat;
   if (preventAdvanceForUnresolvedShot(combat)) return combat;
+  if (preventAdvanceForUnresolvedJamClearing(combat)) return combat;
 
   const segment = getCombatSegment(combat);
   const isLastParticipant = combat.turn >= combat.turns.length - 1;
@@ -481,6 +572,7 @@ export async function rewindSegmentTurn(combat) {
 
 export async function advanceSegmentRound(combat) {
   if (preventAdvanceForUnresolvedShot(combat)) return combat;
+  if (preventAdvanceForUnresolvedJamClearing(combat)) return combat;
   await combat.setFlag(SYSTEM_ID, COMBAT_SEGMENT_FLAG, 1);
   const updatedCombat = await foundry.documents.Combat.prototype.nextRound.call(combat);
   await announceSegment(combat);
