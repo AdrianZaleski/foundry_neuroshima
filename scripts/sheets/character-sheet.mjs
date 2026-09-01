@@ -1,5 +1,6 @@
 import { rollAttribute } from "../rolls/attribute-roll.mjs";
 import { rollSkill } from "../rolls/skill-roll.mjs";
+import { rollPainResistanceForInjury } from "../rolls/injury-roll.mjs";
 import { ammunitionNamesBySymbol } from "../catalogs/ammunition-compatibility.mjs";
 import {
   SPECIALIZATION_LABELS,
@@ -175,6 +176,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // posiadającego atrybut data-action="rollAttribute".
       rollAttribute: this.#onRollAttribute,
       rollSkill: this.#onRollSkill,
+      rollInjury: this.#onRollInjury,
       rollInitiative: this.#onRollInitiative,
       declareSegmentAction: this.#onDeclareSegmentAction,
       passSegment: this.#onPassSegment,
@@ -560,6 +562,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   static async #onRollSkill(event, target) {
     const skillKey = target.dataset.skill;
     await rollSkill(this.actor, skillKey);
+  }
+
+  static async #onRollInjury() {
+    await rollPainResistanceForInjury(this.actor);
   }
 
   static async #onRollInitiative() {

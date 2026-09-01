@@ -100,7 +100,7 @@ const SKILL_CONFIGURATION = {
   wlasnaUmiejetnosc3: createSkillConfiguration("Własna umiejętność 3", "zrecznosc", "Zręczność", true, true)
 };
 
-function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, skillLevel) {
+export function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, skillLevel) {
   let calculatedDifficultyIndex;
 
   // Brak umiejętności utrudnia test o jeden poziom.
@@ -121,7 +121,7 @@ function calculateDifficultyIndexBeforeCriticalResults(startingDifficultyIndex, 
   );
 }
 
-function prepareSliderDescription(skillLevel) {
+export function prepareSliderDescription(skillLevel) {
   if (skillLevel === 0) {
     return "utrudnienie o 1 poziom za brak umiejętności";
   }
@@ -136,7 +136,7 @@ function prepareSliderDescription(skillLevel) {
   return `ułatwienie o ${numberOfSliderSteps} ${levelWord}`;
 }
 
-function applySkillToDieResults(dieResults, successThreshold, skillLevel) {
+export function applySkillToDieResults(dieResults, successThreshold, skillLevel) {
   // Zachowujemy pierwotną pozycję każdej kości, aby po obliczeniach
   // wyświetlić wyniki w tej samej kolejności, w której zostały wyrzucone.
   const evaluatedDieResults = dieResults.map((naturalResult, originalIndex) => ({
@@ -183,7 +183,7 @@ function applySkillToDieResults(dieResults, successThreshold, skillLevel) {
   );
 }
 
-function prepareSkillDieResultsDescription(evaluatedDieResults, successThreshold) {
+export function prepareSkillDieResultsDescription(evaluatedDieResults, successThreshold) {
   return evaluatedDieResults
     .map((dieResult) => {
       const resultDescription = dieResult.adjustedResult <= successThreshold ? "sukces" : "porażka";
