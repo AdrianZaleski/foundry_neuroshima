@@ -1,7 +1,10 @@
 import {
   DIFFICULTY_LABELS,
   DIFFICULTY_MODIFIERS,
+  DIFFICULTY_STARTING_PERCENTAGES,
+  calculateDifficultyIndexFromPercentage,
   calculateFinalDifficultyIndex,
+  calculateWoundPenaltyPercent,
   prepareTestResultMessage
 } from "./roll-helpers.mjs";
 import {
@@ -54,7 +57,13 @@ function describeSuccessCount(numberOfSuccesses) {
   return `${numberOfSuccesses} sukcesów`;
 }
 
-async function selectInjuryType() {
+function checkboxIsSelected(fieldValue) {
+  return fieldValue === true || fieldValue === "true" || fieldValue === "on";
+}
+
+async function selectInjuryType(actor) {
+  const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
+
   return foundry.applications.api.DialogV2.input({
     window: { title: "Rzut na ranę" },
     content: `
@@ -66,6 +75,12 @@ async function selectInjuryType() {
           <option value="serious">Rana ciężka — test Trudny, kara 30% / 60%</option>
           <option value="critical">Rana krytyczna — bez testu, kara 160%</option>
         </select>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="includeWoundPenalties" checked>
+          Uwzględnij aktualne kary z ran (${woundPenaltyPercent}%)
+        </label>
       </div>
     `,
     ok: {
@@ -97,7 +112,7 @@ async function publishCriticalInjuryResult(actor) {
 }
 
 export async function rollPainResistanceForInjury(actor) {
-  const formData = await selectInjuryType();
+  const formData = await selectInjuryType(actor);
   if (!formData) return;
 
   const injuryType = String(formData.injuryType ?? "");
@@ -119,8 +134,17 @@ export async function rollPainResistanceForInjury(actor) {
   }
 
   const skillLevel = Math.max(0, skill.value);
+  const includedWoundPenaltyPercent = checkboxIsSelected(formData.includeWoundPenalties)
+    ? calculateWoundPenaltyPercent(actor)
+    : 0;
+  const difficultyPercentageAfterPenalties = DIFFICULTY_STARTING_PERCENTAGES[
+    injuryConfiguration.difficultyIndex
+  ] + includedWoundPenaltyPercent;
+  const difficultyIndexAfterPenalties = calculateDifficultyIndexFromPercentage(
+    difficultyPercentageAfterPenalties
+  );
   const difficultyIndexBeforeCriticalResults = calculateDifficultyIndexBeforeCriticalResults(
-    injuryConfiguration.difficultyIndex,
+    difficultyIndexAfterPenalties,
     skillLevel
   );
   const roll = await new foundry.dice.Roll("3d20").evaluate();
@@ -152,6 +176,8 @@ export async function rollPainResistanceForInjury(actor) {
       `Poziom umiejętności: ${skillLevel}`,
       `Suwak: ${prepareSliderDescription(skillLevel)}`,
       `Poziom trudności rany: ${DIFFICULTY_LABELS[injuryConfiguration.difficultyIndex]}`,
+      `Uwzględnione kary z ran: ${includedWoundPenaltyPercent}%`,
+      `Poziom trudności po karach: ${DIFFICULTY_LABELS[difficultyIndexAfterPenalties]}`,
       `Ostateczny poziom trudności: ${DIFFICULTY_LABELS[finalDifficultyIndex]}`,
       `Próg sukcesu: ${successThreshold}`,
       `Kości: ${prepareSkillDieResultsDescription(evaluatedDieResults, successThreshold)}`,
@@ -167,7 +193,8 @@ export async function rollPainResistanceForInjury(actor) {
     injuryType,
     testPassed,
     penaltyPercent,
-    numberOfSuccesses
+    numberOfSuccesses,
+    includedWoundPenaltyPercent
   };
 }
 
