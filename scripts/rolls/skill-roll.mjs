@@ -6,8 +6,13 @@ import {
   prepareTestVerdictMessage,
   selectTestConfiguration
 } from "./roll-helpers.mjs";
+import {
+  calculateAttributeValue,
+  calculateSkillValue,
+  describeModifierSources
+} from "../effects/modifiers.mjs";
 
-const ATTRIBUTE_LABELS = {
+export const ATTRIBUTE_LABELS = {
   zrecznosc: "Zręczność",
   percepcja: "Percepcja",
   charakter: "Charakter",
@@ -34,7 +39,7 @@ function createSkillConfiguration(
 }
 
 // Każda standardowa umiejętność ma stałą nazwę i przypisany współczynnik.
-const SKILL_CONFIGURATION = {
+export const SKILL_CONFIGURATION = {
   bijatyka: createSkillConfiguration("Bijatyka", "zrecznosc", "Zręczność"),
   bronReczna: createSkillConfiguration("Broń ręczna", "zrecznosc", "Zręczność"),
   rzucanie: createSkillConfiguration("Rzucanie", "zrecznosc", "Zręczność"),
@@ -253,7 +258,8 @@ export async function rollSkill(actor, skillKey, options = {}) {
   const testConfiguration = await selectTestConfiguration(actor, {
     fixedTestType: options.fixedTestType ?? "",
     windowTitle: options.configurationTitle ?? "Ustawienia testu",
-    attributeKey: selectedAttributeKey
+    attributeKey: selectedAttributeKey,
+    skillKey
   });
 
   if (testConfiguration === null) {
@@ -265,8 +271,12 @@ export async function rollSkill(actor, skillKey, options = {}) {
     startingDifficultyIndex,
     includedWoundPenaltyPercent,
     includedArmorPenaltyPercent,
+    includedTestModifierPercent,
     customPenaltyPercent,
     totalPenaltyPercent,
+    attributeModifierSources,
+    skillModifierSources,
+    testModifierSources,
     difficultyPercentageAfterPenalties,
     difficultyIndexAfterPercentagePenalties
   } = testConfiguration;
@@ -275,7 +285,7 @@ export async function rollSkill(actor, skillKey, options = {}) {
     : `Test umiejętności: ${displayedSkillName}`);
 
   // Wartość końcowa może być zmieniana przez efekty, ale nie może spaść poniżej zera.
-  const skillLevel = Math.max(0, skill.value);
+  const skillLevel = Math.max(0, calculateSkillValue(actor, skillKey));
   const difficultyIndexBeforeCriticalResults = calculateDifficultyIndexBeforeCriticalResults(
     difficultyIndexAfterPercentagePenalties,
     skillLevel
@@ -288,7 +298,8 @@ export async function rollSkill(actor, skillKey, options = {}) {
     difficultyIndexBeforeCriticalResults
   );
 
-  const successThreshold = attribute.value - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
+  const attributeValue = calculateAttributeValue(actor, selectedAttributeKey);
+  const successThreshold = attributeValue - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
   let resultDescriptionLines;
   let rollResult;
 
@@ -348,11 +359,12 @@ export async function rollSkill(actor, skillKey, options = {}) {
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
       `<strong>${testTitle}</strong>`,
-      `Współczynnik: ${selectedAttributeLabel} (${attribute.value})`,
-      `Poziom umiejętności: ${skillLevel}`,
+      `Współczynnik: ${selectedAttributeLabel} — ${attribute.base} bazowa; modyfikatory: ${describeModifierSources(attributeModifierSources)}; razem ${attributeValue}`,
+      `Poziom umiejętności: ${skill.base} bazowy; modyfikatory: ${describeModifierSources(skillModifierSources)}; razem ${skillLevel}`,
       `Suwak: ${prepareSliderDescription(skillLevel)}`,
       `Początkowy poziom trudności: ${DIFFICULTY_LABELS[startingDifficultyIndex]}`,
-      `Kary procentowe: rany ${includedWoundPenaltyPercent}%, pancerz ${includedArmorPenaltyPercent}%, inne ${customPenaltyPercent}%`,
+      `Kary procentowe: rany ${includedWoundPenaltyPercent}%, pancerz ${includedArmorPenaltyPercent}%, efekty ${includedTestModifierPercent}%, inne ${customPenaltyPercent}%`,
+      `Źródła efektów testu: ${describeModifierSources(testModifierSources, "%")}`,
       `Suma kar procentowych: ${totalPenaltyPercent}%`,
       `Wartość procentowa PT po karach: ${difficultyPercentageAfterPenalties}%`,
       `Poziom trudności po karach: ${DIFFICULTY_LABELS[difficultyIndexAfterPercentagePenalties]}`,

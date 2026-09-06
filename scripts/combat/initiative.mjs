@@ -13,6 +13,15 @@ import {
   startSegmentCombat
 } from "./segments.mjs";
 import { calculateArmorPenaltyPercent } from "./armor.mjs";
+import {
+  calculateAttributeValue,
+  calculateSkillValue,
+  collectAttributeModifierSources,
+  collectSkillModifierSources,
+  collectTestModifierSources,
+  describeModifierSources,
+  sumModifierSources
+} from "../effects/modifiers.mjs";
 
 const INITIATIVE_SKILLS = {
   bijatyka: "Bijatyka",
@@ -41,7 +50,7 @@ function prepareSkillOptions(actor) {
   ];
 
   for (const [skillKey, skillName] of Object.entries(INITIATIVE_SKILLS)) {
-    const skillLevel = Math.max(0, actor.system.skills?.[skillKey]?.value ?? 0);
+    const skillLevel = Math.max(0, calculateSkillValue(actor, skillKey));
     options.push(
       `<option value="${skillKey}">${skillName} (${skillLevel})</option>`
     );
@@ -141,6 +150,8 @@ async function selectInitiativeConfiguration(actor) {
   const woundPenalty = calculateWoundPenaltyPercent(actor);
   const dexterityArmorPenalty = calculateArmorPenaltyPercent(actor, "zrecznosc");
   const perceptionArmorPenalty = calculateArmorPenaltyPercent(actor, "percepcja");
+  const testModifierSources = collectTestModifierSources(actor);
+  const testModifierPercent = sumModifierSources(testModifierSources);
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Inicjatywa: ${actor.name}` },
     content: `
@@ -177,6 +188,13 @@ async function selectInitiativeConfiguration(actor) {
         </label>
       </div>
       <div class="form-group">
+        <label>
+          <input type="checkbox" name="includeEffects" checked>
+          Uwzględnij aktywne efekty (${testModifierPercent}%)
+        </label>
+        <small>${describeModifierSources(testModifierSources, "%")}</small>
+      </div>
+      <div class="form-group">
         <label for="neuroshima-initiative-penalty">Inne utrudnienie lub ułatwienie</label>
         <input id="neuroshima-initiative-penalty" type="number"
           name="customPenaltyPercent" value="0" step="1"> %
@@ -200,7 +218,7 @@ async function selectInitiativeConfiguration(actor) {
     attributeKey: String(formData.attributeKey),
     skillKey,
     skillLevel: skillKey
-      ? Math.max(0, actor.system.skills?.[skillKey]?.value ?? 0)
+      ? Math.max(0, calculateSkillValue(actor, skillKey))
       : 0,
     weaponName: meleeWeapon?.name ?? "",
     weaponModifier: meleeWeapon?.system.initiativeBonus ?? 0,
@@ -212,6 +230,12 @@ async function selectInitiativeConfiguration(actor) {
         ? perceptionArmorPenalty
         : dexterityArmorPenalty)
       : 0,
+    includedEffectPenalty: checkboxIsSelected(formData.includeEffects)
+      ? testModifierPercent
+      : 0,
+    testModifierSources: checkboxIsSelected(formData.includeEffects)
+      ? testModifierSources
+      : [],
     customPenalty: Number(formData.customPenaltyPercent) || 0
   };
 }
@@ -237,9 +261,10 @@ export async function rollNeuroshimaInitiative(actor, { messageOptions = {} } = 
   const dieResults = roll.dice[0].results.map((die) => die.result);
   const totalPenalty = configuration.includedWoundPenalty
     + configuration.includedArmorPenalty
+    + configuration.includedEffectPenalty
     + configuration.customPenalty;
   const result = calculateInitiativeResult({
-    attributeValue: attribute.value,
+    attributeValue: calculateAttributeValue(actor, configuration.attributeKey),
     dieResults,
     skillLevel: configuration.skillLevel,
     usesSkill: Boolean(configuration.skillKey),
@@ -252,17 +277,29 @@ export async function rollNeuroshimaInitiative(actor, { messageOptions = {} } = 
   const weaponDescription = configuration.weaponName
     ? `${configuration.weaponName} (${configuration.weaponModifier >= 0 ? "+" : ""}${configuration.weaponModifier})`
     : "brak";
+  const attributeValue = calculateAttributeValue(actor, configuration.attributeKey);
+  const attributeModifierSources = collectAttributeModifierSources(
+    actor,
+    configuration.attributeKey
+  );
+  const skillModifierSources = configuration.skillKey
+    ? collectSkillModifierSources(actor, configuration.skillKey)
+    : [];
 
   await roll.toMessage({
     ...messageOptions,
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
       "<strong>Otwarty test inicjatywy</strong>",
-      `Współczynnik: ${INITIATIVE_ATTRIBUTES[configuration.attributeKey]} (${attribute.value})`,
+      `Współczynnik: ${INITIATIVE_ATTRIBUTES[configuration.attributeKey]} (${attributeValue})`,
+      `Modyfikatory współczynnika: ${describeModifierSources(attributeModifierSources)}`,
       `Umiejętność: ${skillName} (${configuration.skillLevel})`,
+      `Modyfikatory umiejętności: ${describeModifierSources(skillModifierSources)}`,
       `Suwak umiejętności: ${result.sliderSteps} poziom(y)`,
       `Modyfikator broni: ${weaponDescription}`,
-      `Kary procentowe: ${totalPenalty}%`,
+      `Kary procentowe: rany ${configuration.includedWoundPenalty}%, pancerz ${configuration.includedArmorPenalty}%, efekty ${configuration.includedEffectPenalty}%, inne ${configuration.customPenalty}%`,
+      `Źródła efektów testu: ${describeModifierSources(configuration.testModifierSources, "%")}`,
+      `Suma kar procentowych: ${totalPenalty}%`,
       `Ostateczny PT: ${DIFFICULTY_LABELS[result.finalDifficultyIndex]}`,
       `Próg sukcesu: ${result.successThreshold}`,
       `Rozpatrywane kości: ${describeInitiativeDice(result.consideredDice)}`,

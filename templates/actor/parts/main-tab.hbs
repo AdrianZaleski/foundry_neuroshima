@@ -83,12 +83,20 @@
       Zręczność bazowa
       <input type="number" name="system.attributes.zrecznosc.base" value="{{system.attributes.zrecznosc.base}}" min="1" max="40" step="1">
     </label>
+    <label>
+      Modyfikator ręczny
+      <input type="number" name="system.attributes.zrecznosc.manualModifier" value="{{system.attributes.zrecznosc.manualModifier}}" step="1">
+    </label>
     <output>Wartość końcowa: {{system.attributes.zrecznosc.value}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="zrecznosc">Rzuć 3k20</button>
 
     <label>
       Percepcja bazowa
       <input type="number" name="system.attributes.percepcja.base" value="{{system.attributes.percepcja.base}}" min="1" max="40" step="1">
+    </label>
+    <label>
+      Modyfikator ręczny
+      <input type="number" name="system.attributes.percepcja.manualModifier" value="{{system.attributes.percepcja.manualModifier}}" step="1">
     </label>
     <output>Wartość końcowa: {{system.attributes.percepcja.value}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="percepcja">Rzuć 3k20</button>
@@ -97,12 +105,20 @@
       Charakter bazowy
       <input type="number" name="system.attributes.charakter.base" value="{{system.attributes.charakter.base}}" min="1" max="40" step="1">
     </label>
+    <label>
+      Modyfikator ręczny
+      <input type="number" name="system.attributes.charakter.manualModifier" value="{{system.attributes.charakter.manualModifier}}" step="1">
+    </label>
     <output>Wartość końcowa: {{system.attributes.charakter.value}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="charakter">Rzuć 3k20</button>
 
     <label>
       Spryt bazowy
       <input type="number" name="system.attributes.spryt.base" value="{{system.attributes.spryt.base}}" min="1" max="40" step="1">
+    </label>
+    <label>
+      Modyfikator ręczny
+      <input type="number" name="system.attributes.spryt.manualModifier" value="{{system.attributes.spryt.manualModifier}}" step="1">
     </label>
     <output>Wartość końcowa: {{system.attributes.spryt.value}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="spryt">Rzuć 3k20</button>
@@ -111,9 +127,49 @@
       Budowa bazowa
       <input type="number" name="system.attributes.budowa.base" value="{{system.attributes.budowa.base}}" min="1" max="40" step="1">
     </label>
+    <label>
+      Modyfikator ręczny
+      <input type="number" name="system.attributes.budowa.manualModifier" value="{{system.attributes.budowa.manualModifier}}" step="1">
+    </label>
     <output>Wartość końcowa: {{system.attributes.budowa.value}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="budowa">Rzuć 3k20</button>
   </div>
+
+  <h2>Aktywne efekty i modyfikatory</h2>
+  <button type="button" data-action="createModifier">Dodaj efekt</button>
+  <p><small>Efekty mogą zmieniać Współczynnik, poziom Umiejętności albo procentową trudność wszystkich testów.</small></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Źródło</th>
+        <th>Zakres</th>
+        <th>Wartość</th>
+        <th>Czas</th>
+        <th>Stan</th>
+        <th>Akcje</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each modifierEntries}}
+        <tr>
+          <td>{{this.source}}</td>
+          <td>{{this.scopeLabel}}</td>
+          <td>{{this.valueLabel}}</td>
+          <td>{{this.expiresLabel}}</td>
+          <td>{{this.statusLabel}}</td>
+          <td>
+            <button type="button" data-action="editModifier" data-modifier-id="{{this.id}}">Edytuj</button>
+            {{#if this.canToggle}}
+              <button type="button" data-action="toggleModifier" data-modifier-id="{{this.id}}">{{#if this.enabled}}Wyłącz{{else}}Włącz{{/if}}</button>
+            {{/if}}
+            <button type="button" data-action="deleteModifier" data-modifier-id="{{this.id}}">Usuń</button>
+          </td>
+        </tr>
+      {{else}}
+        <tr><td colspan="6">Brak zapisanych efektów.</td></tr>
+      {{/each}}
+    </tbody>
+  </table>
 
   <h2>Rany i utrudnienia</h2>
 

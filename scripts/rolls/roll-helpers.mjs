@@ -1,5 +1,12 @@
 // Wspólne dane i funkcje używane przez różne rodzaje testów Neuroshimy.
 import { calculateArmorPenaltyPercent } from "../combat/armor.mjs";
+import {
+  collectAttributeModifierSources,
+  collectSkillModifierSources,
+  collectTestModifierSources,
+  describeModifierSources,
+  sumModifierSources
+} from "../effects/modifiers.mjs";
 
 // Liczba określa, o ile obniżamy współczynnik podczas obliczania progu testu.
 export const DIFFICULTY_MODIFIERS = [-2, 0, 2, 5, 8, 11, 15, 20, 24];
@@ -70,10 +77,24 @@ function checkboxIsSelected(fieldValue) {
 
 export async function selectTestConfiguration(
   actor,
-  { fixedTestType = "", windowTitle = "Ustawienia testu", attributeKey = "" } = {}
+  {
+    fixedTestType = "",
+    windowTitle = "Ustawienia testu",
+    attributeKey = "",
+    skillKey = ""
+  } = {}
 ) {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
   const armorPenaltyPercent = calculateArmorPenaltyPercent(actor, attributeKey);
+  const attributeModifierSources = collectAttributeModifierSources(actor, attributeKey);
+  const skillModifierSources = skillKey
+    ? collectSkillModifierSources(actor, skillKey)
+    : [];
+  const testModifierSources = collectTestModifierSources(actor);
+  const testModifierPercent = sumModifierSources(testModifierSources);
+  const valueModifierSources = [...attributeModifierSources, ...skillModifierSources];
+  const valueModifierDescription = describeModifierSources(valueModifierSources);
+  const testModifierDescription = describeModifierSources(testModifierSources, "%");
 
   // Tworzymy pozycje listy na podstawie tej samej tabeli,
   // której później użyjemy podczas obliczania progu testu.
@@ -109,6 +130,7 @@ export async function selectTestConfiguration(
     content: `
       ${testTypeField}
       <hr>
+      <p><strong>Modyfikatory wartości:</strong> ${valueModifierDescription}</p>
       <div class="form-group">
         <label>
           <input type="checkbox" name="includeWounds" checked>
@@ -120,6 +142,13 @@ export async function selectTestConfiguration(
           <input type="checkbox" name="includeArmor" checked>
           Uwzględnij pancerz (${armorPenaltyPercent}%)
         </label>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="includeEffects" checked>
+          Uwzględnij aktywne efekty (${testModifierPercent}%)
+        </label>
+        <small>${testModifierDescription}</small>
       </div>
       <div class="form-group">
         <label for="neuroshima-custom-penalty">Dodatkowe utrudnienie lub ułatwienie</label>
@@ -152,9 +181,13 @@ export async function selectTestConfiguration(
   const includedArmorPenaltyPercent = checkboxIsSelected(formData.includeArmor)
     ? armorPenaltyPercent
     : 0;
+  const includedTestModifierPercent = checkboxIsSelected(formData.includeEffects)
+    ? testModifierPercent
+    : 0;
   const customPenaltyPercent = Number(formData.customPenaltyPercent) || 0;
   const totalPenaltyPercent = includedWoundPenaltyPercent
     + includedArmorPenaltyPercent
+    + includedTestModifierPercent
     + customPenaltyPercent;
   const difficultyPercentageAfterPenalties = DIFFICULTY_STARTING_PERCENTAGES[
     startingDifficultyIndex
@@ -165,8 +198,14 @@ export async function selectTestConfiguration(
     startingDifficultyIndex,
     includedWoundPenaltyPercent,
     includedArmorPenaltyPercent,
+    includedTestModifierPercent,
     customPenaltyPercent,
     totalPenaltyPercent,
+    attributeModifierSources,
+    skillModifierSources,
+    testModifierSources: checkboxIsSelected(formData.includeEffects)
+      ? testModifierSources
+      : [],
     difficultyPercentageAfterPenalties,
     difficultyIndexAfterPercentagePenalties: calculateDifficultyIndexFromPercentage(
       difficultyPercentageAfterPenalties

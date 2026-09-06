@@ -71,14 +71,24 @@ rekordów, a nie tylko ich liczbę.
 To jest fundament dla dalszej automatyzacji. System przechowuje wiele kodów
 efektów jako tekst, lecz ich jeszcze nie wykonuje.
 
+Zrealizowany fundament:
+
+- Actor przechowuje listę efektów z nazwą źródła, zakresem, wartością,
+  stanem włączenia i opcjonalnym terminem wygaśnięcia,
+- efekt może zmieniać wartość Współczynnika, poziom Umiejętności albo
+  procentową trudność wszystkich testów,
+- karta pozwala dodawać, edytować, wyłączać i usuwać efekty,
+- każdy Współczynnik posiada zapisany modyfikator ręczny,
+- zwykłe testy, Inicjatywa, Odporność na ból i strzał uwzględniają aktywne
+  efekty oraz pokazują ich źródła,
+- efekty procentowe można pominąć w oknie konkretnego rzutu; premie do
+  wartości wyłącza się na karcie postaci,
+- wygasły efekt pozostaje w historii, ale przestaje działać mechanicznie.
+
 Do dodania:
 
-- trwałe i czasowe modyfikatory Współczynników oraz Umiejętności,
-- ręczne pole modyfikatora każdego Współczynnika, znane z karty Roll20,
-- jeden mechanizm zbierania modyfikatorów z ran, pancerza, chorób, leków,
+- automatyczne tworzenie modyfikatorów z ran, pancerza, chorób, leków,
   sztuczek, cech, amunicji i dodatków do broni,
-- czas trwania efektów i ich wygasanie,
-- źródło każdego modyfikatora widoczne w oknie rzutu,
 - interpretacja wspieranych kodów z zakładki `EFFECT`,
 - bezpieczne pozostawienie nieznanego kodu jako opisu zamiast zgadywania jego
   działania.
@@ -254,10 +264,10 @@ wydzielić z niej jednoznaczne rekordy i powiązać je z `MISC_CAT`.
 
 ### Etap A — fundament efektów
 
-1. Uporządkować model trwałych i czasowych modyfikatorów.
-2. Dodać ręczne modyfikatory Współczynników.
+1. Uporządkować model trwałych i czasowych modyfikatorów — zrealizowane.
+2. Dodać ręczne modyfikatory Współczynników — zrealizowane.
 3. Zaimportować i stopniowo interpretować `EFFECT`.
-4. Pokazywać źródła modyfikatorów w oknach testów.
+4. Pokazywać źródła modyfikatorów w oknach testów — zrealizowane.
 
 ### Etap B — broń i pełne strzelanie
 
@@ -289,7 +299,7 @@ wydzielić z niej jednoznaczne rekordy i powiązać je z `MISC_CAT`.
 
 ## Najbliższy krok
 
-Najbliższym zadaniem będzie wspólny mechanizm efektów i modyfikatorów. Najpierw
-powstanie jawny model źródła, wartości, zakresu i czasu trwania modyfikatora,
-bez automatycznego interpretowania wszystkich kodów `EFFECT` naraz. To pozwoli
-później bezpiecznie podłączać efekty amunicji, chorób, leków, cech i sztuczek.
+Najbliższym zadaniem będzie przygotowanie lokalnego katalogu definicji z
+zakładki `EFFECT`, a następnie interpretacja pierwszej bezpiecznej grupy kodów:
+prostych premii i kar do Współczynników, Umiejętności oraz wszystkich testów.
+Nieznane i złożone kody nadal pozostaną opisem do rozstrzygnięcia przez MG.

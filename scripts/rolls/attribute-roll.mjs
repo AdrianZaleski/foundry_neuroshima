@@ -6,10 +6,14 @@ import {
   prepareTestVerdictMessage,
   selectTestConfiguration
 } from "./roll-helpers.mjs";
+import {
+  calculateAttributeValue,
+  describeModifierSources
+} from "../effects/modifiers.mjs";
 
 // Klucze są technicznymi nazwami zapisanymi w modelu danych,
 // a wartości są polskimi nazwami wyświetlanymi użytkownikowi.
-const ATTRIBUTE_LABELS = {
+export const ATTRIBUTE_LABELS = {
   zrecznosc: "Zręczność",
   percepcja: "Percepcja",
   charakter: "Charakter",
@@ -51,8 +55,11 @@ export async function rollAttribute(actor, attributeKey) {
     startingDifficultyIndex,
     includedWoundPenaltyPercent,
     includedArmorPenaltyPercent,
+    includedTestModifierPercent,
     customPenaltyPercent,
     totalPenaltyPercent,
+    attributeModifierSources,
+    testModifierSources,
     difficultyPercentageAfterPenalties,
     difficultyIndexAfterPercentagePenalties
   } = testConfiguration;
@@ -74,7 +81,8 @@ export async function rollAttribute(actor, attributeKey) {
     difficultyIndexAfterPercentagePenalties
   ];
   const finalDifficultyLabel = DIFFICULTY_LABELS[finalDifficultyIndex];
-  const successThreshold = attribute.value - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
+  const attributeValue = calculateAttributeValue(actor, attributeKey);
+  const successThreshold = attributeValue - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
   let resultDescriptionLines;
 
   if (testType === "open") {
@@ -112,9 +120,10 @@ export async function rollAttribute(actor, attributeKey) {
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
       `<strong>${testTitle}</strong>`,
-      `Wartość współczynnika: ${attribute.value}`,
+      `Wartość współczynnika: ${attribute.base} bazowa; modyfikatory: ${describeModifierSources(attributeModifierSources)}; razem ${attributeValue}`,
       `Początkowy poziom trudności: ${startingDifficultyLabel}`,
-      `Kary procentowe: rany ${includedWoundPenaltyPercent}%, pancerz ${includedArmorPenaltyPercent}%, inne ${customPenaltyPercent}%`,
+      `Kary procentowe: rany ${includedWoundPenaltyPercent}%, pancerz ${includedArmorPenaltyPercent}%, efekty ${includedTestModifierPercent}%, inne ${customPenaltyPercent}%`,
+      `Źródła efektów testu: ${describeModifierSources(testModifierSources, "%")}`,
       `Suma kar procentowych: ${totalPenaltyPercent}%`,
       `Wartość procentowa PT po karach: ${difficultyPercentageAfterPenalties}%`,
       `Poziom trudności po karach: ${difficultyLabelAfterPenalties}`,

@@ -296,5 +296,25 @@
 - List kompatybilnych wpisów nie zapisujemy w katalogowych plikach JSON.
   Generujemy je z aktualnych indeksów Compendiów, aby nie duplikować danych
   i nie tworzyć nieaktualnych odnośników po synchronizacji.
-- Następnym fundamentem będzie wspólny mechanizm trwałych i czasowych efektów
-  oraz modyfikatorów, zanim podłączymy kolejne warianty strzelania.
+- Kolejnym zrealizowanym fundamentem jest wspólny mechanizm trwałych i
+  czasowych efektów oraz modyfikatorów.
+
+## Efekty i modyfikatory
+
+- Każdy Współczynnik ma trwałe pole ręcznego modyfikatora. Wartość końcowa to
+  wartość bazowa, modyfikator ręczny i aktywne efekty dotyczące Współczynnika.
+- Actor przechowuje efekty w `system.activeModifiers`. Każdy wpis ma własny
+  identyfikator, nazwę źródła, zakres, wartość, stan włączenia i opcjonalny
+  termin wygaśnięcia.
+- Zakres `attribute.*` zmienia wartość Współczynnika, `skill.*` poziom
+  Umiejętności, a `test.all` procentową wartość PT wszystkich testów.
+- Dodatnia wartość Współczynnika lub Umiejętności jest premią. Dodatnia wartość
+  procentowa testu jest karą, a ujemna ułatwieniem.
+- Efekt po terminie nie jest usuwany. Pozostaje widoczny jako wygasły i nie
+  wpływa na obliczenia; dzięki temu nie tracimy informacji o jego źródle.
+- Zwykłe testy, Inicjatywa, strzały i test Odporności na ból pokazują źródła
+  procentowych efektów. W oknie rzutu można zdecydować, czy je uwzględnić.
+- Ręczne i aktywne premie do wartości wyłącza się na karcie, a nie w każdym
+  oknie rzutu, ponieważ stanowią aktualną wartość postaci.
+- Surowe kody z `EFFECT` nie są jeszcze interpretowane. Najpierw importujemy
+  ich słownik i podłączamy tylko jednoznaczne, sprawdzone przypadki.

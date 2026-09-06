@@ -13,6 +13,15 @@ import {
   prepareSkillDieResultsDescription,
   prepareSliderDescription
 } from "./skill-roll.mjs";
+import {
+  calculateAttributeValue,
+  calculateSkillValue,
+  collectAttributeModifierSources,
+  collectSkillModifierSources,
+  collectTestModifierSources,
+  describeModifierSources,
+  sumModifierSources
+} from "../effects/modifiers.mjs";
 
 export const INJURY_ROLL_CONFIGURATION = {
   abrasion: {
@@ -63,6 +72,8 @@ function checkboxIsSelected(fieldValue) {
 
 async function selectInjuryType(actor, presetInjuryType = "") {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
+  const testModifierSources = collectTestModifierSources(actor);
+  const testModifierPercent = sumModifierSources(testModifierSources);
   const presetConfiguration = INJURY_ROLL_CONFIGURATION[presetInjuryType];
   const injuryTypeField = presetConfiguration
     ? `
@@ -90,6 +101,13 @@ async function selectInjuryType(actor, presetInjuryType = "") {
           <input type="checkbox" name="includeWoundPenalties" checked>
           Uwzględnij aktualne kary z ran (${woundPenaltyPercent}%)
         </label>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="includeEffects" checked>
+          Uwzględnij aktywne efekty (${testModifierPercent}%)
+        </label>
+        <small>${describeModifierSources(testModifierSources, "%")}</small>
       </div>
     `,
     ok: {
@@ -146,13 +164,17 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
     return;
   }
 
-  const skillLevel = Math.max(0, skill.value);
+  const skillLevel = Math.max(0, calculateSkillValue(actor, "odpornoscNaBol"));
   const includedWoundPenaltyPercent = checkboxIsSelected(formData.includeWoundPenalties)
     ? calculateWoundPenaltyPercent(actor)
     : 0;
+  const testModifierSources = checkboxIsSelected(formData.includeEffects)
+    ? collectTestModifierSources(actor)
+    : [];
+  const includedTestModifierPercent = sumModifierSources(testModifierSources);
   const difficultyPercentageAfterPenalties = DIFFICULTY_STARTING_PERCENTAGES[
     injuryConfiguration.difficultyIndex
-  ] + includedWoundPenaltyPercent;
+  ] + includedWoundPenaltyPercent + includedTestModifierPercent;
   const difficultyIndexAfterPenalties = calculateDifficultyIndexFromPercentage(
     difficultyPercentageAfterPenalties
   );
@@ -166,7 +188,10 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
     dieResults,
     difficultyIndexBeforeCriticalResults
   );
-  const successThreshold = attribute.value - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
+  const attributeValue = calculateAttributeValue(actor, "charakter");
+  const attributeModifierSources = collectAttributeModifierSources(actor, "charakter");
+  const skillModifierSources = collectSkillModifierSources(actor, "odpornoscNaBol");
+  const successThreshold = attributeValue - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
   const evaluatedDieResults = applySkillToDieResults(
     dieResults,
     successThreshold,
@@ -185,11 +210,14 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
       `<strong>${injuryConfiguration.label} — test Odporności na ból</strong>`,
-      `Współczynnik: Charakter (${attribute.value})`,
+      `Współczynnik: Charakter (${attributeValue})`,
+      `Modyfikatory Charakteru: ${describeModifierSources(attributeModifierSources)}`,
       `Poziom umiejętności: ${skillLevel}`,
+      `Modyfikatory Odporności na ból: ${describeModifierSources(skillModifierSources)}`,
       `Suwak: ${prepareSliderDescription(skillLevel)}`,
       `Poziom trudności rany: ${DIFFICULTY_LABELS[injuryConfiguration.difficultyIndex]}`,
       `Uwzględnione kary z ran: ${includedWoundPenaltyPercent}%`,
+      `Aktywne efekty testu: ${includedTestModifierPercent}% (${describeModifierSources(testModifierSources, "%")})`,
       `Poziom trudności po karach: ${DIFFICULTY_LABELS[difficultyIndexAfterPenalties]}`,
       `Ostateczny poziom trudności: ${DIFFICULTY_LABELS[finalDifficultyIndex]}`,
       `Próg sukcesu: ${successThreshold}`,

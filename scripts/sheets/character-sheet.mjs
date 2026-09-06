@@ -1,5 +1,5 @@
-import { rollAttribute } from "../rolls/attribute-roll.mjs";
-import { rollSkill } from "../rolls/skill-roll.mjs";
+import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
+import { SKILL_CONFIGURATION, rollSkill } from "../rolls/skill-roll.mjs";
 import {
   promptToCreateInjuryFromRoll,
   rollPainResistanceForInjury
@@ -36,6 +36,11 @@ import {
   resolveMinorJamClearing
 } from "../combat/weapon-jam.mjs";
 import { calculateArmorPenaltyPercent } from "../combat/armor.mjs";
+import {
+  escapeModifierText,
+  formatSignedModifier,
+  modifierIsActive
+} from "../effects/modifiers.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -121,6 +126,119 @@ function describeMeleeDamageProfile(damageByBuild) {
     .join(" | ");
 }
 
+function getDisplayedSkillName(actor, skillKey) {
+  const configuration = SKILL_CONFIGURATION[skillKey];
+  const skill = actor.system.skills?.[skillKey];
+  if (!configuration) return skillKey;
+  if (!configuration.usesCustomName) return configuration.label;
+  return String(skill?.name ?? "").trim() || configuration.label;
+}
+
+function getModifierScopeLabel(actor, scope) {
+  if (scope === "test.all") return "Wszystkie testy — zmiana procentowa PT";
+
+  const [scopeType, scopeKey] = String(scope).split(".");
+  if (scopeType === "attribute") {
+    return `Współczynnik: ${ATTRIBUTE_LABELS[scopeKey] ?? scopeKey}`;
+  }
+  if (scopeType === "skill") {
+    return `Umiejętność: ${getDisplayedSkillName(actor, scopeKey)}`;
+  }
+  return scope;
+}
+
+function prepareModifierScopeOptions(actor, selectedScope) {
+  const prepareOption = (scope, label) => {
+    const selected = scope === selectedScope ? " selected" : "";
+    return `<option value="${scope}"${selected}>${escapeModifierText(label)}</option>`;
+  };
+  const attributeOptions = Object.entries(ATTRIBUTE_LABELS)
+    .map(([key, label]) => prepareOption(`attribute.${key}`, label))
+    .join("");
+  const skillOptions = Object.keys(actor.system.skills)
+    .map((key) => prepareOption(`skill.${key}`, getDisplayedSkillName(actor, key)))
+    .join("");
+
+  return `
+    <optgroup label="Trudność testu">
+      ${prepareOption("test.all", "Wszystkie testy — wartość procentowa PT")}
+    </optgroup>
+    <optgroup label="Współczynniki — zmiana wartości">
+      ${attributeOptions}
+    </optgroup>
+    <optgroup label="Umiejętności — zmiana poziomu">
+      ${skillOptions}
+    </optgroup>
+  `;
+}
+
+async function promptForModifier(actor, existingModifier = null) {
+  const modifier = existingModifier ?? {
+    source: "",
+    scope: "test.all",
+    value: 0,
+    enabled: true,
+    expiresAt: ""
+  };
+  const formData = await foundry.applications.api.DialogV2.input({
+    window: { title: existingModifier ? "Edycja efektu" : "Nowy efekt" },
+    content: `
+      <div class="form-group">
+        <label for="neuroshima-modifier-source">Źródło efektu</label>
+        <input id="neuroshima-modifier-source" type="text" name="source"
+          value="${escapeModifierText(modifier.source)}" required>
+      </div>
+      <div class="form-group">
+        <label for="neuroshima-modifier-scope">Zakres</label>
+        <select id="neuroshima-modifier-scope" name="scope">
+          ${prepareModifierScopeOptions(actor, modifier.scope)}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="neuroshima-modifier-value">Wartość</label>
+        <input id="neuroshima-modifier-value" type="number" name="value"
+          value="${Number(modifier.value) || 0}" step="1">
+      </div>
+      <p><small>Dla Współczynnika i Umiejętności wartość dodatnia jest premią. Dla testów dodatnia wartość jest karą procentową, a ujemna ułatwieniem.</small></p>
+      <div class="form-group">
+        <label for="neuroshima-modifier-expires">Wygasa</label>
+        <input id="neuroshima-modifier-expires" type="datetime-local"
+          name="expiresAt" value="${escapeModifierText(modifier.expiresAt)}">
+        <small>Puste pole oznacza efekt stały.</small>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="enabled" ${modifier.enabled === false ? "" : "checked"}>
+          Efekt włączony
+        </label>
+      </div>
+    `,
+    ok: { label: "Zapisz", icon: "fas fa-check" },
+    rejectClose: false,
+    modal: true
+  });
+  if (!formData) return null;
+
+  const source = String(formData.source ?? "").trim();
+  if (!source) {
+    ui.notifications.warn("Wpisz źródło efektu.");
+    return null;
+  }
+
+  return {
+    id: modifier.id ?? foundry.utils.randomID(),
+    source,
+    scope: String(formData.scope),
+    value: Math.trunc(Number(formData.value) || 0),
+    enabled: [true, "true", "on"].includes(formData.enabled),
+    expiresAt: String(formData.expiresAt ?? "")
+  };
+}
+
+function getStoredModifiers(actor) {
+  return foundry.utils.deepClone(actor.toObject().system.activeModifiers ?? []);
+}
+
 // Actor zapisuje wyłącznie stabilny kod wybranego wpisu. Czytelne nazwy oraz
 // opisy pobieramy z indeksu Compendium, dzięki czemu aktualizacja katalogu nie
 // wymaga przepisywania danych wszystkich postaci w świecie.
@@ -196,6 +314,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       configureJamClearing: this.#onConfigureJamClearing,
       handleWeaponJam: this.#onHandleWeaponJam,
       saveActorName: this.#onSaveActorName,
+      createModifier: this.#onCreateModifier,
+      editModifier: this.#onEditModifier,
+      toggleModifier: this.#onToggleModifier,
+      deleteModifier: this.#onDeleteModifier,
 
       // Każda rana jest osobnym Itemem osadzonym w postaci.
       createInjury: this.#onCreateInjury,
@@ -332,6 +454,31 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.actor = this.actor;
     context.system = this.actor.system;
     context.combatStatus = prepareActorCombatStatus(this.actor);
+    context.modifierEntries = this.actor.system.activeModifiers.map((modifier) => {
+      const isActive = modifierIsActive(modifier);
+      const expirationTime = Date.parse(modifier.expiresAt);
+      return {
+        id: modifier.id,
+        source: modifier.source,
+        scopeLabel: getModifierScopeLabel(this.actor, modifier.scope),
+        valueLabel: formatSignedModifier(
+          modifier.value,
+          modifier.scope === "test.all" ? "%" : ""
+        ),
+        enabled: modifier.enabled,
+        isExpired: modifier.enabled && !isActive,
+        canToggle: !(modifier.enabled && !isActive),
+        statusLabel: !modifier.enabled
+          ? "wyłączony"
+          : (isActive ? "aktywny" : "wygasł"),
+        expiresLabel: modifier.expiresAt && !Number.isNaN(expirationTime)
+          ? new Intl.DateTimeFormat("pl-PL", {
+            dateStyle: "short",
+            timeStyle: "short"
+          }).format(expirationTime)
+          : "bezterminowo"
+      };
+    });
 
     const [
       originCatalog,
@@ -610,6 +757,59 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   static async #onRollSkill(event, target) {
     const skillKey = target.dataset.skill;
     await rollSkill(this.actor, skillKey);
+  }
+
+  static async #onCreateModifier() {
+    const modifier = await promptForModifier(this.actor);
+    if (!modifier) return;
+    await this.actor.update({
+      "system.activeModifiers": [...getStoredModifiers(this.actor), modifier]
+    });
+  }
+
+  static async #onEditModifier(event, target) {
+    const modifiers = getStoredModifiers(this.actor);
+    const modifierIndex = modifiers.findIndex(
+      (modifier) => modifier.id === target.dataset.modifierId
+    );
+    if (modifierIndex === -1) {
+      ui.notifications.warn("Nie znaleziono tego efektu.");
+      return;
+    }
+    const updatedModifier = await promptForModifier(
+      this.actor,
+      modifiers[modifierIndex]
+    );
+    if (!updatedModifier) return;
+    modifiers[modifierIndex] = updatedModifier;
+    await this.actor.update({ "system.activeModifiers": modifiers });
+  }
+
+  static async #onToggleModifier(event, target) {
+    const modifiers = getStoredModifiers(this.actor);
+    const modifier = modifiers.find(
+      (entry) => entry.id === target.dataset.modifierId
+    );
+    if (!modifier) return;
+    modifier.enabled = !modifier.enabled;
+    await this.actor.update({ "system.activeModifiers": modifiers });
+  }
+
+  static async #onDeleteModifier(event, target) {
+    const modifiers = getStoredModifiers(this.actor);
+    const modifier = modifiers.find(
+      (entry) => entry.id === target.dataset.modifierId
+    );
+    if (!modifier) return;
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: "Usuwanie efektu" },
+      content: `<p>Czy na pewno usunąć efekt <strong>${escapeModifierText(modifier.source)}</strong>?</p>`,
+      modal: true
+    });
+    if (!confirmed) return;
+    await this.actor.update({
+      "system.activeModifiers": modifiers.filter((entry) => entry.id !== modifier.id)
+    });
   }
 
   static async #onRollInjury() {

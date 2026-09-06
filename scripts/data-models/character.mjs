@@ -1,12 +1,26 @@
+import {
+  collectModifiersForScope,
+  sumModifierSources
+} from "../effects/modifiers.mjs";
+
 export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
-    const { NumberField, SchemaField, StringField } = foundry.data.fields;
+    const {
+      ArrayField,
+      BooleanField,
+      NumberField,
+      SchemaField,
+      StringField
+    } = foundry.data.fields;
 
     // Każdy z pięciu współczynników ma identyczną strukturę danych.
     // Funkcja pomocnicza chroni nas przed pięciokrotnym powtarzaniem definicji.
     const createAttributeSchema = () => new SchemaField({
       // "base" jest wartością wpisywaną przez użytkownika i zapisywaną w bazie świata.
       base: new NumberField({ required: true, nullable: false, integer: true, min: 1, max: 40, initial: 1 }),
+
+      // Pole odpowiada ręcznemu modyfikatorowi Współczynnika ze starej karty.
+      manualModifier: new NumberField({ required: true, nullable: false, integer: true, initial: 0 }),
 
       // "modifier" i "value" są wyliczane przy każdym przygotowaniu danych.
       // persisted: false oznacza, że Foundry nie zapisuje ich w bazie świata.
@@ -98,6 +112,17 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         })
       }),
 
+      // Wpis opisuje jeden mechaniczny efekt. Zakres określa, czy zmienia on
+      // Współczynnik, poziom Umiejętności, czy procentową trudność testów.
+      activeModifiers: new ArrayField(new SchemaField({
+        id: new StringField({ required: true, nullable: false, initial: "" }),
+        source: new StringField({ required: true, nullable: false, initial: "" }),
+        scope: new StringField({ required: true, nullable: false, initial: "test.all" }),
+        value: new NumberField({ required: true, nullable: false, integer: true, initial: 0 }),
+        enabled: new BooleanField({ required: true, nullable: false, initial: true }),
+        expiresAt: new StringField({ required: true, nullable: false, initial: "" })
+      }), { required: true, nullable: false, initial: [] }),
+
       // Zaczynamy od jednej niewielkiej grupy umiejętności przypisanych do Zręczności.
       // Kolejne grupy dodamy po sprawdzeniu tego modelu w działającym świecie.
       skills: new SchemaField({
@@ -173,13 +198,22 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
 
     // Wartość końcowa każdego współczynnika jest sumą wartości bazowej
     // oraz modyfikatora pochodzącego na przykład z efektów aktywnych.
-    for (const attribute of Object.values(this.attributes)) {
+    for (const [attributeKey, attribute] of Object.entries(this.attributes)) {
+      const activeModifier = sumModifierSources(collectModifiersForScope(
+        this.activeModifiers,
+        `attribute.${attributeKey}`
+      ));
+      attribute.modifier = attribute.manualModifier + activeModifier;
       attribute.value = attribute.base + attribute.modifier;
     }
 
     // Wartość końcową umiejętności przygotowujemy tak samo jak współczynnik.
     // Dzięki temu przyszłe efekty będą mogły czasowo podnosić albo obniżać poziom.
-    for (const skill of Object.values(this.skills)) {
+    for (const [skillKey, skill] of Object.entries(this.skills)) {
+      skill.modifier = sumModifierSources(collectModifiersForScope(
+        this.activeModifiers,
+        `skill.${skillKey}`
+      ));
       skill.value = skill.base + skill.modifier;
     }
   }

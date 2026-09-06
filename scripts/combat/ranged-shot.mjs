@@ -23,6 +23,15 @@ import {
   calculateArmorPenaltyPercent,
   selectArmorForHit
 } from "./armor.mjs";
+import {
+  calculateAttributeValue,
+  calculateSkillValue,
+  collectAttributeModifierSources,
+  collectSkillModifierSources,
+  collectTestModifierSources,
+  describeModifierSources,
+  sumModifierSources
+} from "../effects/modifiers.mjs";
 
 const SYSTEM_ID = "neuroshima";
 const SKILL_USAGE_FLAG = "combatSkillUsage";
@@ -53,7 +62,7 @@ function getActorCombatant(actor) {
 
 function prepareSkillOptions(actor) {
   return Object.entries(RANGED_SKILLS).map(([skillKey, skillName]) => {
-    const skillLevel = Math.max(0, actor.system.skills?.[skillKey]?.value ?? 0);
+    const skillLevel = Math.max(0, calculateSkillValue(actor, skillKey));
     return `<option value="${skillKey}">${skillName} (${skillLevel})</option>`;
   }).join("");
 }
@@ -103,7 +112,7 @@ export function calculateAvailableCombatSkillPoints(actor, skillUsage, selectedS
   // wcześniej używanych pul. Nie pozwalamy zrobić tego po wydaniu zbyt wielu
   // punktów, ponieważ wcześniejszych wyników kości nie można już cofnąć.
   for (const skillKey of usedSkillKeys) {
-    const skillLevel = Math.max(0, actor.system.skills?.[skillKey]?.value ?? 0);
+    const skillLevel = Math.max(0, calculateSkillValue(actor, skillKey));
     const revisedLimit = Math.floor(skillLevel / divisor);
     if ((skillUsage.spentBySkill[skillKey] ?? 0) > revisedLimit) {
       return {
@@ -114,10 +123,7 @@ export function calculateAvailableCombatSkillPoints(actor, skillUsage, selectedS
     }
   }
 
-  const selectedSkillLevel = Math.max(
-    0,
-    actor.system.skills?.[selectedSkillKey]?.value ?? 0
-  );
+  const selectedSkillLevel = Math.max(0, calculateSkillValue(actor, selectedSkillKey));
   const selectedSkillLimit = Math.floor(selectedSkillLevel / divisor);
   const alreadySpent = skillUsage.spentBySkill[selectedSkillKey] ?? 0;
 
@@ -224,6 +230,8 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
 
   const woundPenalty = calculateWoundPenaltyPercent(actor);
   const armorPenalty = calculateArmorPenaltyPercent(actor, "zrecznosc");
+  const testModifierSources = collectTestModifierSources(actor);
+  const testModifierPercent = sumModifierSources(testModifierSources);
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Strzał: ${actor.name} → ${target.name}` },
     content: `
@@ -245,6 +253,10 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
         <label><input type="checkbox" name="includeArmor" checked> Uwzględnij pancerz (${armorPenalty}%)</label>
       </div>
       <div class="form-group">
+        <label><input type="checkbox" name="includeEffects" checked> Uwzględnij aktywne efekty (${testModifierPercent}%)</label>
+        <small>${describeModifierSources(testModifierSources, "%")}</small>
+      </div>
+      <div class="form-group">
         <label for="neuroshima-shot-modifier">Odległość, ruch, osłona i inne warunki</label>
         <input id="neuroshima-shot-modifier" type="number" name="customModifier" value="0" step="1"> %
       </div>
@@ -264,6 +276,12 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
     skillKey: String(formData.skillKey),
     woundPenalty: checkboxIsSelected(formData.includeWounds) ? woundPenalty : 0,
     armorPenalty: checkboxIsSelected(formData.includeArmor) ? armorPenalty : 0,
+    effectModifier: checkboxIsSelected(formData.includeEffects)
+      ? testModifierPercent
+      : 0,
+    testModifierSources: checkboxIsSelected(formData.includeEffects)
+      ? testModifierSources
+      : [],
     customModifier: Number(formData.customModifier) || 0
   };
 }
@@ -556,7 +574,9 @@ export async function resolveSingleShot(actor) {
   const { weapon, skillKey } = configuration;
   const aimingBonusDice = Math.max(0, Math.min(action.aimingBonusDice, 2));
   const numberOfDice = 1 + aimingBonusDice;
-  const skillLevel = Math.max(0, actor.system.skills?.[skillKey]?.value ?? 0);
+  const skillLevel = Math.max(0, calculateSkillValue(actor, skillKey));
+  const attributeModifierSources = collectAttributeModifierSources(actor, "zrecznosc");
+  const skillModifierSources = collectSkillModifierSources(actor, skillKey);
   const skillUsage = getCurrentSkillUsage(combatant, game.combat.round);
   const skillAvailability = calculateAvailableCombatSkillPoints(
     actor,
@@ -584,10 +604,11 @@ export async function resolveSingleShot(actor) {
 
   const totalDifficultyPercentage = configuration.woundPenalty
     + configuration.armorPenalty
+    + configuration.effectModifier
     + configuration.customModifier
     + weapon.system.accuracyModifier;
   const result = calculateRangedShotResult({
-    dexterity: actor.system.attributes.zrecznosc.value,
+    dexterity: calculateAttributeValue(actor, "zrecznosc"),
     naturalResults,
     difficultyPercentage: totalDifficultyPercentage,
     skillLevel,
@@ -649,7 +670,11 @@ export async function resolveSingleShot(actor) {
       `Broń: ${foundry.utils.escapeHTML(weapon.name)}`,
       `Celowanie: ${aimingBonusDice > 0 ? `+${aimingBonusDice}k20` : "brak"}`,
       `Umiejętność: ${RANGED_SKILLS[skillKey]} (${skillLevel}), użyto ${totalSpentSkillPoints}`,
-      `Kary i modyfikatory: ${totalDifficultyPercentage}%`,
+      `Modyfikatory Zręczności: ${describeModifierSources(attributeModifierSources)}`,
+      `Modyfikatory Umiejętności: ${describeModifierSources(skillModifierSources)}`,
+      `Kary i modyfikatory: rany ${configuration.woundPenalty}%, pancerz ${configuration.armorPenalty}%, efekty ${configuration.effectModifier}%, warunki ${configuration.customModifier}%, broń ${weapon.system.accuracyModifier}%`,
+      `Źródła efektów testu: ${describeModifierSources(configuration.testModifierSources, "%")}`,
+      `Suma kar i modyfikatorów: ${totalDifficultyPercentage}%`,
       `Ostateczny PT: ${DIFFICULTY_LABELS[result.finalDifficultyIndex]}`,
       `Próg sukcesu: ${result.successThreshold}`,
       `Kości: ${diceDescription}`,
