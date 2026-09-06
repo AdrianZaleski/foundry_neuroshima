@@ -284,3 +284,17 @@
 - Karta choroby oraz zakładka Zdrowie pobierają listę konkretnych leków z Compendium. Karta leku pozwala wybrać leczoną chorobę po nazwie.
 - Trzy leki ogólne nie są związane z żadną konkretną chorobą. Jest to prawidłowy stan danych, a nie błąd importu.
 - Użycie leku na karcie postaci zmniejsza liczbę dawek o jeden, lecz opisane działanie nadal rozstrzyga gracz lub MG.
+
+## Plan pełnej implementacji
+
+- Aktualny audyt braków, zakres docelowy i kolejność prac są zapisane w pliku
+  `docs/plan-pelnej-implementacji.md`.
+- Dwukierunkowa nawigacja między bronią i amunicją w Compendiach została
+  zrealizowana. Karty uwzględniają również pasujące Itemy należące do Actora.
+- Relację wyznaczamy przez zgodność `weapon.system.ammunitionCode` z
+  `ammunition.system.ammunitionSymbol`.
+- List kompatybilnych wpisów nie zapisujemy w katalogowych plikach JSON.
+  Generujemy je z aktualnych indeksów Compendiów, aby nie duplikować danych
+  i nie tworzyć nieaktualnych odnośników po synchronizacji.
+- Następnym fundamentem będzie wspólny mechanizm trwałych i czasowych efektów
+  oraz modyfikatorów, zanim podłączymy kolejne warianty strzelania.

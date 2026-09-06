@@ -4,6 +4,10 @@ import {
   damageOptions,
   describeAttackTypes
 } from "../catalogs/combat-reference.mjs";
+import {
+  openRelatedWeaponOrAmmunition,
+  prepareRelationsForWeapon
+} from "../compendia/weapon-ammunition-relations.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
@@ -12,6 +16,9 @@ export class NeuroshimaWeaponSheet extends HandlebarsApplicationMixin(ItemSheetV
   // Karta zapisuje zmienione dane automatycznie, tak samo jak karta ekwipunku.
   static DEFAULT_OPTIONS = {
     classes: ["neuroshima", "weapon-sheet"],
+    actions: {
+      openRelatedItem: this.#onOpenRelatedItem
+    },
     position: {
       width: 540,
       height: 650
@@ -28,6 +35,10 @@ export class NeuroshimaWeaponSheet extends HandlebarsApplicationMixin(ItemSheetV
     }
   };
 
+  static async #onOpenRelatedItem(event, target) {
+    await openRelatedWeaponOrAmmunition(this, target);
+  }
+
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
 
@@ -37,6 +48,7 @@ export class NeuroshimaWeaponSheet extends HandlebarsApplicationMixin(ItemSheetV
     context.ammunitionCompatibilityOptions = ammunitionCompatibilityOptions;
     context.ammunitionCompatibilityListId = `weapon-ammunition-${this.item.id}`;
     context.attackTypeDescription = describeAttackTypes(this.item.system.attackTypes);
+    context.ammunitionRelations = await prepareRelationsForWeapon(this.item);
     context.jamStateOptions = {
       ready: "Sprawna",
       minor: "Lekkie zacięcie",

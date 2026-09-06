@@ -70,6 +70,43 @@
     <small>Lista podpowiada znane rodziny, ale pozwala także wpisać nową.</small>
   </div>
 
+  <h3>Broń wykorzystująca tę amunicję</h3>
+  {{#unless weaponRelations.ammunitionSymbol}}
+    <p>Ustaw rodzinę kompatybilności, aby zobaczyć powiązane bronie.</p>
+  {{else}}
+    {{#if weaponRelations.actorItems.length}}
+      <h4>Broń tej postaci</h4>
+      <ul>
+        {{#each weaponRelations.actorItems}}
+          <li>
+            <button type="button" data-action="openRelatedItem"
+              data-related-source="{{this.source}}" data-related-item-id="{{this.id}}">
+              {{this.name}}
+            </button>
+            — {{this.details}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    <h4>W Kompendium</h4>
+    {{#if weaponRelations.catalogItems.length}}
+      <ul>
+        {{#each weaponRelations.catalogItems}}
+          <li>
+            <button type="button" data-action="openRelatedItem"
+              data-related-source="{{this.source}}" data-related-pack-id="{{this.packId}}"
+              data-related-item-id="{{this.id}}">
+              {{this.name}}
+            </button>
+            — {{this.details}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>{{#if weaponRelations.compendiumAvailable}}Brak broni dla tej rodziny.{{else}}Compendium broni nie jest dostępne.{{/if}}</p>
+    {{/if}}
+  {{/unless}}
+
   <div class="form-group">
     <label>
       Dostępność w procentach

@@ -32,6 +32,43 @@
   </datalist>
   <small>Broń przyjmie każdy wariant amunicji należący do tej rodziny.</small>
 
+  <h3>Kompatybilna amunicja</h3>
+  {{#unless ammunitionRelations.ammunitionSymbol}}
+    <p>Ustaw rodzinę amunicji, aby zobaczyć powiązane wpisy.</p>
+  {{else}}
+    {{#if ammunitionRelations.actorItems.length}}
+      <h4>Zapasy tej postaci</h4>
+      <ul>
+        {{#each ammunitionRelations.actorItems}}
+          <li>
+            <button type="button" data-action="openRelatedItem"
+              data-related-source="{{this.source}}" data-related-item-id="{{this.id}}">
+              {{this.name}}
+            </button>
+            — {{this.details}}
+          </li>
+        {{/each}}
+      </ul>
+    {{/if}}
+    <h4>W Kompendium</h4>
+    {{#if ammunitionRelations.catalogItems.length}}
+      <ul>
+        {{#each ammunitionRelations.catalogItems}}
+          <li>
+            <button type="button" data-action="openRelatedItem"
+              data-related-source="{{this.source}}" data-related-pack-id="{{this.packId}}"
+              data-related-item-id="{{this.id}}">
+              {{this.name}}
+            </button>
+            — {{this.details}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>{{#if ammunitionRelations.compendiumAvailable}}Brak wariantów tej rodziny.{{else}}Compendium amunicji nie jest dostępne.{{/if}}</p>
+    {{/if}}
+  {{/unless}}
+
   <h3>Magazynek</h3>
 
   <label>
