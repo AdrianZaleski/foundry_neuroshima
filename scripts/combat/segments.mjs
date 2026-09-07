@@ -120,6 +120,11 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
         && consumesCurrentSegment
         && action.effectCode === "rangedShot"
         && !action.aimingConfiguration,
+      canCancelUnconfiguredShot: isActiveTurn
+        && consumesCurrentSegment
+        && action.effectCode === "rangedShot"
+        && !action.aimingConfiguration
+        && !action.resolved,
       canConfigureJamClearing: isActiveTurn
         && consumesCurrentSegment
         && action.effectCode === "clearMinorJam"
@@ -281,6 +286,16 @@ export async function markCurrentSegmentActionResolved(actor, resolution) {
   });
 }
 
+export async function cancelCurrentSegmentActionDeclaration(actor) {
+  const activeParticipant = await requireActiveCombatant(actor);
+  if (!activeParticipant) return false;
+  await activeParticipant.combatant.unsetFlag(
+    SYSTEM_ID,
+    COMBATANT_ACTION_FLAG
+  );
+  return true;
+}
+
 export async function configureCurrentAiming(actor, aimingConfiguration) {
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
@@ -369,6 +384,27 @@ export async function selectSegmentAction(actor) {
     formData.customName,
     formData.duration
   );
+  if (selectedAction.effectCode === "rangedShot") {
+    const usableWeapons = actor.items.filter((item) => (
+      item.type === "weapon"
+      && item.system.weaponClass !== "LAUNCHER"
+      && item.system.weaponClass !== "PROJECTILE"
+      && item.system.currentAmmunition > 0
+      && item.system.jamState === "ready"
+    ));
+    if (usableWeapons.length === 0) {
+      ui.notifications.warn(
+        "Nie można zadeklarować strzału: postać nie ma sprawnej, załadowanej broni palnej."
+      );
+      return false;
+    }
+    if (game.user.targets.size !== 1) {
+      ui.notifications.warn(
+        "Nie można zadeklarować strzału: wskaż dokładnie jeden token jako cel."
+      );
+      return false;
+    }
+  }
   if (selectedAction.effectCode === "clearMinorJam") {
     const hasMinorJam = actor.items.some((item) => (
       item.type === "weapon" && item.system.jamState === "minor"

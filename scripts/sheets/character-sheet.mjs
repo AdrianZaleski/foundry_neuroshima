@@ -19,6 +19,7 @@ import {
 } from "../catalogs/health-reference.mjs";
 import { rollNeuroshimaInitiative } from "../combat/initiative.mjs";
 import {
+  cancelCurrentSegmentActionDeclaration,
   finishSegmentAction,
   interruptSegmentAction,
   passSegment,
@@ -409,6 +410,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       passSegment: this.#onPassSegment,
       finishSegmentAction: this.#onFinishSegmentAction,
       interruptSegmentAction: this.#onInterruptSegmentAction,
+      cancelUnconfiguredShot: this.#onCancelUnconfiguredShot,
       configureAiming: this.#onConfigureAiming,
       resolveSingleShot: this.#onResolveSingleShot,
       configureJamClearing: this.#onConfigureJamClearing,
@@ -976,7 +978,18 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     if (declared) {
       let combatStatus = prepareActorCombatStatus(this.actor);
       if (combatStatus.action?.canConfigureAiming) {
-        await configureAiming(this.actor);
+        const configured = await configureAiming(this.actor);
+        if (!configured) {
+          // Broń albo cel mogły zniknąć pomiędzy zatwierdzeniem deklaracji a
+          // wyborem konfiguracji. Cofamy wtedy deklarację, aby segment nie
+          // został zajęty akcją, której nie da się rozstrzygnąć.
+          await cancelCurrentSegmentActionDeclaration(this.actor);
+          ui.notifications.warn(
+            "Strzał nie został zadeklarowany — wybór broni i celu nie został zakończony."
+          );
+          this.render();
+          return;
+        }
         combatStatus = prepareActorCombatStatus(this.actor);
       }
       if (combatStatus.action?.canConfigureJamClearing) {
@@ -1015,6 +1028,14 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   static async #onInterruptSegmentAction() {
     await interruptSegmentAction(this.actor);
+    this.render();
+  }
+
+  static async #onCancelUnconfiguredShot() {
+    const cancelled = await cancelCurrentSegmentActionDeclaration(this.actor);
+    if (cancelled) {
+      ui.notifications.info("Cofnięto niekompletną deklarację strzału.");
+    }
     this.render();
   }
 

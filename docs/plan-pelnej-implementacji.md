@@ -107,7 +107,8 @@ opisowy do czasu wdrożenia wymaganej mechaniki.
 
 Do dodania:
 
-- automatyczna kara za dystans według klasy broni z zakładki `WEAPON`,
+- automatyczna kara za dystans według klasy broni z zakładki `WEAPON` —
+  zrealizowane dla standardowego strzału pojedynczego,
 - modyfikatory za ruch strzelca i celu, postawę, widoczność, rozmiar celu
   oraz osłonę,
 - kontrola, czy broń rzeczywiście obsługuje wybrany rodzaj ataku,
@@ -306,6 +307,7 @@ wydzielić z niej jednoznaczne rekordy i powiązać je z `MISC_CAT`.
 
 ## Najbliższy krok
 
-Najbliższym zadaniem będzie podłączenie klas broni i automatycznych kar za
-dystans z zakładki `WEAPON`. Skorzysta ono z gotowego mechanizmu procentowych
-modyfikatorów i pokaże dystans jako osobne źródło trudności strzału.
+Najbliższym zadaniem będzie zastąpienie wspólnego pola „inne warunki” osobnymi
+ustawieniami ruchu strzelca i celu, widoczności, osłony oraz wybranej lokacji.
+Wartości pochodzą z tabeli utrudnień strzału i będą pokazane jako niezależne
+źródła modyfikatora.

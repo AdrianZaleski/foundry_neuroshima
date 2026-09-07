@@ -30,6 +30,9 @@
           {{#if combatStatus.action.canConfigureAiming}}
             <button type="button" data-action="configureAiming">Wybierz broń i cel strzału</button>
           {{/if}}
+          {{#if combatStatus.action.canCancelUnconfiguredShot}}
+            <button type="button" data-action="cancelUnconfiguredShot">Cofnij deklarację strzału</button>
+          {{/if}}
           {{#if combatStatus.action.canConfigureJamClearing}}
             <button type="button" data-action="configureJamClearing">Wybierz broń z lekkim zacięciem</button>
           {{/if}}

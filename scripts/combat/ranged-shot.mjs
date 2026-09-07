@@ -32,6 +32,10 @@ import {
   describeModifierSources,
   sumModifierSources
 } from "../effects/modifiers.mjs";
+import {
+  calculateRangeModifier,
+  measureTokenDistanceMeters
+} from "./range.mjs";
 
 const SYSTEM_ID = "neuroshima";
 const SKILL_USAGE_FLAG = "combatSkillUsage";
@@ -60,10 +64,23 @@ function getActorCombatant(actor) {
   return game.combat?.getCombatantsByActor(actor)[0] ?? null;
 }
 
-function prepareSkillOptions(actor) {
+function getDefaultRangedSkillKey(weapon) {
+  const weaponClass = weapon?.system?.weaponClass;
+  if (["PISTOL", "REVOLVER"].includes(weaponClass)) return "pistolety";
+  if (["MPISTOL", "MACHINEGUN"].includes(weaponClass)) return "bronMaszynowa";
+  if (weaponClass === "BLACKPOWDER") {
+    return weapon.name.toLocaleLowerCase("pl").includes("pistolet")
+      ? "pistolety"
+      : "karabiny";
+  }
+  return "karabiny";
+}
+
+function prepareSkillOptions(actor, selectedSkillKey = "") {
   return Object.entries(RANGED_SKILLS).map(([skillKey, skillName]) => {
     const skillLevel = Math.max(0, calculateSkillValue(actor, skillKey));
-    return `<option value="${skillKey}">${skillName} (${skillLevel})</option>`;
+    const selected = skillKey === selectedSkillKey ? " selected" : "";
+    return `<option value="${skillKey}"${selected}>${skillName} (${skillLevel})</option>`;
   }).join("");
 }
 
@@ -221,7 +238,7 @@ export function classifyJamSeverity(jamRollResult) {
   return "critical";
 }
 
-async function selectShotConfiguration(actor, target, shotPreparation) {
+async function selectShotConfiguration(actor, target, shotPreparation, sourceToken) {
   const weapon = actor.items.get(String(shotPreparation?.weaponId ?? ""));
   if (!weapon || !getUsableFirearms(actor).includes(weapon)) {
     ui.notifications.warn("Wybrana broń nie jest już sprawna albo nie ma amunicji.");
@@ -232,6 +249,15 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
   const armorPenalty = calculateArmorPenaltyPercent(actor, "zrecznosc");
   const globalTestModifierSources = collectTestModifierSources(actor);
   const globalTestModifierPercent = sumModifierSources(globalTestModifierSources);
+  const measuredDistance = measureTokenDistanceMeters(sourceToken, target);
+  const measuredRange = measuredDistance === null
+    ? null
+    : calculateRangeModifier(weapon, measuredDistance);
+  const measuredRangeDescription = measuredRange?.supported
+    ? measuredRange.inRange
+      ? `${measuredDistance} m; ${measuredRange.rangeLabel}; do ${measuredRange.bandMaximum} m: ${measuredRange.modifierPercent >= 0 ? "+" : ""}${measuredRange.modifierPercent}%`
+      : `${measuredDistance} m; poza zasięgiem standardowego strzału (maks. ${measuredRange.maximumDistance} m)`
+    : "brak automatycznego pomiaru lub tabeli dla tej klasy";
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Strzał: ${actor.name} → ${target.name}` },
     content: `
@@ -242,10 +268,20 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
       <div class="form-group">
         <label for="neuroshima-shot-skill">Umiejętność</label>
         <select id="neuroshima-shot-skill" name="skillKey">
-          ${prepareSkillOptions(actor)}
+          ${prepareSkillOptions(actor, getDefaultRangedSkillKey(weapon))}
         </select>
       </div>
       <hr>
+      <div class="form-group">
+        <label for="neuroshima-shot-distance">Odległość do celu</label>
+        <input id="neuroshima-shot-distance" type="number" name="distanceMeters"
+          value="${measuredDistance ?? ""}" min="0" step="0.1" placeholder="metry">
+        <span>m</span>
+        <small>Automatyczny wynik: ${measuredRangeDescription}</small>
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" name="includeRange" checked> Uwzględnij modyfikator zasięgu</label>
+      </div>
       <div class="form-group">
         <label><input type="checkbox" name="includeWounds" checked> Uwzględnij rany (${woundPenalty}%)</label>
       </div>
@@ -257,7 +293,7 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
         <small>${describeModifierSources(globalTestModifierSources, "%")}</small>
       </div>
       <div class="form-group">
-        <label for="neuroshima-shot-modifier">Odległość, ruch, osłona i inne warunki</label>
+        <label for="neuroshima-shot-modifier">Ruch, osłona i inne warunki</label>
         <input id="neuroshima-shot-modifier" type="number" name="customModifier" value="0" step="1"> %
       </div>
     `,
@@ -272,6 +308,19 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
   if (!formData) return null;
 
   const skillKey = String(formData.skillKey);
+  const distanceText = String(formData.distanceMeters ?? "").trim();
+  const distanceMeters = distanceText ? Number(distanceText) : Number.NaN;
+  const includeRange = checkboxIsSelected(formData.includeRange);
+  const rangeResult = Number.isFinite(distanceMeters)
+    ? calculateRangeModifier(weapon, distanceMeters)
+    : null;
+  if (includeRange && (!rangeResult?.supported || !rangeResult.inRange)) {
+    const message = rangeResult?.supported
+      ? `Cel znajduje się poza zasięgiem standardowego strzału (maks. ${rangeResult.maximumDistance} m).`
+      : "Nie można ustalić kary zasięgu. Wpisz odległość w metrach albo wyłącz modyfikator zasięgu.";
+    ui.notifications.warn(message);
+    return null;
+  }
   const testModifierSources = collectTestModifierSources(actor, {
     attributeKey: "zrecznosc",
     skillKey
@@ -289,6 +338,10 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
     testModifierSources: checkboxIsSelected(formData.includeEffects)
       ? testModifierSources
       : [],
+    distanceMeters: Number.isFinite(distanceMeters) ? distanceMeters : null,
+    rangeResult,
+    rangeModifier: includeRange ? rangeResult.modifierPercent : 0,
+    includeRange,
     customModifier: Number(formData.customModifier) || 0
   };
 }
@@ -574,7 +627,8 @@ export async function resolveSingleShot(actor) {
   const configuration = await selectShotConfiguration(
     actor,
     target,
-    shotPreparation
+    shotPreparation,
+    combatant.token?.object ?? actor.getActiveTokens?.()[0] ?? null
   );
   if (!configuration) return false;
 
@@ -612,6 +666,7 @@ export async function resolveSingleShot(actor) {
   const totalDifficultyPercentage = configuration.woundPenalty
     + configuration.armorPenalty
     + configuration.effectModifier
+    + configuration.rangeModifier
     + configuration.customModifier
     + weapon.system.accuracyModifier;
   const result = calculateRangedShotResult({
@@ -679,7 +734,10 @@ export async function resolveSingleShot(actor) {
       `Umiejętność: ${RANGED_SKILLS[skillKey]} (${skillLevel}), użyto ${totalSpentSkillPoints}`,
       `Modyfikatory Zręczności: ${describeModifierSources(attributeModifierSources)}`,
       `Modyfikatory Umiejętności: ${describeModifierSources(skillModifierSources)}`,
-      `Kary i modyfikatory: rany ${configuration.woundPenalty}%, pancerz ${configuration.armorPenalty}%, efekty ${configuration.effectModifier}%, warunki ${configuration.customModifier}%, broń ${weapon.system.accuracyModifier}%`,
+      configuration.distanceMeters === null
+        ? "Dystans: nieustalony"
+        : `Dystans: ${configuration.distanceMeters} m; ${configuration.rangeResult?.rangeLabel ?? "tabela pominięta"}${configuration.rangeResult?.bandMaximum ? `; przedział do ${configuration.rangeResult.bandMaximum} m` : ""}`,
+      `Kary i modyfikatory: rany ${configuration.woundPenalty}%, pancerz ${configuration.armorPenalty}%, efekty ${configuration.effectModifier}%, zasięg ${configuration.rangeModifier}%, warunki ${configuration.customModifier}%, broń ${weapon.system.accuracyModifier}%`,
       `Źródła efektów testu: ${describeModifierSources(configuration.testModifierSources, "%")}`,
       `Suma kar i modyfikatorów: ${totalDifficultyPercentage}%`,
       `Ostateczny PT: ${DIFFICULTY_LABELS[result.finalDifficultyIndex]}`,

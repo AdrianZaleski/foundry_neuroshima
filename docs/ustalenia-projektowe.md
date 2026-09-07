@@ -166,8 +166,27 @@
 - Niezależnie od liczby kości do trafienia wystarczy jeden sukces.
 - Przerwanie akcji oznacza brak strzału i nie zużywa amunicji. Zakończenie jej wcześniej uruchamia strzał z liczbą kości odpowiadającą liczbie faktycznie wykorzystanych segmentów.
 - Punkty Umiejętności rozdziela się po rzucie pomiędzy dowolne kości użyte w teście. Suma wydanych punktów nie może przekroczyć dostępnej puli rundy.
-- Strzelec wybiera broń, odpowiednią Umiejętność oraz dokładnie jeden token wskazany jako cel.
-- Test jest oparty na Zręczności i rozpoczyna się na PT Przeciętnym. Uwzględnia kary z ran, pancerza strzelca, celność broni i ręcznie wpisane warunki takie jak odległość, ruch oraz osłona.
+- Strzelec wybiera broń oraz dokładnie jeden token wskazany jako cel. System
+  proponuje Umiejętność wynikającą z klasy broni, ale pozwala ją zmienić dla
+  nietypowych egzemplarzy.
+- Deklaracja strzału jest odrzucana przed zajęciem segmentu, jeśli nie wskazano
+  dokładnie jednego celu albo postać nie ma sprawnej i załadowanej broni.
+  Anulowanie okna wyboru broni również cofa deklarację zamiast pozostawiać
+  nierozstrzygalną akcję.
+- Niekompletną deklarację strzału zapisaną wcześniej w trwającej walce można
+  cofnąć z karty postaci bez restartowania walki.
+- Test jest oparty na Zręczności i rozpoczyna się na PT Przeciętnym. Uwzględnia
+  kary z ran, pancerza strzelca, celność broni, automatyczną karę za dystans
+  oraz ręcznie wpisane warunki takie jak ruch i osłona.
+- Dystans jest mierzony między tokenem strzelca i celu dopiero w chwili
+  rozstrzygania strzału. Można poprawić go ręcznie, jeżeli scena używa
+  niestandardowej skali.
+- Standardowy strzał korzysta z tabel `P`, `PM`, `K`, `S` i `ŚR` z arkusza
+  `WEAPON`. Klasa broni oraz zasięg konkretnego egzemplarza wyznaczają
+  maksymalny dozwolony dystans. Dalszy cel blokuje rozstrzygnięcie, chyba że MG
+  świadomie wyłączy modyfikator zasięgu.
+- Śrutówka otrzymuje premię `-30%` do 10 m, nie ma modyfikatora do 20 m oraz
+  karę `+30%` do 30 m.
 - Suwak Umiejętności nie działa. Punkty Umiejętności można wydać po zobaczeniu naturalnego wyniku kości.
 - Pula punktów Umiejętności jest wspólna dla całej rundy. Przy użyciu dwóch różnych Umiejętności każda ma połowę wartości, a przy trzech każda ma jedną trzecią wartości, z zaokrągleniem w dół.
 - Naturalna `20` jest automatyczną porażką kości i nie można jej naprawić punktami Umiejętności.
