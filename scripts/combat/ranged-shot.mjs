@@ -230,8 +230,8 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
 
   const woundPenalty = calculateWoundPenaltyPercent(actor);
   const armorPenalty = calculateArmorPenaltyPercent(actor, "zrecznosc");
-  const testModifierSources = collectTestModifierSources(actor);
-  const testModifierPercent = sumModifierSources(testModifierSources);
+  const globalTestModifierSources = collectTestModifierSources(actor);
+  const globalTestModifierPercent = sumModifierSources(globalTestModifierSources);
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Strzał: ${actor.name} → ${target.name}` },
     content: `
@@ -253,8 +253,8 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
         <label><input type="checkbox" name="includeArmor" checked> Uwzględnij pancerz (${armorPenalty}%)</label>
       </div>
       <div class="form-group">
-        <label><input type="checkbox" name="includeEffects" checked> Uwzględnij aktywne efekty (${testModifierPercent}%)</label>
-        <small>${describeModifierSources(testModifierSources, "%")}</small>
+        <label><input type="checkbox" name="includeEffects" checked> Uwzględnij aktywne efekty (globalne ${globalTestModifierPercent}%; pełna wartość zależy od Umiejętności)</label>
+        <small>${describeModifierSources(globalTestModifierSources, "%")}</small>
       </div>
       <div class="form-group">
         <label for="neuroshima-shot-modifier">Odległość, ruch, osłona i inne warunki</label>
@@ -271,9 +271,16 @@ async function selectShotConfiguration(actor, target, shotPreparation) {
 
   if (!formData) return null;
 
+  const skillKey = String(formData.skillKey);
+  const testModifierSources = collectTestModifierSources(actor, {
+    attributeKey: "zrecznosc",
+    skillKey
+  });
+  const testModifierPercent = sumModifierSources(testModifierSources);
+
   return {
     weapon,
-    skillKey: String(formData.skillKey),
+    skillKey,
     woundPenalty: checkboxIsSelected(formData.includeWounds) ? woundPenalty : 0,
     armorPenalty: checkboxIsSelected(formData.includeArmor) ? armorPenalty : 0,
     effectModifier: checkboxIsSelected(formData.includeEffects)

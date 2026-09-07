@@ -37,10 +37,18 @@ import {
 } from "../combat/weapon-jam.mjs";
 import { calculateArmorPenaltyPercent } from "../combat/armor.mjs";
 import {
+  calculateAttributeValue,
+  collectAutomaticModifierSources,
   escapeModifierText,
   formatSignedModifier,
   modifierIsActive
 } from "../effects/modifiers.mjs";
+import {
+  convertEffectValue,
+  getEffectAutomationDefinition,
+  parseEffectCodes,
+  prepareDiseaseStageModifiers
+} from "../catalogs/effect-definitions.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -137,14 +145,33 @@ function getDisplayedSkillName(actor, skillKey) {
 function getModifierScopeLabel(actor, scope) {
   if (scope === "test.all") return "Wszystkie testy — zmiana procentowa PT";
 
-  const [scopeType, scopeKey] = String(scope).split(".");
+  const [scopeType, scopeSubtype, scopeKey] = String(scope).split(".");
   if (scopeType === "attribute") {
-    return `Współczynnik: ${ATTRIBUTE_LABELS[scopeKey] ?? scopeKey}`;
+    return `Współczynnik: ${ATTRIBUTE_LABELS[scopeSubtype] ?? scopeSubtype}`;
   }
   if (scopeType === "skill") {
-    return `Umiejętność: ${getDisplayedSkillName(actor, scopeKey)}`;
+    return `Poziom Umiejętności: ${getDisplayedSkillName(actor, scopeSubtype)}`;
+  }
+  if (scopeType === "test" && scopeSubtype === "skill") {
+    return `Testy Umiejętności: ${getDisplayedSkillName(actor, scopeKey)}`;
+  }
+  if (scopeType === "test" && scopeSubtype === "attribute") {
+    return `Testy Współczynnika: ${ATTRIBUTE_LABELS[scopeKey] ?? scopeKey}`;
   }
   return scope;
+}
+
+function describeDiseaseModifier(actor, modifier) {
+  const [scopeType, scopeSubtype, scopeKey] = modifier.scope.split(".");
+  const note = modifier.note ? ` (${modifier.note})` : "";
+  if (scopeType === "attribute") {
+    return `${ATTRIBUTE_LABELS[scopeSubtype] ?? scopeSubtype} ${formatSignedModifier(modifier.value)}${note}`;
+  }
+  if (scopeType === "test" && scopeSubtype === "skill") {
+    const changeType = modifier.value >= 0 ? "kara" : "premia";
+    return `${getDisplayedSkillName(actor, scopeKey)}: ${changeType} ${Math.abs(modifier.value)}%${note}`;
+  }
+  return `${getModifierScopeLabel(actor, modifier.scope)} ${formatSignedModifier(modifier.value)}${note}`;
 }
 
 function prepareModifierScopeOptions(actor, selectedScope) {
@@ -169,7 +196,80 @@ function prepareModifierScopeOptions(actor, selectedScope) {
     <optgroup label="Umiejętności — zmiana poziomu">
       ${skillOptions}
     </optgroup>
+    <optgroup label="Testy Umiejętności — zmiana procentowa PT">
+      ${Object.keys(actor.system.skills)
+        .map((key) => prepareOption(
+          `test.skill.${key}`,
+          getDisplayedSkillName(actor, key)
+        ))
+        .join("")}
+    </optgroup>
   `;
+}
+
+async function prepareAutomatedEffectCatalog() {
+  const compendium = game.packs.get("world.neuroshima-effects");
+  if (!compendium) return [];
+  await compendium.getIndex({ fields: ["system.sourceCode", "system.description"] });
+  return [...compendium.index.values()]
+    .map((entry) => ({
+      id: entry.id ?? entry._id,
+      name: entry.name,
+      sourceCode: entry.system?.sourceCode ?? "",
+      description: entry.system?.description ?? "",
+      automation: getEffectAutomationDefinition(entry.system?.sourceCode)
+    }))
+    .filter((entry) => entry.automation)
+    .sort((left, right) => left.name.localeCompare(right.name, "pl"));
+}
+
+async function promptForCatalogModifier(actor) {
+  const definitions = await prepareAutomatedEffectCatalog();
+  if (!definitions.length) {
+    ui.notifications.warn(
+      "Kompendium efektów nie jest jeszcze dostępne. Po dodaniu nowego typu Item uruchom ponownie Foundry."
+    );
+    return null;
+  }
+  const definitionOptions = definitions.map((definition) => (
+    `<option value="${definition.id}">${escapeModifierText(definition.name)} — ${definition.sourceCode}</option>`
+  )).join("");
+  const formData = await foundry.applications.api.DialogV2.input({
+    window: { title: "Efekt z Kompendium" },
+    content: `
+      <div class="form-group">
+        <label for="neuroshima-effect-definition">Definicja</label>
+        <select id="neuroshima-effect-definition" name="definitionId">${definitionOptions}</select>
+      </div>
+      <div class="form-group">
+        <label for="neuroshima-effect-source-value">Wartość kodu</label>
+        <input id="neuroshima-effect-source-value" type="number" name="sourceValue" value="0" step="1">
+      </div>
+      <p><small>Wpisz wartość zgodnie ze źródłem: dodatnia oznacza premię, ujemna karę. System sam przeliczy ją na właściwy rodzaj modyfikatora.</small></p>
+      <div class="form-group">
+        <label for="neuroshima-effect-expires">Wygasa</label>
+        <input id="neuroshima-effect-expires" type="datetime-local" name="expiresAt">
+        <small>Puste pole oznacza efekt stały.</small>
+      </div>
+    `,
+    ok: { label: "Dodaj efekt", icon: "fas fa-wand-magic-sparkles" },
+    rejectClose: false,
+    modal: true
+  });
+  if (!formData) return null;
+
+  const definition = definitions.find(
+    (entry) => entry.id === String(formData.definitionId)
+  );
+  if (!definition) return null;
+  return {
+    id: foundry.utils.randomID(),
+    source: `${definition.name} [${definition.sourceCode}]`,
+    scope: definition.automation.scope,
+    value: convertEffectValue(definition.automation, formData.sourceValue),
+    enabled: true,
+    expiresAt: String(formData.expiresAt ?? "")
+  };
 }
 
 async function promptForModifier(actor, existingModifier = null) {
@@ -315,6 +415,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       handleWeaponJam: this.#onHandleWeaponJam,
       saveActorName: this.#onSaveActorName,
       createModifier: this.#onCreateModifier,
+      createCatalogModifier: this.#onCreateCatalogModifier,
       editModifier: this.#onEditModifier,
       toggleModifier: this.#onToggleModifier,
       deleteModifier: this.#onDeleteModifier,
@@ -359,6 +460,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       deleteDisease: this.#onDeleteDisease,
       previousDiseaseStage: this.#onPreviousDiseaseStage,
       nextDiseaseStage: this.#onNextDiseaseStage,
+      toggleDiseaseEffects: this.#onToggleDiseaseEffects,
 
       createMedicine: this.#onCreateMedicine,
       editMedicine: this.#onEditMedicine,
@@ -454,7 +556,13 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.actor = this.actor;
     context.system = this.actor.system;
     context.combatStatus = prepareActorCombatStatus(this.actor);
-    context.modifierEntries = this.actor.system.activeModifiers.map((modifier) => {
+    context.attributeFinalValues = Object.fromEntries(
+      Object.keys(ATTRIBUTE_LABELS).map((attributeKey) => [
+        attributeKey,
+        calculateAttributeValue(this.actor, attributeKey)
+      ])
+    );
+    const prepareModifierEntry = (modifier, editable) => {
       const isActive = modifierIsActive(modifier);
       const expirationTime = Date.parse(modifier.expiresAt);
       return {
@@ -463,11 +571,12 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         scopeLabel: getModifierScopeLabel(this.actor, modifier.scope),
         valueLabel: formatSignedModifier(
           modifier.value,
-          modifier.scope === "test.all" ? "%" : ""
+          modifier.scope.startsWith("test.") ? "%" : ""
         ),
         enabled: modifier.enabled,
         isExpired: modifier.enabled && !isActive,
         canToggle: !(modifier.enabled && !isActive),
+        editable,
         statusLabel: !modifier.enabled
           ? "wyłączony"
           : (isActive ? "aktywny" : "wygasł"),
@@ -478,7 +587,16 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
           }).format(expirationTime)
           : "bezterminowo"
       };
-    });
+    };
+    context.modifierEntries = [
+      ...this.actor.system.activeModifiers.map((modifier) => (
+        prepareModifierEntry(modifier, true)
+      )),
+      ...collectAutomaticModifierSources(this.actor).map((modifier) => ({
+        ...prepareModifierEntry({ ...modifier, enabled: true }, false),
+        statusLabel: "automatyczny"
+      }))
+    ];
 
     const [
       originCatalog,
@@ -516,6 +634,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       .filter((item) => item.type === "disease")
       .map((item) => {
         const currentStage = item.system.stages[item.system.currentStage];
+        const source = `Choroba: ${item.name}`;
+        const parsedEffects = parseEffectCodes(currentStage?.effect, source);
+        const stageModifiers = prepareDiseaseStageModifiers(currentStage, source);
         return {
           id: item.id,
           name: item.name,
@@ -524,6 +645,11 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
           currentStageSummary: currentStage?.summary ?? "",
           currentStageDescription: currentStage?.description ?? "",
           currentStageEffect: currentStage?.effect ?? "",
+          mechanicalEffects: stageModifiers.map((modifier) => (
+            describeDiseaseModifier(this.actor, modifier)
+          )),
+          unsupportedEffects: parsedEffects.unsupportedCodes,
+          mechanicalEffectsEnabled: item.system.applyMechanicalEffects !== false,
           medicationDescription: item.system.medicationDescription,
           linkedMedicines: medicinesByDisease[item.system.sourceCode] ?? [],
           canMoveBack: diseaseStageOrder.indexOf(item.system.currentStage) > 0,
@@ -761,6 +887,14 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   static async #onCreateModifier() {
     const modifier = await promptForModifier(this.actor);
+    if (!modifier) return;
+    await this.actor.update({
+      "system.activeModifiers": [...getStoredModifiers(this.actor), modifier]
+    });
+  }
+
+  static async #onCreateCatalogModifier() {
+    const modifier = await promptForCatalogModifier(this.actor);
     if (!modifier) return;
     await this.actor.update({
       "system.activeModifiers": [...getStoredModifiers(this.actor), modifier]
@@ -1011,6 +1145,17 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   static async #onNextDiseaseStage(event, target) {
     await changeDiseaseStage(this, target, 1);
+  }
+
+  static async #onToggleDiseaseEffects(event, target) {
+    const diseaseItem = this.actor.items.get(target.dataset.itemId);
+    if (!diseaseItem || diseaseItem.type !== "disease") {
+      ui.notifications.warn("Nie znaleziono tej choroby na karcie postaci.");
+      return;
+    }
+    await diseaseItem.update({
+      "system.applyMechanicalEffects": diseaseItem.system.applyMechanicalEffects === false
+    });
   }
 
   static async #onCreateMedicine() {

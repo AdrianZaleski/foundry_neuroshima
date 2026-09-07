@@ -8,6 +8,16 @@
       {{#if this.currentStageSummary}}<p><strong>Zasady:</strong> {{this.currentStageSummary}}</p>{{/if}}
       {{#if this.currentStageDescription}}<p>{{this.currentStageDescription}}</p>{{/if}}
       {{#if this.currentStageEffect}}<p><small>Kod efektu: {{this.currentStageEffect}}</small></p>{{/if}}
+      {{#if this.mechanicalEffects.length}}
+        <p><strong>Zmiany aktualnego etapu:</strong></p>
+        <ul>
+          {{#each this.mechanicalEffects}}<li>{{this}}</li>{{/each}}
+        </ul>
+        <p><small>Wpływ na wyliczenia: {{#if this.mechanicalEffectsEnabled}}włączony{{else}}wyłączony{{/if}}</small></p>
+      {{/if}}
+      {{#if this.unsupportedEffects.length}}
+        <p><small>Efekty opisowe: {{#each this.unsupportedEffects}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</small></p>
+      {{/if}}
       {{#if this.linkedMedicines.length}}
         <p>
           <strong>Leki:</strong>
@@ -27,6 +37,7 @@
       <div>
         <button type="button" data-action="previousDiseaseStage" data-item-id="{{this.id}}" {{#unless this.canMoveBack}}disabled{{/unless}}>Poprzedni etap</button>
         <button type="button" data-action="nextDiseaseStage" data-item-id="{{this.id}}" {{#unless this.canMoveForward}}disabled{{/unless}}>Następny etap</button>
+        <button type="button" data-action="toggleDiseaseEffects" data-item-id="{{this.id}}">{{#if this.mechanicalEffectsEnabled}}Wyłącz wpływ{{else}}Włącz wpływ{{/if}}</button>
         <button type="button" data-action="editDisease" data-item-id="{{this.id}}">Edytuj</button>
         <button type="button" data-action="deleteDisease" data-item-id="{{this.id}}">Usuń</button>
       </div>

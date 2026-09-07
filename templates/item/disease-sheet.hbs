@@ -9,23 +9,49 @@
     </select>
   </label>
 
+  <label>
+    <input type="checkbox" name="system.applyMechanicalEffects" {{checked system.applyMechanicalEffects}}>
+    Uwzględniaj mechaniczne skutki aktualnego etapu w testach i wyliczeniach
+  </label>
+
   <label>Opis choroby
     <textarea name="system.description" rows="8">{{system.description}}</textarea>
   </label>
 
   <h2>Etapy choroby</h2>
-  {{#each system.stages as |stage stageKey|}}
+  {{#each stageEntries}}
     <fieldset>
-      <legend>{{lookup ../diseaseStageOptions stageKey}}</legend>
-      <label>Podsumowanie zasad
-        <textarea name="system.stages.{{stageKey}}.summary" rows="2">{{stage.summary}}</textarea>
+      <legend>{{this.label}}</legend>
+      <label>Dodatkowe zasady opisowe
+        <textarea name="system.stages.{{this.key}}.summary" rows="2">{{this.stage.summary}}</textarea>
       </label>
       <label>Opis etapu
-        <textarea name="system.stages.{{stageKey}}.description" rows="5">{{stage.description}}</textarea>
+        <textarea name="system.stages.{{this.key}}.description" rows="5">{{this.stage.description}}</textarea>
       </label>
-      <label>Surowy kod efektu
-        <input type="text" name="system.stages.{{stageKey}}.effect" value="{{stage.effect}}">
-      </label>
+      <p><strong>Premie i utrudnienia:</strong></p>
+      <button type="button" data-action="addStageModifier" data-stage-key="{{this.key}}">Dodaj zmianę</button>
+      {{#if this.mechanicalEffects.length}}
+        <ul>
+          {{#each this.mechanicalEffects}}
+            <li>
+              {{this.label}}
+              <button type="button" data-action="editStageModifier" data-stage-key="{{../key}}" data-modifier-index="{{this.index}}">Edytuj</button>
+              <button type="button" data-action="deleteStageModifier" data-stage-key="{{../key}}" data-modifier-index="{{this.index}}">Usuń</button>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p><small>Brak zmian liczbowych na tym etapie.</small></p>
+      {{/if}}
+      {{#if this.unsupportedEffects.length}}
+        <p><small>Nierozpoznane stare wpisy: {{#each this.unsupportedEffects}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</small></p>
+      {{/if}}
+      <details>
+        <summary>Dane techniczne starszego importu</summary>
+        <label>Surowy kod efektu
+          <input type="text" name="system.stages.{{this.key}}.effect" value="{{this.stage.effect}}">
+        </label>
+      </details>
     </fieldset>
   {{/each}}
 

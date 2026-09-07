@@ -316,5 +316,25 @@
   procentowych efektów. W oknie rzutu można zdecydować, czy je uwzględnić.
 - Ręczne i aktywne premie do wartości wyłącza się na karcie, a nie w każdym
   oknie rzutu, ponieważ stanowią aktualną wartość postaci.
-- Surowe kody z `EFFECT` nie są jeszcze interpretowane. Najpierw importujemy
-  ich słownik i podłączamy tylko jednoznaczne, sprawdzone przypadki.
+- Pełne 86 definicji z zakładki `EFFECT` jest synchronizowane do Kompendium
+  `Neuroshima: Efekty` jako Itemy typu `effectDefinition`.
+- 59 definicji jest jednoznacznych i obsługiwanych automatycznie: pięć kodów
+  Współczynników oraz 54 kody testów konkretnych Umiejętności. Pozostałe 27
+  definicji zachowuje opis i nie wykonuje się bez dodatkowej mechaniki.
+- Kod `ATR_*` zmienia wartość Współczynnika bez odwracania znaku.
+- Kod `SKILL_*` zmienia procentową trudność testu wskazanej Umiejętności, a nie
+  jej poziom 0–20. Źródłowe `-30` oznacza karę 30%, dlatego silnik PT odwraca
+  znak podczas interpretacji.
+- Parser toleruje brak dwukropka w kilku istniejących wpisach chorób, np.
+  `ATR_ZRE-4`, ale nie próbuje interpretować nieznanych fragmentów.
+- Premie i kary z aktualnego etapu choroby są stosowane automatycznie. Zmiana
+  etapu natychmiast zmienia aktywny zestaw modyfikatorów.
+- Karta choroby pokazuje czytelną listę zmian dla każdego etapu, a karta Aktora
+  pozwala czasowo wyłączyć lub ponownie włączyć ich wpływ na wyliczenia bez
+  usuwania choroby albo zmiany jej danych źródłowych.
+- Każdy etap choroby ma edytowalną listę liczbowych premii i utrudnień,
+  oddzieloną od opisu fabularnego i dodatkowych zasad opisowych. Starsze
+  rekordy bez kodów EFFECT otrzymują bezpieczne propozycje wyciągnięte z ich
+  skrótu zasad; po pierwszej zmianie lista jest zapisywana jawnie na Itemie.
+- Przycisk `Dodaj z Kompendium EFFECT` pozwala zastosować obsługiwaną definicję
+  ręcznie, podając wartość źródłową i opcjonalny termin wygaśnięcia.

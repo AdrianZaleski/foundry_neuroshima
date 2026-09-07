@@ -150,8 +150,8 @@ async function selectInitiativeConfiguration(actor) {
   const woundPenalty = calculateWoundPenaltyPercent(actor);
   const dexterityArmorPenalty = calculateArmorPenaltyPercent(actor, "zrecznosc");
   const perceptionArmorPenalty = calculateArmorPenaltyPercent(actor, "percepcja");
-  const testModifierSources = collectTestModifierSources(actor);
-  const testModifierPercent = sumModifierSources(testModifierSources);
+  const globalTestModifierSources = collectTestModifierSources(actor);
+  const globalTestModifierPercent = sumModifierSources(globalTestModifierSources);
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Inicjatywa: ${actor.name}` },
     content: `
@@ -190,9 +190,9 @@ async function selectInitiativeConfiguration(actor) {
       <div class="form-group">
         <label>
           <input type="checkbox" name="includeEffects" checked>
-          Uwzględnij aktywne efekty (${testModifierPercent}%)
+          Uwzględnij aktywne efekty (globalne ${globalTestModifierPercent}%; pełna wartość zależy od wyboru)
         </label>
-        <small>${describeModifierSources(testModifierSources, "%")}</small>
+        <small>${describeModifierSources(globalTestModifierSources, "%")}</small>
       </div>
       <div class="form-group">
         <label for="neuroshima-initiative-penalty">Inne utrudnienie lub ułatwienie</label>
@@ -213,9 +213,15 @@ async function selectInitiativeConfiguration(actor) {
   const skillKey = String(formData.skillKey ?? "");
   const meleeWeaponId = String(formData.meleeWeaponId ?? "");
   const meleeWeapon = meleeWeaponId ? actor.items.get(meleeWeaponId) : null;
+  const attributeKey = String(formData.attributeKey);
+  const testModifierSources = collectTestModifierSources(actor, {
+    attributeKey,
+    skillKey
+  });
+  const testModifierPercent = sumModifierSources(testModifierSources);
 
   return {
-    attributeKey: String(formData.attributeKey),
+    attributeKey,
     skillKey,
     skillLevel: skillKey
       ? Math.max(0, calculateSkillValue(actor, skillKey))

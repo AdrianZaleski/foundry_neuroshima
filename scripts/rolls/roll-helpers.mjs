@@ -90,7 +90,10 @@ export async function selectTestConfiguration(
   const skillModifierSources = skillKey
     ? collectSkillModifierSources(actor, skillKey)
     : [];
-  const testModifierSources = collectTestModifierSources(actor);
+  const testModifierSources = collectTestModifierSources(actor, {
+    attributeKey,
+    skillKey
+  });
   const testModifierPercent = sumModifierSources(testModifierSources);
   const valueModifierSources = [...attributeModifierSources, ...skillModifierSources];
   const valueModifierDescription = describeModifierSources(valueModifierSources);

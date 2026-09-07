@@ -16,7 +16,8 @@ const compendiumNames = [
   "melee-weapons",
   "diseases",
   "medicines",
-  "armors"
+  "armors",
+  "effects"
 ];
 const projectDirectory = process.cwd();
 

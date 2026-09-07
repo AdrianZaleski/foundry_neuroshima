@@ -89,13 +89,19 @@ Do dodania:
 
 - automatyczne tworzenie modyfikatorów z ran, pancerza, chorób, leków,
   sztuczek, cech, amunicji i dodatków do broni,
-- interpretacja wspieranych kodów z zakładki `EFFECT`,
+- interpretacja kolejnych kodów z zakładki `EFFECT` dotyczących broni,
+  amunicji, zacięć i stanów specjalnych,
 - bezpieczne pozostawienie nieznanego kodu jako opisu zamiast zgadywania jego
   działania.
 
 Arkusz zawiera 86 wpisów `EFFECT`, między innymi modyfikatory Współczynników,
 Umiejętności, zasięgu, PP, celności, niezawodności, efekty czasowe, śmierć,
 gaz łzawiący i ignorowanie części kar z ran.
+
+Pełne 86 definicji jest już importowane do Kompendium `Neuroshima: Efekty`.
+Automatyzacja obejmuje 59 jednoznacznych definicji: pięć Współczynników i 54
+konkretne Umiejętności. Pozostałych 27 wpisów zachowuje opis źródłowy i status
+opisowy do czasu wdrożenia wymaganej mechaniki.
 
 ### 2. Pełna mechanika strzelania
 
@@ -266,7 +272,8 @@ wydzielić z niej jednoznaczne rekordy i powiązać je z `MISC_CAT`.
 
 1. Uporządkować model trwałych i czasowych modyfikatorów — zrealizowane.
 2. Dodać ręczne modyfikatory Współczynników — zrealizowane.
-3. Zaimportować i stopniowo interpretować `EFFECT`.
+3. Zaimportować `EFFECT` i zinterpretować premie oraz kary Współczynników i
+   Umiejętności — zrealizowane; pozostałe grupy będą podłączane etapami.
 4. Pokazywać źródła modyfikatorów w oknach testów — zrealizowane.
 
 ### Etap B — broń i pełne strzelanie
@@ -299,7 +306,6 @@ wydzielić z niej jednoznaczne rekordy i powiązać je z `MISC_CAT`.
 
 ## Najbliższy krok
 
-Najbliższym zadaniem będzie przygotowanie lokalnego katalogu definicji z
-zakładki `EFFECT`, a następnie interpretacja pierwszej bezpiecznej grupy kodów:
-prostych premii i kar do Współczynników, Umiejętności oraz wszystkich testów.
-Nieznane i złożone kody nadal pozostaną opisem do rozstrzygnięcia przez MG.
+Najbliższym zadaniem będzie podłączenie klas broni i automatycznych kar za
+dystans z zakładki `WEAPON`. Skorzysta ono z gotowego mechanizmu procentowych
+modyfikatorów i pokaże dystans jako osobne źródło trudności strzału.

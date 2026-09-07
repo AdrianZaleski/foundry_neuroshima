@@ -1,0 +1,1980 @@
+[
+  {
+    "_id": "effct00000000002",
+    "name": "Tłumik płomienia",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_HIDER_EFFECT",
+      "description": "Zmniejsza widoczność ognia wylotowego przy strzelaniu (ewentualne testy Wypatrywania lub Czujności przeciwników są trudniejsze o jeden stopień)."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 2,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000003",
+    "name": "Rozstawialny",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_BIPODSETUP",
+      "description": "Rozstawienie tego urządzenia na ziemi zajmuje %s tury."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 3,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000004",
+    "name": "Bonus po rozstawieniu",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_BIPODATTACK",
+      "description": "Po rozstawieniu te urządzenie ułatwia testy ataku tą bronią o %s."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 4,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000005",
+    "name": "Nieporęczny",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_NIEPORECZNY",
+      "description": "schowac to ty go nigdzie nie schowasz, ale ta spluwa nie sluzy do tego, aby trzymaæ ja w gaciach, nie?"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 5,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000006",
+    "name": "Poręczny",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_PORECZNY",
+      "description": "tę pukawke da sie schowac. Trzeba cie zaczac przeszukiwac, aby ja znalezc, bo na pierwszy rzut oka jej nie widac."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 6,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000007",
+    "name": "Tłumik dźwięku",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_SUPPRESSOR_EFFECT",
+      "description": "Zmniejsza hałas wystrzału (ewentualne testy Nasłuchiwania lub Czujności przeciwników są trudniejsze o jeden stopień)."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 7,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000008",
+    "name": "Niekontrolowalny",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_AUTO_PENALTY",
+      "description": "Utrudnienie do ataku podczas strzelania serią"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 8,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000009",
+    "name": "Delikatny",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "DELICATE",
+      "description": "-3 na rzut do zacięcia gdy brudna"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 9,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000010",
+    "name": "Wymiana Kalibru",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "HOTSWAP_CALIBER",
+      "description": "Wystarczy tylko wymienić lufę, zamek oraz magazynek razem z adapterem na inne kalibry"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 10,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000011",
+    "name": "Dodatkowy zasięg",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_RANGE_BONUS",
+      "description": "Bonus do efektywnego zasięgu strzału."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 11,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000012",
+    "name": "Dodatkowe punkty przebicia",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "ARMOR_PIERCING_BONUS",
+      "description": "Bonus do punktów przebicia."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 12,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000013",
+    "name": "Dodatkowe celność",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_ACCURACY_BONUS",
+      "description": "Bonus do rzutu na trafienie."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 13,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000014",
+    "name": "Zintegrowana optyka",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_INTEGRATED_OPTICS",
+      "description": "Za broń ma zintegrowaną optykę i umożliwia użycie lunety bez dodatków. Nie można na niej zamontować innej optyki."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 14,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000015",
+    "name": "Dodatkowa niezawodność",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_MISFIRE_BONUS",
+      "description": "Bonus do rzutu na zacięcie."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 15,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000016",
+    "name": "Kara niezawodności",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_MISFIRE_PENALTY",
+      "description": "Utrudnienie rzutu na zacięcie."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 16,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000017",
+    "name": "Wymaga dobra amunicji",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_INTOLERANT",
+      "description": "Zwiększa kary za złą amunicję."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 17,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000020",
+    "name": "Modyfikator Budowy",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "ATR_BUD",
+      "description": "Zwiększa Budowę. Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 20,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000021",
+    "name": "Modyfikator Zręczności",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "ATR_ZRE",
+      "description": "Zwiększa Zręczność. Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 21,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000022",
+    "name": "Modyfikator Charakteru",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "ATT_CHA",
+      "description": "Zwiększa Charakter. Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 22,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000023",
+    "name": "Modyfikator Sprytu",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "ATT_SPR",
+      "description": "Zwiększa Spryt. Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 23,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000024",
+    "name": "Modyfikator Percepcji",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "ATT_PER",
+      "description": "Zwiększa Percepcję. Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 24,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000026",
+    "name": "Modyfikator testów na Kondycję",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_KONDYCJA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 26,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000027",
+    "name": "Modyfikator testów na Pływanie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_PLYWANIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 27,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000028",
+    "name": "Modyfikator testów na Wspinaczkę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_WSPINACZKA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 28,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000029",
+    "name": "Modyfikator testów na Jazdę Konno",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_JAZDAKONNO",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 29,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000030",
+    "name": "Modyfikator testów na Powożenie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_POWOZENIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 30,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000031",
+    "name": "Modyfikator testów na Ujeżdżanie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_UJEZDZANIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 31,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000032",
+    "name": "Modyfikator testów na Bijatykę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_BIJATYKA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 32,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000033",
+    "name": "Modyfikator testów na Broń ręczną",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_BRONRECZNA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 33,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000034",
+    "name": "Modyfikator testów na Rzucanie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_RZUCANIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 34,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000035",
+    "name": "Modyfikator testów na Samochód",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_SAMOCHOD",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 35,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000036",
+    "name": "Modyfikator testów na Motocykl",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_MOTOCYKL",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 36,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000037",
+    "name": "Modyfikator testów na Ciężarówkę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_CIEZAROWKA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 37,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000038",
+    "name": "Modyfikator testów na Kradzież kieszonkową",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_KRADZIEZKIESZONKOWA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 38,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000039",
+    "name": "Modyfikator testów na Otwieranie zamków",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_OTWIERANIEZAMKOW",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 39,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000040",
+    "name": "Modyfikator testów na Zwinne dłonie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_ZWINNEDLONIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 40,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000041",
+    "name": "Modyfikator testów na Pistolety",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_PISTOLETY",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 41,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000042",
+    "name": "Modyfikator testów na Karabiny",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_KARABINY",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 42,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000043",
+    "name": "Modyfikator testów na Broń maszynową",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_BRONMASZYNOWA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 43,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000044",
+    "name": "Modyfikator testów na Łuk",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_LUK",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 44,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000045",
+    "name": "Modyfikator testów na Kuszę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_KUSZA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 45,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000046",
+    "name": "Modyfikator testów na Procę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_PROCA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 46,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000047",
+    "name": "Modyfikator testów na Zastraszanie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_ZASTRASZANIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 47,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000048",
+    "name": "Modyfikator testów na Perswazję",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_PERSWAZJA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 48,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000049",
+    "name": "Modyfikator testów na Zdolności przywódcze",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_ZDOLNOSCIPRZYWODCZE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 49,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000050",
+    "name": "Modyfikator testów na Postrzeganie emocji",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_POSTRZEGANIEEMOCJI",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 50,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000051",
+    "name": "Modyfikator testów na Blef",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_BLEF",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 51,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000052",
+    "name": "Modyfikator testów na Opiekę nad zwierzętami",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_OPIEKANADZWIERZETAMI",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 52,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000053",
+    "name": "Modyfikator testów na Odporność na ból",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_ODPORNOSCNABOL",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 53,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000054",
+    "name": "Modyfikator testów na Niezłomność",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_NIEZLOMNOSC",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 54,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000055",
+    "name": "Modyfikator testów na Morale",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_MORALE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 55,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000056",
+    "name": "Modyfikator testów na Pierwszą pomoc",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_PIERWSZAPOMOC",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 56,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000057",
+    "name": "Modyfikator testów na Leczenie ran",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_LECZENIERAN",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 57,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000058",
+    "name": "Modyfikator testów na Leczenie chorób",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_LECZENIECHOROB",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 58,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000059",
+    "name": "Modyfikator testów na Mechanikę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_MECHANIKA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 59,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000060",
+    "name": "Modyfikator testów na Elektronikę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_ELEKTRONIKA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 60,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000061",
+    "name": "Modyfikator testów na Komputery",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_KOMPUTERY",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 61,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000062",
+    "name": "Modyfikator testów na Historię, Psychologię i Sztukę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_OGOLNIEHUMANISTYCZNE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 62,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000063",
+    "name": "Modyfikator testów na Geografię, Fizykę i Matematykę",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_OGOLNIESCISLE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 63,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000064",
+    "name": "Modyfikator testów na Biologię, Chemię i Chirurgię",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_OGOLNEBIOCHEMIA",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 64,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000065",
+    "name": "Modyfikator testów na Maszyny ciężkie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_MASZYNYCIEZKIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 65,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000066",
+    "name": "Modyfikator testów na Wozy bojowe",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_WOZYBOJOWE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 66,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000067",
+    "name": "Modyfikator testów na Kutry",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_KUTRY",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 67,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000068",
+    "name": "Modyfikator testów na Rusznikarstwo",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_RUSZNIKARSTWO",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 68,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000069",
+    "name": "Modyfikator testów na Wyrzutnie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_WYRZUTNIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 69,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000070",
+    "name": "Modyfikator testów na Materiały wybuchowe",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_MATERIALYWYBUCHOWE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 70,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000071",
+    "name": "Modyfikator testów na Wyczucie kierunku",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_WYCZUCIEKIERUNKU",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 71,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000072",
+    "name": "Modyfikator testów na Przygotowanie pułapki",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_PRZYGOTOWANIEPULAPKI",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 72,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000073",
+    "name": "Modyfikator testów na Tropienie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_TROPIENIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 73,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000074",
+    "name": "Modyfikator testów na Nasłuchiwanie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_NASLUCHIWANIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 74,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000075",
+    "name": "Modyfikator testów na Wypatrywanie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_WYPATRYWANIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 75,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000076",
+    "name": "Modyfikator testów na Czujność",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_CZUJNOSC",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 76,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000077",
+    "name": "Modyfikator testów na Skradanie się",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_SKRADANIESIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 77,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000078",
+    "name": "Modyfikator testów na Ukrywanie się",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_UKRYWANIESIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 78,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000079",
+    "name": "Maskowanie",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_MASKOWANIE",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 79,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000080",
+    "name": "Modyfikator testów na Łowiectwo",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_LOWIECTWO",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 80,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000081",
+    "name": "Modyfikator testów na Znajomość terenu",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_ZNAJOMOSCTERENU",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 81,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000082",
+    "name": "Modyfikator testów na Zdobywanie wody",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "SKILL_ZDOBYWANIEWODY",
+      "description": "Ujemna wartość zmniejsza."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 82,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000084",
+    "name": "Używa innych przedmiotów",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "USING_CONSUMES",
+      "description": "Zużycie tego przedmiotu wymaga żeby był używany z innym przedmiotem."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 84,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000086",
+    "name": "Usuwa kary za niezdane testy odporności na ból",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "EFFECT_PASSALLPAIN",
+      "description": "Możesz odjąć sobie z kar wartość punktów za wszystkie niezdane, nawet stare, testy odporności na ból. Nie możesz odjąć bazowej kary za obrażenie."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 86,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000087",
+    "name": "Ten przedmiot pozostawia po użyciu efekty które się utrzymują przez X godzin",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "TEMPORARY",
+      "description": "Podany w godzinach"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 87,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000088",
+    "name": "Oszołomienie wybuchem",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "EFFECT_DAZZLE",
+      "description": "Trafiony pada na ziemię i otrzymuje +30 do wszystkich testów, dopóki nie zda Przeciętnego testu Budowy. Test może zdawać na początku każdej tury."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 88,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000089",
+    "name": "Zadaj efekt",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "INFLIECT_EFFECT",
+      "description": "Trafienie wroga zadaje efekt."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 89,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000090",
+    "name": "Gaz drażniący",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "EFFECT_TEARGAS",
+      "description": "Chloroacetofenon – organiczny związek chemiczny z grupy ketonów, pochodna acetofenonu, stosowany jako drażniący bojowy środek trujący (lakrymator)."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 90,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000091",
+    "name": "Śmierć.",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "EFFECT_DEATH",
+      "description": "Bez natychmiastowej pomocy postać umiera."
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 91,
+        "importWarnings": []
+      }
+    }
+  },
+  {
+    "_id": "effct00000000094",
+    "name": "Wbudowany dodatek",
+    "type": "effectDefinition",
+    "img": "icons/svg/aura.svg",
+    "system": {
+      "sourceCode": "WEAPON_INTEGRATED",
+      "description": "Ta broń ma zintegrowany dodatek (z tabeli ADDON)"
+    },
+    "effects": [],
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+      "default": 0
+    },
+    "flags": {
+      "neuroshima": {
+        "sourceSheet": "EFFECT",
+        "sourceRow": 94,
+        "importWarnings": []
+      }
+    }
+  }
+]

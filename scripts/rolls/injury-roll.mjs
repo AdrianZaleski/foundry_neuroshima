@@ -72,7 +72,10 @@ function checkboxIsSelected(fieldValue) {
 
 async function selectInjuryType(actor, presetInjuryType = "") {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
-  const testModifierSources = collectTestModifierSources(actor);
+  const testModifierSources = collectTestModifierSources(actor, {
+    attributeKey: "charakter",
+    skillKey: "odpornoscNaBol"
+  });
   const testModifierPercent = sumModifierSources(testModifierSources);
   const presetConfiguration = INJURY_ROLL_CONFIGURATION[presetInjuryType];
   const injuryTypeField = presetConfiguration
@@ -169,7 +172,10 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
     ? calculateWoundPenaltyPercent(actor)
     : 0;
   const testModifierSources = checkboxIsSelected(formData.includeEffects)
-    ? collectTestModifierSources(actor)
+    ? collectTestModifierSources(actor, {
+      attributeKey: "charakter",
+      skillKey: "odpornoscNaBol"
+    })
     : [];
   const includedTestModifierPercent = sumModifierSources(testModifierSources);
   const difficultyPercentageAfterPenalties = DIFFICULTY_STARTING_PERCENTAGES[

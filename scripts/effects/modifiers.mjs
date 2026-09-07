@@ -1,3 +1,5 @@
+import { prepareDiseaseStageModifiers } from "../catalogs/effect-definitions.mjs";
+
 function normalizeModifierValue(value) {
   const modifierValue = Number(value);
   return Number.isFinite(modifierValue) ? Math.trunc(modifierValue) : 0;
@@ -31,6 +33,20 @@ export function sumModifierSources(modifierSources) {
   return modifierSources.reduce((sum, modifier) => sum + modifier.value, 0);
 }
 
+function collectDiseaseModifierSources(actor) {
+  const diseaseItems = actor.items?.filter?.((item) => item.type === "disease") ?? [];
+  return diseaseItems.flatMap((item) => {
+    if (item.system.applyMechanicalEffects === false) return [];
+    const currentStage = item.system.stages?.[item.system.currentStage];
+    const source = `Choroba: ${item.name}`;
+    return prepareDiseaseStageModifiers(currentStage, source);
+  });
+}
+
+export function collectAutomaticModifierSources(actor) {
+  return collectDiseaseModifierSources(actor);
+}
+
 export function collectAttributeModifierSources(actor, attributeKey) {
   const attribute = actor.system.attributes?.[attributeKey];
   if (!attribute) return [];
@@ -40,6 +56,9 @@ export function collectAttributeModifierSources(actor, attributeKey) {
     actor.system.activeModifiers,
     `attribute.${attributeKey}`
   );
+  sources.push(...collectAutomaticModifierSources(actor).filter(
+    (modifier) => modifier.scope === `attribute.${attributeKey}`
+  ));
 
   if (manualModifier !== 0) {
     sources.unshift({
@@ -59,8 +78,23 @@ export function collectSkillModifierSources(actor, skillKey) {
   return collectModifiersForScope(actor.system.activeModifiers, `skill.${skillKey}`);
 }
 
-export function collectTestModifierSources(actor) {
-  return collectModifiersForScope(actor.system.activeModifiers, "test.all");
+export function collectTestModifierSources(
+  actor,
+  { attributeKey = "", skillKey = "" } = {}
+) {
+  const applicableScopes = new Set(["test.all"]);
+  if (attributeKey) applicableScopes.add(`test.attribute.${attributeKey}`);
+  if (skillKey) applicableScopes.add(`test.skill.${skillKey}`);
+
+  const storedModifiers = [...(actor.system.activeModifiers ?? [])]
+    .flatMap((modifier) => (
+      applicableScopes.has(modifier.scope)
+        ? collectModifiersForScope([modifier], modifier.scope)
+        : []
+    ));
+  const automaticModifiers = collectAutomaticModifierSources(actor)
+    .filter((modifier) => applicableScopes.has(modifier.scope));
+  return [...storedModifiers, ...automaticModifiers];
 }
 
 export function calculateAttributeValue(actor, attributeKey) {

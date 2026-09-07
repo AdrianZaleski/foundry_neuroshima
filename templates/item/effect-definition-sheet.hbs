@@ -1,0 +1,13 @@
+<section style="height: 100%; overflow-y: auto; padding-right: 6px;">
+  <header><h2>{{item.name}}</h2></header>
+  <label>
+    Kod źródłowy
+    <input type="text" name="system.sourceCode" value="{{system.sourceCode}}">
+  </label>
+  <label>
+    Opis
+    <textarea name="system.description" rows="9">{{system.description}}</textarea>
+  </label>
+  <p><strong>Automatyzacja:</strong> {{#if isAutomated}}obsługiwana{{else}}opisowa{{/if}}</p>
+  <p>{{automationDescription}}</p>
+</section>

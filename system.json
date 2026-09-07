@@ -30,7 +30,8 @@
       "meleeWeapon": {},
       "disease": {},
       "medicine": {},
-      "armor": {}
+      "armor": {},
+      "effectDefinition": {}
     }
   }
 }

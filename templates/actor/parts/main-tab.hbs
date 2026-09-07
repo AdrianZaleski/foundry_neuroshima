@@ -87,7 +87,7 @@
       Modyfikator ręczny
       <input type="number" name="system.attributes.zrecznosc.manualModifier" value="{{system.attributes.zrecznosc.manualModifier}}" step="1">
     </label>
-    <output>Wartość końcowa: {{system.attributes.zrecznosc.value}}</output>
+    <output>Wartość końcowa: {{attributeFinalValues.zrecznosc}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="zrecznosc">Rzuć 3k20</button>
 
     <label>
@@ -98,7 +98,7 @@
       Modyfikator ręczny
       <input type="number" name="system.attributes.percepcja.manualModifier" value="{{system.attributes.percepcja.manualModifier}}" step="1">
     </label>
-    <output>Wartość końcowa: {{system.attributes.percepcja.value}}</output>
+    <output>Wartość końcowa: {{attributeFinalValues.percepcja}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="percepcja">Rzuć 3k20</button>
 
     <label>
@@ -109,7 +109,7 @@
       Modyfikator ręczny
       <input type="number" name="system.attributes.charakter.manualModifier" value="{{system.attributes.charakter.manualModifier}}" step="1">
     </label>
-    <output>Wartość końcowa: {{system.attributes.charakter.value}}</output>
+    <output>Wartość końcowa: {{attributeFinalValues.charakter}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="charakter">Rzuć 3k20</button>
 
     <label>
@@ -120,7 +120,7 @@
       Modyfikator ręczny
       <input type="number" name="system.attributes.spryt.manualModifier" value="{{system.attributes.spryt.manualModifier}}" step="1">
     </label>
-    <output>Wartość końcowa: {{system.attributes.spryt.value}}</output>
+    <output>Wartość końcowa: {{attributeFinalValues.spryt}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="spryt">Rzuć 3k20</button>
 
     <label>
@@ -131,12 +131,13 @@
       Modyfikator ręczny
       <input type="number" name="system.attributes.budowa.manualModifier" value="{{system.attributes.budowa.manualModifier}}" step="1">
     </label>
-    <output>Wartość końcowa: {{system.attributes.budowa.value}}</output>
+    <output>Wartość końcowa: {{attributeFinalValues.budowa}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="budowa">Rzuć 3k20</button>
   </div>
 
   <h2>Aktywne efekty i modyfikatory</h2>
   <button type="button" data-action="createModifier">Dodaj efekt</button>
+  <button type="button" data-action="createCatalogModifier">Dodaj z Kompendium EFFECT</button>
   <p><small>Efekty mogą zmieniać Współczynnik, poziom Umiejętności albo procentową trudność wszystkich testów.</small></p>
   <table>
     <thead>
@@ -158,11 +159,15 @@
           <td>{{this.expiresLabel}}</td>
           <td>{{this.statusLabel}}</td>
           <td>
-            <button type="button" data-action="editModifier" data-modifier-id="{{this.id}}">Edytuj</button>
-            {{#if this.canToggle}}
-              <button type="button" data-action="toggleModifier" data-modifier-id="{{this.id}}">{{#if this.enabled}}Wyłącz{{else}}Włącz{{/if}}</button>
+            {{#if this.editable}}
+              <button type="button" data-action="editModifier" data-modifier-id="{{this.id}}">Edytuj</button>
+              {{#if this.canToggle}}
+                <button type="button" data-action="toggleModifier" data-modifier-id="{{this.id}}">{{#if this.enabled}}Wyłącz{{else}}Włącz{{/if}}</button>
+              {{/if}}
+              <button type="button" data-action="deleteModifier" data-modifier-id="{{this.id}}">Usuń</button>
+            {{else}}
+              Zmień źródłowy Item
             {{/if}}
-            <button type="button" data-action="deleteModifier" data-modifier-id="{{this.id}}">Usuń</button>
           </td>
         </tr>
       {{else}}

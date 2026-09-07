@@ -1,7 +1,8 @@
 import { HIT_LOCATION_LABELS } from "./damage-resolution.mjs";
+import { calculateAttributeValue } from "../effects/modifiers.mjs";
 
 function getAttributeValue(actor, key) {
-  return Math.max(0, Number(actor.system.attributes?.[key]?.value) || 0);
+  return Math.max(0, calculateAttributeValue(actor, key));
 }
 
 export function calculateArmorPenaltyPercent(actor, attributeKey = "zrecznosc") {

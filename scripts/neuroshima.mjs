@@ -9,6 +9,7 @@ import { NeuroshimaDiseaseDataModel } from "./data-models/disease.mjs";
 import { NeuroshimaMedicineDataModel } from "./data-models/medicine.mjs";
 import { NeuroshimaWeaponDataModel } from "./data-models/weapon.mjs";
 import { NeuroshimaArmorDataModel } from "./data-models/armor.mjs";
+import { NeuroshimaEffectDefinitionDataModel } from "./data-models/effect-definition.mjs";
 import { NeuroshimaCharacterSheet } from "./sheets/character-sheet.mjs";
 import { NeuroshimaAmmunitionSheet } from "./sheets/ammunition-sheet.mjs";
 import { NeuroshimaBackgroundSheet } from "./sheets/background-sheet.mjs";
@@ -20,6 +21,7 @@ import { NeuroshimaDiseaseSheet } from "./sheets/disease-sheet.mjs";
 import { NeuroshimaMedicineSheet } from "./sheets/medicine-sheet.mjs";
 import { NeuroshimaWeaponSheet } from "./sheets/weapon-sheet.mjs";
 import { NeuroshimaArmorSheet } from "./sheets/armor-sheet.mjs";
+import { NeuroshimaEffectDefinitionSheet } from "./sheets/effect-definition-sheet.mjs";
 import {
   NeuroshimaCombat
 } from "./combat/initiative.mjs";
@@ -86,6 +88,7 @@ Hooks.once("init", () => {
   CONFIG.Item.dataModels.disease = NeuroshimaDiseaseDataModel;
   CONFIG.Item.dataModels.medicine = NeuroshimaMedicineDataModel;
   CONFIG.Item.dataModels.armor = NeuroshimaArmorDataModel;
+  CONFIG.Item.dataModels.effectDefinition = NeuroshimaEffectDefinitionDataModel;
 
   // Rejestrujemy własny wygląd karty i ustawiamy go jako domyślny
   // dla wszystkich Actorów typu "character".
@@ -204,6 +207,13 @@ Hooks.once("init", () => {
     NeuroshimaArmorSheet,
     { types: ["armor"], makeDefault: true }
   );
+
+  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+    foundry.documents.Item,
+    game.system.id,
+    NeuroshimaEffectDefinitionSheet,
+    { types: ["effectDefinition"], makeDefault: true }
+  );
 });
 
 // Kod źródłowy identyfikuje dokładny wariant broni, amunicji albo zdolności.
@@ -221,7 +231,8 @@ Hooks.on("preCreateItem", (item) => {
     "meleeWeapon",
     "disease",
     "medicine",
-    "armor"
+    "armor",
+    "effectDefinition"
   ].includes(item.type)) return;
   if (item.system.sourceCode) return;
 
@@ -236,7 +247,8 @@ Hooks.on("preCreateItem", (item) => {
     meleeWeapon: "CUSTOM_MELEE_WEAPON",
     disease: "CUSTOM_DISEASE",
     medicine: "CUSTOM_MEDICINE",
-    armor: "CUSTOM_ARMOR"
+    armor: "CUSTOM_ARMOR",
+    effectDefinition: "CUSTOM_EFFECT"
   };
   item.updateSource({
     "system.sourceCode": `${codePrefixByType[item.type]}_${foundry.utils.randomID()}`
