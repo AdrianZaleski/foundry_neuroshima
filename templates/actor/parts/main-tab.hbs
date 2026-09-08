@@ -18,6 +18,7 @@
       <h2>Walka</h2>
       {{#if combatStatus.started}}
         <p><strong>Runda {{combatStatus.round}} — segment {{combatStatus.segment}} z 3</strong></p>
+        <button type="button" data-action="downloadCombatDiagnostics">Pobierz diagnostykę walki</button>
 
         {{#if combatStatus.action.isCurrent}}
           <p>
@@ -63,6 +64,9 @@
           {{/if}}
           {{#if combatStatus.action.canInterrupt}}
             <button type="button" data-action="interruptSegmentAction">{{combatStatus.action.interruptLabel}}</button>
+          {{/if}}
+          {{#if combatStatus.action.canAdvanceAfterAction}}
+            <button type="button" data-action="advanceAfterSegmentAction">Zakończ udział w segmencie</button>
           {{/if}}
         {{else}}
           {{#if combatStatus.isActiveTurn}}

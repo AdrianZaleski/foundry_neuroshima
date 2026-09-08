@@ -159,20 +159,27 @@
 
 ### Pojedynczy strzał
 
-- Przy deklarowaniu każdego wariantu strzału wybiera się broń oraz dokładnie jeden token celu. Wybór jest przypisany do tej akcji.
+- Przy deklarowaniu każdego wariantu strzału wybiera się broń oraz cel z listy tokenów na scenie. Wybór jest przypisany do tej akcji.
 - Zwykły `Strzał` system rozstrzyga od razu. Wariant celowany rozstrzyga się w drugim, a długo celowany w trzecim zajętym segmencie.
+- Po rozstrzygnięciu akcji bieżący segment pozostaje wykorzystany. Przycisk
+  `Zakończ udział w segmencie` przechodzi do kolejnego uczestnika, a po
+  ostatnim uczestniku — do kolejnego segmentu.
 - Po wejściu w ostatni segment wielosegmentowego strzału system automatycznie otwiera okno rozstrzygnięcia. Zamknięcie okna pozostawia przycisk `Rozstrzygnij strzał` na karcie.
 - Nie można przejść do kolejnego uczestnika, segmentu ani rundy, dopóki zadeklarowany strzał nie zostanie rozstrzygnięty.
+- Po rozstrzygnięciu akcji karta pokazuje przycisk `Zakończ udział w segmencie`.
+  Przenosi on kolejkę do następnego uczestnika, a po ostatnim uczestniku do
+  następnego segmentu. Rozstrzygnięty strzał nadal zużywa swój segment.
 - Niezależnie od liczby kości do trafienia wystarczy jeden sukces.
 - Przerwanie akcji oznacza brak strzału i nie zużywa amunicji. Zakończenie jej wcześniej uruchamia strzał z liczbą kości odpowiadającą liczbie faktycznie wykorzystanych segmentów.
 - Punkty Umiejętności rozdziela się po rzucie pomiędzy dowolne kości użyte w teście. Suma wydanych punktów nie może przekroczyć dostępnej puli rundy.
-- Strzelec wybiera broń oraz dokładnie jeden token wskazany jako cel. System
-  proponuje Umiejętność wynikającą z klasy broni, ale pozwala ją zmienić dla
-  nietypowych egzemplarzy.
-- Deklaracja strzału jest odrzucana przed zajęciem segmentu, jeśli nie wskazano
-  dokładnie jednego celu albo postać nie ma sprawnej i załadowanej broni.
-  Anulowanie okna wyboru broni również cofa deklarację zamiast pozostawiać
-  nierozstrzygalną akcję.
+- Strzelec wybiera broń oraz cel w jednym formularzu. Wcześniejsze wskazanie
+  jednego tokenu narzędziem celowania ustawia go jako domyślny wybór, ale nie
+  jest wymagane do otwarcia formularza. System proponuje Umiejętność wynikającą
+  z klasy broni, ale pozwala ją zmienić dla nietypowych egzemplarzy.
+- Deklaracja strzału jest odrzucana przed zajęciem segmentu, jeśli postać nie
+  ma sprawnej i załadowanej broni. Brak celu na scenie albo anulowanie okna
+  wyboru broni i celu cofa deklarację zamiast pozostawiać nierozstrzygalną
+  akcję.
 - Niekompletną deklarację strzału zapisaną wcześniej w trwającej walce można
   cofnąć z karty postaci bez restartowania walki.
 - Test jest oparty na Zręczności i rozpoczyna się na PT Przeciętnym. Uwzględnia
@@ -357,3 +364,11 @@
   skrótu zasad; po pierwszej zmianie lista jest zapisywana jawnie na Itemie.
 - Przycisk `Dodaj z Kompendium EFFECT` pozwala zastosować obsługiwaną definicję
   ręcznie, podając wartość źródłową i opcjonalny termin wygaśnięcia.
+
+## Diagnostyka
+
+- Podczas walki karta Aktora udostępnia przycisk `Pobierz diagnostykę walki`.
+  Zapisuje on plik JSON ze stanem rundy i segmentu, akcjami uczestników,
+  amunicją, zacięciami, tokenami celu oraz wersją Foundry i systemu.
+- Reset flag walki korzysta z operatora `ForcedDeletion` wymaganego przez
+  Foundry VTT 14, zamiast ze starej składni kluczy `-=`.

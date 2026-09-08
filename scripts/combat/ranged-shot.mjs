@@ -90,6 +90,20 @@ function prepareWeaponOptions(weapons, selectedWeaponId = "") {
   )).join("");
 }
 
+function prepareTargetOptions(targets, selectedTargetId = "") {
+  return targets.map((target) => {
+    const selected = target.id === selectedTargetId ? " selected" : "";
+    return `<option value="${target.id}"${selected}>${foundry.utils.escapeHTML(target.name)}</option>`;
+  }).join("");
+}
+
+function getAvailableShotTargets(combatant) {
+  const shooterTokenId = combatant?.tokenId ?? combatant?.token?.id ?? null;
+  return (canvas.tokens?.placeables ?? []).filter((token) => (
+    token.id && token.id !== shooterTokenId
+  ));
+}
+
 function getUsableFirearms(actor) {
   return actor.items.filter((item) => (
     item.type === "weapon"
@@ -399,26 +413,34 @@ export async function configureAiming(actor) {
     return false;
   }
 
-  const targets = [...game.user.targets];
-  if (targets.length !== 1) {
-    ui.notifications.warn("Wskaż dokładnie jeden token jako cel strzału.");
-    return false;
-  }
-
   const weapons = getUsableFirearms(actor);
   if (weapons.length === 0) {
     ui.notifications.warn("Postać nie ma sprawnej, załadowanej broni palnej.");
     return false;
   }
 
-  const target = targets[0];
+  const availableTargets = getAvailableShotTargets(combatant);
+  if (availableTargets.length === 0) {
+    ui.notifications.warn("Na scenie nie ma dostępnego celu strzału.");
+    return false;
+  }
+  const targetedTokens = [...game.user.targets];
+  const selectedTarget = targetedTokens.length === 1
+    ? availableTargets.find((target) => target.id === targetedTokens[0].id)
+    : null;
   const formData = await foundry.applications.api.DialogV2.input({
-    window: { title: `Przygotowanie strzału: ${actor.name} → ${target.name}` },
+    window: { title: `Przygotowanie strzału: ${actor.name}` },
     content: `
       <div class="form-group">
         <label for="neuroshima-aiming-weapon">Broń</label>
         <select id="neuroshima-aiming-weapon" name="weaponId">
           ${prepareWeaponOptions(weapons)}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="neuroshima-aiming-target">Cel</label>
+        <select id="neuroshima-aiming-target" name="targetTokenId">
+          ${prepareTargetOptions(availableTargets, selectedTarget?.id)}
         </select>
       </div>
       <p>
@@ -434,6 +456,12 @@ export async function configureAiming(actor) {
 
   const weapon = actor.items.get(String(formData.weaponId));
   if (!weapon || !weapons.includes(weapon)) return false;
+  const targetTokenId = String(formData.targetTokenId);
+  const target = availableTargets.find((candidate) => candidate.id === targetTokenId);
+  if (!target) {
+    ui.notifications.warn("Wybrany cel nie jest już dostępny na tej scenie.");
+    return false;
+  }
 
   return configureCurrentAiming(actor, {
     weaponId: weapon.id,

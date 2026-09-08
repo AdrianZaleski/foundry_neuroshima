@@ -19,6 +19,7 @@ import {
 } from "../catalogs/health-reference.mjs";
 import { rollNeuroshimaInitiative } from "../combat/initiative.mjs";
 import {
+  advanceSegmentTurn,
   cancelCurrentSegmentActionDeclaration,
   finishSegmentAction,
   interruptSegmentAction,
@@ -37,6 +38,7 @@ import {
   resolveMinorJamClearing
 } from "../combat/weapon-jam.mjs";
 import { calculateArmorPenaltyPercent } from "../combat/armor.mjs";
+import { downloadCombatDiagnostics } from "../diagnostics/combat-diagnostics.mjs";
 import {
   calculateAttributeValue,
   collectAutomaticModifierSources,
@@ -406,10 +408,12 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       rollSkill: this.#onRollSkill,
       rollInjury: this.#onRollInjury,
       rollInitiative: this.#onRollInitiative,
+      downloadCombatDiagnostics: this.#onDownloadCombatDiagnostics,
       declareSegmentAction: this.#onDeclareSegmentAction,
       passSegment: this.#onPassSegment,
       finishSegmentAction: this.#onFinishSegmentAction,
       interruptSegmentAction: this.#onInterruptSegmentAction,
+      advanceAfterSegmentAction: this.#onAdvanceAfterSegmentAction,
       cancelUnconfiguredShot: this.#onCancelUnconfiguredShot,
       configureAiming: this.#onConfigureAiming,
       resolveSingleShot: this.#onResolveSingleShot,
@@ -1012,6 +1016,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     this.render();
   }
 
+  static #onDownloadCombatDiagnostics() {
+    downloadCombatDiagnostics(this.actor);
+  }
+
   static async #onPassSegment() {
     await passSegment(this.actor);
     this.render();
@@ -1028,6 +1036,16 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   static async #onInterruptSegmentAction() {
     await interruptSegmentAction(this.actor);
+    this.render();
+  }
+
+  static async #onAdvanceAfterSegmentAction() {
+    const combatStatus = prepareActorCombatStatus(this.actor);
+    if (!combatStatus.action?.canAdvanceAfterAction) {
+      ui.notifications.warn("Najpierw dokończ albo rozstrzygnij bieżącą akcję.");
+      return;
+    }
+    await advanceSegmentTurn(game.combat);
     this.render();
   }
 

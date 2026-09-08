@@ -10,6 +10,20 @@ const AIMING_PREPARATION_FLAG = "aimingPreparation";
 const SKILL_USAGE_FLAG = "combatSkillUsage";
 const SEGMENTS_PER_ROUND = 3;
 
+function forcedFlagDeletion() {
+  return new foundry.data.operators.ForcedDeletion();
+}
+
+async function deleteCombatantFlag(combatant, flagKey) {
+  return combatant.update({
+    flags: {
+      [SYSTEM_ID]: {
+        [flagKey]: forcedFlagDeletion()
+      }
+    }
+  });
+}
+
 function clampSegment(segment) {
   return Math.max(1, Math.min(Number(segment) || 1, SEGMENTS_PER_ROUND));
 }
@@ -52,6 +66,9 @@ function describeActionTiming(action, currentTick) {
   const remainingAfterCurrentSegment = Math.max(0, action.endsAtTick - currentTick);
 
   if (remainingAfterCurrentSegment === 0) {
+    if (action.resolved) {
+      return "Akcja została rozstrzygnięta. Bieżący segment jest wykorzystany.";
+    }
     return "Akcja zajmuje bieżący segment.";
   }
 
@@ -129,6 +146,14 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
         && consumesCurrentSegment
         && action.effectCode === "clearMinorJam"
         && !action.jamClearingConfiguration,
+      canAdvanceAfterAction: isActiveTurn
+        && consumesCurrentSegment
+        && action.endsAtTick === currentTick
+        && (
+          action.resolved
+          || action.interrupted
+          || !["rangedShot", "clearMinorJam"].includes(action.effectCode)
+        ),
       timingDescription: consumesCurrentSegment
         ? describeActionTiming(action, currentTick)
         : "Poprzednia akcja jest zakończona."
@@ -196,8 +221,11 @@ export async function declareSegmentAction(actor, actionName, duration, metadata
 
   // Stary, osobny zapis przygotowanego celowania nie jest już używany.
   // Strzał przechowuje broń, cel i liczbę kości we własnej akcji.
-  await combatant.unsetFlag(SYSTEM_ID, AIMING_PREPARATION_FLAG);
+  await deleteCombatantFlag(combatant, AIMING_PREPARATION_FLAG);
 
+  // setFlag scala obiekty: nowa deklaracja nie może odziedziczyć wyniku,
+  // przerwania ani konfiguracji broni i celu poprzedniej akcji.
+  await deleteCombatantFlag(combatant, COMBATANT_ACTION_FLAG);
   await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, action);
 
   const endingDescription = safeDuration === 1
@@ -289,10 +317,7 @@ export async function markCurrentSegmentActionResolved(actor, resolution) {
 export async function cancelCurrentSegmentActionDeclaration(actor) {
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
-  await activeParticipant.combatant.unsetFlag(
-    SYSTEM_ID,
-    COMBATANT_ACTION_FLAG
-  );
+  await deleteCombatantFlag(activeParticipant.combatant, COMBATANT_ACTION_FLAG);
   return true;
 }
 
@@ -395,12 +420,6 @@ export async function selectSegmentAction(actor) {
     if (usableWeapons.length === 0) {
       ui.notifications.warn(
         "Nie można zadeklarować strzału: postać nie ma sprawnej, załadowanej broni palnej."
-      );
-      return false;
-    }
-    if (game.user.targets.size !== 1) {
-      ui.notifications.warn(
-        "Nie można zadeklarować strzału: wskaż dokładnie jeden token jako cel."
       );
       return false;
     }
@@ -534,11 +553,15 @@ export async function startSegmentCombat(combat) {
   }
 
   const actionResets = combat.combatants.map((combatant) => ({
-      _id: combatant.id,
-      [`flags.${SYSTEM_ID}.-=${COMBATANT_ACTION_FLAG}`]: null,
-      [`flags.${SYSTEM_ID}.-=${AIMING_PREPARATION_FLAG}`]: null,
-      [`flags.${SYSTEM_ID}.-=${SKILL_USAGE_FLAG}`]: null
-    }));
+    _id: combatant.id,
+    flags: {
+      [SYSTEM_ID]: {
+        [COMBATANT_ACTION_FLAG]: forcedFlagDeletion(),
+        [AIMING_PREPARATION_FLAG]: forcedFlagDeletion(),
+        [SKILL_USAGE_FLAG]: forcedFlagDeletion()
+      }
+    }
+  }));
 
   if (actionResets.length > 0) {
     await combat.updateEmbeddedDocuments("Combatant", actionResets);
