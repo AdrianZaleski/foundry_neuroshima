@@ -2,6 +2,7 @@ import {
   collectModifiersForScope,
   sumModifierSources
 } from "../effects/modifiers.mjs";
+import { collectBackgroundFeatureModifiers } from "../effects/background-features.mjs";
 
 export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
@@ -70,6 +71,9 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
       background: new SchemaField({
         origin: new StringField({ required: true, nullable: false, initial: "" }),
         originSourceCode: new StringField({ required: true, nullable: false, initial: "" }),
+        // W Foundry pole z choices domyślnie zabrania pustego tekstu.
+        // Starsi Actorzy nie mają wyboru premii, więc pusty stan musi być poprawny.
+        originBonusAttribute: new StringField({ required: true, nullable: false, blank: true, initial: "", choices: ["", "budowa", "zrecznosc", "charakter", "spryt", "percepcja"] }),
         profession: new StringField({ required: true, nullable: false, initial: "" }),
         professionSourceCode: new StringField({ required: true, nullable: false, initial: "" }),
         specialization: new StringField({ required: true, nullable: false, initial: "" }),
@@ -195,6 +199,10 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
 
   prepareDerivedData() {
     super.prepareDerivedData();
+    const backgroundModifiers = collectBackgroundFeatureModifiers({
+      system: this,
+      items: this.parent?.items ?? []
+    });
 
     // Wartość końcowa każdego współczynnika jest sumą wartości bazowej
     // oraz modyfikatora pochodzącego na przykład z efektów aktywnych.
@@ -203,7 +211,8 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         this.activeModifiers,
         `attribute.${attributeKey}`
       ));
-      attribute.modifier = attribute.manualModifier + activeModifier;
+      attribute.modifier = attribute.manualModifier + activeModifier
+        + sumModifierSources(backgroundModifiers.filter(modifier => modifier.scope === `attribute.${attributeKey}`));
       attribute.value = attribute.base + attribute.modifier;
     }
 

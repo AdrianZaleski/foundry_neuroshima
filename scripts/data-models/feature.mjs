@@ -1,8 +1,9 @@
 export class NeuroshimaFeatureDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
-    const { StringField } = foundry.data.fields;
+    const { StringField, BooleanField } = foundry.data.fields;
 
     return {
+      applyMechanicalEffects: new BooleanField({ initial: true }),
       // Kod źródłowy pozwoli później rozpoznać rekord pochodzący z katalogu
       // PERK albo TRAIT, niezależnie od nazwy wyświetlanej użytkownikowi.
       sourceCode: new StringField({

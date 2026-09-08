@@ -39,6 +39,15 @@
     </article>
   {{/if}}
 
+  {{#if chooseOriginBonus}}
+    <label>Współczynnik z premią +1 za pochodzenie
+      <select name="system.background.originBonusAttribute">
+        {{selectOptions originBonusOptions selected=system.background.originBonusAttribute}}
+      </select>
+    </label>
+  {{/if}}
+  <p><small>Premia z katalogowego pochodzenia jest doliczana do wartości końcowej. Wartość bazową wpisz bez tej premii.</small></p>
+
   <label>
     Profesja z katalogu
     <select name="system.background.professionSourceCode">
@@ -102,8 +111,8 @@
       {{#each perkItems}}
         <tr>
           <td>{{this.name}}</td>
-          <td>{{this.requirements}}</td>
-          <td>{{this.effects}}</td>
+          <td>{{this.requirements}}<p><strong>{{this.requirementStatus.label}}</strong></p><small>{{this.requirementStatus.details}}</small></td>
+          <td>{{this.effects}}<p><small>{{this.automationStatus}}</small></p></td>
           <td>
             <button type="button" data-action="editFeature" data-item-id="{{this.id}}">Edytuj</button>
             <button type="button" data-action="deleteFeature" data-item-id="{{this.id}}">Usuń</button>
@@ -134,8 +143,8 @@
       {{#each traitItems}}
         <tr>
           <td>{{this.name}}</td>
-          <td>{{this.requirements}}</td>
-          <td>{{this.effects}}</td>
+          <td>{{this.requirements}}<p><strong>{{this.requirementStatus.label}}</strong></p><small>{{this.requirementStatus.details}}</small></td>
+          <td>{{this.effects}}<p><small>{{this.automationStatus}}</small></p></td>
           <td>
             <button type="button" data-action="editFeature" data-item-id="{{this.id}}">Edytuj</button>
             <button type="button" data-action="deleteFeature" data-item-id="{{this.id}}">Usuń</button>

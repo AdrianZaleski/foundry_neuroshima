@@ -1,4 +1,5 @@
 import { prepareDiseaseStageModifiers } from "../catalogs/effect-definitions.mjs";
+import { collectBackgroundFeatureModifiers } from "./background-features.mjs";
 
 function normalizeModifierValue(value) {
   const modifierValue = Number(value);
@@ -44,7 +45,7 @@ function collectDiseaseModifierSources(actor) {
 }
 
 export function collectAutomaticModifierSources(actor) {
-  return collectDiseaseModifierSources(actor);
+  return [...collectDiseaseModifierSources(actor), ...collectBackgroundFeatureModifiers(actor)];
 }
 
 export function collectAttributeModifierSources(actor, attributeKey) {

@@ -1,4 +1,6 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
+import { checkFeatureRequirements } from "../effects/background-features.mjs";
+import { confirmPerkAddition, getFeatureRequirementValues } from "./feature-requirements.mjs";
 import { SKILL_CONFIGURATION, rollSkill } from "../rolls/skill-roll.mjs";
 import {
   promptToCreateInjuryFromRoll,
@@ -633,6 +635,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.selectedOrigin = originCatalog.selectedEntry;
     context.selectedProfession = professionCatalog.selectedEntry;
     context.selectedSpecialization = specializationCatalog.selectedEntry;
+    context.originBonusOptions = { "": "Wybierz Współczynnik", ...ATTRIBUTE_LABELS };
+    context.chooseOriginBonus = this.actor.system.background.originSourceCode === "ORIGIN_UNKNOWN";
 
     // Choroba przeciągnięta z Compendium staje się niezależnym Itemem Actora.
     // Aktualny etap można dzięki temu zmieniać bez modyfikowania wzorca.
@@ -716,10 +720,16 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
     // Cechy i sztuczki są osadzonymi Itemami. Przygotowujemy dwie listy,
     // aby karta mogła pokazać je osobno mimo wspólnego modelu danych.
+    const values = getFeatureRequirementValues(this.actor);
     const prepareFeatureItem = (item) => ({
       id: item.id,
       name: item.name,
       requirements: item.system.requirements,
+      requirementStatus: checkFeatureRequirements(this.actor, item.system.requirements, values),
+      automationStatus: item.system.applyMechanicalEffects === false ? "Automatyczne premie wyłączone"
+        : parseEffectCodes(item.system.effects, item.name).modifiers.length
+          ? "Rozpoznane premie naliczane automatycznie; pozostałe działanie według opisu"
+          : "Działanie według opisu — rozstrzyga gracz lub MG",
       effects: item.system.effects,
       description: item.system.description
     });
@@ -1247,6 +1257,14 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     await this.actor.deleteEmbeddedDocuments("Item", [medicineItem.id]);
   }
 
+  async _onDropItem(event, item) {
+    if (!this.actor.isOwner || !this.isEditable) return null;
+    // Przesuwanie własnej sztuczki na karcie jest sortowaniem, nie dodawaniem.
+    if (this.actor.uuid !== item.parent?.uuid
+      && !(await confirmPerkAddition(this.actor, item))) return null;
+    return super._onDropItem(event, item);
+  }
+
   static async #onCreateFeature(event, target) {
     const featureType = target.dataset.featureType;
     const featureTypeNames = {
@@ -1259,12 +1277,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       return;
     }
 
-    const [createdFeature] = await this.actor.createEmbeddedDocuments("Item", [
-      {
-        name: featureTypeNames[featureType],
-        type: featureType
-      }
-    ]);
+    const data = { name: featureTypeNames[featureType], type: featureType };
+    if (!(await confirmPerkAddition(this.actor, data))) return;
+    const [createdFeature] = await this.actor.createEmbeddedDocuments("Item", [data]);
 
     await createdFeature.sheet.render({ force: true });
   }

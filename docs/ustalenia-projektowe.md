@@ -365,7 +365,35 @@
 - Przycisk `Dodaj z Kompendium EFFECT` pozwala zastosować obsługiwaną definicję
   ręcznie, podając wartość źródłową i opcjonalny termin wygaśnięcia.
 
-## Diagnostyka
+## Parametry pochodzeń, profesji, cech i sztuczek — 2026-09-08
+
+- Katalogowe pochodzenie dodaje premię do wartości końcowej Współczynnika
+  oraz testów; nie zmienia wartości bazowej. Zmiana lub wyczyszczenie wyboru
+  usuwa poprzednią premię. Dotychczas ręcznie doliczoną premię należy odjąć
+  od bazy, aby nie naliczyć jej dwukrotnie.
+- `ORIGIN_UNKNOWN` udostępnia jawny wybór Współczynnika z premią +1.
+- Parametry tła są zapisane w `scripts/catalogs/background-bonuses.mjs`;
+  test sprawdza ich zgodność z lokalnymi katalogami pochodzeń i profesji.
+  Profesje nie mają obecnie liczbowych bonusów w danych katalogowych.
+- Na karcie cech i sztuczek sprawdzamy kody ORIGIN/CLASS oraz jednoznaczne
+  progi Współczynników i standardowych Umiejętności zapisane jako `N+`.
+  Sprawdzenie używa bieżących wartości końcowych i nie wyłącza efektów.
+- Przeciągnięcie nowej sztuczki na kartę otwiera okno przed jej zapisaniem.
+  Pokazuje spełnione wymagania, brakujące progi z obecną wartością oraz
+  warunki wymagające oceny MG. Przy brakach można wybrać `Dodaj mimo to`
+  albo `Nie dodawaj sztuczki`; przy spełnionych wymaganiach `Dodaj sztuczkę`.
+  Zamknięcie okna anuluje dodawanie. Sortowanie własnych sztuczek nie pyta
+  ponownie. Ręczne tworzenie pustej sztuczki również wymaga potwierdzenia;
+  wymagania wpisane później są oceniane na karcie. Okno dotyczy dodawania
+  przez kartę, nie zewnętrznych makr i importów.
+- Nierozpoznane wymagania, alternatywy i warunki fabularne pozostają jawnie
+  oznaczone do sprawdzenia przez MG. Rozpoznane kody EFFECT w polu działania
+  korzystają ze wspólnego silnika; można wyłączyć ich naliczanie na Itemie.
+- Większość katalogowych cech i sztuczek ma działanie opisowe. Wybór pakietów
+  Umiejętności, manewry i efekty warunkowe wymagają kolejnych implementacji;
+  ta zmiana nie oznacza pełnej automatyzacji wszystkich zdolności.
+
+## Diagnostyka walki
 
 - Podczas walki karta Aktora udostępnia przycisk `Pobierz diagnostykę walki`.
   Zapisuje on plik JSON ze stanem rundy i segmentu, akcjami uczestników,
