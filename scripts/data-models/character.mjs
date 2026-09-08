@@ -223,6 +223,7 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         this.activeModifiers,
         `skill.${skillKey}`
       ));
+      skill.modifier += sumModifierSources(backgroundModifiers.filter(modifier => modifier.scope === `skill.${skillKey}`));
       skill.value = skill.base + skill.modifier;
     }
   }

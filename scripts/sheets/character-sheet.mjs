@@ -1,5 +1,7 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
 import { checkFeatureRequirements } from "../effects/background-features.mjs";
+import { getTraitBonusDefinition } from "../effects/trait-bonuses.mjs";
+import { preventDuplicateFeature } from "../effects/feature-duplicates.mjs";
 import { confirmPerkAddition, getFeatureRequirementValues } from "./feature-requirements.mjs";
 import { SKILL_CONFIGURATION, rollSkill } from "../rolls/skill-roll.mjs";
 import {
@@ -43,6 +45,7 @@ import { calculateArmorPenaltyPercent } from "../combat/armor.mjs";
 import { downloadCombatDiagnostics } from "../diagnostics/combat-diagnostics.mjs";
 import {
   calculateAttributeValue,
+  calculateSkillValue,
   collectAutomaticModifierSources,
   escapeModifierText,
   formatSignedModifier,
@@ -564,6 +567,11 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.actor = this.actor;
     context.system = this.actor.system;
     context.combatStatus = prepareActorCombatStatus(this.actor);
+    // Wartości z bieżących Itemów, tak jak w rzutach; nie z wcześniejszego
+    // przygotowania modelu, które może poprzedzać przygotowanie cech Actora.
+    context.skillFinalValues = Object.fromEntries(
+      Object.keys(this.actor.system.skills).map(key => [key, calculateSkillValue(this.actor, key)])
+    );
     context.attributeFinalValues = Object.fromEntries(
       Object.keys(ATTRIBUTE_LABELS).map((attributeKey) => [
         attributeKey,
@@ -727,6 +735,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       requirements: item.system.requirements,
       requirementStatus: checkFeatureRequirements(this.actor, item.system.requirements, values),
       automationStatus: item.system.applyMechanicalEffects === false ? "Automatyczne premie wyłączone"
+        : getTraitBonusDefinition(item)
+          ? `Automatycznie: ${getTraitBonusDefinition(item).summary}`
         : parseEffectCodes(item.system.effects, item.name).modifiers.length
           ? "Rozpoznane premie naliczane automatycznie; pozostałe działanie według opisu"
           : "Działanie według opisu — rozstrzyga gracz lub MG",
@@ -1259,6 +1269,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
   async _onDropItem(event, item) {
     if (!this.actor.isOwner || !this.isEditable) return null;
+    if (this.actor.uuid !== item.parent?.uuid && preventDuplicateFeature(this.actor, item)) return null;
     // Przesuwanie własnej sztuczki na karcie jest sortowaniem, nie dodawaniem.
     if (this.actor.uuid !== item.parent?.uuid
       && !(await confirmPerkAddition(this.actor, item))) return null;
@@ -1281,7 +1292,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     if (!(await confirmPerkAddition(this.actor, data))) return;
     const [createdFeature] = await this.actor.createEmbeddedDocuments("Item", [data]);
 
-    await createdFeature.sheet.render({ force: true });
+    if (createdFeature) await createdFeature.sheet.render({ force: true });
   }
 
   static async #onEditFeature(event, target) {

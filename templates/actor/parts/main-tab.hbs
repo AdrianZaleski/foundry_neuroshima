@@ -13,12 +13,13 @@
     Rzuć inicjatywę
   </button>
 
+  <button type="button" data-action="downloadCombatDiagnostics">Pobierz diagnostykę postaci i walki</button>
+
   {{#if combatStatus.inCombat}}
     <section>
       <h2>Walka</h2>
       {{#if combatStatus.started}}
         <p><strong>Runda {{combatStatus.round}} — segment {{combatStatus.segment}} z 3</strong></p>
-        <button type="button" data-action="downloadCombatDiagnostics">Pobierz diagnostykę walki</button>
 
         {{#if combatStatus.action.isCurrent}}
           <p>

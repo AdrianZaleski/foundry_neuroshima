@@ -1,4 +1,5 @@
 import { BACKGROUND_BONUSES } from "../catalogs/background-bonuses.mjs";
+import { collectTraitSkillModifiers } from "./trait-bonuses.mjs";
 import { parseEffectCodes } from "../catalogs/effect-definitions.mjs";
 
 export function collectBackgroundFeatureModifiers(actor) {
@@ -20,7 +21,7 @@ export function collectBackgroundFeatureModifiers(actor) {
     if (!["perk", "trait"].includes(item.type) || item.system.applyMechanicalEffects === false) continue;
     modifiers.push(...parseEffectCodes(item.system.effects, `${item.type === "perk" ? "Sztuczka" : "Cecha"}: ${item.name}`).modifiers);
   }
-  return modifiers;
+  return [...modifiers, ...collectTraitSkillModifiers(actor)];
 }
 
 const normalize = value => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll("ł", "l").toLowerCase().replace(/[^a-z0-9]/g, "");

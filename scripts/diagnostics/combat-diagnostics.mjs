@@ -1,4 +1,22 @@
+import { calculateSkillValue, collectSkillModifierSources } from "../effects/modifiers.mjs";
 const SYSTEM_ID = "neuroshima";
+
+export function prepareFeatureDiagnostics(actor) {
+  return {
+    features: [...(actor.items ?? [])].filter(item => ["trait", "perk"].includes(item.type)).map(item => ({
+      id: item.id, name: item.name, type: item.type,
+      sourceCode: item.system.sourceCode,
+      applyMechanicalEffects: item.system.applyMechanicalEffects,
+      requirements: item.system.requirements,
+      effects: item.system.effects
+    })),
+    skills: Object.fromEntries(Object.entries(actor.system.skills ?? {}).map(([key, skill]) => [key, {
+      base: skill.base, modelValue: skill.value,
+      calculatedValue: calculateSkillValue(actor, key),
+      sources: collectSkillModifierSources(actor, key)
+    }]))
+  };
+}
 
 function serializeWeapon(item) {
   return {
@@ -46,7 +64,8 @@ export function prepareCombatDiagnostics(actor) {
     } : null,
     inspectedActor: actor ? {
       id: actor.id,
-      name: actor.name
+      name: actor.name,
+      ...prepareFeatureDiagnostics(actor)
     } : null,
     targets: [...game.user.targets].map((token) => ({
       id: token.id,

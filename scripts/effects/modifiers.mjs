@@ -76,7 +76,10 @@ export function collectAttributeModifierSources(actor, attributeKey) {
 
 export function collectSkillModifierSources(actor, skillKey) {
   if (!actor.system.skills?.[skillKey]) return [];
-  return collectModifiersForScope(actor.system.activeModifiers, `skill.${skillKey}`);
+  return [
+    ...collectModifiersForScope(actor.system.activeModifiers, `skill.${skillKey}`),
+    ...collectAutomaticModifierSources(actor).filter(modifier => modifier.scope === `skill.${skillKey}`)
+  ];
 }
 
 export function collectTestModifierSources(

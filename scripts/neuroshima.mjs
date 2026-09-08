@@ -26,6 +26,7 @@ import {
   NeuroshimaCombat
 } from "./combat/initiative.mjs";
 import { initializeSegmentCombatInterface } from "./combat/segments.mjs";
+import { initializeFeatureDuplicateGuard } from "./effects/feature-duplicates.mjs";
 import {
   initializeCatalogCompendia
 } from "./compendia/catalog-compendia.mjs";
@@ -52,6 +53,7 @@ Hooks.once("init", () => {
   CONFIG.Combat.documentClass = NeuroshimaCombat;
   CONFIG.Combat.initiative.decimals = 0;
   initializeSegmentCombatInterface();
+  initializeFeatureDuplicateGuard();
 
   // Łączymy typ Itemu "equipment" z modelem danych zwykłego ekwipunku.
   CONFIG.Item.dataModels.equipment = NeuroshimaEquipmentDataModel;

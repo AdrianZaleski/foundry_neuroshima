@@ -393,7 +393,29 @@
   Umiejętności, manewry i efekty warunkowe wymagają kolejnych implementacji;
   ta zmiana nie oznacza pełnej automatyzacji wszystkich zdolności.
 
-## Diagnostyka walki
+## Stałe premie cech — pierwszy zakres
+
+- Jawne definicje w `scripts/effects/trait-bonuses.mjs` podłączają pięć cech
+  z lokalnego katalogu TRAIT: Hazardzista (+2 do Zdolności manualnych),
+  Doktor Quinn (Medycyna minimum 4), Koleś zwany koniem (Jeździectwo minimum 2),
+  Swoje przeszedłem (Walka wręcz i Siła woli minimum 1) oraz Wyszkolenie
+  (Broń strzelecka i Pirotechnika minimum 1).
+- Poziom minimalny podnosi niewystarczającą bazę, lecz nie obniża wyższego
+  poziomu i nie dodaje całej swojej wartości do już rozwiniętej Umiejętności.
+  Ręczne modyfikatory nadal działają, w tym kary zmniejszające poziom końcowy.
+- Bonusy są wyliczane bez zmiany bazy; są widoczne jako źródła na karcie
+  i w testach oraz uwzględniane w wymaganiach sztuczek. Usunięcie cechy lub
+  wyłączenie jej automatycznych premii usuwa wpływ. Duplikat tego samego kodu
+  nie przyznaje premii drugi raz.
+- Wcześniej ręcznie wpisaną premię Hazardzisty należy usunąć z bazy.
+  Minimalne poziomy nie kumulują się z ręcznie wpisanym takim samym poziomem.
+- Obecność cechy na Actorze oznacza jej przyznanie, także za zgodą MG mimo
+  wymagań. Warunek postaci z opisu Doktor Quinn ocenia MG. Dodatkowe przerzuty
+  i ułatwienie wierzchowca z cechy Koleś zwany koniem pozostają opisowe.
+- Nie interpretujemy dowolnych liczb z tekstu jako stałych bonusów.
+  Cechy wybierające pakiet oraz efekty sytuacyjne są kolejnym zakresem.
+
+## Raport diagnostyczny walki
 
 - Podczas walki karta Aktora udostępnia przycisk `Pobierz diagnostykę walki`.
   Zapisuje on plik JSON ze stanem rundy i segmentu, akcjami uczestników,
