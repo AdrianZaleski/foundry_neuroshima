@@ -1,6 +1,6 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
 import { checkFeatureRequirements } from "../effects/background-features.mjs";
-import { getTraitBonusDefinition } from "../effects/trait-bonuses.mjs";
+import { getTraitBonusDefinition, describeTraitAutomation, getRequiredGender } from "../effects/trait-bonuses.mjs";
 import { preventDuplicateFeature } from "../effects/feature-duplicates.mjs";
 import { confirmPerkAddition, getFeatureRequirementValues } from "./feature-requirements.mjs";
 import { SKILL_CONFIGURATION, rollSkill } from "../rolls/skill-roll.mjs";
@@ -565,6 +565,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
     // Udostępniamy szablonowi kartę Actora oraz jej dane systemowe.
     context.actor = this.actor;
+    context.genderOptions = { "": "Nie określono", female: "Kobieta", male: "Mężczyzna", other: "Inna" };
     context.system = this.actor.system;
     context.combatStatus = prepareActorCombatStatus(this.actor);
     // Wartości z bieżących Itemów, tak jak w rzutach; nie z wcześniejszego
@@ -733,10 +734,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       id: item.id,
       name: item.name,
       requirements: item.system.requirements,
-      requirementStatus: checkFeatureRequirements(this.actor, item.system.requirements, values),
+      requirementStatus: checkFeatureRequirements(this.actor, item.system.requirements, values, item),
       automationStatus: item.system.applyMechanicalEffects === false ? "Automatyczne premie wyłączone"
-        : getTraitBonusDefinition(item)
-          ? `Automatycznie: ${getTraitBonusDefinition(item).summary}`
+        : getTraitBonusDefinition(item) || getRequiredGender(item)
+          ? describeTraitAutomation(this.actor, item)
         : parseEffectCodes(item.system.effects, item.name).modifiers.length
           ? "Rozpoznane premie naliczane automatycznie; pozostałe działanie według opisu"
           : "Działanie według opisu — rozstrzyga gracz lub MG",
@@ -1273,7 +1274,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     // Przesuwanie własnej sztuczki na karcie jest sortowaniem, nie dodawaniem.
     if (this.actor.uuid !== item.parent?.uuid
       && !(await confirmPerkAddition(this.actor, item))) return null;
-    return super._onDropItem(event, item);
+    const added = await super._onDropItem(event, item);
+    if (added && this.actor.uuid !== item.parent?.uuid && getTraitBonusDefinition(added)?.groups) await added.sheet.render({ force: true });
+    return added;
   }
 
   static async #onCreateFeature(event, target) {

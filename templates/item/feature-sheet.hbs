@@ -7,6 +7,19 @@
   </header>
 
   <h2>{{featureTypeName}}</h2>
+  {{#if skillGroupOptions}}
+    <label>Pakiet Umiejętności (+2 do każdej)
+      <select name="system.selectedSkillGroup">{{selectOptions skillGroupOptions selected=system.selectedSkillGroup}}</select>
+    </label>
+    <p>Zmiana pakietu przenosi premię bez zmiany wartości bazowych.</p>
+  {{/if}}
+  <label>Ograniczenie płci wynikające z zasad
+    <select name="system.requiredGender">{{selectOptions genderOptions selected=system.requiredGender}}</select>
+  </label>
+  {{#if hasGenderRequirement}}
+    <p>Efekt wymaga zgodnej płci na karcie postaci. Doktor Quinn zawsze wymaga kobiety.</p>
+    <label><input type="checkbox" name="system.ignoreGenderRequirement" {{checked system.ignoreGenderRequirement}}> MG zezwolił na działanie mimo wymogu płci</label>
+  {{/if}}
   <label><input type="checkbox" name="system.applyMechanicalEffects" {{checked system.applyMechanicalEffects}}> Naliczaj rozpoznane premie automatycznie</label>
 
   <label>

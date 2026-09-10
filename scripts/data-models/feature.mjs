@@ -3,6 +3,9 @@ export class NeuroshimaFeatureDataModel extends foundry.abstract.TypeDataModel {
     const { StringField, BooleanField } = foundry.data.fields;
 
     return {
+      selectedSkillGroup: new StringField({ initial: "", blank: true }),
+      requiredGender: new StringField({ initial: "", blank: true, choices: ["", "female", "male"] }),
+      ignoreGenderRequirement: new BooleanField({ initial: false }),
       applyMechanicalEffects: new BooleanField({ initial: true }),
       // Kod źródłowy pozwoli później rozpoznać rekord pochodzący z katalogu
       // PERK albo TRAIT, niezależnie od nazwy wyświetlanej użytkownikowi.

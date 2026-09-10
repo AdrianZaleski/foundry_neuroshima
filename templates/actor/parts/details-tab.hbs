@@ -1,5 +1,8 @@
 <section class="tab {{tabs.details.cssClass}}" data-group="sheet" data-tab="details" style="height: calc(100% - 42px); overflow-y: auto; padding-right: 6px;">
   <h2>Dane postaci</h2>
+  <label>Płeć postaci
+    <select name="system.identity.gender">{{selectOptions genderOptions selected=system.identity.gender}}</select>
+  </label>
 
   {{!-- Ksywa jest nazwą dokumentu Actor i dzięki temu pozostaje widoczna także poza kartą. --}}
   <label>

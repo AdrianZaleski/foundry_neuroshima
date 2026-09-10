@@ -1,3 +1,4 @@
+import { getTraitBonusDefinition, getRequiredGender } from "../effects/trait-bonuses.mjs";
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -25,6 +26,10 @@ export class NeuroshimaFeatureSheet extends HandlebarsApplicationMixin(ItemSheet
 
     context.item = this.item;
     context.system = this.item.system;
+    const definition = getTraitBonusDefinition(this.item);
+    context.skillGroupOptions = definition?.groups ? { "": "Wybierz pakiet", ...definition.groups } : null;
+    context.hasGenderRequirement = Boolean(getRequiredGender(this.item));
+    context.genderOptions = { "": "Brak dodatkowego ograniczenia", female: "Tylko kobiety", male: "Tylko mężczyźni" };
     context.featureTypeName = this.item.type === "trait" ? "Cecha" : "Sztuczka";
 
     return context;

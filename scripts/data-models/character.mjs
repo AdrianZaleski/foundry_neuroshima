@@ -61,6 +61,7 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
       // informacje osobowe zapisujemy w modelu systemu, aby można je było
       // niezależnie wyświetlać i wykorzystywać w przyszłych automatyzacjach.
       identity: new SchemaField({
+        gender: new StringField({ initial: "", blank: true, choices: ["", "female", "male", "other"] }),
         firstName: new StringField({ required: true, nullable: false, initial: "" }),
         lastName: new StringField({ required: true, nullable: false, initial: "" })
       }),

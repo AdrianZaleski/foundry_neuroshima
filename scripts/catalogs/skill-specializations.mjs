@@ -1,6 +1,6 @@
 // Specjalizacje obejmują całe grupy umiejętności. Mapa pochodzi z poprzedniej
 // karty Roll20 i używa stabilnych kodów katalogowych zapisanych na Actorze.
-const SKILL_GROUPS = {
+export const SKILL_GROUPS = {
   walkaWrecz: ["bijatyka", "bronReczna", "rzucanie"],
   bronStrzelecka: ["pistolety", "karabiny", "bronMaszynowa"],
   bronDystansowa: ["luk", "kusza", "proca"],

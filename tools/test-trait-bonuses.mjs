@@ -32,7 +32,7 @@ test("Hazardzista z PERK jak w raporcie nalicza trzy premie i współdzieli toż
 function fixture(code, base = 0) {
   const item = structuredClone(catalog.find(item => item.system.sourceCode === code));
   assert.ok(item, code);
-  return { items: [item], system: { background: {}, attributes: {}, activeModifiers: [],
+  return { items: [item], system: { identity: { gender: "female" }, background: {}, attributes: {}, activeModifiers: [],
     skills: Object.fromEntries(TRAIT_BONUSES[code].skills.map(key => [key, { base }]))
   } };
 }

@@ -1,5 +1,6 @@
 import { BACKGROUND_BONUSES } from "../catalogs/background-bonuses.mjs";
 import { collectTraitSkillModifiers } from "./trait-bonuses.mjs";
+import { getRequiredGender, genderRequirementMet } from "./trait-bonuses.mjs";
 import { parseEffectCodes } from "../catalogs/effect-definitions.mjs";
 
 export function collectBackgroundFeatureModifiers(actor) {
@@ -18,7 +19,7 @@ export function collectBackgroundFeatureModifiers(actor) {
     modifiers.push(...parseEffectCodes(bonus, `${type === "origin" ? "Pochodzenie" : "Profesja"}: ${entry.name}`).modifiers);
   }
   for (const item of actor.items ?? []) {
-    if (!["perk", "trait"].includes(item.type) || item.system.applyMechanicalEffects === false) continue;
+    if (!["perk", "trait"].includes(item.type) || item.system.applyMechanicalEffects === false || !genderRequirementMet(actor, item)) continue;
     modifiers.push(...parseEffectCodes(item.system.effects, `${item.type === "perk" ? "Sztuczka" : "Cecha"}: ${item.name}`).modifiers);
   }
   return [...modifiers, ...collectTraitSkillModifiers(actor)];
@@ -27,8 +28,10 @@ export function collectBackgroundFeatureModifiers(actor) {
 const normalize = value => String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replaceAll("ł", "l").toLowerCase().replace(/[^a-z0-9]/g, "");
 
 // Nie zgadujemy alternatyw, wymagań fabularnych ani nazw nieznanych statystyk.
-export function checkFeatureRequirements(actor, text, values) {
+export function checkFeatureRequirements(actor, text, values, item = null) {
   const checks = String(text ?? "").split(/[,;\n]+/).map(s => s.trim()).filter(Boolean).map(part => {
+    const gender = part.match(/^Płeć:\s*(Kobieta|Mężczyzna)$/iu);
+    if (gender) return { text: part, met: item?.system?.ignoreGenderRequirement === true || actor.system.identity?.gender === (gender[1].toLocaleLowerCase("pl") === "kobieta" ? "female" : "male") };
     if (/^(ORIGIN|CLASS)_[A-Z0-9_]+$/.test(part)) {
       const type = part.startsWith("ORIGIN_") ? "origin" : "profession";
       const entry = BACKGROUND_BONUSES.find(e => e.sourceCode === part);
@@ -41,6 +44,7 @@ export function checkFeatureRequirements(actor, text, values) {
     }
     return { text: part, met: null };
   });
+  if (item && getRequiredGender(item)) checks.push({ text: `Płeć: ${getRequiredGender(item) === "female" ? "kobieta" : "mężczyzna"}${item.system?.ignoreGenderRequirement ? " — wyjątek MG" : ""}`, met: genderRequirementMet(actor, item) });
   return {
     checks,
     label: checks.some(c => c.met === false) ? "Wymagania niespełnione"

@@ -11,8 +11,8 @@ export function getFeatureRequirementValues(actor) {
 }
 
 export async function confirmPerkAddition(actor, item) {
-  if (item.type !== "perk") return true;
-  const status = checkFeatureRequirements(actor, item.system?.requirements, getFeatureRequirementValues(actor));
+  if (!["perk", "trait"].includes(item.type)) return true;
+  const status = checkFeatureRequirements(actor, item.system?.requirements, getFeatureRequirementValues(actor), item);
   const needsOverride = status.checks.some(check => check.met !== true);
   const sections = [
     [false, "Brakujące wymagania"],
