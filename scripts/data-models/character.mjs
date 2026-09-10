@@ -82,6 +82,23 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
       }),
 
       development: new SchemaField({
+        ignoreSessionLimit: new BooleanField({ initial: false }),
+        session: new NumberField({ initial: 1, min: 1, integer: true }),
+        history: new ArrayField(new SchemaField({
+          id: new StringField({ initial: "" }),
+          timestamp: new StringField({ initial: "" }),
+          label: new StringField({ initial: "" }),
+          userId: new StringField({ initial: "" }),
+          kind: new StringField({ initial: "" }),
+          key: new StringField({ initial: "" }),
+          session: new NumberField({ initial: 1, integer: true }),
+          from: new NumberField({ initial: 0 }),
+          to: new NumberField({ initial: 0 }),
+          cost: new NumberField({ initial: 0 }),
+          specialized: new BooleanField({ initial: false }),
+          balanceBefore: new NumberField({ initial: 0 }),
+          balanceAfter: new NumberField({ initial: 0 })
+        }), { initial: [] }),
         experiencePoints: new NumberField({
           required: true,
           nullable: false,

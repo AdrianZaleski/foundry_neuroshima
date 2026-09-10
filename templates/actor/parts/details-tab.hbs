@@ -97,8 +97,22 @@
     <input type="number" name="system.development.experiencePoints" value="{{system.development.experiencePoints}}" min="0" step="1">
   </label>
 
-  <h2>Sztuczki</h2>
+  <section>
+    <h3>Rozwój za PD</h3>
+    <p>Rozliczenie po sesji {{system.development.session}}</p>
+    <p>{{#if system.development.ignoreSessionLimit}}Limit podniesień po sesji wyłączony decyzją MG.{{else}}Limit: jedno podniesienie danej wartości po sesji.{{/if}}</p>
+    {{#if canManageDevelopmentSession}}<button type="button" data-action="toggleDevelopmentSessionLimit">{{#if system.development.ignoreSessionLimit}}Przywróć limit podniesień (MG){{else}}Wyłącz limit podniesień (MG){{/if}}</button>{{/if}}
+    <button type="button" data-action="purchaseDevelopment">Kup rozwój za PD</button>
+    {{#if canManageDevelopmentSession}}<button type="button" data-action="nextDevelopmentSession">Kolejna sesja rozwoju (MG)</button>{{/if}}
+    <details><summary>Historia rozwoju</summary>
+      <table><thead><tr><th>Sesja</th><th>Rozwój</th><th>Poziom</th><th>Koszt PD</th><th>PD po zakupie</th></tr></thead>
+        <tbody>{{#each developmentHistory}}<tr><td>{{this.session}}</td><td>{{this.label}}</td><td>{{this.from}} → {{this.to}}</td><td>{{this.cost}}</td><td>{{this.balanceAfter}}</td></tr>
+        {{else}}<tr><td colspan="5">Brak zakupów rozwoju.</td></tr>{{/each}}</tbody>
+      </table>
+    </details>
+  </section>
 
+  <h2>Sztuczki</h2>
   <button type="button" data-action="createFeature" data-feature-type="perk">Dodaj sztuczkę</button>
 
   <table>
@@ -149,6 +163,10 @@
           <td>{{this.requirements}}<p><strong>{{this.requirementStatus.label}}</strong></p><small>{{this.requirementStatus.details}}</small></td>
           <td>{{this.effects}}<p><small>{{this.automationStatus}}</small></p></td>
           <td>
+            {{#if this.hasConditionalEffect}}
+              <p>Działa do przespania nocy. Wyłącz efekt po ustaleniu tego w grze.</p>
+              <button type="button" data-action="toggleConditionalFeature" data-item-id="{{this.id}}">{{#if this.conditionalEffectActive}}Wyłącz efekt{{else}}Włącz Umysł kupca{{/if}}</button>
+            {{/if}}
             <button type="button" data-action="editFeature" data-item-id="{{this.id}}">Edytuj</button>
             <button type="button" data-action="deleteFeature" data-item-id="{{this.id}}">Usuń</button>
           </td>

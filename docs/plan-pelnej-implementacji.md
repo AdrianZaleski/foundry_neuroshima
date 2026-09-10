@@ -1,6 +1,23 @@
 # Plan pełnej implementacji systemu Neuroshima
 
-Stan na: 2026-09-06
+Stan bazowego audytu: 2026-09-06. Aktualizacja priorytetów: 2026-09-10.
+
+## Aktualne priorytety — 2026-09-10
+
+Dalsza automatyzacja pojedynczych cech została odłożona decyzją użytkownika.
+Aktualny stan i lista pozostałych prac są w
+[cechy-stan-i-pozostale-prace.md](cechy-stan-i-pozostale-prace.md).
+Ten zapis uaktualnia starsze opisy braków dotyczących cech poniżej.
+
+Zatwierdzony następny etap: rozwój postaci za PD — koszt zakupu,
+Specjalizacja, odjęcie punktów i historia zmian. Przed wdrożeniem ustalić
+jednoznaczne źródło tabel kosztów. Przygotowano niezależny mechanizm wyceny
+i wspólnego zapisu poziomu, salda oraz historii, z testami na cenach
+testowych. Nie podłączono go jeszcze do karty ani modelu danych; czeka na
+potwierdzoną tabelę kosztów i zasady wyznaczania kupowanego poziomu.
+Kolejne kandydatury: pierwsza pomoc i leczenie ran, następnie
+podstawowy przebieg walki wręcz. Pełne strzelanie i przygotowanie wydania
+pozostają w planie.
 
 ## Cel
 
@@ -307,7 +324,7 @@ wydzielić z niej jednoznaczne rekordy i powiązać je z `MISC_CAT`.
 
 ## Najbliższy krok
 
-Najbliższym zadaniem będzie zastąpienie wspólnego pola „inne warunki” osobnymi
-ustawieniami ruchu strzelca i celu, widoczności, osłony oraz wybranej lokacji.
-Wartości pochodzą z tabeli utrudnień strzału i będą pokazane jako niezależne
-źródła modyfikatora.
+Wybrać kolejny większy etap zgodnie z aktualnymi priorytetami powyżej.
+Zapisany wcześniej krok strzelania — osobne ustawienia ruchu, widoczności,
+osłony i wybranej lokacji — pozostaje otwarty, ale nie jest jedynym
+kandydatem do następnej realizacji.

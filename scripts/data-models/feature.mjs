@@ -3,6 +3,7 @@ export class NeuroshimaFeatureDataModel extends foundry.abstract.TypeDataModel {
     const { StringField, BooleanField } = foundry.data.fields;
 
     return {
+      conditionalEffectActive: new BooleanField({ initial: false }),
       selectedSkillGroup: new StringField({ initial: "", blank: true }),
       requiredGender: new StringField({ initial: "", blank: true, choices: ["", "female", "male"] }),
       ignoreGenderRequirement: new BooleanField({ initial: false }),

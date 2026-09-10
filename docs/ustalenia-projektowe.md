@@ -395,6 +395,10 @@
 
 ## Stałe premie cech — pierwszy zakres
 
+Aktualizacja 2026-09-10: poniższy opis dokumentuje pierwszy zakres.
+Nowszy stan (pakiety, płeć, Umysł kupca) i odłożone prace opisuje
+[cechy-stan-i-pozostale-prace.md](cechy-stan-i-pozostale-prace.md).
+
 - Jawne definicje w `scripts/effects/trait-bonuses.mjs` podłączają pięć cech
   z lokalnego katalogu TRAIT: Hazardzista (+2 do Zdolności manualnych),
   Doktor Quinn (Medycyna minimum 4), Koleś zwany koniem (Jeździectwo minimum 2),

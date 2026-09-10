@@ -1,4 +1,6 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
+import { purchaseDevelopment, nextDevelopmentSession, toggleDevelopmentSessionLimit } from "../development/interface.mjs";
+import { isMerchantMind } from "../effects/conditional-features.mjs";
 import { checkFeatureRequirements } from "../effects/background-features.mjs";
 import { getTraitBonusDefinition, describeTraitAutomation, getRequiredGender } from "../effects/trait-bonuses.mjs";
 import { preventDuplicateFeature } from "../effects/feature-duplicates.mjs";
@@ -440,6 +442,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // jest przekazywany przez przycisk tworzenia.
       createFeature: this.#onCreateFeature,
       editFeature: this.#onEditFeature,
+      purchaseDevelopment: async function () { await purchaseDevelopment(this.actor); },
+      nextDevelopmentSession: async function () { await nextDevelopmentSession(this.actor); },
+      toggleDevelopmentSessionLimit: async function () { await toggleDevelopmentSessionLimit(this.actor); },
+      toggleConditionalFeature: this.#onToggleConditionalFeature,
       deleteFeature: this.#onDeleteFeature,
 
       // Te trzy akcje obsługują przedmioty zapisane wewnątrz konkretnej postaci.
@@ -565,6 +571,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
     // Udostępniamy szablonowi kartę Actora oraz jej dane systemowe.
     context.actor = this.actor;
+    context.canManageDevelopmentSession = game.user.isGM;
+    context.developmentHistory = [...(this.actor.system.development.history ?? [])].reverse();
     context.genderOptions = { "": "Nie określono", female: "Kobieta", male: "Mężczyzna", other: "Inna" };
     context.system = this.actor.system;
     context.combatStatus = prepareActorCombatStatus(this.actor);
@@ -734,8 +742,11 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       id: item.id,
       name: item.name,
       requirements: item.system.requirements,
+      hasConditionalEffect: isMerchantMind(item),
+      conditionalEffectActive: item.system.conditionalEffectActive === true,
       requirementStatus: checkFeatureRequirements(this.actor, item.system.requirements, values, item),
       automationStatus: item.system.applyMechanicalEffects === false ? "Automatyczne premie wyłączone"
+        : isMerchantMind(item) ? (item.system.conditionalEffectActive ? "Efekt aktywny: Spryt i Charakter +2; pozostałe Współczynniki −1." : "Efekt wyłączony.")
         : getTraitBonusDefinition(item) || getRequiredGender(item)
           ? describeTraitAutomation(this.actor, item)
         : parseEffectCodes(item.system.effects, item.name).modifiers.length
@@ -1296,6 +1307,17 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     const [createdFeature] = await this.actor.createEmbeddedDocuments("Item", [data]);
 
     if (createdFeature) await createdFeature.sheet.render({ force: true });
+  }
+
+  static async #onToggleConditionalFeature(event, target) {
+    const item = this.actor.items.get(target.dataset.itemId);
+    if (!item || !isMerchantMind(item) || !this.actor.isOwner || !this.isEditable) return;
+    const active = item.system.conditionalEffectActive === true;
+    await item.update({
+      "system.conditionalEffectActive": !active,
+      ...(!active ? { "system.applyMechanicalEffects": true } : {})
+    });
+    this.render();
   }
 
   static async #onEditFeature(event, target) {
