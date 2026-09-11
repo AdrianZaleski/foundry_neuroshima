@@ -1,4 +1,18 @@
 <section class="tab {{tabs.health.cssClass}}" data-group="sheet" data-tab="health" style="height: calc(100% - 42px); overflow-y: auto; padding-right: 6px;">
+  <section>
+    <h2>Opatrywanie ran</h2>
+    {{#each injuryItems}}
+      <article><h3>{{this.name}} — {{this.locationName}}</h3>
+        <p>{{this.injuryTypeName}}, kara {{this.penaltyPercent}}%.</p>
+        {{#if this.stabilized}}<p>Rana krytyczna opatrzona. Pozostałe obrażenia i stan pacjenta ocenia MG.</p>{{/if}}
+        <button type="button" data-action="treatInjury" data-item-id="{{this.id}}">Opatrz ranę</button>
+        <details><summary>Historia zabiegów</summary>
+          {{#each this.treatmentHistory}}<p>{{this.timestamp}} — {{this.healer}}, {{this.method}}: {{#if this.passed}}sukces{{else}}porażka{{/if}}. Kara {{this.before}}% → {{this.after}}%. Czas: {{this.duration}}.</p>
+          {{else}}<p>Brak zabiegów.</p>{{/each}}
+        </details>
+      </article>
+    {{else}}<p>Brak ran do opatrzenia.</p>{{/each}}
+  </section>
   <h2>Choroby</h2>
   <button type="button" data-action="createDisease">Dodaj chorobę</button>
 

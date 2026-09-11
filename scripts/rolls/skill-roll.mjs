@@ -259,7 +259,9 @@ export async function rollSkill(actor, skillKey, options = {}) {
     fixedTestType: options.fixedTestType ?? "",
     windowTitle: options.configurationTitle ?? "Ustawienia testu",
     attributeKey: selectedAttributeKey,
-    skillKey
+    skillKey,
+    fixedDifficultyIndex: options.fixedDifficultyIndex ?? null,
+    fixedPenaltyPercent: options.fixedPenaltyPercent ?? 0
   });
 
   if (testConfiguration === null) {

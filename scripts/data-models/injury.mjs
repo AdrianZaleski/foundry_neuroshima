@@ -9,9 +9,27 @@ const DAMAGE_VALUE_BY_INJURY_TYPE = {
 
 export class NeuroshimaInjuryDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
-    const { NumberField, StringField } = foundry.data.fields;
+    const { NumberField, StringField, BooleanField, ArrayField, SchemaField } = foundry.data.fields;
 
     return {
+      treatment: new SchemaField({
+        firstAidReduction: new NumberField({ initial: 0, min: 0 }),
+        totalReduction: new NumberField({ initial: 0, min: 0 }),
+        firstAidFailures: new NumberField({ initial: 0, min: 0, integer: true }),
+        healingFailures: new NumberField({ initial: 0, min: 0, integer: true }),
+        stabilized: new BooleanField({ initial: false }),
+        history: new ArrayField(new SchemaField({
+          timestamp: new StringField({ initial: "" }),
+          healer: new StringField({ initial: "" }),
+          method: new StringField({ initial: "" }),
+          passed: new BooleanField({ initial: false }),
+          before: new NumberField({ initial: 0 }),
+          after: new NumberField({ initial: 0 }),
+          difficulty: new NumberField({ initial: 0 }),
+          conditions: new NumberField({ initial: 0 }),
+          duration: new StringField({ initial: "" })
+        }), { initial: [] })
+      }),
       // Lokacja pozwoli później osobno rozpatrywać skutki ran głowy,
       // tułowia oraz kończyn.
       location: new StringField({

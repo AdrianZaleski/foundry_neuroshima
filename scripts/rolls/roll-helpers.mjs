@@ -81,7 +81,9 @@ export async function selectTestConfiguration(
     fixedTestType = "",
     windowTitle = "Ustawienia testu",
     attributeKey = "",
-    skillKey = ""
+    skillKey = "",
+    fixedDifficultyIndex = null,
+    fixedPenaltyPercent = 0
   } = {}
 ) {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
@@ -105,7 +107,7 @@ export async function selectTestConfiguration(
     .map((difficultyLabel, difficultyIndex) => {
       const thresholdChange = -DIFFICULTY_MODIFIERS[difficultyIndex];
       const thresholdChangeLabel = thresholdChange >= 0 ? `+${thresholdChange}` : thresholdChange;
-      const selectedAttribute = difficultyIndex === DEFAULT_DIFFICULTY_INDEX ? "selected" : "";
+      const selectedAttribute = difficultyIndex === (fixedDifficultyIndex ?? DEFAULT_DIFFICULTY_INDEX) ? "selected" : "";
 
       return `<option value="${difficultyIndex}" ${selectedAttribute}>${difficultyLabel} (współczynnik ${thresholdChangeLabel})</option>`;
     })
@@ -160,7 +162,8 @@ export async function selectTestConfiguration(
       </div>
       <div class="form-group">
         <label for="neuroshima-difficulty">Poziom trudności</label>
-        <select id="neuroshima-difficulty" name="difficultyIndex">
+        <p>Modyfikator wynikający z akcji: ${Number(fixedPenaltyPercent) || 0}%</p>
+        <select id="neuroshima-difficulty" name="difficultyIndex" ${fixedDifficultyIndex !== null ? "disabled" : ""}>
           ${difficultyOptions}
         </select>
       </div>
@@ -177,7 +180,7 @@ export async function selectTestConfiguration(
     return null;
   }
 
-  const startingDifficultyIndex = Number(formData.difficultyIndex);
+  const startingDifficultyIndex = fixedDifficultyIndex ?? Number(formData.difficultyIndex);
   const includedWoundPenaltyPercent = checkboxIsSelected(formData.includeWounds)
     ? woundPenaltyPercent
     : 0;
@@ -187,7 +190,7 @@ export async function selectTestConfiguration(
   const includedTestModifierPercent = checkboxIsSelected(formData.includeEffects)
     ? testModifierPercent
     : 0;
-  const customPenaltyPercent = Number(formData.customPenaltyPercent) || 0;
+  const customPenaltyPercent = (Number(formData.customPenaltyPercent) || 0) + (Number(fixedPenaltyPercent) || 0);
   const totalPenaltyPercent = includedWoundPenaltyPercent
     + includedArmorPenaltyPercent
     + includedTestModifierPercent

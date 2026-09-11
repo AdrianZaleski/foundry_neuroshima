@@ -1,4 +1,5 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
+import { treatInjury } from "../health/treatment-interface.mjs";
 import { purchaseDevelopment, nextDevelopmentSession, toggleDevelopmentSessionLimit } from "../development/interface.mjs";
 import { isMerchantMind } from "../effects/conditional-features.mjs";
 import { checkFeatureRequirements } from "../effects/background-features.mjs";
@@ -436,6 +437,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       // Każda rana jest osobnym Itemem osadzonym w postaci.
       createInjury: this.#onCreateInjury,
       editInjury: this.#onEditInjury,
+      treatInjury: async function (event, target) { await treatInjury(this.actor, target.dataset.itemId); this.render(); },
       deleteInjury: this.#onDeleteInjury,
 
       // Sztuczki i cechy korzystają ze wspólnej obsługi, a ich dokładny typ
@@ -721,6 +723,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         name: item.name,
         locationName: injuryLocationNames[item.system.location] ?? item.system.location,
         injuryTypeName: injuryTypeNames[item.system.injuryType] ?? item.system.injuryType,
+        treatmentHistory: [...(item.system.treatment?.history ?? [])].reverse(),
+        stabilized: item.system.treatment?.stabilized,
         damageValue: item.system.damageValue,
         penaltyPercent: item.system.penaltyPercent
       }));

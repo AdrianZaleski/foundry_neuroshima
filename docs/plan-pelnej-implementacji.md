@@ -311,6 +311,11 @@ wydzielić z niej jednoznaczne rekordy i powiązać je z `MISC_CAT`.
 
 ### Etap D — zdrowie
 
+Aktualizacja 2026-09-11: podstawowe opatrywanie pojedynczej rany, test medyka,
+limity poprawy, warunki i historia zabiegów są wdrożone; test manualny
+pozostaje do potwierdzenia. Szczegóły i pozostały zakres:
+[pierwsza-pomoc-i-leczenie.md](pierwsza-pomoc-i-leczenie.md).
+
 1. Dodać mechaniczne skutki ran i pierwszą pomoc.
 2. Dodać leczenie oraz czasowe działanie leków.
 3. Podłączyć efekty chorób i śmierć.
