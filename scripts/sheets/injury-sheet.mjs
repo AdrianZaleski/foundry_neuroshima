@@ -37,6 +37,7 @@ export class NeuroshimaInjurySheet extends HandlebarsApplicationMixin(ItemSheetV
       rightLeg: "Prawa noga"
     };
     context.injuryTypeOptions = {
+      bruise: "Siniaki (gojenie 30% dziennie)",
       abrasion: "Draśnięcie (D)",
       light: "Rana lekka (L)",
       serious: "Rana ciężka (C)",

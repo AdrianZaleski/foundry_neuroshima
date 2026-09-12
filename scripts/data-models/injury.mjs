@@ -1,6 +1,7 @@
 // Wartość obrażeń odpowiada oznaczeniom używanym na referencyjnej karcie Roll20.
 // Przechowujemy rodzaj rany, a liczbę wyliczamy, aby oba pola nie mogły się rozjechać.
 const DAMAGE_VALUE_BY_INJURY_TYPE = {
+  bruise: 0,
   abrasion: 1,
   light: 3,
   serious: 9,
@@ -12,6 +13,14 @@ export class NeuroshimaInjuryDataModel extends foundry.abstract.TypeDataModel {
     const { NumberField, StringField, BooleanField, ArrayField, SchemaField } = foundry.data.fields;
 
     return {
+      healing: new SchemaField({
+        pendingDay: new NumberField({ initial: 0, min: 0, max: 1, integer: true }),
+        history: new ArrayField(new SchemaField({
+          timestamp: new StringField({ initial: "" }), userId: new StringField({ initial: "" }),
+          days: new NumberField({ initial: 0 }), mode: new StringField({ initial: "" }),
+          before: new NumberField({ initial: 0 }), after: new NumberField({ initial: 0 })
+        }), { initial: [] })
+      }),
       treatment: new SchemaField({
         firstAidReduction: new NumberField({ initial: 0, min: 0 }),
         totalReduction: new NumberField({ initial: 0, min: 0 }),
@@ -51,7 +60,7 @@ export class NeuroshimaInjuryDataModel extends foundry.abstract.TypeDataModel {
       injuryType: new StringField({
         required: true,
         nullable: false,
-        choices: ["abrasion", "light", "serious", "critical"],
+        choices: ["bruise", "abrasion", "light", "serious", "critical"],
         initial: "abrasion"
       }),
 

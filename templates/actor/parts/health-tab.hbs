@@ -1,5 +1,8 @@
 <section class="tab {{tabs.health.cssClass}}" data-group="sheet" data-tab="health" style="height: calc(100% - 42px); overflow-y: auto; padding-right: 6px;">
   <section>
+    <h2>Gojenie — upływ czasu</h2>
+    <button type="button" data-action="healOverTime">Rozlicz gojenie tej postaci</button>
+    {{#if canManageDevelopmentSession}}<button type="button" data-action="healGroupOverTime">Rozlicz gojenie wielu postaci (MG)</button>{{/if}}
     <h2>Opatrywanie ran</h2>
     {{#each injuryItems}}
       <article><h3>{{this.name}} — {{this.locationName}}</h3>
@@ -9,6 +12,9 @@
         <details><summary>Historia zabiegów</summary>
           {{#each this.treatmentHistory}}<p>{{this.timestamp}} — {{this.healer}}, {{this.method}}: {{#if this.passed}}sukces{{else}}porażka{{/if}}. Kara {{this.before}}% → {{this.after}}%. Czas: {{this.duration}}.</p>
           {{else}}<p>Brak zabiegów.</p>{{/each}}
+        </details>
+        <details><summary>Historia gojenia</summary>
+          {{#each this.healingHistory}}<p>{{this.timestamp}} — {{this.days}} dni, {{this.mode}}: {{this.before}}% → {{this.after}}%.</p>{{else}}<p>Brak rozliczonego gojenia.</p>{{/each}}
         </details>
       </article>
     {{else}}<p>Brak ran do opatrzenia.</p>{{/each}}

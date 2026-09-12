@@ -1,5 +1,6 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
 import { treatInjury } from "../health/treatment-interface.mjs";
+import { healOverTime } from "../health/healing-interface.mjs";
 import { purchaseDevelopment, nextDevelopmentSession, toggleDevelopmentSessionLimit } from "../development/interface.mjs";
 import { isMerchantMind } from "../effects/conditional-features.mjs";
 import { checkFeatureRequirements } from "../effects/background-features.mjs";
@@ -92,6 +93,7 @@ const injuryLocationNames = {
 };
 
 const injuryTypeNames = {
+  bruise: "Siniaki",
   abrasion: "Draśnięcie",
   light: "Rana lekka",
   serious: "Rana ciężka",
@@ -438,6 +440,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       createInjury: this.#onCreateInjury,
       editInjury: this.#onEditInjury,
       treatInjury: async function (event, target) { await treatInjury(this.actor, target.dataset.itemId); this.render(); },
+      healOverTime: async function () { await healOverTime(this.actor); this.render(); },
+      healGroupOverTime: async function () { await healOverTime(this.actor, true); this.render(); },
       deleteInjury: this.#onDeleteInjury,
 
       // Sztuczki i cechy korzystają ze wspólnej obsługi, a ich dokładny typ
@@ -725,6 +729,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         injuryTypeName: injuryTypeNames[item.system.injuryType] ?? item.system.injuryType,
         treatmentHistory: [...(item.system.treatment?.history ?? [])].reverse(),
         stabilized: item.system.treatment?.stabilized,
+        healingHistory: [...(item.system.healing?.history ?? [])].reverse(),
         damageValue: item.system.damageValue,
         penaltyPercent: item.system.penaltyPercent
       }));
