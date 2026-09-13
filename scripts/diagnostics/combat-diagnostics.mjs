@@ -1,4 +1,6 @@
 import { calculateSkillValue, collectSkillModifierSources } from "../effects/modifiers.mjs";
+import { prepareActorCombatStatus, getSegmentAction } from "../combat/segments.mjs";
+import { findTrackedDuel, trackedDuels, meleeRoundSpent, blocksMeleeAdvance } from "../combat/melee-tracker.mjs";
 const SYSTEM_ID = "neuroshima";
 
 export function prepareFeatureDiagnostics(actor) {
@@ -31,7 +33,10 @@ function serializeWeapon(item) {
   };
 }
 
-function serializeCombatant(combatant) {
+function serializeCombatant(combatant, combat) {
+  const actor = combatant.actor;
+  const status = actor ? prepareActorCombatStatus(actor, combat) : null;
+  const duel = actor ? findTrackedDuel(combat, actor.id) : null;
   return {
     id: combatant.id,
     name: combatant.name,
@@ -39,6 +44,13 @@ function serializeCombatant(combatant) {
     tokenId: combatant.tokenId ?? combatant.token?.id ?? null,
     initiative: combatant.initiative,
     segmentAction: combatant.getFlag(SYSTEM_ID, "segmentAction") ?? null,
+    effectiveSegmentAction: getSegmentAction(combatant),
+    actorCombatStatus: status,
+    meleeDuelHostId: duel?.hostId ?? null,
+    meleeRoundSpent: actor ? meleeRoundSpent(combat, actor.id) : false,
+    actionBlockReason: !actor ? "missingActor" : !status?.inCombat ? "actorNotMatched"
+      : !status.started ? "combatNotStarted" : !status.isActiveTurn ? "otherTurn"
+      : status.consumesCurrentSegment ? "segmentOccupied" : duel ? "activeMeleeDuel" : null,
     combatSkillUsage: combatant.getFlag(SYSTEM_ID, "combatSkillUsage") ?? null,
     weapons: combatant.actor?.items
       .filter((item) => item.type === "weapon")
@@ -65,6 +77,8 @@ export function prepareCombatDiagnostics(actor) {
     inspectedActor: actor ? {
       id: actor.id,
       name: actor.name,
+      combatStatus: combat ? prepareActorCombatStatus(actor, combat) : null,
+      standaloneMeleeDuel: actor.getFlag?.(SYSTEM_ID, "meleeDuel") ?? null,
       ...prepareFeatureDiagnostics(actor)
     } : null,
     targets: [...game.user.targets].map((token) => ({
@@ -79,7 +93,10 @@ export function prepareCombatDiagnostics(actor) {
       turn: combat.turn,
       segment: combat.getFlag(SYSTEM_ID, "combatSegment") ?? null,
       activeCombatantId: combat.combatant?.id ?? null,
-      combatants: combat.combatants.map(serializeCombatant)
+      turnOrder: combat.turns.map(participant => participant.id),
+      meleeDuels: trackedDuels(combat),
+      meleeBlocksAdvance: blocksMeleeAdvance(combat),
+      combatants: combat.combatants.map(participant => serializeCombatant(participant, combat))
     } : null
   };
 }

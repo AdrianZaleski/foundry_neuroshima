@@ -12,6 +12,9 @@
   <button type="button" data-action="rollInitiative">
     Rzuć inicjatywę
   </button>
+  {{#if canManageMelee}}
+    <button type="button" data-action="meleeDuel">Pojedynek wręcz (panel MG)</button>
+  {{/if}}
 
   <button type="button" data-action="downloadCombatDiagnostics">Pobierz diagnostykę postaci i walki</button>
 
@@ -70,11 +73,15 @@
             <button type="button" data-action="advanceAfterSegmentAction">Zakończ udział w segmencie</button>
           {{/if}}
         {{else}}
-          {{#if combatStatus.isActiveTurn}}
+          {{#if combatStatus.canDeclareAction}}
             <button type="button" data-action="declareSegmentAction">Zadeklaruj akcję</button>
             <button type="button" data-action="passSegment">Pas</button>
           {{else}}
-            <p>Postać czeka na swój moment w tym segmencie.</p>
+            {{#if combatStatus.isActiveTurn}}
+              <p>Rozlicz rundę walki wręcz w panelu MG.</p>
+            {{else}}
+              <p>Postać czeka na swój moment w tym segmencie.</p>
+            {{/if}}
           {{/if}}
         {{/if}}
       {{else}}

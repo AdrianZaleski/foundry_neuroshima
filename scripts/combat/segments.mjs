@@ -2,6 +2,7 @@ import {
   prepareCombatActionOptions,
   resolveCombatAction
 } from "./action-catalog.mjs";
+import { findTrackedDuel, meleeTrackerAction, meleeRoundSpent, blocksMeleeAdvance, trackedDuels, MELEE_DUELS_FLAG } from "./melee-tracker.mjs";
 
 const SYSTEM_ID = "neuroshima";
 const COMBAT_SEGMENT_FLAG = "combatSegment";
@@ -49,6 +50,8 @@ export function getCombatSegment(combat) {
 }
 
 export function getSegmentAction(combatant) {
+  const melee = meleeTrackerAction(combatant?.parent ?? globalThis.game?.combat, combatant?.actor?.id);
+  if (melee) return melee;
   return combatant?.getFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG) ?? null;
 }
 
@@ -100,7 +103,7 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
     round,
     segment,
     isActiveTurn,
-    canDeclareAction: isActiveTurn && !consumesCurrentSegment,
+    canDeclareAction: isActiveTurn && !consumesCurrentSegment && !findTrackedDuel(combat, actor.id),
     consumesCurrentSegment,
     action: action ? {
       ...action,
@@ -112,6 +115,7 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
       canFinishEarly: isActiveTurn
         && consumesCurrentSegment
         && action.endsAtTick > currentTick
+        && action.effectCode !== "melee"
         && action.effectCode !== "clearMinorJam",
       canInterrupt: isActiveTurn
         && consumesCurrentSegment
@@ -188,6 +192,10 @@ export async function declareSegmentAction(actor, actionName, duration, metadata
   if (!activeParticipant) return false;
 
   const { combat, combatant } = activeParticipant;
+  if (findTrackedDuel(combat, actor.id)) {
+    ui.notifications.warn("Postać uczestniczy w pojedynku wręcz. Rozstrzygnij akcję w panelu MG.");
+    return false;
+  }
   const safeName = String(actionName ?? "").trim();
   const safeDuration = Math.max(1, Math.min(Number(duration) || 1, SEGMENTS_PER_ROUND));
   const segment = getCombatSegment(combat);
@@ -254,6 +262,7 @@ async function changeCurrentAction(actor, changeType) {
 
   const { combat, combatant } = activeParticipant;
   const action = getSegmentAction(combatant);
+  if (action?.effectCode === "melee") return false;
   const segment = getCombatSegment(combat);
   const round = Math.max(1, Number(combat.round) || 1);
   const currentTick = calculateSegmentTick(round, segment);
@@ -455,6 +464,7 @@ async function announceSegment(combat) {
 async function announceCompletedAction(combat) {
   const combatant = combat.combatant;
   let action = getSegmentAction(combatant);
+  if (action?.effectCode === "melee") return;
   if (!combatant?.actor || !action || action.duration <= 1) return;
 
   const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
@@ -568,13 +578,32 @@ export async function startSegmentCombat(combat) {
   }
 
   await combat.setFlag(SYSTEM_ID, COMBAT_SEGMENT_FLAG, 1);
+  await combat.setFlag(SYSTEM_ID, MELEE_DUELS_FLAG, []);
   const startedCombat = await foundry.documents.Combat.prototype.startCombat.call(combat);
   await announceSegment(combat);
   return startedCombat;
 }
 
 export async function advanceSegmentTurn(combat) {
+  // Przechodzimy wyłącznie przez kolejki już rozliczonych pojedynków.
+  // Strzelców i pozostałe akcje nadal obsługujemy osobno w każdym segmencie.
+  const startingRound = combat.round;
+  const limit = combat.turns.length * SEGMENTS_PER_ROUND + 1;
+  for (let step = 0; step < limit; step++) {
+    const before = `${combat.round}:${getCombatSegment(combat)}:${combat.turn}`;
+    await advanceSingleSegmentTurn(combat);
+    if (`${combat.round}:${getCombatSegment(combat)}:${combat.turn}` === before) break;
+    if (combat.round !== startingRound || !meleeRoundSpent(combat, combat.combatant?.actor?.id)) break;
+  }
+  return combat;
+}
+
+async function advanceSingleSegmentTurn(combat) {
   if (!combat.started || combat.turns.length === 0) return combat;
+  if (blocksMeleeAdvance(combat)) {
+    ui.notifications.warn("Najpierw rozstrzygnij wszystkie trzy segmenty pojedynku na tę rundę (panel MG).");
+    return combat;
+  }
   if (preventAdvanceForUnresolvedShot(combat)) return combat;
   if (preventAdvanceForUnresolvedJamClearing(combat)) return combat;
 
@@ -606,6 +635,10 @@ export async function advanceSegmentTurn(combat) {
 
 export async function rewindSegmentTurn(combat) {
   if (!combat.started || combat.turns.length === 0) return combat;
+  if (trackedDuels(combat).length) {
+    ui.notifications.warn("Cofnięcie Trackera nie odtwarza zużytych kości pojedynku. Cofanie tej walki jest zablokowane.");
+    return combat;
+  }
 
   const segment = getCombatSegment(combat);
 
@@ -630,6 +663,10 @@ export async function rewindSegmentTurn(combat) {
 }
 
 export async function advanceSegmentRound(combat) {
+  if (blocksMeleeAdvance(combat, true)) {
+    ui.notifications.warn("Dokończ pojedynki wręcz przed przejściem do kolejnej rundy.");
+    return combat;
+  }
   if (preventAdvanceForUnresolvedShot(combat)) return combat;
   if (preventAdvanceForUnresolvedJamClearing(combat)) return combat;
   await combat.setFlag(SYSTEM_ID, COMBAT_SEGMENT_FLAG, 1);
@@ -640,6 +677,10 @@ export async function advanceSegmentRound(combat) {
 }
 
 export async function rewindSegmentRound(combat) {
+  if (trackedDuels(combat).length) {
+    ui.notifications.warn("Cofnięcie rundy nie odtwarza kości pojedynku. Cofanie tej walki jest zablokowane.");
+    return combat;
+  }
   await combat.setFlag(SYSTEM_ID, COMBAT_SEGMENT_FLAG, 1);
   return foundry.documents.Combat.prototype.previousRound.call(combat);
 }

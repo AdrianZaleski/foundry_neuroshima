@@ -1,4 +1,6 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
+import { saveActorNickname } from "./actor-name.mjs";
+import { openMeleeDuel } from "../combat/melee-interface.mjs";
 import { treatInjury } from "../health/treatment-interface.mjs";
 import { healOverTime } from "../health/healing-interface.mjs";
 import { purchaseDevelopment, nextDevelopmentSession, toggleDevelopmentSessionLimit } from "../development/interface.mjs";
@@ -418,6 +420,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       rollSkill: this.#onRollSkill,
       rollInjury: this.#onRollInjury,
       rollInitiative: this.#onRollInitiative,
+      meleeDuel: function () { return openMeleeDuel(this.actor); },
       downloadCombatDiagnostics: this.#onDownloadCombatDiagnostics,
       declareSegmentAction: this.#onDeclareSegmentAction,
       passSegment: this.#onPassSegment,
@@ -578,6 +581,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     // Udostępniamy szablonowi kartę Actora oraz jej dane systemowe.
     context.actor = this.actor;
     context.canManageDevelopmentSession = game.user.isGM;
+    context.canManageMelee = game.user.isGM;
     context.developmentHistory = [...(this.actor.system.development.history ?? [])].reverse();
     context.genderOptions = { "": "Nie określono", female: "Kobieta", male: "Mężczyzna", other: "Inna" };
     context.system = this.actor.system;
@@ -1135,9 +1139,12 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       return;
     }
 
-    if (newActorName === this.actor.name) return;
-    await this.actor.update({ name: newActorName });
-    ui.notifications.info(`Zapisano ksywę: ${newActorName}.`);
+    try {
+      await saveActorNickname(this.actor, newActorName);
+      ui.notifications.info(`Zapisano ksywę postaci i tokenów: ${newActorName}.`);
+    } catch (error) {
+      ui.notifications.warn(`Nie udało się zsynchronizować wszystkich nazw: ${error.message}`);
+    }
   }
 
   static async #onCreateInjury() {
