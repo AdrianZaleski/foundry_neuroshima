@@ -104,10 +104,14 @@ export function resolveMeleeExchange(state, { attackDice, defenseDice, attackThr
   defenseThreshold += meleeManeuverBonuses(defender).defense;
   const attackSuccesses = attacking.filter(die => meleeDieSucceeds(die, attackThreshold)).length;
   const defenseSuccesses = defending.filter(die => meleeDieSucceeds(die, defenseThreshold)).length;
+  // Kilka par porażek można rozliczyć razem jako kolejne remisowe
+  // segmenty. Nie jest to cios łączony i nie powstają z niego obrażenia.
+  const failedDiceDraw = attackSuccesses === 0 && defenseSuccesses === 0;
   // Bez ustalenia kosztu częściowo zepsutego ciosu nie zgadujemy, które
   // kości wracają do puli: gracz wybiera ponownie cios za pozostałe sukcesy.
-  if (attackDice.length > 1 && attackSuccesses !== attackDice.length) {
-    throw new Error("Cios łączony wymaga udanych kości. Wybierz ponownie jego siłę po zmianie wyników.");
+  if (attackDice.length > 1 && attackSuccesses !== attackDice.length && !failedDiceDraw) {
+    const failedNumbers = attackDice.filter((index, position) => !meleeDieSucceeds(attacking[position], attackThreshold)).map(index => index + 1);
+    throw new Error(`Cios łączony: zaznaczono ${attackDice.length} kości ataku, ale sukcesów jest ${attackSuccesses}. Kości ataku z porażką: ${failedNumbers.join(", ")}. Odznacz je i wybierz tyle samo kości obrony co kości ataku. Porażki możesz rozegrać osobno; grupowy remis wymaga samych porażek obu stron.`);
   }
   const hit = attackSuccesses > defenseSuccesses;
   const defenseWon = attackSuccesses === 0 && defenseSuccesses > 0;
@@ -120,7 +124,7 @@ export function resolveMeleeExchange(state, { attackDice, defenseDice, attackThr
   if (initiativeChanged) defender.defenseAdvantage = 0;
   const exchange = { type: "exchange", segment: next.segment, cost: attackDice.length,
     attackerId: attacker.id, defenderId: defender.id, attackDice, defenseDice,
-    attackThreshold, defenseThreshold, attackSuccesses, defenseSuccesses, hit, initiativeChanged,
+    attackThreshold, defenseThreshold, attackSuccesses, defenseSuccesses, hit, initiativeChanged, failedDiceDraw,
     counterHit, counterHitSuccesses: counterHit ? defenseSuccesses : 0,
     attackerManeuver: attacker.maneuver ?? "standard", defenderManeuver: defender.maneuver ?? "standard" };
   for (const die of [...attacking, ...defending]) die.used = true;

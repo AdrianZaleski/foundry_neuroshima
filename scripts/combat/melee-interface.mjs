@@ -7,7 +7,7 @@ import { calculateInitiativeResult } from "./initiative-calculation.mjs";
 import { MELEE_DUELS_FLAG, trackedDuels, findTrackedDuel, assertTrackerStart,
   assertTrackerExchange, assertTrackerNextRound, assertTrackerParticipants } from "./melee-tracker.mjs";
 import { advanceSegmentTurn } from "./segments.mjs";
-import { createMeleeDamageHits, resolveMeleeDamageHit } from "./melee-damage.mjs";
+import { createMeleeDamageHits, resolveMeleeDamageHit, meleeDamageProfile } from "./melee-damage.mjs";
 import { calculateWoundPenaltyPercent, calculateDifficultyIndexFromPercentage,
   DIFFICULTY_MODIFIERS } from "../rolls/roll-helpers.mjs";
 
@@ -166,6 +166,7 @@ export async function openMeleeDuel(host) {
       snapshot = JSON.stringify(read());
     };
     let duel = read();
+    let selectedDice = {};
     if (!duel) {
       duel = await setup(host);
       if (!duel) return;
@@ -232,16 +233,59 @@ export async function openMeleeDuel(host) {
       const attackChoices = describeMeleeDice(state.fighters[attackerIndex], profiles[attackerIndex].attack + meleeManeuverBonuses(state.fighters[attackerIndex]).attack).filter(die => !die.used);
       const defenseChoices = describeMeleeDice(state.fighters[defenderIndex], profiles[defenderIndex].defense + meleeManeuverBonuses(state.fighters[defenderIndex]).defense).filter(die => !die.used);
       const successfulAttackDice = attackChoices.filter(die => die.succeeds);
-      const summary = state.fighters.map((fighter, index) => `<h3>${escape(actors[index].name)}${fighter.id === state.initiative ? " — atakuje" : " — broni się"}</h3>
-        <p>${escape(profiles[index].weaponName)}; kary: ${profiles[index].penalty}%; próg ataku ${profiles[index].attack + meleeManeuverBonuses(fighter).attack}, obrony ${profiles[index].defense + meleeManeuverBonuses(fighter).defense}. Punkty: ${fighter.skill - fighter.spent}/${fighter.skill}.</p>
-        <p>${MELEE_MANEUVER_LABELS[fighter.maneuver ?? "standard"]}; wspólne Zwiększone tempo: ${state.tempo ?? 0} poziomów PT. Szarża: ${fighter.charge ?? 0}; kara −${fighter.chargePenalty ?? 0}.${fighter.maneuver === "fullDefense" ? ` Przewaga obrony: ${fighter.defenseAdvantage ?? 0}/2.` : ""}</p>
-        <p>${describeMeleeDice(fighter, index === attackerIndex ? profiles[index].attack + meleeManeuverBonuses(fighter).attack : profiles[index].defense + meleeManeuverBonuses(fighter).defense).map(die => escape(die.label)).join("; ")}</p>`).join("");
+      const canAct = state.segment <= 3 && exchangeReady;
       const canAdvance = combat && configurations.some(entry => entry.id === combat.combatant?.actor?.id) && !exchangeReady;
-      const data = await input(`Pojedynek — tura ${state.round}, ${state.segment > 3 ? "koniec tury" : `segment ${state.segment}`}`, `${summary}
-        ${state.segment <= 3 ? `<p><strong>Dostępne sukcesy ataku: ${successfulAttackDice.length}.</strong> ${successfulAttackDice.length < 2 ? "Brak ciosu łączonego. Wybierz pojedynczą kość; porażkę też rozgrywasz jako nieudany atak." : "Możesz wykonać pojedynczy cios albo połączyć udane kości."} Całą rundę rozgrywamy tutaj jako kolejne wymiany, bez przesuwania Trackera między nimi.</p>` : ""}
-        ${combat ? `<p>Tracker: runda ${combat.round}, segment ${combat.getFlag("neuroshima", "combatSegment") || 1}. Rozlicz tutaj wszystkie trzy segmenty pojedynku. System następnie przejdzie do pozostałych uczestników i pominie wykorzystane kolejki obu postaci.</p>` : ""}
-        <select name="action">${state.segment <= 3 && exchangeReady ? `<option value="exchange">Pojedynczy cios — jedna kość każdej strony</option>${successfulAttackDice.length >= 2 ? '<option value="combined">Cios łączony — dwie lub trzy udane kości ataku</option>' : ""}<option value="points">Wydaj punkty Umiejętności</option>` : state.segment > 3 && nextRoundReady ? '<option value="next">Nowa tura: manewry i kości</option>' : '<option value="wait">Zamknij i poczekaj na Tracker</option>'}${canAdvance ? '<option value="tracker">Następny uczestnik Trackera</option>' : ""}<option value="end">Zakończ pojedynek</option></select>`);
+      const summary = [attackerIndex, defenderIndex].map((index, role) => {
+        const fighter = state.fighters[index];
+        const build = calculateAttributeValue(actors[index], "budowa");
+        const weapon = configurations[index].weaponId ? actors[index].items.get(configurations[index].weaponId) : null;
+        const damageLabels = { S_D: "drobny siniak", S_L: "siniak", S_C: "ciężki siniak", S_K: "krytyczny siniak",
+          D_D: "draśnięcie", D_L: "rana lekka", D_C: "rana ciężka", D_K: "rana krytyczna" };
+        const damagePreview = [1, 2, 3].map(successes => {
+          const damage = meleeDamageProfile(weapon, build, successes);
+          return `${successes}: ${damageLabels[damage.damageCode] ?? "ustala MG"}`;
+        }).join(" · ");
+        const key = role ? "defense" : "attack";
+        const threshold = role ? profiles[index].defense + meleeManeuverBonuses(fighter).defense
+          : profiles[index].attack + meleeManeuverBonuses(fighter).attack;
+        return `<section style="flex:1;min-width:220px;padding:12px;border:1px solid var(--color-border-light-primary,#666);border-radius:6px;">
+          <h3>${escape(actors[index].name)} — ${role ? "broni się" : "atakuje"}</h3>
+          <p>${escape(profiles[index].weaponName)} · próg <strong>${threshold}</strong> · kara ${profiles[index].penalty}%</p>
+          <p><strong>Budowa ${build}</strong> — obrażenia za sukcesy:<br>${damagePreview}</p>
+          <small>Przed uwzględnieniem lokacji trafienia i pancerza.</small>
+          <p>Punkty Umiejętności: <strong>${fighter.skill - fighter.spent}/${fighter.skill}</strong> · ${MELEE_MANEUVER_LABELS[fighter.maneuver ?? "standard"]}</p>
+          ${describeMeleeDice(fighter, threshold).map(die => `<div class="form-group">
+            <input id="melee-${key}-${die.index}" name="${key}${die.index}" type="checkbox" ${die.used || !canAct ? "disabled" : ""} ${!die.used && checked(selectedDice[`${key}${die.index}`]) ? "checked" : ""}>
+            <label for="melee-${key}-${die.index}">${escape(die.label)}</label></div>`).join("")}
+          ${fighter.chargePenalty ? `<p>Kara Szarży: −${fighter.chargePenalty}</p>` : ""}
+          ${fighter.maneuver === "fullDefense" ? `<p>Przewaga obrony: ${fighter.defenseAdvantage ?? 0}/2</p>` : ""}
+        </section>`;
+      }).join("");
+      const actorOptions = actors.map(actor => `<option value="${actor.id}">${escape(actor.name)}</option>`).join("");
+      const actions = canAct ? [["exchange", "Rozstrzygnij cios"], ["points", "Wydaj punkty"]]
+        : state.segment > 3 && nextRoundReady ? [["next", "Nowa tura"]] : [["wait", "Zamknij"]];
+      if (canAdvance) actions.push(["tracker", "Dalej w Trackerze"]);
+      actions.push(["end", "Zakończ pojedynek"]);
+      const lastExchange = state.history.filter(entry => entry.type === "exchange").at(-1);
+      const data = await foundry.applications.api.DialogV2.wait({
+        window: { title: `Pojedynek — tura ${state.round}, ${state.segment > 3 ? "koniec tury" : `segment ${state.segment}`}` },
+        position: { width: 760 }, rejectClose: false, modal: true,
+        content: `<div style="display:flex;flex-wrap:wrap;gap:12px;">${summary}</div>
+          <p>Zwiększone tempo: ${state.tempo ?? 0}. ${combat ? `Tracker: runda ${combat.round}, segment ${combat.getFlag("neuroshima", "combatSegment") || 1}.` : ""}</p>
+          ${lastExchange ? `<p><strong>Ostatni cios:</strong> ${lastExchange.attackSuccesses} sukcesów ataku / ${lastExchange.defenseSuccesses} obrony. ${lastExchange.hit ? "Trafienie." : lastExchange.counterHit ? "Kontrcios przy Furii." : lastExchange.initiativeChanged ? "Przejęcie Inicjatywy." : lastExchange.failedDiceDraw ? "Remis — obie strony bez sukcesów. Inicjatywa bez zmian." : "Brak trafienia."}</p>` : ""}
+          ${canAct ? `<p>Zaznacz po jednej kości obu stron albo po 2–3 na cios łączony. Cios łączony wymaga sukcesów ataku. Możesz też zaznaczyć równą liczbę porażek obu stron, aby rozliczyć te segmenty razem jako remis, bez obrażeń i zmiany Inicjatywy. Dostępne sukcesy: ${successfulAttackDice.length}.</p>
+          <details><summary>Punkty Umiejętności — popraw lub zepsuj kość</summary>
+            <div class="form-group"><label for="melee-spender">Kto wydaje</label><select id="melee-spender" name="fighterId">${actorOptions}</select></div>
+            <div class="form-group"><label for="melee-target">Czyja kość</label><select id="melee-target" name="targetId">${actorOptions}</select></div>
+            <div class="form-group"><label for="melee-die">Numer kości</label><select id="melee-die" name="die"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div>
+            <div class="form-group"><label for="melee-points">Liczba punktów</label><input id="melee-points" name="points" type="number" min="1" step="1" value="1"></div>
+            <p>Ustaw wydatek i kliknij „Wydaj punkty”. Własną kość obniżasz, przeciwnika podwyższasz.</p>
+          </details>` : ""}`,
+        buttons: actions.map(([action, label]) => ({ action, label,
+          callback: (event, button) => ({ ...Object.fromEntries(new FormData(button.form)), action }) }))
+      });
       if (!data) break;
+      selectedDice = data;
       try {
         if (clock() !== clockSnapshot) throw new Error("Tracker zmienił się podczas wyboru. Otwórz panel ponownie.");
         if (data.action === "wait") break;
@@ -261,30 +305,14 @@ export async function openMeleeDuel(host) {
           await save(duel);
         } else if (data.action === "points" && state.segment <= 3) {
           if (combat) assertTrackerExchange(combat, duel);
-          const choices = actors.map(actor => `<option value="${actor.id}">${escape(actor.name)}</option>`).join("");
-          const points = await input("Popraw lub zepsuj kość", `<label>Kto wydaje punkty<select name="fighterId">${choices}</select></label>
-            <label>Czyja kość<select name="targetId">${choices}</select></label><label>Numer kości<input name="die" type="number" min="1" max="3" value="1"></label>
-            <label>Punkty<input name="points" type="number" min="1" value="1"></label><p>Własną kość obniżasz, przeciwnika podwyższasz. Wydatek jest zapisywany od razu i pozostaje po zamknięciu panelu.</p>`, "Wydaj punkty");
-          if (!points) continue;
+          const points = data;
           duel = { ...duel, state: spendMeleePoints(state, { fighterId: points.fighterId, targetId: points.targetId, dieIndex: Number(points.die) - 1, points: Number(points.points) }) };
           await save(duel);
         } else if (["exchange", "combined"].includes(data.action) && state.segment <= 3) {
           if (combat) assertTrackerExchange(combat, duel);
-          const combined = data.action === "combined";
-          if (combined && successfulAttackDice.length < 2) throw new Error("Cios łączony wymaga przynajmniej dwóch dostępnych sukcesów ataku.");
-          const selection = [attackerIndex, defenderIndex].map((index, role) => {
-            const key = role ? "defense" : "attack";
-            const choices = role ? defenseChoices : combined ? successfulAttackDice : attackChoices;
-            return `<h3>${role ? "Obrona" : "Atak"}: ${escape(actors[index].name)}</h3>${combined
-              ? choices.map(die => `<label><input type="checkbox" name="${key}${die.index}">${escape(die.label)}</label>`).join("")
-              : `<select name="${key}Die"><option value="">Wybierz jedną kość</option>${choices.map(die => `<option value="${die.index}">${escape(die.label)}</option>`).join("")}</select>`}`;
-          }).join("");
-          const dice = await input(combined ? "Cios łączony" : "Pojedynczy cios", `${selection}<p>${combined ? "Zaznacz 2 albo 3 udane kości ataku i tyle samo kości obrony. Obrona może zawierać porażki." : "Wybierz po jednej kości. Nieudany atak również zużywa segment i może oddać Inicjatywę."} Po trafieniu rozlicz obrażenia w następnym oknie.</p>`, "Rozstrzygnij wymianę");
-          if (!dice) continue;
-          if (!combined && (!["0", "1", "2"].includes(String(dice.attackDie)) || !["0", "1", "2"].includes(String(dice.defenseDie)))) throw new Error("Wybierz jedną kość ataku i jedną kość obrony.");
-          const attackDice = combined ? [0, 1, 2].filter(index => checked(dice[`attack${index}`])) : [Number(dice.attackDie)];
-          const defenseDice = combined ? [0, 1, 2].filter(index => checked(dice[`defense${index}`])) : [Number(dice.defenseDie)];
-          if (combined && attackDice.length < 2) throw new Error("Zaznacz przynajmniej dwie udane kości ataku albo wróć do pojedynczego ciosu.");
+          const attackDice = [0, 1, 2].filter(index => checked(data[`attack${index}`]));
+          const defenseDice = [0, 1, 2].filter(index => checked(data[`defense${index}`]));
+          if (!attackDice.length || !defenseDice.length) throw new Error("Wybierz przynajmniej jedną kość ataku i obrony.");
           const currentProfiles = configurations.map((entry, index) => profile(actors[index], entry.weaponId, entry.skillKey, state.tempo ?? 0));
           if (JSON.stringify(currentProfiles) !== JSON.stringify(profiles)) {
             throw new Error("Modyfikatory lub broń zmieniły się. Sprawdź nowe progi i wybierz kości ponownie.");
@@ -295,12 +323,13 @@ export async function openMeleeDuel(host) {
             damageHits: [...(duel.damageHits ?? []), ...createMeleeDamageHits(state, result.exchange, configurations, actors)] };
           await save(duel);
           const exchange = result.exchange;
+          selectedDice = {};
           await foundry.documents.ChatMessage.create({ content: `<h3>Pojedynek wręcz — tura ${state.round}, segment ${state.segment}</h3>
             <p>${escape(actors[attackerIndex].name)} → ${escape(actors[defenderIndex].name)}; koszt ${exchange.cost} segmentów.</p>
             <p>Sukcesy ataku: ${exchange.attackSuccesses}; obrony: ${exchange.defenseSuccesses}.</p>
             <p>Atak: ${MELEE_MANEUVER_LABELS[exchange.attackerManeuver]}; obrona: ${MELEE_MANEUVER_LABELS[exchange.defenderManeuver]}; Zwiększone tempo: ${state.tempo ?? 0}.</p>
             ${exchange.counterHit ? `<p>Furia: ${escape(actors[attackerIndex].name)} traci Inicjatywę i otrzymuje cios za ${exchange.counterHitSuccesses} sukces. Obrażenia oczekują na rozliczenie w panelu.</p>` : ""}
-            <p>${exchange.hit ? `Trafienie za ${exchange.attackSuccesses} sukcesy. Obrażenia oczekują na rozliczenie w panelu.` : exchange.initiativeChanged ? "Obrońca przejmuje Inicjatywę od następnego segmentu." : "Brak trafienia. Inicjatywa bez zmian."}</p>` });
+            <p>${exchange.hit ? `Trafienie za ${exchange.attackSuccesses} sukcesy. Obrażenia oczekują na rozliczenie w panelu.` : exchange.initiativeChanged ? "Obrońca przejmuje Inicjatywę od następnego segmentu." : exchange.failedDiceDraw ? "Remis — obie strony bez sukcesów. Bez obrażeń, Inicjatywa bez zmian." : "Brak trafienia. Inicjatywa bez zmian."}</p>` });
           if (duel.damageHits.some(hit => !hit.completed)) continue;
           if (combat && duel.state.segment === 4) {
             await advanceSegmentTurn(combat);

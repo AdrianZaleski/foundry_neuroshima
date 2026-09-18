@@ -2,6 +2,7 @@ import { calculateAttributeValue, escapeModifierText as escape } from "../effect
 import { resolveDamage, getHitLocation, HIT_LOCATION_LABELS } from "./damage-resolution.mjs";
 import { getArmorCoveringLocation } from "./armor.mjs";
 import { rollPainResistanceForInjury } from "../rolls/injury-roll.mjs";
+import { BRUISE_NAMES } from "../health/injury-labels.mjs";
 
 // Górne granice włącznie, ostatni wiersz bez górnej granicy. B&W s.146–149.
 const profiles = {
@@ -55,6 +56,7 @@ export function createMeleeDamageHits(state, exchange, configurations, actors) {
     return { id: globalThis.foundry?.utils?.randomID?.() ?? crypto.randomUUID().replaceAll("-", "").slice(0,16), sourceId, targetId,
       sourceName: source.name, weaponName: weapon?.name ?? "Pięści", successes, build,
       ...meleeDamageProfile(weapon, build, successes), naturalResult: die?.natural,
+      locationDice: indices.map(index => ({ index, natural: fighter.dice[index].natural })),
       damageType: ["MELEE_3","MELEE_7","MELEE_8","MELEE_10","MELEE_13","MELEE_14"].includes(code) ? "cutting" : profiles[code] ? "blunt" : "",
       armorPenetration: weapon?.system.armorPenetration ?? 0, completed: false };
   });
@@ -70,18 +72,24 @@ export async function resolveMeleeDamageHit(hit, actor, persist) {
   const save = async changes => { hit = { ...hit, ...changes }; await persist(hit); };
   if (!hit.spec) {
     const codes = ["D_D","D_L","D_C","D_K","S_D","S_L","S_C","S_K"];
+    const locationField = hit.locationDice?.length
+      ? `<div class="form-group"><label for="melee-hit-location">Kość lokacji — wybiera atakujący</label>
+          <select id="melee-hit-location" name="naturalResult">${hit.locationDice.map(die => `<option value="${die.natural}">Kość ${die.index + 1}: ${die.natural} — ${HIT_LOCATION_LABELS[getHitLocation(die.natural)] ?? "brak lokacji"}</option>`).join("")}</select></div>`
+      : `<div class="form-group"><label for="melee-hit-location">Naturalna kość lokacji (1–19)</label><input id="melee-hit-location" name="naturalResult" type="number" min="1" max="19" step="1" value="${hit.naturalResult ?? ""}"></div>`;
     const form = await input(`Obrażenia — ${actor.name}`, `<p>${escape(hit.sourceName)}: ${escape(hit.weaponName)}, Budowa ${hit.build}, cios za ${hit.successes} sukcesy.</p>
       <p>Profil: ${escape(hit.profile)} (${escape(hit.source)}).</p>
       <label>Obrażenia<select name="damageCode"><option value="">Wybierz obrażenia</option>${codes.map(code=>`<option value="${code}" ${code===hit.damageCode?"selected":""}>${code.replace("D_", "Rana ").replace("S_", "Siniaki ")}</option>`).join("")}</select></label>
-      <label>Naturalna kość lokacji (1–19)<input name="naturalResult" type="number" min="1" max="19" step="1" value="${hit.naturalResult ?? ""}"></label>
-      <p>Tabela jak przy strzelaniu. Domyślnie pierwsza udana kość ciosu, przed poprawkami Umiejętności; przy ciosie łączonym MG może wskazać inną.</p>
+      ${locationField}
+      <p>Lokacja wynika z naturalnego wyniku, przed poprawkami Umiejętności. Przy ciosie łączonym atakujący wybiera dowolną z użytych kości (s. 203).</p>
       <label>Rodzaj obrażeń<select name="damageType"><option value="">Wybierz rodzaj</option><option value="blunt" ${hit.damageType==="blunt"?"selected":""}>Obuchowe</option><option value="cutting" ${hit.damageType==="cutting"?"selected":""}>Tnące / kłute</option></select></label>
       <label>Przebicie pancerza<input name="armorPenetration" type="number" min="0" step="1" value="${hit.armorPenetration}"></label>`, "Rozlicz trafienie");
     if (!form) return false;
     const naturalResult = Number(form.naturalResult), armorPenetration = Number(form.armorPenetration);
     if (!codes.includes(form.damageCode) || !Number.isInteger(naturalResult) || naturalResult<1 || naturalResult>19
       || !["blunt","cutting"].includes(form.damageType) || !Number.isInteger(armorPenetration) || armorPenetration<0) throw new Error("Sprawdź obrażenia, kość lokacji, rodzaj ciosu i przebicie pancerza.");
-    await save({ spec: { damageCode: form.damageCode, naturalResult, armorPenetration, damageType: form.damageType } });
+    if (hit.locationDice?.length && !hit.locationDice.some(die => die.natural === naturalResult)) throw new Error("Wybierz lokację z kości użytych w tym ciosie.");
+    await save({ spec: { damageCode: form.damageCode, naturalResult, armorPenetration, damageType: form.damageType,
+      damageBoost: hit.locationDice?.some(die => [1,2].includes(die.natural)) ?? false } });
   }
   if (!hit.result) {
     const location = getHitLocation(hit.spec.naturalResult);
@@ -101,34 +109,18 @@ export async function resolveMeleeDamageHit(hit, actor, persist) {
     await save({ armor, result: resolveDamage({ ...hit.spec, armorReduction: armor?.covered ? armor.reduction : 0 }) });
   }
   if (!hit.result.prevented && !hit.injury) {
-    let injury;
-    if (hit.result.damageKind === "S") {
-      // Pole poza etykietą: style etykiet DialogV2 nie mogą blokować
-      // kliknięcia ani ograniczać miejsca na edytowalną kontrolkę.
-      const form = await input(`Siniaki — ${actor.name}`, `
-        <p>${hit.result.locationLabel}: ${hit.result.finalDamageName}. Końcowy kod: ${hit.result.finalDamageCode}.</p>
-        <div class="form-group stacked">
-          <label for="neuroshima-bruise-penalty">Końcowa kara za siniaki (%) — ustala MG</label>
-          <div class="form-fields">
-            <input id="neuroshima-bruise-penalty" name="penaltyPercent" type="number"
-              min="0" step="1" placeholder="Wpisz karę, np. 15" required autofocus
-              style="width: 100%; min-width: 120px; pointer-events: auto;">
-          </div>
-        </div>`, "Zapisz siniaki");
-      if (!form) return false;
-      const penaltyPercent = Number(form.penaltyPercent);
-      if (form.penaltyPercent == null || String(form.penaltyPercent).trim()==="" || !Number.isInteger(penaltyPercent) || penaltyPercent<0) throw new Error("Wpisz końcową karę za siniaki.");
-      injury = { injuryType: "bruise", penaltyPercent };
-    } else {
-      injury = await rollPainResistanceForInjury(actor, hit.result.injuryType);
-      if (!injury) return false;
-    }
+    const bruise = hit.result.damageKind === "S";
+    const painResult = await rollPainResistanceForInjury(actor, hit.result.injuryType, { bruise });
+    if (!painResult) return false;
+    const injury = { ...painResult, injuryType: bruise ? "bruise" : painResult.injuryType };
     await save({ injury });
   }
   // Sprawdź również aktualność pojedynku/Trackera przed zapisem dokumentów.
   await persist(hit);
   if (!hit.result.prevented && !actor.items.get(hit.id)) {
-    await actor.createEmbeddedDocuments("Item", [{ _id: hit.id, name: `${hit.result.finalDamageName} — ${hit.result.locationLabel}`,
+    const injuryName = hit.result.damageKind === "S"
+      ? BRUISE_NAMES[hit.result.finalDamageCode] : hit.result.finalDamageName;
+    await actor.createEmbeddedDocuments("Item", [{ _id: hit.id, name: injuryName,
       type: "injury", system: { injuryType: hit.injury.injuryType, penaltyPercent: hit.injury.penaltyPercent,
         location: hit.result.location, description: `Walka wręcz: ${hit.sourceName}, ${hit.weaponName}, ${hit.successes} sukcesy. ${hit.result.finalDamageCode}. ${hit.result.locationDescription}` },
       flags: { neuroshima: { meleeDamageId: hit.id, damageCode: hit.result.finalDamageCode } } }], { keepId: true });

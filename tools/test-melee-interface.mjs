@@ -6,10 +6,10 @@ import { advanceSegmentTurn } from "../scripts/combat/segments.mjs";
 
 function setup(answers, isGM = true, diceSequence = []) {
   const writes = [], messages = [], warnings = [], dialogs = [];
-  let stored = null, rolls = 0;
+  let stored = null, rolls = 0, painRoll = false;
   const actor = id => ({ id, name: id, type: "character", items: [], system: {
-    attributes: { zrecznosc: { base: 12 }, budowa: { base: 12 } },
-    skills: { bijatyka: { base: 2 } }, activeModifiers: [], background: {}
+    attributes: { zrecznosc: { base: 12 }, budowa: { base: 12 }, charakter: { base: 12 } },
+    skills: { bijatyka: { base: 2 }, odpornoscNaBol: { base: 0 } }, activeModifiers: [], background: {}
   }, getFlag: () => stored, setFlag: async (system, key, value) => { stored = structuredClone(value); writes.push(value); } });
   const host = actor("a"), opponent = actor("b");
   const actors = [host, opponent];
@@ -17,14 +17,27 @@ function setup(answers, isGM = true, diceSequence = []) {
   globalThis.game = { actors, user: { isGM: isGM, id: "gm" } };
   globalThis.ui = { notifications: { warn: message => warnings.push(message) } };
   globalThis.foundry = { applications: { api: { DialogV2: {
+    wait: async options => {
+      dialogs.push(options);
+      const data = answers.shift();
+      if (!data) return null;
+      if (["exchange", "combined", "points"].includes(data.action)) {
+        const fields = answers.shift();
+        if (!fields) return null;
+        if (data.action === "exchange") return { action: "exchange",
+          [`attack${fields.attackDie}`]: "on", [`defense${fields.defenseDie}`]: "on" };
+        return { ...fields, action: data.action };
+      }
+      return data;
+    },
     input: async options => {
       dialogs.push(options);
-      if (options.window.title.startsWith("Obrażenia —")) return { damageCode: "S_D", naturalResult: "10", damageType: "blunt", armorPenetration: "0" };
-      if (options.window.title.startsWith("Siniaki —")) return { penaltyPercent: "0" };
+      if (options.window.title.startsWith("Obrażenia —")) return { damageCode: "S_D", naturalResult: options.content.match(/name="naturalResult"><option value="(\d+)"/)?.[1] ?? "10", damageType: "blunt", armorPenetration: "0" };
+      if (options.window.title.startsWith("Siniaki —")) { painRoll = true; return { attributeKey: "charakter" }; }
       return answers.shift() ?? null;
     }, confirm: async () => true
   } } }, dice: { Roll: class {
-    async evaluate() { rolls++; this.dice = [{ results: (diceSequence.shift() ?? [3, 6, 19]).map(result => ({ result })) }]; return this; }
+    async evaluate() { if (painRoll) { painRoll = false; this.dice = [{results: [3,4,19].map(result => ({result}))}]; return this; } rolls++; this.dice = [{ results: (diceSequence.shift() ?? [3, 6, 19]).map(result => ({ result })) }]; return this; }
     async toMessage(message) { messages.push(message); }
   } }, documents: { ChatMessage: { getSpeaker: ({ actor }) => ({ alias: actor?.name ?? "MG" }), create: async message => messages.push(message) } } };
   for (const actor of actors) {
@@ -38,6 +51,49 @@ function setup(answers, isGM = true, diceSequence = []) {
   return { host, writes, messages, warnings, dialogs, state: () => stored, rolls: () => rolls };
 }
 const start = [{ opponent: "b" }, { weapon0: "", weapon1: "", skill0: "bijatyka", skill1: "bijatyka", initiative: "a" }, { maneuver0: "standard", maneuver1: "standard", tempo0: "0" }];
+
+test("Dwa sukcesy ze screena: poprawa wyboru zachowuje kości i rozlicza cios za dwa sukcesy", async () => {
+  const environment = setup([...start,
+    {action:"combined"},{attack0:true,attack1:true,attack2:true,defense0:true,defense1:true,defense2:true},
+    {action:"combined"},{attack0:true,attack1:true,defense0:true,defense1:true},
+    {action:"exchange"},{attackDie:"2",defenseDie:"2"}
+  ],true,[[2,7,11],[20,17,7]]);
+  environment.host.system.attributes.zrecznosc.base = 10;
+  game.actors.get("b").system.attributes.zrecznosc.base = 1;
+  await openMeleeDuel(environment.host);
+  assert.equal(environment.warnings.length,1);
+  assert.match(environment.warnings[0],/Kości ataku z porażką: 3/);
+  const panels = environment.dialogs.filter(dialog => dialog.window.title.startsWith("Pojedynek —"));
+  assert.match(panels[1].content,/name="attack2" type="checkbox"\s+checked/);
+  const exchanges = environment.state().state.history.filter(entry=>entry.type==="exchange");
+  assert.equal(exchanges[0].attackSuccesses,2);
+  assert.equal(exchanges[0].hit,true);
+  assert.equal(exchanges[0].cost,2);
+  assert.equal(exchanges[1].failedDiceDraw,true);
+  assert.equal(environment.state().state.segment,4);
+  assert.equal(environment.rolls(),2);
+});
+
+test("Przycisk panelu rozlicza zaznaczone kości bez dodatkowego okna wyboru", async () => {
+  const environment = setup([...start]);
+  const originalFormData = globalThis.FormData;
+  let clicks = 0;
+  globalThis.FormData = class { constructor(form) { return form; } };
+  foundry.applications.api.DialogV2.wait = async options => {
+    if (clicks++) return null;
+    assert.ok(options.content.includes('name="attack0"'));
+    assert.ok(options.content.includes('name="defense2"'));
+    assert.ok(options.content.includes('name="points"'));
+    return options.buttons.find(button => button.action === "exchange").callback(null,
+      { form: [["attack0", "on"], ["defense2", "on"], ["points", "1"]] });
+  };
+  try { await openMeleeDuel(environment.host); }
+  finally { globalThis.FormData = originalFormData; }
+  assert.deepEqual(environment.warnings, []);
+  assert.equal(environment.state().state.segment, 2);
+  assert.equal(environment.state().state.history[0].hit, true);
+  assert.equal(environment.dialogs.some(dialog => ["Pojedynczy cios", "Cios łączony"].includes(dialog.window.title)), false);
+});
 
 test("Przypadek ze screena: 15, 3, 13 przeciw progowi 6 pozwala rozegrać całą rundę", async () => {
   const environment = setup([...start,
@@ -68,7 +124,7 @@ test("Panel zapisuje cios i wznawia bez ponownego rzutu", async () => {
   assert.equal(environment.state().state.segment, 2);
   assert.equal(environment.state().state.history[0].hit, true);
   assert.equal(environment.rolls(), 2);
-  assert.equal(environment.messages.length, 4);
+  assert.equal(environment.messages.length, 5);
   await openMeleeDuel(environment.host);
   assert.equal(environment.rolls(), 2);
   assert.equal(environment.state().state.segment, 2);
@@ -209,6 +265,23 @@ function attachCombat() {
   game.combat = combat;
   return combat;
 }
+
+test("Remis całej puli kończy turę Trackera bez okna obrażeń", async () => {
+  const environment = setup([...start, {action:"combined"},
+    {attack0:true,attack1:true,attack2:true,defense0:true,defense1:true,defense2:true}],true,[[12,20,11],[4,15,2]]);
+  environment.host.system.attributes.zrecznosc.base = 10;
+  game.actors.get("b").system.attributes.zrecznosc.base = 1;
+  const combat = attachCombat();
+  await openMeleeDuel(environment.host);
+  assert.deepEqual(environment.warnings, []);
+  const duel = findTrackedDuel(combat,"a");
+  assert.equal(duel.state.initiative,"a");
+  assert.equal(duel.state.segment,4);
+  assert.deepEqual(duel.damageHits,[]);
+  assert.equal(combat.round,2);
+  assert.equal(environment.dialogs.some(dialog=>dialog.window.title.startsWith("Obrażenia —")),false);
+  assert.ok(environment.messages.some(message=>message.content?.includes("Remis — obie strony bez sukcesów")));
+});
 
 test("Panel Trackera zapisuje jedną wymianę obu postaci i wznawia z karty przeciwnika", async () => {
   const answers = [...start, { action: "exchange" }, { attackDie: "0", defenseDie: "2" }];

@@ -356,3 +356,40 @@ Wcześniejszych trafień nie przeliczamy ponownie.
 - Testy automatyczne obejmują m.in. progi Budowy, siniaki, test bólu,
   pancerz, kontrcios, przerwany zapis i trafienie tokena zamiast wzorca.
   Test końcowy w działającym Foundry pozostaje do wykonania.
+
+## Uproszczenie panelu — 2026-09-18
+
+Użytkownik potwierdził zapis obrażeń i poprawny przebieg walki mieszanej
+z dwusegmentowym strzałem. Kolejna zmiana dotyczy obsługi pojedynku:
+
+- Wspólny widok obu stron: role, progi, kary, pula Umiejętności i kości.
+- Zaznaczenie jednej lub kilku kości i przycisk „Rozstrzygnij cios”
+  zastępują listę akcji oraz osobne okna pojedynczego i łączonego ciosu.
+- Pola wydawania punktów znajdują się w rozwijanej części tego widoku.
+- Po operacji panel odtwarza aktualny stan i pokazuje wynik ostatniej wymiany.
+  Nadal korzysta z DialogV2; nie jest stale otwartą aplikacją bez przeładowania.
+- Przygotowanie tury, obrażenia i test bólu nadal mają osobne okna.
+  Mechanika rezerwacji segmentów i zapisu trafień pozostaje wspólna.
+
+## Siniaki i lokacje — uzupełnienie strony 203
+
+Użytkownik dostarczył czarno-białą stronę 203 i potwierdził, że siniaki
+korzystają z kar zwykłych ran; różnią się szybszym leczeniem i możliwością
+użycia Budowy zamiast Charakteru w teście Odporności na ból.
+
+- Ręczne pole kary zastąpiono istniejącym testem bólu dla poziomu obrażenia
+  po lokacji i pancerzu. Dla siniaków formularz pozwala wybrać Charakter
+  lub Budowę, uwzględniając modyfikatory wybranego Współczynnika.
+- Zapis na karcie ma nazwę sD, sL, sC lub sK, typ bruise i kod ciężkości
+  w flags.neuroshima.damageCode. Zachowuje szybsze leczenie siniaków.
+  Starszych, ręcznie zapisanych kar nie przelicza się ponownie.
+- Krytyczny siniak korzysta z istniejącej kary krytycznej bez testu bólu;
+  komunikat wskazuje śmierć zgodnie ze stroną 203. Ten etap nie dodaje
+  automatycznego oznaczania tokena jako martwego ani licznika kumulacji ran.
+- Przy ciosie łączonym atakujący wybiera lokację z naturalnych wyników
+  użytych kości. Nowe trafienia oferują listę tych kości zamiast dowolnej
+  liczby. Stare oczekujące trafienia zachowują pole liczbowe ze względu
+  na brak zapisanej listy. Wynik 1 lub 2 zwiększa poziom obrażeń również
+  po wybraniu innej lokacji; trafienie głowy nie dodaje drugiej premii.
+- Testy obejmują obydwa Współczynniki, wszystkie poziomy siniaków,
+  niezmienione testy zwykłych ran, przerwany zapis oraz wybór lokacji.

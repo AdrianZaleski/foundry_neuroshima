@@ -43,6 +43,7 @@ function getLocationDescription(definition, location) {
 export function resolveDamage({
   damageCode,
   naturalResult,
+  damageBoost = false,
   armorReduction = 0,
   armorPenetration = 0
 }) {
@@ -51,7 +52,7 @@ export function resolveDamage({
   if (!parsedDamage || !location) return null;
 
   const baseSeverityIndex = SEVERITY_CODES.indexOf(parsedDamage.severityCode);
-  const headBonus = location === "head" ? 1 : 0;
+  const headBonus = location === "head" || damageBoost ? 1 : 0;
   // Nie ograniczamy obrażeń Krytycznych podniesionych trafieniem w głowę.
   // Ten zapasowy poziom może zostać dopiero pochłonięty przez pancerz.
   const incomingSeverityIndex = baseSeverityIndex + headBonus;

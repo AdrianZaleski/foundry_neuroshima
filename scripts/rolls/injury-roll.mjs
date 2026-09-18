@@ -50,6 +50,8 @@ export const INJURY_ROLL_CONFIGURATION = {
   }
 };
 
+const BRUISE_CODES = { abrasion: "sD", light: "sL", serious: "sC", critical: "sK" };
+
 const INJURY_LOCATION_LABELS = {
   general: "Ogólne / inne miejsce",
   head: "Głowa",
@@ -70,7 +72,7 @@ function checkboxIsSelected(fieldValue) {
   return fieldValue === true || fieldValue === "true" || fieldValue === "on";
 }
 
-async function selectInjuryType(actor, presetInjuryType = "") {
+async function selectInjuryType(actor, presetInjuryType = "", bruise = false) {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
   const testModifierSources = collectTestModifierSources(actor, {
     attributeKey: "charakter",
@@ -80,7 +82,7 @@ async function selectInjuryType(actor, presetInjuryType = "") {
   const presetConfiguration = INJURY_ROLL_CONFIGURATION[presetInjuryType];
   const injuryTypeField = presetConfiguration
     ? `
-      <p><strong>Rodzaj rany:</strong> ${presetConfiguration.label}</p>
+      <p><strong>Rodzaj obrażenia:</strong> ${bruise ? BRUISE_CODES[presetInjuryType] : presetConfiguration.label}</p>
       <input type="hidden" name="injuryType" value="${presetInjuryType}">
     `
     : `
@@ -96,9 +98,15 @@ async function selectInjuryType(actor, presetInjuryType = "") {
     `;
 
   return foundry.applications.api.DialogV2.input({
-    window: { title: "Rzut na ranę" },
+    window: { title: bruise ? "Siniaki — Odporność na ból" : "Rzut na ranę" },
     content: `
       ${injuryTypeField}
+      ${bruise ? `<p>Siniaki: trudność i kary jak dla zwykłej rany tego poziomu.</p>
+        <div class="form-group"><label for="bruise-pain-attribute">Współczynnik</label>
+          <select id="bruise-pain-attribute" name="attributeKey">
+            <option value="charakter">Charakter (${calculateAttributeValue(actor, "charakter")})</option>
+            <option value="budowa">Budowa (${calculateAttributeValue(actor, "budowa")})</option>
+          </select></div>` : ""}
       <div class="form-group">
         <label>
           <input type="checkbox" name="includeWoundPenalties" checked>
@@ -108,9 +116,9 @@ async function selectInjuryType(actor, presetInjuryType = "") {
       <div class="form-group">
         <label>
           <input type="checkbox" name="includeEffects" checked>
-          Uwzględnij aktywne efekty (${testModifierPercent}%)
+          Uwzględnij aktywne efekty ${bruise ? "wybranego Współczynnika" : `(${testModifierPercent}%)`}
         </label>
-        <small>${describeModifierSources(testModifierSources, "%")}</small>
+        <small>${bruise ? "Charakter: " + describeModifierSources(testModifierSources, "%") + "; Budowa: " + describeModifierSources(collectTestModifierSources(actor, { attributeKey: "budowa", skillKey: "odpornoscNaBol" }), "%") : describeModifierSources(testModifierSources, "%")}</small>
       </div>
     `,
     ok: {
@@ -122,14 +130,14 @@ async function selectInjuryType(actor, presetInjuryType = "") {
   });
 }
 
-async function publishCriticalInjuryResult(actor) {
+async function publishCriticalInjuryResult(actor, bruise = false) {
   await foundry.documents.ChatMessage.create({
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     content: [
-      "<strong>Rana krytyczna</strong>",
+      bruise ? "<strong>sK — siniaki krytyczne</strong>" : "<strong>Rana krytyczna</strong>",
       "Test Odporności na ból: nie wykonuje się",
       "<strong>Kara z rany: 160%</strong>",
-      "Jeśli postać nie otrzyma pierwszej pomocy, umiera."
+      bruise ? "Krytyczny siniak oznacza śmierć postaci (s. 203)." : "Jeśli postać nie otrzyma pierwszej pomocy, umiera."
     ].join("<br>")
   });
 
@@ -141,15 +149,15 @@ async function publishCriticalInjuryResult(actor) {
   };
 }
 
-export async function rollPainResistanceForInjury(actor, presetInjuryType = "") {
+export async function rollPainResistanceForInjury(actor, presetInjuryType = "", { bruise = false } = {}) {
   if (presetInjuryType === "critical") {
-    return publishCriticalInjuryResult(actor);
+    return publishCriticalInjuryResult(actor, bruise);
   }
 
-  const formData = await selectInjuryType(actor, presetInjuryType);
+  const formData = await selectInjuryType(actor, presetInjuryType, bruise);
   if (!formData) return;
 
-  const injuryType = String(formData.injuryType ?? "");
+  const injuryType = presetInjuryType || String(formData.injuryType ?? "");
   const injuryConfiguration = INJURY_ROLL_CONFIGURATION[injuryType];
   if (!injuryConfiguration) {
     ui.notifications.error("Nie znaleziono wybranego rodzaju rany.");
@@ -157,13 +165,16 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
   }
 
   if (injuryType === "critical") {
-    return publishCriticalInjuryResult(actor);
+    return publishCriticalInjuryResult(actor, bruise);
   }
 
-  const attribute = actor.system.attributes.charakter;
+  const attributeKey = bruise ? String(formData.attributeKey ?? "charakter") : "charakter";
+  if (!["charakter", "budowa"].includes(attributeKey)) throw new Error("Wybierz Charakter albo Budowę do testu bólu.");
+  const attributeLabel = attributeKey === "budowa" ? "Budowa" : "Charakter";
+  const attribute = actor.system.attributes[attributeKey];
   const skill = actor.system.skills.odpornoscNaBol;
   if (!attribute || !skill) {
-    ui.notifications.error("Postać nie ma Charakteru lub umiejętności Odporność na ból.");
+    ui.notifications.error(`Postać nie ma Współczynnika ${attributeLabel} lub umiejętności Odporność na ból.`);
     return;
   }
 
@@ -173,7 +184,7 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
     : 0;
   const testModifierSources = checkboxIsSelected(formData.includeEffects)
     ? collectTestModifierSources(actor, {
-      attributeKey: "charakter",
+      attributeKey,
       skillKey: "odpornoscNaBol"
     })
     : [];
@@ -194,8 +205,8 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
     dieResults,
     difficultyIndexBeforeCriticalResults
   );
-  const attributeValue = calculateAttributeValue(actor, "charakter");
-  const attributeModifierSources = collectAttributeModifierSources(actor, "charakter");
+  const attributeValue = calculateAttributeValue(actor, attributeKey);
+  const attributeModifierSources = collectAttributeModifierSources(actor, attributeKey);
   const skillModifierSources = collectSkillModifierSources(actor, "odpornoscNaBol");
   const successThreshold = attributeValue - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
   const evaluatedDieResults = applySkillToDieResults(
@@ -215,9 +226,9 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
   await roll.toMessage({
     speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
     flavor: [
-      `<strong>${injuryConfiguration.label} — test Odporności na ból</strong>`,
-      `Współczynnik: Charakter (${attributeValue})`,
-      `Modyfikatory Charakteru: ${describeModifierSources(attributeModifierSources)}`,
+      `<strong>${bruise ? BRUISE_CODES[injuryType] : injuryConfiguration.label} — test Odporności na ból</strong>`,
+      `Współczynnik: ${attributeLabel} (${attributeValue})`,
+      `Modyfikatory (${attributeLabel}): ${describeModifierSources(attributeModifierSources)}`,
       `Poziom umiejętności: ${skillLevel}`,
       `Modyfikatory Odporności na ból: ${describeModifierSources(skillModifierSources)}`,
       `Suwak: ${prepareSliderDescription(skillLevel)}`,
@@ -241,7 +252,8 @@ export async function rollPainResistanceForInjury(actor, presetInjuryType = "") 
     testPassed,
     penaltyPercent,
     numberOfSuccesses,
-    includedWoundPenaltyPercent
+    includedWoundPenaltyPercent,
+    attributeKey
   };
 }
 

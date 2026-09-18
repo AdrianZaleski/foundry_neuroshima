@@ -39,7 +39,7 @@ test("Cios łączony bierze pełne trzy sukcesy; Furia wskazuje właściwego pos
 
 function environment(answers=[]) {
   const items=[]; items.get=id=>items.find(item=>item.id===id);
-  const actor={name:"Cel",items,system:{attributes:{charakter:{base:12}},skills:{odpornoscNaBol:{base:0}},activeModifiers:[]},
+  const actor={name:"Cel",items,system:{attributes:{charakter:{base:12},budowa:{base:16}},skills:{odpornoscNaBol:{base:0}},activeModifiers:[]},
     async createEmbeddedDocuments(type,data) { const created=data.map(item=>({...item,id:item._id}));items.push(...created);return created; }};
   globalThis.foundry={applications:{api:{DialogV2:{input:async()=>answers.shift()??null}}},
     documents:{ChatMessage:{getSpeaker:()=>({}),create:async()=>{}}},
@@ -59,10 +59,11 @@ test("Anulowanie siniaków zachowuje trafienie; wznowienie zapisuje jeden siniak
   const env=environment();
   assert.equal(await resolveMeleeDamageHit(hit(),env.actor,env.persist),false);
   assert.equal(env.actor.items.length,0);
-  env.answers.push({penaltyPercent:"15"});
+  env.answers.push({attributeKey:"budowa"});
   assert.equal(await resolveMeleeDamageHit(env.stored,env.actor,env.persist),true);
   assert.equal(env.actor.items[0].system.injuryType,"bruise");
-  assert.equal(env.actor.items[0].system.penaltyPercent,15);
+  assert.equal(env.actor.items[0].system.penaltyPercent,5);
+  assert.equal(env.stored.injury.attributeKey,"budowa");
   await resolveMeleeDamageHit(env.stored,env.actor,env.persist);
   assert.equal(env.actor.items.length,1);
 });
@@ -104,4 +105,46 @@ test("Trzy zużyte segmenty nie pozwalają pominąć oczekujących obrażeń",()
   assert.equal(blocksMeleeAdvance(combat),true);
   combat.round=2;
   assert.throws(()=>assertTrackerNextRound(combat,duel),/obrażenia/);
+});
+
+test("Siniaki: Budowa lub Charakter wyznacza test, kara odpowiada zwykłej ranie", async () => {
+  for (const [code, passed, failed] of [["S_D",5,10],["S_L",15,30],["S_C",30,60]]) {
+    for (const attributeKey of ["budowa","charakter"]) {
+      const env = environment([{attributeKey}]);
+      env.actor.system.attributes.charakter.base = 1;
+      const current = hit(); current.spec.damageCode = code;
+      await resolveMeleeDamageHit(current,env.actor,env.persist);
+      assert.equal(env.actor.items[0].system.penaltyPercent,attributeKey === "budowa" ? passed : failed);
+      assert.equal(env.actor.items[0].system.injuryType,"bruise");
+      assert.equal(env.actor.items[0].flags.neuroshima.damageCode,code);
+      assert.equal(env.stored.injury.attributeKey,attributeKey);
+    }
+  }
+});
+
+test("Zwykła rana nadal korzysta z Charakteru; krytyczne siniaki nie rzucają testu", async () => {
+  const env = environment([{attributeKey:"budowa"}]);
+  env.actor.system.attributes.charakter.base = 1;
+  const current = hit(); current.spec.damageCode = "D_L";
+  await resolveMeleeDamageHit(current,env.actor,env.persist);
+  assert.equal(env.stored.injury.attributeKey,"charakter");
+  assert.equal(env.stored.injury.penaltyPercent,30);
+  const critical = environment();
+  const criticalHit = hit(); criticalHit.spec.damageCode = "S_K";
+  foundry.dice.Roll = class { constructor() { throw new Error("Nie wolno rzucać na krytyczny siniak"); } };
+  await resolveMeleeDamageHit(criticalHit,critical.actor,critical.persist);
+  assert.equal(critical.actor.items[0].system.injuryType,"bruise");
+  assert.equal(critical.actor.items[0].system.penaltyPercent,160);
+});
+
+test("Lokacja z użytej kości: wybór tułowia zachowuje jedno podniesienie za naturalne 2", async () => {
+  const env = environment([{damageCode:"S_D",naturalResult:"7",damageType:"blunt",armorPenetration:"0"},{attributeKey:"budowa"}]);
+  const current = {...hit(),spec:undefined,locationDice:[{index:0,natural:2},{index:1,natural:7}],naturalResult:2};
+  await resolveMeleeDamageHit(current,env.actor,env.persist);
+  assert.equal(env.stored.result.location,"torso");
+  assert.equal(env.stored.result.finalDamageCode,"S_L");
+  assert.equal(env.stored.injury.penaltyPercent,15);
+  const invalid = environment([{damageCode:"S_D",naturalResult:"10",damageType:"blunt",armorPenetration:"0"}]);
+  await assert.rejects(()=>resolveMeleeDamageHit(current,invalid.actor,invalid.persist),/kości użytych/);
+  assert.equal(invalid.actor.items.length,0);
 });

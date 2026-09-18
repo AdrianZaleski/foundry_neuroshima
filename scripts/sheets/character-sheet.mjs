@@ -1,5 +1,6 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
 import { saveActorNickname } from "./actor-name.mjs";
+import { expandBruiseName } from "../health/injury-labels.mjs";
 import { openMeleeDuel } from "../combat/melee-interface.mjs";
 import { treatInjury } from "../health/treatment-interface.mjs";
 import { healOverTime } from "../health/healing-interface.mjs";
@@ -726,18 +727,29 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     // Nie zapisujemy sumy, ponieważ zawsze wynika z aktualnej listy ran.
     context.injuryItems = this.actor.items
       .filter((item) => item.type === "injury")
-      .map((item) => ({
+      .map((item) => {
+        const locationName = injuryLocationNames[item.system.location] ?? item.system.location;
+        // Starsze rany wręcz miały lokację również w nazwie. Szablon
+        // dopisuje ją osobno, więc usuwamy powtórzenie tylko w widoku.
+        const suffix = ` — ${locationName}`;
+        let name = item.name.trim();
+        while (name.endsWith(suffix)) name = name.slice(0, -suffix.length).trimEnd();
+        if (item.system.injuryType === "bruise") name = expandBruiseName(name);
+        return {
         id: item.id,
-        name: item.name,
-        locationName: injuryLocationNames[item.system.location] ?? item.system.location,
+        name: name || item.name,
+        locationName,
         injuryTypeName: injuryTypeNames[item.system.injuryType] ?? item.system.injuryType,
         treatmentHistory: [...(item.system.treatment?.history ?? [])].reverse(),
         stabilized: item.system.treatment?.stabilized,
         healingHistory: [...(item.system.healing?.history ?? [])].reverse(),
         damageValue: item.system.damageValue,
         penaltyPercent: item.system.penaltyPercent
-      }));
+        };
+      });
 
+    context.activeInjuryItems = context.injuryItems.filter(item => item.penaltyPercent > 0);
+    context.healedInjuryItems = context.injuryItems.filter(item => item.penaltyPercent <= 0);
     context.totalWoundPenaltyPercent = context.injuryItems.reduce(
       (currentSum, injury) => currentSum + injury.penaltyPercent,
       0

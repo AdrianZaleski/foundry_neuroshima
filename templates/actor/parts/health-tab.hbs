@@ -4,7 +4,7 @@
     <button type="button" data-action="healOverTime">Rozlicz gojenie tej postaci</button>
     {{#if canManageDevelopmentSession}}<button type="button" data-action="healGroupOverTime">Rozlicz gojenie wielu postaci (MG)</button>{{/if}}
     <h2>Opatrywanie ran</h2>
-    {{#each injuryItems}}
+    {{#each activeInjuryItems}}
       <article><h3>{{this.name}} — {{this.locationName}}</h3>
         <p>{{this.injuryTypeName}}, kara {{this.penaltyPercent}}%.</p>
         {{#if this.stabilized}}<p>Rana krytyczna opatrzona. Pozostałe obrażenia i stan pacjenta ocenia MG.</p>{{/if}}
@@ -18,6 +18,24 @@
         </details>
       </article>
     {{else}}<p>Brak ran do opatrzenia.</p>{{/each}}
+    {{#if healedInjuryItems.length}}
+      <details>
+        <summary>Historia — obrażenia bez kary ({{healedInjuryItems.length}})</summary>
+        {{#each healedInjuryItems}}
+          <article><h3>{{this.name}} — {{this.locationName}}</h3>
+            <p>Kara 0%.</p>
+            <details><summary>Historia zabiegów</summary>
+              {{#each this.treatmentHistory}}<p>{{this.timestamp}} — {{this.healer}}, {{this.method}}: kara {{this.before}}% → {{this.after}}%.</p>
+              {{else}}<p>Brak zabiegów.</p>{{/each}}
+            </details>
+            <details><summary>Historia gojenia</summary>
+              {{#each this.healingHistory}}<p>{{this.timestamp}} — {{this.days}} dni, {{this.mode}}: {{this.before}}% → {{this.after}}%.</p>
+              {{else}}<p>Brak rozliczonego gojenia.</p>{{/each}}
+            </details>
+          </article>
+        {{/each}}
+      </details>
+    {{/if}}
   </section>
   <h2>Choroby</h2>
   <button type="button" data-action="createDisease">Dodaj chorobę</button>

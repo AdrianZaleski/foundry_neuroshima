@@ -8,6 +8,27 @@ const round = (first = [3, 6, 19], second = [12, 13, 18], skill = 0) => createMe
 const exchange = (state, attackDice, defenseDice, attackThreshold = 12, defenseThreshold = 12) =>
   resolveMeleeExchange(state, { attackDice, defenseDice, attackThreshold, defenseThreshold });
 
+test("Screen: trzy porażki obu stron rozliczają trzy remisowe segmenty", () => {
+  const state = round([12,20,11], [4,15,2], 3);
+  const result = exchange(state, [0,1,2], [0,1,2], 10, 1);
+  assert.equal(result.exchange.failedDiceDraw, true);
+  assert.equal(result.exchange.hit, false);
+  assert.equal(result.exchange.counterHit, false);
+  assert.equal(result.exchange.initiativeChanged, false);
+  assert.equal(result.state.initiative, "a");
+  assert.equal(result.state.segment, 4);
+  assert.ok(result.state.fighters.every(fighter => fighter.dice.every(die => die.used)));
+  assert.equal(state.segment, 1);
+});
+
+test("Grupa porażek nie maskuje udanej obrony; remis dwóch segmentów zostawia trzeci", () => {
+  const state = round([12,20,11], [4,15,2]);
+  assert.throws(() => exchange(state, [0,1,2], [0,1,2], 10, 4), /Cios łączony/);
+  const result = exchange(state, [0,1], [0,1], 10, 1);
+  assert.equal(result.state.segment, 3);
+  assert.equal(result.state.fighters[0].dice[2].used, false);
+});
+
 test("Przykład 1, strona 195: remis, trafienie, dwie porażki", () => {
   let state = round();
   let result = exchange(state, [1], [0]);
