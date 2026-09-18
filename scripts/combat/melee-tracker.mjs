@@ -46,6 +46,7 @@ export function assertTrackerExchange(combat, duel) {
 
 export function assertTrackerNextRound(combat, duel) {
   assertTrackerParticipants(combat, duel);
+  if (duel.damageHits?.some(hit => !hit.completed)) throw new Error("Najpierw rozlicz oczekujące obrażenia pojedynku.");
   if (duel.state?.segment !== 4 || combat.round !== duel.trackerRound + 1 || segmentOf(combat) !== 1) {
     throw new Error("Nowe kości wymagają ukończenia tury pojedynku i rozpoczęcia następnej rundy Trackera.");
   }
@@ -82,6 +83,7 @@ export function meleeRoundSpent(combat, actorId) {
 export function blocksMeleeAdvance(combat, wholeRound = false) {
   if (!combat?.started) return false;
   return trackedDuels(combat).some(duel => {
+    if (duel.damageHits?.some(hit => !hit.completed)) return wholeRound || includesActor(duel, combat.combatant?.actor?.id);
     if (duel.ended) return false;
     const pending = duel.trackerRound < combat.round || !duel.state
       || (duel.trackerRound === combat.round && duel.state.segment <= 3);

@@ -7,6 +7,7 @@ import { calculateInitiativeResult } from "./initiative-calculation.mjs";
 import { MELEE_DUELS_FLAG, trackedDuels, findTrackedDuel, assertTrackerStart,
   assertTrackerExchange, assertTrackerNextRound, assertTrackerParticipants } from "./melee-tracker.mjs";
 import { advanceSegmentTurn } from "./segments.mjs";
+import { createMeleeDamageHits, resolveMeleeDamageHit } from "./melee-damage.mjs";
 import { calculateWoundPenaltyPercent, calculateDifficultyIndexFromPercentage,
   DIFFICULTY_MODIFIERS } from "../rolls/roll-helpers.mjs";
 
@@ -17,6 +18,10 @@ const input = (title, content, label = "Dalej") => foundry.applications.api.Dial
   window: { title }, position: { width: 650 }, content,
   ok: { label }, rejectClose: false, modal: true
 });
+
+function duelActor(id, combat = null) {
+  return combat ? [...combat.combatants].find(entry => entry.actor?.id === id)?.actor : game.actors.get(id);
+}
 
 function profile(actor, weaponId, skillKey, tempo = 0) {
   const weapon = weaponId ? actor.items.get(weaponId) : null;
@@ -32,9 +37,9 @@ function profile(actor, weaponId, skillKey, tempo = 0) {
     weaponName: weapon?.name ?? "Pięści" };
 }
 
-async function declareManeuvers(configurations, initiative, previousState = null, opening = null) {
+async function declareManeuvers(configurations, initiative, previousState = null, opening = null, combat = null) {
   const fighters = configurations.map(configuration => {
-    const actor = game.actors.get(configuration.id);
+    const actor = duelActor(configuration.id, combat);
     if (!actor) throw new Error("Nie znaleziono uczestnika pojedynku.");
     const charge = previousState ? 0 : opening?.charges?.[actor.id] ?? 0;
     return { id: actor.id, name: actor.name, charge,
@@ -61,10 +66,10 @@ async function declareManeuvers(configurations, initiative, previousState = null
   }
 }
 
-async function rollFighters(declarations) {
+async function rollFighters(declarations, combat = null) {
   const fighters = [];
   for (const declaration of declarations) {
-    const actor = game.actors.get(declaration.id);
+    const actor = duelActor(declaration.id, combat);
     if (!actor) throw new Error("Nie znaleziono uczestnika pojedynku.");
     const roll = await new foundry.dice.Roll("3d20").evaluate();
     await roll.toMessage({ speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
@@ -78,7 +83,7 @@ async function rollFighters(declarations) {
 async function setup(host) {
   const actors = [...game.actors].filter(actor => actor.type === "character" && actor.id !== host.id);
   if (!actors.length) throw new Error("Dodaj drugą postać do świata.");
-  const selected = await input("Pojedynek wręcz — przeciwnik", `<p>Jeśli rozpoczynająca postać jest w aktywnej walce, pojedynek zostanie połączony z jej Trackerem. Obie postacie muszą w niej uczestniczyć; rozpocznij w pierwszym segmencie, przed ich akcjami. Poza walką panel działa samodzielnie. Dodatkowi przeciwnicy i rany nie są jeszcze automatyczne.</p>
+  const selected = await input("Pojedynek wręcz — przeciwnik", `<p>Jeśli rozpoczynająca postać jest w aktywnej walce, pojedynek zostanie połączony z jej Trackerem. Obie postacie muszą w niej uczestniczyć; rozpocznij w pierwszym segmencie, przed ich akcjami. Poza walką panel działa samodzielnie. Trafienia prowadzą do rozliczenia obrażeń i zapisu na karcie. Dodatkowi przeciwnicy nie są jeszcze automatyczni.</p>
     <select name="opponent">${actors.map(actor => `<option value="${actor.id}">${escape(actor.name)}</option>`).join("")}</select>`);
   if (!selected) return null;
   const opponent = actors.find(actor => actor.id === selected.opponent);
@@ -109,10 +114,10 @@ async function setup(host) {
   return { configurations, state: null, opening: { charges, winnerId: configuration.initiative, attempts: [] } };
 }
 
-async function rollOpening(configurations, opening) {
+async function rollOpening(configurations, opening, combat = null) {
   const results = [];
   for (const configuration of configurations) {
-    const actor = game.actors.get(configuration.id);
+    const actor = duelActor(configuration.id, combat);
     if (!actor) throw new Error("Nie znaleziono uczestnika pojedynku.");
     const current = profile(actor, configuration.weaponId, configuration.skillKey);
     const weapon = configuration.weaponId ? actor.items.get(configuration.weaponId) : null;
@@ -190,13 +195,13 @@ export async function openMeleeDuel(host) {
             const retry = await input("Remis Inicjatywy", "<p>Obie strony mają ten sam wynik. Powtórz testy z tymi samymi deklaracjami Szarży albo zamknij okno i wróć później.</p>", "Powtórz testy");
             if (!retry) break;
           }
-          duel = { ...duel, opening: await rollOpening(duel.configurations, duel.opening) };
+          duel = { ...duel, opening: await rollOpening(duel.configurations, duel.opening, combat) };
           await save(duel);
           if (!duel.opening.winnerId) continue;
         }
-        const declarations = await declareManeuvers(duel.configurations, duel.opening.winnerId, null, duel.opening);
+        const declarations = await declareManeuvers(duel.configurations, duel.opening.winnerId, null, duel.opening, combat);
         if (!declarations) break;
-        duel = { ...duel, state: createMeleeRound({ fighters: await rollFighters(declarations), initiative: duel.opening.winnerId }) };
+        duel = { ...duel, state: createMeleeRound({ fighters: await rollFighters(declarations, combat), initiative: duel.opening.winnerId }) };
         await save(duel);
       }
       const { state, configurations } = duel;
@@ -205,8 +210,22 @@ export async function openMeleeDuel(host) {
         try { assertTrackerExchange(combat, duel); } catch { exchangeReady = false; }
         try { assertTrackerNextRound(combat, duel); } catch { nextRoundReady = false; }
       }
-      const actors = configurations.map(entry => game.actors.get(entry.id));
+      const actors = configurations.map(entry => duelActor(entry.id, combat));
       if (actors.some(actor => !actor)) throw new Error("Brakuje uczestnika. Przywróć go przed wznowieniem pojedynku.");
+      const pending = duel.damageHits?.find(hit => !hit.completed);
+      if (pending) {
+        const finished = await resolveMeleeDamageHit(pending, actors.find(actor => actor.id === pending.targetId), async hit => {
+          const updated = { ...duel, damageHits: duel.damageHits.map(entry => entry.id === hit.id ? hit : entry) };
+          await save(updated);
+          duel = updated;
+        });
+        if (!finished) break;
+        if (combat && duel.state.segment === 4 && duel.damageHits.every(hit => hit.completed)) {
+          await advanceSegmentTurn(combat);
+          break;
+        }
+        continue;
+      }
       const profiles = configurations.map((entry, index) => profile(actors[index], entry.weaponId, entry.skillKey, state.tempo ?? 0));
       const attackerIndex = configurations.findIndex(entry => entry.id === state.initiative);
       const defenderIndex = 1 - attackerIndex;
@@ -236,9 +255,9 @@ export async function openMeleeDuel(host) {
           if (confirmed) { await save(null); break; }
         } else if (data.action === "next" && state.segment > 3) {
           if (combat) assertTrackerNextRound(combat, duel);
-          const declarations = await declareManeuvers(configurations, state.initiative, state);
+          const declarations = await declareManeuvers(configurations, state.initiative, state, null, combat);
           if (!declarations) continue;
-          duel = { ...duel, ...(combat ? { trackerRound: combat.round } : {}), state: createMeleeRound({ fighters: await rollFighters(declarations), initiative: state.initiative, round: state.round + 1 }) };
+          duel = { ...duel, ...(combat ? { trackerRound: combat.round } : {}), state: createMeleeRound({ fighters: await rollFighters(declarations, combat), initiative: state.initiative, round: state.round + 1 }) };
           await save(duel);
         } else if (data.action === "points" && state.segment <= 3) {
           if (combat) assertTrackerExchange(combat, duel);
@@ -260,7 +279,7 @@ export async function openMeleeDuel(host) {
               ? choices.map(die => `<label><input type="checkbox" name="${key}${die.index}">${escape(die.label)}</label>`).join("")
               : `<select name="${key}Die"><option value="">Wybierz jedną kość</option>${choices.map(die => `<option value="${die.index}">${escape(die.label)}</option>`).join("")}</select>`}`;
           }).join("");
-          const dice = await input(combined ? "Cios łączony" : "Pojedynczy cios", `${selection}<p>${combined ? "Zaznacz 2 albo 3 udane kości ataku i tyle samo kości obrony. Obrona może zawierać porażki." : "Wybierz po jednej kości. Nieudany atak również zużywa segment i może oddać Inicjatywę."} Trafienia i pancerz rozlicz MG ręcznie.</p>`, "Rozstrzygnij wymianę");
+          const dice = await input(combined ? "Cios łączony" : "Pojedynczy cios", `${selection}<p>${combined ? "Zaznacz 2 albo 3 udane kości ataku i tyle samo kości obrony. Obrona może zawierać porażki." : "Wybierz po jednej kości. Nieudany atak również zużywa segment i może oddać Inicjatywę."} Po trafieniu rozlicz obrażenia w następnym oknie.</p>`, "Rozstrzygnij wymianę");
           if (!dice) continue;
           if (!combined && (!["0", "1", "2"].includes(String(dice.attackDie)) || !["0", "1", "2"].includes(String(dice.defenseDie)))) throw new Error("Wybierz jedną kość ataku i jedną kość obrony.");
           const attackDice = combined ? [0, 1, 2].filter(index => checked(dice[`attack${index}`])) : [Number(dice.attackDie)];
@@ -272,15 +291,17 @@ export async function openMeleeDuel(host) {
           }
           const result = resolveMeleeExchange(state, { attackDice,
             defenseDice, attackThreshold: profiles[attackerIndex].attack, defenseThreshold: profiles[defenderIndex].defense });
-          duel = { ...duel, state: result.state };
+          duel = { ...duel, state: result.state,
+            damageHits: [...(duel.damageHits ?? []), ...createMeleeDamageHits(state, result.exchange, configurations, actors)] };
           await save(duel);
           const exchange = result.exchange;
           await foundry.documents.ChatMessage.create({ content: `<h3>Pojedynek wręcz — tura ${state.round}, segment ${state.segment}</h3>
             <p>${escape(actors[attackerIndex].name)} → ${escape(actors[defenderIndex].name)}; koszt ${exchange.cost} segmentów.</p>
             <p>Sukcesy ataku: ${exchange.attackSuccesses}; obrony: ${exchange.defenseSuccesses}.</p>
             <p>Atak: ${MELEE_MANEUVER_LABELS[exchange.attackerManeuver]}; obrona: ${MELEE_MANEUVER_LABELS[exchange.defenderManeuver]}; Zwiększone tempo: ${state.tempo ?? 0}.</p>
-            ${exchange.counterHit ? `<p>Furia: ${escape(actors[attackerIndex].name)} traci Inicjatywę i otrzymuje cios za ${exchange.counterHitSuccesses} sukces. MG rozlicza obrażenia.</p>` : ""}
-            <p>${exchange.hit ? `Trafienie za ${exchange.attackSuccesses} sukcesy. MG rozlicza profil broni, lokację, pancerz i ranę.` : exchange.initiativeChanged ? "Obrońca przejmuje Inicjatywę od następnego segmentu." : "Brak trafienia. Inicjatywa bez zmian."}</p>` });
+            ${exchange.counterHit ? `<p>Furia: ${escape(actors[attackerIndex].name)} traci Inicjatywę i otrzymuje cios za ${exchange.counterHitSuccesses} sukces. Obrażenia oczekują na rozliczenie w panelu.</p>` : ""}
+            <p>${exchange.hit ? `Trafienie za ${exchange.attackSuccesses} sukcesy. Obrażenia oczekują na rozliczenie w panelu.` : exchange.initiativeChanged ? "Obrońca przejmuje Inicjatywę od następnego segmentu." : "Brak trafienia. Inicjatywa bez zmian."}</p>` });
+          if (duel.damageHits.some(hit => !hit.completed)) continue;
           if (combat && duel.state.segment === 4) {
             await advanceSegmentTurn(combat);
             // Po rozliczeniu rundy zamykamy panel, aby MG mógł obsłużyć

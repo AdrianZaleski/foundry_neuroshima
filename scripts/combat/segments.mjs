@@ -601,7 +601,7 @@ export async function advanceSegmentTurn(combat) {
 async function advanceSingleSegmentTurn(combat) {
   if (!combat.started || combat.turns.length === 0) return combat;
   if (blocksMeleeAdvance(combat)) {
-    ui.notifications.warn("Najpierw rozstrzygnij wszystkie trzy segmenty pojedynku na tę rundę (panel MG).");
+    ui.notifications.warn("Najpierw rozstrzygnij trzy segmenty pojedynku i oczekujące obrażenia (panel MG).");
     return combat;
   }
   if (preventAdvanceForUnresolvedShot(combat)) return combat;

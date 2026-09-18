@@ -320,3 +320,39 @@ rozliczana naraz nadal składa się z osobnych wymian albo poprawnego ciosu
 - Raport potwierdza zadeklarowany strzał celowany trzeciego uczestnika
   w rundzie 2: rozpoczęty w segmencie 1, rozstrzygany w segmencie 2.
   Jego oczekiwanie w tym zapisie jest prawidłowe, a nie ogólną blokadą akcji.
+
+## Obrażenia w pojedynku — 2026-09-13
+
+Użytkownik zatwierdził użycie lokacji takich jak przy strzelaniu.
+Trafienia powstałe po tej zmianie otrzymują zapis oczekujących obrażeń.
+Wcześniejszych trafień nie przeliczamy ponownie.
+
+- Profil zależy od Budowy i całej liczby sukcesów ciosu, bez odejmowania
+  sukcesów obrony. Pełny profil karty ma pierwszeństwo. Brakujące lub urwane
+  dane uzupełnia tabela z czarno-białych stron 146–149, rozpoznawana po kodzie
+  źródłowym broni. Sztylet nie ma osobnego profilu w tych materiałach:
+  dla niego i nieznanych broni MG wskazuje obrażenia w oknie trafienia.
+- Progi oznaczają wartości do podanej Budowy włącznie; ostatni wiersz to
+  19 i więcej. Uściślono etykiety karty broni, bez migracji jej danych.
+- Używamy wspólnej tabeli lokacji strzeleckich, premii głowy i redukcji
+  obrażeń. Jako propozycję lokacji panel bierze naturalny wynik pierwszej
+  udanej kości wybranego ciosu. MG może go zmienić przed zapisem — wybór
+  kości przy ciosie łączonym jest rozwiązaniem interfejsu, nie cytatem zasad.
+- Okno pozwala sprawdzić kod obrażeń, rodzaj ciosu i PP. Pancerz korzysta
+  z właściwej redukcji (obuchowa lub tnąca), szansy osłony i Wytrzymałości.
+- Zwykła rana uruchamia istniejący test Odporności na ból, a następnie
+  zapisuje Item rany wraz z karą. Siniaki zapisują się jako typ bruise,
+  z zachowanym kodem ciężkości; końcową karę nadal wpisuje MG, ponieważ
+  przesłane fragmenty nie opisują kompletnej procedury siniaków.
+- Kontrcios przy Furii rozlicza obrażenia przeciwnika. Rany wpływają
+  na progi następnej wymiany, jeszcze w tej samej turze.
+- W Trackerze obrażenia dotyczą aktora konkretnego tokena, także gdy jest
+  niepołączony ze wzorcem świata. Ten sam aktor dostarcza bieżące progi,
+  Budowę, Umiejętności i pancerz pojedynku.
+- Zamknięcie okna zachowuje oczekujące trafienie i blokuje dalszą kolejkę
+  pary. Ponowne otwarcie panelu kończy zapis przed następną wymianą.
+  Id rany i znacznik na pancerzu chronią wznowienie po częściowym zapisie
+  przed powtórzeniem skutków. Nie stanowi to blokady dwóch klientów MG.
+- Testy automatyczne obejmują m.in. progi Budowy, siniaki, test bólu,
+  pancerz, kontrcios, przerwany zapis i trafienie tokena zamiast wzorca.
+  Test końcowy w działającym Foundry pozostaje do wykonania.

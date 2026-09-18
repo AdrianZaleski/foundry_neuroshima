@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { openMeleeDuel } from "../scripts/combat/melee-interface.mjs";
 import { findTrackedDuel, meleeTrackerAction } from "../scripts/combat/melee-tracker.mjs";
+import { advanceSegmentTurn } from "../scripts/combat/segments.mjs";
 
 function setup(answers, isGM = true, diceSequence = []) {
   const writes = [], messages = [], warnings = [], dialogs = [];
@@ -16,11 +17,24 @@ function setup(answers, isGM = true, diceSequence = []) {
   globalThis.game = { actors, user: { isGM: isGM, id: "gm" } };
   globalThis.ui = { notifications: { warn: message => warnings.push(message) } };
   globalThis.foundry = { applications: { api: { DialogV2: {
-    input: async options => { dialogs.push(options); return answers.shift() ?? null; }, confirm: async () => true
+    input: async options => {
+      dialogs.push(options);
+      if (options.window.title.startsWith("Obrażenia —")) return { damageCode: "S_D", naturalResult: "10", damageType: "blunt", armorPenetration: "0" };
+      if (options.window.title.startsWith("Siniaki —")) return { penaltyPercent: "0" };
+      return answers.shift() ?? null;
+    }, confirm: async () => true
   } } }, dice: { Roll: class {
     async evaluate() { rolls++; this.dice = [{ results: (diceSequence.shift() ?? [3, 6, 19]).map(result => ({ result })) }]; return this; }
     async toMessage(message) { messages.push(message); }
   } }, documents: { ChatMessage: { getSpeaker: ({ actor }) => ({ alias: actor?.name ?? "MG" }), create: async message => messages.push(message) } } };
+  for (const actor of actors) {
+    actor.items.get = id => actor.items.find(item => item.id === id);
+    actor.createEmbeddedDocuments = async (type, data) => {
+      const created = data.map(item => ({ ...item, id: item._id }));
+      actor.items.push(...created);
+      return created;
+    };
+  }
   return { host, writes, messages, warnings, dialogs, state: () => stored, rolls: () => rolls };
 }
 const start = [{ opponent: "b" }, { weapon0: "", weapon1: "", skill0: "bijatyka", skill1: "bijatyka", initiative: "a" }, { maneuver0: "standard", maneuver1: "standard", tempo0: "0" }];
@@ -54,7 +68,7 @@ test("Panel zapisuje cios i wznawia bez ponownego rzutu", async () => {
   assert.equal(environment.state().state.segment, 2);
   assert.equal(environment.state().state.history[0].hit, true);
   assert.equal(environment.rolls(), 2);
-  assert.equal(environment.messages.length, 3);
+  assert.equal(environment.messages.length, 4);
   await openMeleeDuel(environment.host);
   assert.equal(environment.rolls(), 2);
   assert.equal(environment.state().state.segment, 2);
@@ -232,4 +246,31 @@ test("Nowa runda Trackera daje nowe kości dopiero po deklaracji manewrów", asy
   assert.equal(findTrackedDuel(combat, "a").state.round, 2);
   assert.equal(findTrackedDuel(combat, "a").state.segment, 1);
   assert.equal(environment.rolls(), 4);
+});
+
+test("Anulowane obrażenia ostatniego ciosu blokują Tracker; wznowienie rani token, nie wzorzec", async () => {
+  const environment = setup([...start, { action:"combined" },
+    {attack0:true,attack1:true,attack2:true,defense0:true,defense1:true,defense2:true}],true,[[3,4,5],[13,14,15]]);
+  const combat = attachCombat();
+  const worldActor = game.actors.get("b");
+  const tokenActor = { ...worldActor, items: [] };
+  tokenActor.items.get = id => tokenActor.items.find(item => item.id === id);
+  tokenActor.createEmbeddedDocuments = async (type,data) => {
+    const created = data.map(item => ({...item,id:item._id})); tokenActor.items.push(...created); return created;
+  };
+  combat.combatants[1].actor = tokenActor;
+  const originalInput = foundry.applications.api.DialogV2.input;
+  foundry.applications.api.DialogV2.input = async options => options.window.title.startsWith("Obrażenia —") ? null : originalInput(options);
+  await openMeleeDuel(environment.host);
+  assert.equal(findTrackedDuel(combat,"a").state.segment,4);
+  assert.equal(findTrackedDuel(combat,"a").damageHits[0].completed,false);
+  await advanceSegmentTurn(combat);
+  assert.equal(combat.round,1);
+  assert.equal(combat.turn,0);
+  foundry.applications.api.DialogV2.input = originalInput;
+  await openMeleeDuel(environment.host);
+  assert.equal(combat.round,2);
+  assert.equal(tokenActor.items.length,1);
+  assert.equal(worldActor.items.length,0);
+  assert.equal(environment.rolls(),2);
 });
