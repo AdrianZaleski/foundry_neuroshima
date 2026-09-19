@@ -14,6 +14,28 @@ import { calculateWoundPenaltyPercent, calculateDifficultyIndexFromPercentage,
 const FLAG = "meleeDuel";
 let busy = false;
 const checked = value => value === true || value === "on" || value === "true";
+export function bindMeleePointLimit(root, fighters) {
+  const spender = root.querySelector('[name="fighterId"]');
+  const points = root.querySelector('[name="points"]');
+  if (!spender || !points) return;
+  const button = root.querySelector('button[data-action="points"]');
+  const hint = root.querySelector('[data-point-limit]');
+  const update = () => {
+    const fighter = fighters.find(entry => entry.id === spender.value);
+    const available = fighter ? Math.max(0, fighter.skill - fighter.spent) : 0;
+    points.max = String(available);
+    points.min = available ? "1" : "0";
+    points.disabled = available === 0;
+    if (button) button.disabled = available === 0;
+    if (hint) hint.textContent = `Dostępne punkty: ${available}.`;
+    if (!available) points.value = "0";
+    else if (points.value !== "") points.value = String(Math.max(1, Math.min(available, Math.trunc(Number(points.value) || 1))));
+  };
+  spender.addEventListener("change", update);
+  points.addEventListener("input", update);
+  points.addEventListener("change", () => { if (!points.value) points.value = "1"; update(); });
+  update();
+}
 const input = (title, content, label = "Dalej") => foundry.applications.api.DialogV2.input({
   window: { title }, position: { width: 650 }, content,
   ok: { label }, rejectClose: false, modal: true
@@ -270,6 +292,7 @@ export async function openMeleeDuel(host) {
       const data = await foundry.applications.api.DialogV2.wait({
         window: { title: `Pojedynek — tura ${state.round}, ${state.segment > 3 ? "koniec tury" : `segment ${state.segment}`}` },
         position: { width: 760 }, rejectClose: false, modal: true,
+        render: (event, dialog) => bindMeleePointLimit(dialog.element, state.fighters),
         content: `<div style="display:flex;flex-wrap:wrap;gap:12px;">${summary}</div>
           <p>Zwiększone tempo: ${state.tempo ?? 0}. ${combat ? `Tracker: runda ${combat.round}, segment ${combat.getFlag("neuroshima", "combatSegment") || 1}.` : ""}</p>
           ${lastExchange ? `<p><strong>Ostatni cios:</strong> ${lastExchange.attackSuccesses} sukcesów ataku / ${lastExchange.defenseSuccesses} obrony. ${lastExchange.hit ? "Trafienie." : lastExchange.counterHit ? "Kontrcios przy Furii." : lastExchange.initiativeChanged ? "Przejęcie Inicjatywy." : lastExchange.failedDiceDraw ? "Remis — obie strony bez sukcesów. Inicjatywa bez zmian." : "Brak trafienia."}</p>` : ""}
@@ -278,7 +301,8 @@ export async function openMeleeDuel(host) {
             <div class="form-group"><label for="melee-spender">Kto wydaje</label><select id="melee-spender" name="fighterId">${actorOptions}</select></div>
             <div class="form-group"><label for="melee-target">Czyja kość</label><select id="melee-target" name="targetId">${actorOptions}</select></div>
             <div class="form-group"><label for="melee-die">Numer kości</label><select id="melee-die" name="die"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div>
-            <div class="form-group"><label for="melee-points">Liczba punktów</label><input id="melee-points" name="points" type="number" min="1" step="1" value="1"></div>
+            <div class="form-group"><label for="melee-points">Liczba punktów</label><input id="melee-points" name="points" type="number" min="0" max="${Math.max(0, state.fighters[0].skill - state.fighters[0].spent)}" step="1" value="1"></div>
+            <p data-point-limit></p>
             <p>Ustaw wydatek i kliknij „Wydaj punkty”. Własną kość obniżasz, przeciwnika podwyższasz.</p>
           </details>` : ""}`,
         buttons: actions.map(([action, label]) => ({ action, label,
@@ -308,6 +332,15 @@ export async function openMeleeDuel(host) {
           const points = data;
           duel = { ...duel, state: spendMeleePoints(state, { fighterId: points.fighterId, targetId: points.targetId, dieIndex: Number(points.die) - 1, points: Number(points.points) }) };
           await save(duel);
+          if (points.fighterId === points.targetId) {
+            const fighter = duel.state.fighters.find(entry => entry.id === points.fighterId);
+            const before = state.fighters.find(entry => entry.id === points.fighterId);
+            const spent = fighter.spent - before.spent;
+            const value = fighter.dice[Number(points.die) - 1].value;
+            if (value === 1 || spent < Number(points.points)) {
+              ui.notifications.info(`${value === 1 ? "Kość osiągnęła najniższą wartość: 1." : `Kość obniżono do ${value}.`} Wydano ${spent} pkt; pozostało ${fighter.skill - fighter.spent}.`);
+            }
+          }
         } else if (["exchange", "combined"].includes(data.action) && state.segment <= 3) {
           if (combat) assertTrackerExchange(combat, duel);
           const attackDice = [0, 1, 2].filter(index => checked(data[`attack${index}`]));

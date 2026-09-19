@@ -58,16 +58,21 @@ export function spendMeleePoints(state, { fighterId, targetId, dieIndex, points 
   integer(points, 1, 100, "wydawane punkty");
   integer(dieIndex, 0, 2, "kość");
   if (next.segment > 3 || !fighter || !target) throw new Error("Brak aktywnej tury pojedynku.");
-  if (fighter.spent + points > fighter.skill) throw new Error("Za mało punktów Umiejętności.");
   const die = target.dice[dieIndex];
   if (die.used) throw new Error("Ta kość została już wykorzystana.");
+  const requestedPoints = points;
   if (fighterId === targetId) {
     if (die.natural === 20) throw new Error("Naturalnej 20 nie można naprawić.");
-    if (die.value - points < 1) throw new Error("Nie można obniżyć wyniku poniżej 1.");
+    if (die.value === 1) return next;
+    points = Math.min(points, die.value - 1, fighter.skill - fighter.spent);
+    if (points <= 0) throw new Error("Brak dostępnych punktów Umiejętności.");
     die.value -= points;
-  } else die.value += points;
+  } else {
+    if (fighter.spent + points > fighter.skill) throw new Error("Za mało punktów Umiejętności.");
+    die.value += points;
+  }
   fighter.spent += points;
-  next.history.push({ type: "points", segment: next.segment, fighterId, targetId, dieIndex, points });
+  next.history.push({ type: "points", segment: next.segment, fighterId, targetId, dieIndex, points, requestedPoints });
   return next;
 }
 

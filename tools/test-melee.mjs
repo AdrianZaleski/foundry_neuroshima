@@ -8,6 +8,20 @@ const round = (first = [3, 6, 19], second = [12, 13, 18], skill = 0) => createMe
 const exchange = (state, attackDice, defenseDice, attackThreshold = 12, defenseThreshold = 12) =>
   resolveMeleeExchange(state, { attackDice, defenseDice, attackThreshold, defenseThreshold });
 
+test("Poprawianie kości zatrzymuje się na 1 i pobiera tylko potrzebne punkty", () => {
+  const initial = round([5,12,20], undefined, 8);
+  const action = { fighterId: "a", targetId: "a", dieIndex: 0, points: 8 };
+  const next = spendMeleePoints(initial, action);
+  assert.equal(next.fighters[0].dice[0].value, 1);
+  assert.equal(next.fighters[0].spent, 4);
+  assert.equal(next.history.at(-1).points, 4);
+  assert.deepEqual(spendMeleePoints(next, action), next);
+  const limited = spendMeleePoints(round([12,3,20], undefined, 2), action);
+  assert.equal(limited.fighters[0].dice[0].value, 10);
+  assert.equal(limited.fighters[0].spent, 2);
+  assert.throws(() => spendMeleePoints(initial, {...action,dieIndex:2}), /Naturalnej 20/);
+});
+
 test("Screen: trzy porażki obu stron rozliczają trzy remisowe segmenty", () => {
   const state = round([12,20,11], [4,15,2], 3);
   const result = exchange(state, [0,1,2], [0,1,2], 10, 1);

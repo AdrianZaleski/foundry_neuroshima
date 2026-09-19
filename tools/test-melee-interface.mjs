@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { openMeleeDuel } from "../scripts/combat/melee-interface.mjs";
+import { openMeleeDuel, bindMeleePointLimit } from "../scripts/combat/melee-interface.mjs";
 import { findTrackedDuel, meleeTrackerAction } from "../scripts/combat/melee-tracker.mjs";
 import { advanceSegmentTurn } from "../scripts/combat/segments.mjs";
 
@@ -346,4 +346,23 @@ test("Anulowane obrażenia ostatniego ciosu blokują Tracker; wznowienie rani to
   assert.equal(tokenActor.items.length,1);
   assert.equal(worldActor.items.length,0);
   assert.equal(environment.rolls(),2);
+});
+
+ test("Limit punktów: pula 4, wpisane 10, zmiana na postać bez punktów", () => {
+  const field = value => ({value,listeners:{},addEventListener(type,handler){this.listeners[type]=handler;}});
+  const spender = field("a"), points = field("10"), button = {}, hint = {};
+  const elements = {'[name="fighterId"]':spender,'[name="points"]':points,'button[data-action="points"]':button,'[data-point-limit]':hint};
+  bindMeleePointLimit({querySelector:selector=>elements[selector]},[{id:"a",skill:8,spent:4},{id:"b",skill:3,spent:3}]);
+  assert.equal(points.max,"4");
+  assert.equal(points.value,"4");
+  points.value="10"; points.listeners.input();
+  assert.equal(points.value,"4");
+  spender.value="b"; spender.listeners.change();
+  assert.equal(points.max,"0");
+  assert.equal(points.disabled,true);
+  assert.equal(button.disabled,true);
+  spender.value="a"; spender.listeners.change();
+  assert.equal(points.disabled,false);
+  assert.equal(button.disabled,false);
+  assert.equal(points.value,"1");
 });
