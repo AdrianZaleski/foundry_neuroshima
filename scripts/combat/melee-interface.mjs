@@ -90,12 +90,13 @@ async function declareManeuvers(configurations, initiative, previousState = null
 
 async function rollFighters(declarations, combat = null) {
   const fighters = [];
+  const sharedTempo = Math.max(0, ...declarations.map(entry => entry.tempo ?? 0));
   for (const declaration of declarations) {
     const actor = duelActor(declaration.id, combat);
     if (!actor) throw new Error("Nie znaleziono uczestnika pojedynku.");
     const roll = await new foundry.dice.Roll("3d20").evaluate();
     await roll.toMessage({ speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
-      flavor: `Walka wręcz — ${MELEE_MANEUVER_LABELS[declaration.maneuver]}, Zwiększone tempo: ${declaration.tempo}; jawne kości nowej tury` }, { rollMode: "publicroll" });
+      flavor: `Walka wręcz — ${MELEE_MANEUVER_LABELS[declaration.maneuver]}, Wspólne zwiększone tempo: ${sharedTempo} (poziomy PT obu stron); jawne kości nowej tury` }, { rollMode: "publicroll" });
     fighters.push({ ...declaration,
       dice: roll.dice[0].results.map(result => result.result) });
   }
