@@ -62,7 +62,7 @@ export function createMeleeDamageHits(state, exchange, configurations, actors) {
   });
 }
 const input = (title,content,label) => foundry.applications.api.DialogV2.input({
-  window: { title }, content, ok: { label }, rejectClose: false, modal: true
+  window: { title }, content, ok: { label }, rejectClose: false, modal: false
 });
 
 // Każdy etap zapisujemy przed mutacją dokumentów. Id rany oraz znacznik

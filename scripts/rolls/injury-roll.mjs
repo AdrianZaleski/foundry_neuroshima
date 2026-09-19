@@ -126,7 +126,7 @@ async function selectInjuryType(actor, presetInjuryType = "", bruise = false) {
       icon: "fas fa-dice-d20"
     },
     rejectClose: false,
-    modal: true
+    modal: false
   });
 }
 

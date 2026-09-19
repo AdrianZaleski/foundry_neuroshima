@@ -291,7 +291,7 @@ export async function openMeleeDuel(host) {
       const lastExchange = state.history.filter(entry => entry.type === "exchange").at(-1);
       const data = await foundry.applications.api.DialogV2.wait({
         window: { title: `Pojedynek — tura ${state.round}, ${state.segment > 3 ? "koniec tury" : `segment ${state.segment}`}` },
-        position: { width: 760 }, rejectClose: false, modal: true,
+        position: { width: 760 }, rejectClose: false, modal: false,
         render: (event, dialog) => bindMeleePointLimit(dialog.element, state.fighters),
         content: `<div style="display:flex;flex-wrap:wrap;gap:12px;">${summary}</div>
           <p>Zwiększone tempo: ${state.tempo ?? 0}. ${combat ? `Tracker: runda ${combat.round}, segment ${combat.getFlag("neuroshima", "combatSegment") || 1}.` : ""}</p>
