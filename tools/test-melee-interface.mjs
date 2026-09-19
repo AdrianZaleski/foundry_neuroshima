@@ -52,6 +52,13 @@ function setup(answers, isGM = true, diceSequence = []) {
 }
 const start = [{ opponent: "b" }, { weapon0: "", weapon1: "", skill0: "bijatyka", skill1: "bijatyka", initiative: "a" }, { maneuver0: "standard", maneuver1: "standard", tempo0: "0" }];
 
+test("Okna pojedynku pozostaja niemodalne", async () => {
+  const environment = setup([...start]);
+  await openMeleeDuel(environment.host);
+  assert.ok(environment.dialogs.length > 0);
+  assert.equal(environment.dialogs.every(dialog => dialog.modal === false), true);
+});
+
 test("Dwa sukcesy ze screena: poprawa wyboru zachowuje kości i rozlicza cios za dwa sukcesy", async () => {
   const environment = setup([...start,
     {action:"combined"},{attack0:true,attack1:true,attack2:true,defense0:true,defense1:true,defense2:true},
@@ -223,6 +230,8 @@ test("Zwiększone tempo podnosi PT obu stron, Furia dodaje bonus tylko do ataku"
   assert.equal(exchange.defenseThreshold, 9);
   assert.equal(environment.state().state.tempo, 2);
   assert.match(environment.messages[0].flavor, /Furia/);
+  assert.match(environment.messages[0].flavor, /Wsp.*tempo: 2/);
+  assert.match(environment.messages[1].flavor, /Wsp.*tempo: 2/);
 });
 
 test("Błędna deklaracja nie rzuca kości; można poprawić wybór przed turą", async () => {
