@@ -38,7 +38,7 @@ export function bindMeleePointLimit(root, fighters) {
 }
 const input = (title, content, label = "Dalej") => foundry.applications.api.DialogV2.input({
   window: { title }, position: { width: 650 }, content,
-  ok: { label }, rejectClose: false, modal: true
+  ok: { label }, rejectClose: false, modal: false
 });
 
 function duelActor(id, combat = null) {
