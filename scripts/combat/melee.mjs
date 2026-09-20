@@ -28,14 +28,15 @@ export function meleeManeuverBonuses(fighter) {
     defense: (fighter.maneuver === "fullDefense" ? 2 : 0) - penalty };
 }
 
-export function createMeleeRound({ fighters, initiative, round = 1 }) {
+export function createMeleeRound({ fighters, initiative, round = 1, startSegment = 1 }) {
   if (!Array.isArray(fighters) || fighters.length !== 2 || fighters[0].id === fighters[1].id) {
     throw new Error("Pojedynek wymaga dwóch różnych uczestników.");
   }
   if (!fighters.some(fighter => fighter.id === initiative)) throw new Error("Wybierz posiadacza Inicjatywy.");
   validateMeleeDeclarations(fighters, initiative);
   return {
-    round: integer(round, 1, Number.MAX_SAFE_INTEGER, "tura"), segment: 1, initiative,
+    round: integer(round, 1, Number.MAX_SAFE_INTEGER, "tura"),
+    segment: integer(startSegment, 1, 3, "segment początkowy"), initiative,
     tempo: Math.max(...fighters.map(fighter => fighter.tempo ?? 0)),
     fighters: fighters.map(fighter => {
       if (!fighter.id || fighter.dice?.length !== 3) throw new Error("Każdy uczestnik musi mieć trzy kości.");
@@ -93,8 +94,13 @@ export function resolveMeleeExchange(state, { attackDice, defenseDice, attackThr
   const attacker = next.fighters.find(fighter => fighter.id === next.initiative);
   const defender = next.fighters.find(fighter => fighter.id !== next.initiative);
   if (!Array.isArray(attackDice) || !Array.isArray(defenseDice)
-    || attackDice.length !== defenseDice.length || attackDice.length < 1
-    || attackDice.length > 4 - next.segment) throw new Error("Wybierz równą liczbę dostępnych kości obu stron.");
+    || attackDice.length !== defenseDice.length || attackDice.length < 1) {
+    throw new Error("Wybierz równą liczbę dostępnych kości obu stron.");
+  }
+  const remainingSegments = 4 - next.segment;
+  if (attackDice.length > remainingSegments) {
+    throw new Error(`W tej turze ${remainingSegments === 1 ? "pozostał 1 segment" : `pozostały ${remainingSegments} segmenty`}. Wybierz najwyżej ${remainingSegments} kości każdej strony.`);
+  }
   const select = (fighter, indices) => {
     if (new Set(indices).size !== indices.length) throw new Error("Nie można użyć tej samej kości dwukrotnie.");
     return indices.map(index => {

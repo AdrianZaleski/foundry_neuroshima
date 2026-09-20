@@ -22,6 +22,20 @@ test("Poprawianie kości zatrzymuje się na 1 i pobiera tylko potrzebne punkty",
   assert.throws(() => spendMeleePoints(initial, {...action,dieIndex:2}), /Naturalnej 20/);
 });
 
+test("Późne wejście w zwarcie udostępnia tylko segmenty pozostałe w rundzie", () => {
+  const state = createMeleeRound({ startSegment: 3, initiative: "a",
+    fighters: [{ id: "a", skill: 0, dice: [2, 3, 4] }, { id: "b", skill: 0, dice: [12, 13, 14] }] });
+  assert.equal(state.segment, 3);
+  assert.throws(() => resolveMeleeExchange(state, { attackDice: [0, 1], defenseDice: [0, 1],
+    attackThreshold: 12, defenseThreshold: 12 }), /pozostał 1 segment/);
+  const result = resolveMeleeExchange(state, { attackDice: [0], defenseDice: [0],
+    attackThreshold: 12, defenseThreshold: 12 });
+  assert.equal(result.state.segment, 4);
+  assert.deepEqual(result.state.fighters[0].dice.map(die => die.used), [true, false, false]);
+  assert.throws(() => resolveMeleeExchange(result.state, { attackDice: [1], defenseDice: [1],
+    attackThreshold: 12, defenseThreshold: 12 }));
+});
+
 test("Screen: trzy porażki obu stron rozliczają trzy remisowe segmenty", () => {
   const state = round([12,20,11], [4,15,2], 3);
   const result = exchange(state, [0,1,2], [0,1,2], 10, 1);

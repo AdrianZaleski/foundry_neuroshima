@@ -4,7 +4,7 @@ import { calculateAttributeValue, calculateSkillValue, collectTestModifierSource
   sumModifierSources, escapeModifierText as escape } from "../effects/modifiers.mjs";
 import { calculateArmorPenaltyPercent } from "./armor.mjs";
 import { calculateInitiativeResult } from "./initiative-calculation.mjs";
-import { MELEE_DUELS_FLAG, trackedDuels, findTrackedDuel, assertTrackerStart,
+import { MELEE_DUELS_FLAG, trackedDuels, findTrackedDuel, assertTrackerStart, interruptRangedShotsForMelee,
   assertTrackerExchange, assertTrackerNextRound, assertTrackerParticipants } from "./melee-tracker.mjs";
 import { advanceSegmentTurn } from "./segments.mjs";
 import { createMeleeDamageHits, resolveMeleeDamageHit, meleeDamageProfile } from "./melee-damage.mjs";
@@ -64,6 +64,22 @@ export function bindMeleePointLimit(root, fighters, thresholds = {}) {
   update();
   updateDice();
 }
+
+export function bindMeleeDiceSelection(root, maximum) {
+  const limit = Math.max(0, Math.min(3, Number(maximum) || 0));
+  for (const group of ["attack", "defense"]) {
+    const inputs = Array.from(root.querySelectorAll(`input[data-melee-dice="${group}"]`) ?? []);
+    const enforce = changed => {
+      const selected = inputs.filter(input => input.checked && !input.disabled);
+      if (selected.length <= limit) return;
+      if (changed?.checked) changed.checked = false;
+      else for (const input of selected.slice(limit)) input.checked = false;
+    };
+    enforce();
+    for (const input of inputs) input.addEventListener("change", () => enforce(input));
+  }
+}
+
 const input = (title, content, label = "Dalej") => foundry.applications.api.DialogV2.input({
   window: { title }, position: { width: 650 }, content,
   ok: { label }, rejectClose: false, modal: false
@@ -161,7 +177,7 @@ async function rollFighters(declarations, combat = null) {
 async function setup(host) {
   const actors = [...game.actors].filter(actor => actor.type === "character" && actor.id !== host.id);
   if (!actors.length) throw new Error("Dodaj drugą postać do świata.");
-  const selected = await input("Pojedynek wręcz — przeciwnik", `<p>Jeśli rozpoczynająca postać jest w aktywnej walce, pojedynek zostanie połączony z jej Trackerem. Obie postacie muszą w niej uczestniczyć; rozpocznij w pierwszym segmencie, przed ich akcjami. Poza walką panel działa samodzielnie. Trafienia prowadzą do rozliczenia obrażeń i zapisu na karcie. Dodatkowi przeciwnicy nie są jeszcze automatyczni.</p>
+  const selected = await input("Pojedynek wręcz — przeciwnik", `<p>Jeśli rozpoczynająca postać jest w aktywnej walce, pojedynek zostanie połączony z jej Trackerem. Obie postacie muszą w niej uczestniczyć. W segmencie 2 lub 3 rozpocznij zwarcie podczas kolejki jednej z nich; pierwsza tura wykorzysta tylko segmenty pozostałe w rundzie. Poza walką panel działa samodzielnie. Trafienia prowadzą do rozliczenia obrażeń i zapisu na karcie. Dodatkowi przeciwnicy nie są jeszcze automatyczni.</p>
     <select name="opponent">${actors.map(actor => `<option value="${actor.id}">${escape(actor.name)}</option>`).join("")}</select>`);
   if (!selected) return null;
   const opponent = actors.find(actor => actor.id === selected.opponent);
@@ -250,7 +266,9 @@ export async function openMeleeDuel(host) {
       if (!duel) return;
       if (combat) {
         assertTrackerStart(combat, duel);
-        duel = { ...duel, trackerRound: combat.round, hostId };
+        const trackerStartSegment = Number(combat.getFlag("neuroshima", "combatSegment")) || 1;
+        await interruptRangedShotsForMelee(combat, duel);
+        duel = { ...duel, trackerRound: combat.round, trackerStartSegment, hostId };
       }
       await save(duel);
     }
@@ -266,8 +284,8 @@ export async function openMeleeDuel(host) {
         }
       }
       if (!duel.state) {
-        if (combat && (combat.round !== duel.trackerRound || (combat.getFlag("neuroshima", "combatSegment") || 1) !== 1)) {
-          throw new Error("Tracker przesunięto przed przygotowaniem pojedynku. Przywróć rundę i pierwszy segment, w którym go rozpoczęto.");
+        if (combat && (combat.round !== duel.trackerRound || (combat.getFlag("neuroshima", "combatSegment") || 1) !== (duel.trackerStartSegment ?? 1))) {
+          throw new Error("Tracker przesunięto przed przygotowaniem pojedynku. Przywróć rundę i segment, w którym go rozpoczęto.");
         }
         if (!duel.opening.winnerId) {
           if (duel.opening.attempts.length) {
@@ -280,7 +298,8 @@ export async function openMeleeDuel(host) {
         }
         const declarations = await declareManeuvers(duel.configurations, duel.opening.winnerId, null, duel.opening, combat);
         if (!declarations) break;
-        duel = { ...duel, state: createMeleeRound({ fighters: await rollFighters(declarations, combat), initiative: duel.opening.winnerId }) };
+        duel = { ...duel, state: createMeleeRound({ fighters: await rollFighters(declarations, combat),
+          initiative: duel.opening.winnerId, startSegment: combat ? duel.trackerStartSegment ?? 1 : 1 }) };
         await save(duel);
       }
       const { state, configurations } = duel;
@@ -311,6 +330,7 @@ export async function openMeleeDuel(host) {
       const attackChoices = describeMeleeDice(state.fighters[attackerIndex], profiles[attackerIndex].attack + meleeManeuverBonuses(state.fighters[attackerIndex]).attack).filter(die => !die.used);
       const defenseChoices = describeMeleeDice(state.fighters[defenderIndex], profiles[defenderIndex].defense + meleeManeuverBonuses(state.fighters[defenderIndex]).defense).filter(die => !die.used);
       const successfulAttackDice = attackChoices.filter(die => die.succeeds);
+      const remainingSegments = Math.max(0, 4 - state.segment);
       const canAct = state.segment <= 3 && exchangeReady;
       const canAdvance = combat && configurations.some(entry => entry.id === combat.combatant?.actor?.id) && !exchangeReady;
       const roleThresholds = configurations.map((entry, index) => index === attackerIndex
@@ -336,7 +356,7 @@ export async function openMeleeDuel(host) {
           <small>Przed uwzględnieniem lokacji trafienia i pancerza.</small>
           <p>Punkty Umiejętności: <strong>${fighter.skill - fighter.spent}/${fighter.skill}</strong> · ${MELEE_MANEUVER_LABELS[fighter.maneuver ?? "standard"]}</p>
           ${describeMeleeDice(fighter, threshold).map(die => `<div class="form-group">
-            <input id="melee-${key}-${die.index}" name="${key}${die.index}" type="checkbox" ${die.used || !canAct ? "disabled" : ""} ${!die.used && checked(selectedDice[`${key}${die.index}`]) ? "checked" : ""}>
+            <input id="melee-${key}-${die.index}" name="${key}${die.index}" data-melee-dice="${key}" type="checkbox" ${die.used || !canAct ? "disabled" : ""} ${!die.used && checked(selectedDice[`${key}${die.index}`]) ? "checked" : ""}>
             <label for="melee-${key}-${die.index}">${escape(die.label)}</label></div>`).join("")}
           ${fighter.chargePenalty ? `<p>Kara Szarży: −${fighter.chargePenalty}</p>` : ""}
           ${fighter.maneuver === "fullDefense" ? `<p>Przewaga obrony: ${fighter.defenseAdvantage ?? 0}/2</p>` : ""}
@@ -347,13 +367,17 @@ export async function openMeleeDuel(host) {
       if (canAdvance) actions.push(["tracker", "Dalej w Trackerze"]);
       actions.push(["end", "Zakończ pojedynek"]);
       const lastExchange = state.history.filter(entry => entry.type === "exchange").at(-1);
+      const selectionInstruction = remainingSegments === 1
+        ? "<strong>Pozostał 1 segment tej rundy.</strong> Wybierz dokładnie po jednej kości obu stron."
+        : `<strong>Pozostały ${remainingSegments} segmenty tej rundy.</strong> Wybierz po jednej kości obu stron albo po 2${remainingSegments === 3 ? "–3" : ""} na cios łączony.`;
       const data = await foundry.applications.api.DialogV2.wait({
         window: { title: `Pojedynek — tura ${state.round}, ${state.segment > 3 ? "koniec tury" : `segment ${state.segment}`}` },
         position: { width: 760 }, rejectClose: false, modal: false,
+        render: (event, dialog) => bindMeleeDiceSelection(dialog.element, remainingSegments),
         content: `<div style="display:flex;flex-wrap:wrap;gap:12px;">${summary}</div>
           <p>Zwiększone tempo: ${state.tempo ?? 0}. ${combat ? `Tracker: runda ${combat.round}, segment ${combat.getFlag("neuroshima", "combatSegment") || 1}.` : ""}</p>
           ${lastExchange ? `<p><strong>Ostatni cios:</strong> ${lastExchange.attackSuccesses} sukcesów ataku / ${lastExchange.defenseSuccesses} obrony. ${lastExchange.hit ? "Trafienie." : lastExchange.counterHit ? "Kontrcios przy Furii." : lastExchange.initiativeChanged ? "Przejęcie Inicjatywy." : lastExchange.failedDiceDraw ? "Remis — obie strony bez sukcesów. Inicjatywa bez zmian." : "Brak trafienia."}</p>` : ""}
-          ${canAct ? `<p>Zaznacz po jednej kości obu stron albo po 2–3 na cios łączony. Cios łączony wymaga sukcesów ataku. Możesz też zaznaczyć równą liczbę porażek obu stron, aby rozliczyć te segmenty razem jako remis, bez obrażeń i zmiany Inicjatywy. Dostępne sukcesy: ${successfulAttackDice.length}.</p>` : ""}`,
+          ${canAct ? `<p>${selectionInstruction} Cios łączony wymaga sukcesów ataku. Możesz też zaznaczyć równą liczbę porażek obu stron, aby rozliczyć te segmenty razem jako remis, bez obrażeń i zmiany Inicjatywy. Dostępne sukcesy: ${successfulAttackDice.length}.</p>` : ""}`,
         buttons: actions.map(([action, label]) => action === "points"
           ? { action, label, callback: async (event, button) => {
             const formValues = button?.form ? Object.fromEntries(new FormData(button.form)) : {};
@@ -379,7 +403,8 @@ export async function openMeleeDuel(host) {
           if (combat) assertTrackerNextRound(combat, duel);
           const declarations = await declareManeuvers(configurations, state.initiative, state, null, combat);
           if (!declarations) continue;
-          duel = { ...duel, ...(combat ? { trackerRound: combat.round } : {}), state: createMeleeRound({ fighters: await rollFighters(declarations, combat), initiative: state.initiative, round: state.round + 1 }) };
+          duel = { ...duel, ...(combat ? { trackerRound: combat.round, trackerStartSegment: 1 } : {}),
+            state: createMeleeRound({ fighters: await rollFighters(declarations, combat), initiative: state.initiative, round: state.round + 1 }) };
           await save(duel);
         } else if (data.action === "points" && state.segment <= 3) {
           if (combat) assertTrackerExchange(combat, duel);

@@ -255,10 +255,10 @@ Ta aktualizacja rozszerza pierwszy zakres powyżej:
   z ich kart. Pojedynki poza walką i wcześniejsze samodzielne zapisy
   zachowują dotychczasowy tryb; zakończ stary pojedynek przed utworzeniem
   nowego z Trackerem.
-- Pierwszy zakres połączenia wymaga rozpoczęcia w pierwszym segmencie,
-  zanim którykolwiek uczestnik wykona akcję. Obie postacie muszą mieć
+- Początkowy zakres połączenia wymagał rozpoczęcia w pierwszym segmencie,
+  zanim którykolwiek uczestnik wykonał akcję. Obie postacie nadal muszą mieć
   po jednym tokenie w tej walce i nie mogą należeć do innego pojedynku.
-  Wejście w zwarcie w środku rundy pozostaje do implementacji.
+  Wejście w zwarcie w środku rundy dodano w aktualizacji z 2026-09-20 poniżej.
 - Wymianę rozstrzyga MG podczas kolejki jednego z jej uczestników.
   Lokalna Inicjatywa wybiera atakującego; nie przestawia pozostałych
   uczestników globalnego Trackera.
@@ -415,3 +415,82 @@ użycia Budowy zamiast Charakteru w teście Odporności na ból.
 - Widok graczy,
   zakres ujawnianych wyników oraz możliwość samodzielnego wydawania własnych
   punktów wymagają osobnego testu wieloklientowego.
+
+## Film o walce wręcz i wejście w zwarcie podczas rundy — 2026-09-20
+
+Źródło wskazane przez użytkownika:
+https://www.youtube.com/watch?v=mpgTzMtYDpw
+
+Wnioski zestawiono z przekazanymi wcześniej stronami zasad oraz tekstowym
+opisem „Neuroshima — Mechanika Walki 1.5”. Film jest materiałem pomocniczym;
+w razie rozbieżności nadal obowiązuje zatwierdzona wyżej hierarchia źródeł.
+
+- Zwarcie może rozpocząć się w środku rundy. Gdy postać dobiegnie do strzelca,
+  walka wręcz rozpoczyna się natychmiast, również w drugim albo trzecim
+  segmencie, bez czekania na kolejną rundę.
+- Uczestnicy ponownie ustalają między sobą Inicjatywę nawet pomiędzy segmentami
+  tej samej rundy. Jest to lokalna Inicjatywa pojedynku i nie powinna zmieniać
+  kolejności pozostałych uczestników w Combat Trackerze.
+- Osiągnięty strzelec nie wykonuje dalej zwykłych akcji strzeleckich. Może
+  próbować strzelić w zwarciu, ale rozstrzyga to jak akcję walki wręcz:
+  potrzebuje lokalnej Inicjatywy i przełamania obrony; osobno sprawdza zacięcie.
+- Przykład trzech sukcesów ataku przeciw dwóm sukcesom obrony potwierdza, że
+  obrona jest wtedy niewystarczająca, a obrażenia wynikają z pełnego profilu
+  za trzy sukcesy. Nie odejmujemy sukcesów obrony od sukcesów ataku.
+- Zaimplementowana interpretacja: pojedynek rozpoczęty późno może zużyć tylko
+  segmenty pozostałe w bieżącej rundzie. Na początku następnej rundy otrzymuje
+  nową pulę trzech kości. Źródło potwierdza natychmiastowy start i ponowne
+  ustalenie Inicjatywy, ale nie opisuje wprost, co zrobić z nadmiarowymi kośćmi
+  w niepełnej pierwszej turze pojedynku.
+
+### Wpływ pojedynku na główną walkę — stan ustaleń
+
+- Pojedynek jest częścią tej samej walki, a nie osobną osią czasu. Obie postacie
+  zużywają na niego swoje dostępne segmenty i nie mogą równolegle wykonywać
+  zwykłych akcji ani pasować.
+- Pozostali uczestnicy zachowują własne kolejki, akcje segmentowe i globalną
+  kolejność. Mogą nadal oddziaływać na walczących wręcz; rezerwacja segmentów
+  nie daje uczestnikom pojedynku ochrony przed strzałami, ranami ani efektami.
+- Obrażenia zadane w pojedynku są stosowane od razu, więc mogą zmienić progi
+  dalszych wymian w tej samej rundzie.
+- Obecny panel rozgrywa przy kolejce jednego uczestnika całą dostępną turę
+  pojedynku, pozostawiając zegar Trackera w miejscu, a potem pomija wykorzystane
+  kolejki obydwu uczestników. Jest to przyjęty sposób obsługi interfejsu,
+  nie osobna reguła podręcznika.
+- Implementacja dopuszcza start pojedynku w segmencie 1, 2 albo 3.
+  W segmencie 2 lub 3 wymaga bieżącej kolejki jednej ze stron, przerywa jej
+  nierozstrzygnięte przygotowane strzały i tworzy niepełną pierwszą turę
+  pojedynku z liczbą wymian równą liczbie segmentów pozostałych w rundzie.
+
+### Kolejność dobiegnięcia i przygotowanego strzału — decyzja użytkownika
+
+- O wyniku decyduje zwykła kolejność uczestników w bieżącym segmencie,
+  wynikająca z globalnej Inicjatywy.
+- Jeżeli Albert działa przed Ulfem, najpierw kończy i oddaje przygotowany strzał.
+  Następnie Ulf w swojej kolejce dobiega i natychmiast rozpoczyna zwarcie.
+- Jeżeli Ulf działa przed Albertem, dobiega i rozpoczyna zwarcie przed kolejką
+  Alberta. Albert traci bieżący segment oraz cały przygotowywany strzał.
+- Nie zamieniamy automatycznie przerwanego strzału celowanego na strzał
+  z przyłożenia. Ewentualny strzał w zwarciu jest późniejszą, osobno
+  deklarowaną akcją rozstrzyganą zasadami walki wręcz.
+- Przerwany strzał nie przechodzi na kolejny segment ani następną rundę.
+
+### Wdrożenie wejścia w zwarcie w środku rundy — 2026-09-20
+
+- Start w segmencie 2 pozostawia dwie wymiany, a start w segmencie 3 jedną.
+  Wszystkie trzy wyniki 3k20 są jawne, lecz nadmiarowych kości nie można użyć
+  po zakończeniu bieżącej rundy. Panel ogranicza zaznaczenie do liczby
+  pozostałych segmentów i pokazuje ten limit w instrukcji wyboru.
+- Od następnej rundy pojedynek wraca do zwykłej pełnej puli trzech segmentów
+  i nowych 3k20.
+- Zwarcie rozpoczęte w późniejszym segmencie musi powstać podczas kolejki
+  jednego z jego uczestników. Dzięki temu globalna kolejność rozstrzyga, czy
+  strzelec zdążył wcześniej oddać strzał.
+- Nierozstrzygnięty strzał uczestnika, który trwa w chwili rozpoczęcia zwarcia,
+  zostaje oznaczony jako przerwany i rozstrzygnięty bez wystrzału. Zapis czatu
+  podaje przyczynę przerwania.
+- Akcja dobiegnięcia kończąca się w bieżącym segmencie nie blokuje rozpoczęcia
+  pojedynku. Pozostałe kolidujące akcje nadal wymagają wcześniejszego
+  dokończenia.
+- Po rozliczeniu niepełnej tury Tracker pomija pozostałe kolejki obu stron,
+  ale nadal obsługuje normalnie pozostałych uczestników walki.

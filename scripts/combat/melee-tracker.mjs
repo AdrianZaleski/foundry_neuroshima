@@ -22,17 +22,48 @@ export function assertTrackerParticipants(combat, duel) {
 
 export function assertTrackerStart(combat, duel) {
   assertTrackerParticipants(combat, duel);
-  if (segmentOf(combat) !== 1) throw new Error("Pojedynek z Trackerem rozpocznij w pierwszym segmencie rundy.");
+  const segment = segmentOf(combat);
   const firstIndex = combat.turns.findIndex(participant => includesActor(duel, participant.actor?.id));
-  if (combat.turn > firstIndex) throw new Error("Uczestnik już działał w tym segmencie. Rozpocznij pojedynek w kolejnej rundzie.");
-  const tick = (combat.round - 1) * 3 + 1;
+  if (segment === 1 && combat.turn > firstIndex) {
+    throw new Error("Uczestnik już działał w tym segmencie. Rozpocznij pojedynek w jego bieżącej kolejce albo w kolejnej rundzie.");
+  }
+  if (segment > 1 && !includesActor(duel, combat.combatant?.actor?.id)) {
+    throw new Error("Zwarcie w środku rundy rozpocznij podczas kolejki jednej z jego stron.");
+  }
+  const tick = (combat.round - 1) * 3 + segment;
   for (const entry of duel.configurations) {
     if (findTrackedDuel(combat, entry.id)) throw new Error("Postać już uczestniczy w pojedynku tej walki.");
     const participant = [...combat.combatants].find(candidate => candidate.actor?.id === entry.id);
     const action = participant.getFlag("neuroshima", "segmentAction");
-    if (action && action.endsAtTick >= tick) throw new Error("Postać ma już zadeklarowaną akcję. Dokończ ją przed pojedynkiem.");
+    const interruptedShot = action?.effectCode === "rangedShot" && !action.resolved
+      && !action.interrupted && action.startedAtTick <= tick && action.endsAtTick >= tick;
+    const arrivingAction = participant.id === combat.combatant?.id && action?.endsAtTick === tick;
+    if (action && action.endsAtTick >= tick && !interruptedShot && !arrivingAction) {
+      throw new Error("Postać ma już zadeklarowaną akcję. Dokończ ją przed pojedynkiem.");
+    }
     if (meleeTrackerAction(combat, entry.id)) throw new Error("Postać zużyła już segment na wcześniejszy pojedynek.");
   }
+}
+
+export async function interruptRangedShotsForMelee(combat, duel) {
+  const segment = segmentOf(combat);
+  const tick = (combat.round - 1) * 3 + segment;
+  const interrupted = [];
+  for (const entry of duel.configurations) {
+    const participant = [...combat.combatants].find(candidate => candidate.actor?.id === entry.id);
+    const action = participant?.getFlag("neuroshima", "segmentAction");
+    if (action?.effectCode !== "rangedShot" || action.resolved || action.interrupted
+      || action.startedAtTick > tick || action.endsAtTick < tick) continue;
+    const changed = { ...action, endsAtTick: tick, interrupted: true, resolved: true,
+      resolution: "Przerwano przez rozpoczęcie walki wręcz — brak strzału" };
+    await participant.setFlag("neuroshima", "segmentAction", changed);
+    interrupted.push(entry.id);
+    await foundry.documents.ChatMessage.create({
+      speaker: foundry.documents.ChatMessage.getSpeaker({ actor: participant.actor }),
+      content: `<strong>${foundry.utils.escapeHTML(participant.actor.name)}</strong>: akcja „${foundry.utils.escapeHTML(action.name)}” została przerwana przez rozpoczęcie walki wręcz. Strzał nie padł.`
+    });
+  }
+  return interrupted;
 }
 
 export function assertTrackerExchange(combat, duel) {
@@ -58,10 +89,11 @@ export function meleeTrackerAction(combat, actorId) {
   for (const duel of trackedDuels(combat)) {
     if (duel.trackerRound !== combat.round || !includesActor(duel, actorId)) continue;
     if (duel.state?.segment === 4) {
-      const tick = (combat.round - 1) * 3 + 1;
-      return { name: "Walka wręcz — runda rozliczona", duration: 3, actionCode: "melee",
+      const startedSegment = Math.max(1, Math.min(Number(duel.trackerStartSegment) || 1, 3));
+      const tick = (combat.round - 1) * 3 + startedSegment;
+      return { name: "Walka wręcz — runda rozliczona", duration: 4 - startedSegment, actionCode: "melee",
         effectCode: "melee", resolved: true, requiresTest: false, startedRound: combat.round,
-        startedSegment: 1, startedAtTick: tick, endsAtTick: tick + 2 };
+        startedSegment, startedAtTick: tick, endsAtTick: tick + (3 - startedSegment) };
     }
     const exchange = duel.state?.history.find(entry => entry.type === "exchange"
       && entry.segment <= segment && entry.segment + entry.cost > segment);

@@ -2,12 +2,15 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createMeleeRound, resolveMeleeExchange } from "../scripts/combat/melee.mjs";
 import { assertTrackerStart, assertTrackerExchange, assertTrackerNextRound,
-  meleeTrackerAction, blocksMeleeAdvance } from "../scripts/combat/melee-tracker.mjs";
+  meleeTrackerAction, blocksMeleeAdvance, interruptRangedShotsForMelee } from "../scripts/combat/melee-tracker.mjs";
 import { passSegment, prepareActorCombatStatus, advanceSegmentTurn, advanceSegmentRound } from "../scripts/combat/segments.mjs";
 
 function setup() {
   const flags = { combatSegment: 1, meleeDuels: [] };
-  const participants = ["a", "b", "c"].map(id => ({ id, actor: { id, name: id }, getFlag: () => null }));
+  const actions = {};
+  const participants = ["a", "b", "c"].map(id => ({ id, actor: { id, name: id },
+    getFlag: (scope, key) => key === "segmentAction" ? actions[id] ?? null : null,
+    async setFlag(scope, key, value) { if (key === "segmentAction") actions[id] = structuredClone(value); } }));
   const combat = { started: true, round: 1, turn: 0, combatants: participants, turns: participants,
     get combatant() { return participants[this.turn]; },
     getFlag: (scope, key) => flags[key],
@@ -28,20 +31,57 @@ function setup() {
     async nextTurn() { this.turn++; return this; }
     async nextRound() { this.round++; this.turn = 0; return this; }
   }, ChatMessage: { create: async () => {}, getSpeaker: () => ({}) } }, utils: { escapeHTML: value => value } };
-  return { combat, flags, duel, participants, warnings };
+  return { combat, flags, duel, participants, warnings, actions };
 }
 
-test("Łączenie wymaga wolnych postaci i pierwszego segmentu", () => {
+test("Łączenie wymaga wolnych postaci i właściwej kolejki", () => {
   const { combat, flags, duel } = setup();
   assert.doesNotThrow(() => assertTrackerStart(combat, duel));
   flags.combatSegment = 2;
-  assert.throws(() => assertTrackerStart(combat, duel));
+  assert.doesNotThrow(() => assertTrackerStart(combat, duel));
+  combat.turn = 2;
+  assert.throws(() => assertTrackerStart(combat, duel), /kolejki jednej/);
   flags.combatSegment = 1;
   combat.turn = 1;
-  assert.throws(() => assertTrackerStart(combat, duel));
+  assert.throws(() => assertTrackerStart(combat, duel), /już działał/);
   combat.turn = 0;
   flags.meleeDuels = [duel];
-  assert.throws(() => assertTrackerStart(combat, duel));
+  assert.throws(() => assertTrackerStart(combat, duel), /już uczestniczy/);
+});
+
+test("Zwarcie przerywa przygotowany strzał bez wystrzału", async () => {
+  const { combat, flags, duel, actions } = setup();
+  flags.combatSegment = 2;
+  actions.a = { name: "Dobiegnięcie", effectCode: "move", startedAtTick: 1, endsAtTick: 2 };
+  actions.b = { name: "Strzał celowany", effectCode: "rangedShot", startedAtTick: 1, endsAtTick: 3 };
+  assert.doesNotThrow(() => assertTrackerStart(combat, duel));
+  assert.deepEqual(await interruptRangedShotsForMelee(combat, duel), ["b"]);
+  assert.equal(actions.b.interrupted, true);
+  assert.equal(actions.b.resolved, true);
+  assert.equal(actions.b.endsAtTick, 2);
+  assert.match(actions.b.resolution, /brak strzału/);
+  assert.equal(actions.a.interrupted, undefined);
+  actions.b = { name: "Strzał celowany", effectCode: "rangedShot", startedAtTick: 1,
+    endsAtTick: 2, resolved: true, resolution: "Strzał oddany" };
+  assert.deepEqual(await interruptRangedShotsForMelee(combat, duel), []);
+  assert.equal(actions.b.interrupted, undefined);
+  assert.equal(actions.b.resolution, "Strzał oddany");
+});
+
+test("Rozliczona późna tura zajmuje tylko pozostałe segmenty", () => {
+  const { combat, flags, duel } = setup();
+  flags.combatSegment = 2;
+  duel.trackerStartSegment = 2;
+  duel.state = createMeleeRound({ startSegment: 2, initiative: "a",
+    fighters: [{ id: "a", skill: 0, dice: [2, 3, 4] }, { id: "b", skill: 0, dice: [12, 13, 14] }] });
+  duel.state = resolveMeleeExchange(duel.state, { attackDice: [0, 1], defenseDice: [0, 1],
+    attackThreshold: 12, defenseThreshold: 12 }).state;
+  flags.meleeDuels = [duel];
+  const action = meleeTrackerAction(combat, "a");
+  assert.equal(action.duration, 2);
+  assert.equal(action.startedSegment, 2);
+  assert.equal(action.startedAtTick, 2);
+  assert.equal(action.endsAtTick, 3);
 });
 
 test("Cios za trzy segmenty zajmuje oba tokeny od pierwszego segmentu", async () => {

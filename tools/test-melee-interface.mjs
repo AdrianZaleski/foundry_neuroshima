@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { openMeleeDuel, bindMeleePointLimit } from "../scripts/combat/melee-interface.mjs";
+import { openMeleeDuel, bindMeleePointLimit, bindMeleeDiceSelection } from "../scripts/combat/melee-interface.mjs";
 import { findTrackedDuel, meleeTrackerAction } from "../scripts/combat/melee-tracker.mjs";
 import { advanceSegmentTurn } from "../scripts/combat/segments.mjs";
 
@@ -16,7 +16,7 @@ function setup(answers, isGM = true, diceSequence = []) {
   actors.get = id => actors.find(entry => entry.id === id);
   globalThis.game = { actors, user: { isGM: isGM, id: "gm" } };
   globalThis.ui = { notifications: { warn: message => warnings.push(message), info: message => infos.push(message) } };
-  globalThis.foundry = { applications: { api: { DialogV2: {
+  globalThis.foundry = { utils: { escapeHTML: value => String(value) }, applications: { api: { DialogV2: {
     wait: async options => {
       dialogs.push(options);
       if (options.window.title === "Wydaj punkty Umiejętności") {
@@ -79,7 +79,7 @@ test("Dwa sukcesy ze screena: poprawa wyboru zachowuje kości i rozlicza cios za
   assert.equal(environment.warnings.length,1);
   assert.match(environment.warnings[0],/Kości ataku z porażką: 3/);
   const panels = environment.dialogs.filter(dialog => dialog.window.title.startsWith("Pojedynek —"));
-  assert.match(panels[1].content,/name="attack2" type="checkbox"\s+checked/);
+  assert.match(panels[1].content,/name="attack2"[^>]*type="checkbox"[^>]*checked/);
   const exchanges = environment.state().state.history.filter(entry=>entry.type==="exchange");
   assert.equal(exchanges[0].attackSuccesses,2);
   assert.equal(exchanges[0].hit,true);
@@ -298,7 +298,10 @@ test("Anulowanie deklaracji następnej tury zachowuje stare kości", async () =>
 
 function attachCombat() {
   const flags = { combatSegment: 1, meleeDuels: [] };
-  const participants = game.actors.map(actor => ({ id: actor.id, actor, getFlag: () => null }));
+  const segmentActions = {};
+  const participants = game.actors.map(actor => ({ id: actor.id, actor,
+    getFlag: (scope, key) => key === "segmentAction" ? segmentActions[actor.id] ?? null : null,
+    async setFlag(scope, key, value) { if (key === "segmentAction") segmentActions[actor.id] = structuredClone(value); } }));
   const combat = { started: true, round: 1, turn: 0, combatants: participants, turns: participants,
     get combatant() { return participants[this.turn]; },
     getFlag: (scope, key) => flags[key],
@@ -312,9 +315,39 @@ function attachCombat() {
     async nextTurn() { this.turn++; return this; }
     async nextRound() { this.round++; this.turn = 0; return this; }
   };
+  combat.segmentActions = segmentActions;
   game.combat = combat;
   return combat;
 }
+
+test("Start w trzecim segmencie przerywa strzał i rozlicza jedną wymianę", async () => {
+  const answers = [...start, { action: "exchange" }, { attackDie: "0", defenseDie: "0" }];
+  const environment = setup(answers, true, [[19, 3, 4], [19, 6, 7]]);
+  const combat = attachCombat();
+  await combat.setFlag("neuroshima", "combatSegment", 3);
+  combat.segmentActions.b = { name: "Strzał celowany", effectCode: "rangedShot",
+    startedAtTick: 1, endsAtTick: 3, resolved: false };
+  await openMeleeDuel(environment.host);
+  const duel = findTrackedDuel(combat, "a");
+  assert.deepEqual(environment.warnings, []);
+  assert.equal(duel.trackerStartSegment, 3);
+  assert.equal(duel.state.segment, 4);
+  assert.equal(duel.state.history.filter(entry => entry.type === "exchange").length, 1);
+  const firstPanel = environment.dialogs.find(dialog => dialog.window.title === "Pojedynek — tura 1, segment 3");
+  assert.match(firstPanel.content, /Pozostał 1 segment tej rundy/);
+  assert.match(firstPanel.content, /data-melee-dice="attack"/);
+  assert.equal(typeof firstPanel.render, "function");
+  assert.equal(combat.segmentActions.b.interrupted, true);
+  assert.equal(combat.segmentActions.b.resolved, true);
+  assert.match(combat.segmentActions.b.resolution, /brak strzału/);
+  assert.equal(combat.round, 2);
+  assert.equal(environment.rolls(), 2);
+  answers.push({ action: "next" }, start[2]);
+  await openMeleeDuel(environment.host);
+  assert.equal(findTrackedDuel(combat, "a").trackerStartSegment, 1);
+  assert.equal(findTrackedDuel(combat, "a").state.segment, 1);
+  assert.equal(environment.rolls(), 4);
+});
 
 test("Remis całej puli kończy turę Trackera bez okna obrażeń", async () => {
   const environment = setup([...start, {action:"combined"},
@@ -396,6 +429,20 @@ test("Anulowane obrażenia ostatniego ciosu blokują Tracker; wznowienie rani to
   assert.equal(tokenActor.items.length,1);
   assert.equal(worldActor.items.length,0);
   assert.equal(environment.rolls(),2);
+});
+
+test("Panel ogranicza wybór kości do pozostałych segmentów", () => {
+  const input = checked => ({ checked, disabled: false, listeners: {},
+    addEventListener(type, handler) { this.listeners[type] = handler; } });
+  const attack = [input(true), input(true), input(true)];
+  const defense = [input(true), input(true), input(false)];
+  const root = { querySelectorAll: selector => selector.includes('"attack"') ? attack : defense };
+  bindMeleeDiceSelection(root, 1);
+  assert.deepEqual(attack.map(entry => entry.checked), [true, false, false]);
+  assert.deepEqual(defense.map(entry => entry.checked), [true, false, false]);
+  attack[1].checked = true;
+  attack[1].listeners.change();
+  assert.equal(attack[1].checked, false);
 });
 
  test("Limit punktów: pula 4, wpisane 10, zmiana na postać bez punktów", () => {
