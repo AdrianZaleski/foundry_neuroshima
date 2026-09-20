@@ -5,7 +5,7 @@ import { findTrackedDuel, meleeTrackerAction } from "../scripts/combat/melee-tra
 import { advanceSegmentTurn } from "../scripts/combat/segments.mjs";
 
 function setup(answers, isGM = true, diceSequence = []) {
-  const writes = [], messages = [], warnings = [], dialogs = [];
+  const writes = [], messages = [], warnings = [], infos = [], dialogs = [];
   let stored = null, rolls = 0, painRoll = false;
   const actor = id => ({ id, name: id, type: "character", items: [], system: {
     attributes: { zrecznosc: { base: 12 }, budowa: { base: 12 }, charakter: { base: 12 } },
@@ -15,13 +15,21 @@ function setup(answers, isGM = true, diceSequence = []) {
   const actors = [host, opponent];
   actors.get = id => actors.find(entry => entry.id === id);
   globalThis.game = { actors, user: { isGM: isGM, id: "gm" } };
-  globalThis.ui = { notifications: { warn: message => warnings.push(message) } };
+  globalThis.ui = { notifications: { warn: message => warnings.push(message), info: message => infos.push(message) } };
   globalThis.foundry = { applications: { api: { DialogV2: {
     wait: async options => {
       dialogs.push(options);
+      if (options.window.title === "Wydaj punkty Umiejętności") {
+        const selection = answers.shift();
+        return selection ? { ...selection, action: selection.action ?? "spend" } : { action: "cancel" };
+      }
       const data = answers.shift();
       if (!data) return null;
-      if (["exchange", "combined", "points"].includes(data.action)) {
+      if (data.action === "points") {
+        const button = options.buttons.find(entry => entry.action === "points");
+        return button.callback(null, null, null);
+      }
+      if (["exchange", "combined"].includes(data.action)) {
         const fields = answers.shift();
         if (!fields) return null;
         if (data.action === "exchange") return { action: "exchange",
@@ -48,7 +56,7 @@ function setup(answers, isGM = true, diceSequence = []) {
       return created;
     };
   }
-  return { host, writes, messages, warnings, dialogs, state: () => stored, rolls: () => rolls };
+  return { host, writes, messages, warnings, infos, dialogs, state: () => stored, rolls: () => rolls };
 }
 const start = [{ opponent: "b" }, { weapon0: "", weapon1: "", skill0: "bijatyka", skill1: "bijatyka", initiative: "a" }, { maneuver0: "standard", maneuver1: "standard", tempo0: "0" }];
 
@@ -90,7 +98,7 @@ test("Przycisk panelu rozlicza zaznaczone kości bez dodatkowego okna wyboru", a
     if (clicks++) return null;
     assert.ok(options.content.includes('name="attack0"'));
     assert.ok(options.content.includes('name="defense2"'));
-    assert.ok(options.content.includes('name="points"'));
+    assert.equal(options.content.includes('name="points"'), false);
     return options.buttons.find(button => button.action === "exchange").callback(null,
       { form: [["attack0", "on"], ["defense2", "on"], ["points", "1"]] });
   };
@@ -205,12 +213,30 @@ test("Szarżujący nie może wybrać Pełnej obrony nawet po wygranej", async ()
   assert.equal(environment.state().state.fighters[0].maneuver, "standard");
 });
 
-test("Wydatek punktów pozostaje po zamknięciu panelu", async () => {
-  const environment = setup([...start, { action: "points" }, { fighterId: "a", targetId: "b", die: "1", points: "2" }]);
+test("Edytor punktów wymaga jawnego wyboru przed zapisem", async () => {
+  const environment = setup([...start, { action: "points" },
+    { fighterId: "a", targetId: "b", die: "1", points: "2" }]);
   await openMeleeDuel(environment.host);
+  const editor = environment.dialogs.find(dialog => dialog.window.title === "Wydaj punkty Umiejętności");
+  const panel = environment.dialogs.find(dialog => dialog.window.title.startsWith("Pojedynek —"));
+  assert.ok(editor);
+  assert.equal(panel.content.includes('name="fighterId"'), false);
+  assert.match(editor.content, /a — 2 pkt/);
+  assert.match(editor.content, /Kość 1: 3 → 3/);
   assert.deepEqual(environment.warnings, []);
   assert.equal(environment.state().state.fighters[0].spent, 2);
   assert.equal(environment.state().state.fighters[1].dice[0].value, 5);
+});
+
+test("Anulowanie edytora nie wydaje domyślnych punktów", async () => {
+  const environment = setup([...start, { action: "points" }, null]);
+  await openMeleeDuel(environment.host);
+  assert.deepEqual(environment.warnings, []);
+  assert.deepEqual(environment.infos, ["Anulowano wydawanie punktów."]);
+  assert.equal(environment.state().state.fighters[0].spent, 0);
+  assert.equal(environment.state().state.fighters[1].spent, 0);
+  assert.deepEqual(environment.state().state.fighters[0].dice.map(die => die.value), [3, 6, 19]);
+  assert.deepEqual(environment.state().state.fighters[1].dice.map(die => die.value), [3, 6, 19]);
 });
 
 test("Gracz nie może prowadzić panelu MG", async () => {
@@ -232,6 +258,21 @@ test("Zwiększone tempo podnosi PT obu stron, Furia dodaje bonus tylko do ataku"
   assert.match(environment.messages[0].flavor, /Furia/);
   assert.match(environment.messages[0].flavor, /Wsp.*tempo: 2/);
   assert.match(environment.messages[1].flavor, /Wsp.*tempo: 2/);
+});
+
+
+
+test("Ujemny próg jest jednoznaczny i oznacza niemożliwy sukces", async () => {
+  const environment = setup([...start.slice(0, 2),
+    { maneuver0: "standard", maneuver1: "fullDefense", tempo0: "3" }]);
+  environment.host.system.skills.bijatyka.base = 3;
+  const defender = game.actors.get("b");
+  defender.system.attributes.zrecznosc.base = 5;
+  defender.items.push({ type: "injury", system: { penaltyPercent: 15 } });
+  await openMeleeDuel(environment.host);
+  const panel = environment.dialogs.find(dialog => dialog.window.title.startsWith("Pojedynek —"));
+  assert.match(panel.content, /próg <strong>−4<\/strong> — <strong>sukces niemożliwy<\/strong>/);
+  assert.deepEqual(environment.warnings, []);
 });
 
 test("Błędna deklaracja nie rzuca kości; można poprawić wybór przed turą", async () => {
@@ -374,4 +415,37 @@ test("Anulowane obrażenia ostatniego ciosu blokują Tracker; wznowienie rani to
   assert.equal(points.disabled,false);
   assert.equal(button.disabled,false);
   assert.equal(points.value,"1");
+});
+
+test("Edytor pokazuje aktualne wyniki kości wybranej postaci", () => {
+  const field = value => ({ value, listeners: {}, addEventListener(type, handler) { this.listeners[type] = handler; } });
+  const spender = field("a"), target = field("a"), points = field("1"), button = {}, hint = {};
+  const dieSelect = { value: "1", options: [
+    { value: "1", textContent: "", disabled: false },
+    { value: "2", textContent: "", disabled: false },
+    { value: "3", textContent: "", disabled: false }
+  ] };
+  const elements = {
+    '[name="fighterId"]': spender, '[name="targetId"]': target, '[name="die"]': dieSelect,
+    '[name="points"]': points, 'button[data-action="spend"]': button, '[data-point-limit]': hint
+  };
+  const fighters = [
+    { id: "a", skill: 8, spent: 0, dice: [
+      { natural: 10, value: 7, used: false }, { natural: 9, value: 9, used: false }, { natural: 4, value: 4, used: false }
+    ] },
+    { id: "b", skill: 4, spent: 0, dice: [
+      { natural: 20, value: 20, used: true }, { natural: 13, value: 15, used: false }, { natural: 7, value: 7, used: false }
+    ] }
+  ];
+  const thresholdHint = {};
+  elements['[data-target-threshold]'] = thresholdHint;
+  bindMeleePointLimit({ querySelector: selector => elements[selector] }, fighters, { a: 7, b: -4 });
+  assert.equal(dieSelect.options[0].textContent, "Kość 1: 10 → 7 — sukces (próg 7)");
+  target.value = "b";
+  target.listeners.change();
+  assert.equal(dieSelect.options[0].textContent, "Kość 1: 20 → 20 — porażka (próg −4) — zużyta");
+  assert.equal(dieSelect.options[1].textContent, "Kość 2: 13 → 15 — porażka (próg −4)");
+  assert.match(thresholdHint.textContent, /Próg wybranej postaci: −4.*Sukces jest niemożliwy/);
+  assert.equal(dieSelect.options[0].disabled, true);
+  assert.equal(dieSelect.value, "2");
 });

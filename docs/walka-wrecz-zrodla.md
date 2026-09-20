@@ -393,3 +393,25 @@ użycia Budowy zamiast Charakteru w teście Odporności na ból.
   po wybraniu innej lokacji; trafienie głowy nie dodaje drugiej premii.
 - Testy obejmują obydwa Współczynniki, wszystkie poziomy siniaków,
   niezmienione testy zwykłych ran, przerwany zapis oraz wybór lokacji.
+
+## Edytor wydawania punktów — 2026-09-20
+
+- Przycisk „Wydaj punkty” w głównym panelu nie przesyła już ukrytych
+  wartości domyślnych. Otwiera osobny edytor z wyborem postaci wydającej
+  punkty, właściciela kości, numeru kości i liczby punktów.
+- Główny panel pojedynku pozostaje widoczny podczas pracy w edytorze,
+  dzięki czemu nadal można porównać role, progi, kości i dostępne pule.
+- Lista kości pokazuje wynik naturalny oraz aktualną wartość po wydaniu
+  punktów, aktualizuje się po zmianie właściciela i blokuje zużyte kości.
+- Zmiana kości następuje dopiero po użyciu przycisku „Zatwierdź wydatek”.
+  Zamknięcie albo anulowanie edytora nie zmienia puli ani wyników kości
+  i wyświetla informację „Anulowano wydawanie punktów.”
+- Przy nazwie każdej postaci edytor pokazuje jej pozostałą pulę punktów.
+- Ujemny próg jest wyświetlany znakiem „−” i komunikatem „sukces niemożliwy”.
+  Opis każdej kości w edytorze pokazuje również sukces albo porażkę względem
+  aktualnego progu, aby nie wydawać punktów na nieosiągalny wynik.
+- Użytkownik potwierdził 2026-09-20 po pobieżnym teście w Foundry, że walka
+  wręcz działa poprawnie od strony MG.
+- Widok graczy,
+  zakres ujawnianych wyników oraz możliwość samodzielnego wydawania własnych
+  punktów wymagają osobnego testu wieloklientowego.
