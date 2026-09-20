@@ -1,4 +1,4 @@
-import { createMeleeRound, spendMeleePoints, resolveMeleeExchange,
+import { createMeleeRound, spendMeleePoints, resolveMeleeExchange, enterMeleeBerserk,
   MELEE_MANEUVER_LABELS, meleeManeuverBonuses, validateMeleeDeclarations, describeMeleeDice, meleeDieSucceeds } from "./melee.mjs";
 import { calculateAttributeValue, calculateSkillValue, collectTestModifierSources,
   sumModifierSources, escapeModifierText as escape } from "../effects/modifiers.mjs";
@@ -8,8 +8,10 @@ import { MELEE_DUELS_FLAG, trackedDuels, findTrackedDuel, assertTrackerStart, in
   assertTrackerExchange, assertTrackerNextRound, assertTrackerParticipants } from "./melee-tracker.mjs";
 import { advanceSegmentTurn } from "./segments.mjs";
 import { createMeleeDamageHits, resolveMeleeDamageHit, meleeDamageProfile } from "./melee-damage.mjs";
-import { calculateWoundPenaltyPercent, calculateDifficultyIndexFromPercentage,
-  DIFFICULTY_MODIFIERS } from "../rolls/roll-helpers.mjs";
+import { calculateWoundPenaltyPercent, calculateDifficultyIndexFromPercentage, calculateFinalDifficultyIndex,
+  DIFFICULTY_MODIFIERS, DIFFICULTY_LABELS, DIFFICULTY_STARTING_PERCENTAGES } from "../rolls/roll-helpers.mjs";
+import { calculateDifficultyIndexBeforeCriticalResults, applySkillToDieResults,
+  prepareSkillDieResultsDescription } from "../rolls/skill-roll.mjs";
 
 const FLAG = "meleeDuel";
 let busy = false;
@@ -130,18 +132,45 @@ function profile(actor, weaponId, skillKey, tempo = 0) {
     weaponName: weapon?.name ?? "Pięści" };
 }
 
+export async function rollMeleeBerserkMorale(actor) {
+  const skillLevel = Math.max(0, calculateSkillValue(actor, "morale"));
+  const woundPenalty = calculateWoundPenaltyPercent(actor);
+  const armorAid = calculateArmorPenaltyPercent(actor);
+  const effectPenalty = sumModifierSources(collectTestModifierSources(actor, { attributeKey: "charakter", skillKey: "morale" }));
+  const percentage = DIFFICULTY_STARTING_PERCENTAGES[5] + woundPenalty + effectPenalty - armorAid;
+  const difficultyAfterPenalties = calculateDifficultyIndexFromPercentage(percentage);
+  const difficultyBeforeCriticals = calculateDifficultyIndexBeforeCriticalResults(difficultyAfterPenalties, skillLevel);
+  const roll = await new foundry.dice.Roll("3d20").evaluate();
+  const dice = roll.dice[0].results.map(result => result.result);
+  const finalDifficulty = calculateFinalDifficultyIndex(dice, difficultyBeforeCriticals);
+  const threshold = calculateAttributeValue(actor, "charakter") - DIFFICULTY_MODIFIERS[finalDifficulty];
+  const evaluatedDice = applySkillToDieResults(dice, threshold, skillLevel);
+  const successes = evaluatedDice.filter(die => die.adjustedResult <= threshold).length;
+  const passed = successes >= 2;
+  await roll.toMessage({ speaker: foundry.documents.ChatMessage.getSpeaker({ actor }),
+    flavor: ["<strong>Tryb Berserka — test Morale</strong>",
+      "Trudność bazowa: Cholernie trudny.",
+      "Kara pancerza pomaga: −" + armorAid + " PT; rany i efekty: +" + (woundPenalty + effectPenalty) + " PT.",
+      "Trudność końcowa: " + DIFFICULTY_LABELS[finalDifficulty] + "; próg Charakteru: " + formatMeleeThreshold(threshold) + ".",
+      "Kości: " + prepareSkillDieResultsDescription(evaluatedDice, threshold) + ".",
+      "Sukcesy: " + successes + " — " + (passed ? "test zdany, Berserk aktywny" : "test niezdany") + "."].join("<br>") }, { rollMode: "publicroll" });
+  return { passed, successes, armorAid, woundPenalty, effectPenalty, finalDifficulty, threshold, dice, evaluatedDice };
+}
 async function declareManeuvers(configurations, initiative, previousState = null, opening = null, combat = null) {
   const fighters = configurations.map(configuration => {
     const actor = duelActor(configuration.id, combat);
     if (!actor) throw new Error("Nie znaleziono uczestnika pojedynku.");
     const charge = previousState ? 0 : opening?.charges?.[actor.id] ?? 0;
+    const previous = previousState?.fighters.find(entry => entry.id === actor.id);
     return { id: actor.id, name: actor.name, charge,
       chargePenalty: charge && opening?.winnerId !== actor.id ? charge : 0,
-      skill: Math.max(0, calculateSkillValue(actor, configuration.skillKey)) };
+      skill: Math.max(0, calculateSkillValue(actor, configuration.skillKey)),
+      berserk: Boolean(configuration.automaticBerserk || previous?.berserk),
+      berserkAttemptedRound: previous?.berserkAttemptedRound ?? 0 };
   });
   while (true) {
     const data = await input("Manewry — przed rzutem nowej tury", `<p>Wybierz manewry obu stron przed rzutem. Furia: +2 do ataku, lecz utrata Inicjatywy oznacza również trafienie przez przeciwnika. Pełna obrona: +2 do obrony, przejęcie Inicjatywy po dwóch kolejnych udanych obronach przeciw nieudanym atakom.</p>
-      ${fighters.map((fighter, index) => `<h3>${escape(fighter.name)}</h3><p>Szarża: ${fighter.charge}; kara pierwszej tury: −${fighter.chargePenalty} do Zręczności.</p><select name="maneuver${index}">${Object.entries(MELEE_MANEUVER_LABELS).filter(([key]) => !fighter.charge || key !== "fullDefense").map(([key, label]) => `<option value="${key}">${label}</option>`).join("")}</select>
+      ${fighters.map((fighter, index) => `<h3>${escape(fighter.name)}</h3><p>Szarża: ${fighter.charge}; kara pierwszej tury: −${fighter.chargePenalty} do Zręczności.${fighter.berserk ? " <strong>Tryb Berserka aktywny.</strong>" : ""}</p><select name="maneuver${index}">${Object.entries(MELEE_MANEUVER_LABELS).filter(([key]) => (!fighter.charge || key !== "fullDefense") && (!fighter.berserk || key !== "fullDefense")).map(([key, label]) => `<option value="${key}">${label}</option>`).join("")}</select>
         ${fighter.id === initiative ? `<label>Zwiększone tempo — poziomy PT obu stron<input type="number" name="tempo${index}" min="0" max="${Math.min(3, fighter.skill)}" step="1" value="0"></label>` : ""}`).join("")}
       <p>Tempo może zwiększyć posiadacz Inicjatywy, najwyżej o 3 poziomy i nie więcej niż wartość Umiejętności. Można je łączyć z Furią, ale nie z Pełną obroną. Wybory obowiązują przez całą turę.</p>`, "Zatwierdź i rzuć 3k20");
     if (!data) return null;
@@ -186,13 +215,15 @@ async function setup(host) {
   const configuration = await input("Broń i Inicjatywa", `${pair.map((actor, index) => `<h3>${escape(actor.name)}</h3>
     <label>Broń<select name="weapon${index}"><option value="">Pięści</option>${actor.items.filter(item => item.type === "meleeWeapon").map(item => `<option value="${item.id}">${escape(item.name)}</option>`).join("")}</select></label>
     <label>Umiejętność<select name="skill${index}"><option value="bijatyka">Bijatyka (pięści, kastet)</option><option value="bronReczna">Broń ręczna</option></select></label>
-    <label>Szarża — premia do Inicjatywy<input name="charge${index}" type="number" min="0" max="3" step="1" value="0"></label>`).join("")}
+    <label>Szarża — premia do Inicjatywy<input name="charge${index}" type="number" min="0" max="3" step="1" value="0"></label>
+    <label><input name="automaticBerserk${index}" type="checkbox"> Automatyczny Tryb Berserka (bestia, robot lub cecha — bez testu Morale)</label>`).join("")}
     <p>Szarżę deklarujesz przed testem Zręczności: +1 do +3. Przegrana daje taką samą karę do Zręczności przez pierwszą turę. Szarżujący nie może w niej wybrać Pełnej obrony.</p>
     <label>Ustalenie Inicjatywy<select name="initiativeMode"><option value="roll">Rzuć otwarte testy obu stron</option><option value="manual">Inicjatywa już ustalona (bez Szarży)</option></select></label>
     <label>Posiadacz już ustalonej Inicjatywy<select name="initiative">${pair.map(actor => `<option value="${actor.id}">${escape(actor.name)}</option>`).join("")}</select></label>`);
   if (!configuration) return null;
   const configurations = pair.map((actor, index) => ({ id: actor.id,
-    weaponId: String(configuration[`weapon${index}`] ?? ""), skillKey: configuration[`skill${index}`] }));
+    weaponId: String(configuration[`weapon${index}`] ?? ""), skillKey: configuration[`skill${index}`],
+    automaticBerserk: checked(configuration[`automaticBerserk${index}`]) }));
   for (const entry of configurations) {
     if (!["bijatyka", "bronReczna"].includes(entry.skillKey)) throw new Error("Nieprawidłowa Umiejętność.");
     if (!entry.weaponId && entry.skillKey !== "bijatyka") throw new Error("Pięści korzystają z Bijatyki.");
@@ -327,15 +358,18 @@ export async function openMeleeDuel(host) {
       const profiles = configurations.map((entry, index) => profile(actors[index], entry.weaponId, entry.skillKey, state.tempo ?? 0));
       const attackerIndex = configurations.findIndex(entry => entry.id === state.initiative);
       const defenderIndex = 1 - attackerIndex;
-      const attackChoices = describeMeleeDice(state.fighters[attackerIndex], profiles[attackerIndex].attack + meleeManeuverBonuses(state.fighters[attackerIndex]).attack).filter(die => !die.used);
-      const defenseChoices = describeMeleeDice(state.fighters[defenderIndex], profiles[defenderIndex].defense + meleeManeuverBonuses(state.fighters[defenderIndex]).defense).filter(die => !die.used);
+      const defenderFighter = state.fighters[defenderIndex];
+      const roleThresholds = configurations.map((entry, index) => index === attackerIndex || state.fighters[index].berserk
+        ? profiles[index].attack + meleeManeuverBonuses(state.fighters[index]).attack
+        : profiles[index].defense + meleeManeuverBonuses(state.fighters[index]).defense);
+      const attackChoices = describeMeleeDice(state.fighters[attackerIndex], roleThresholds[attackerIndex]).filter(die => !die.used);
+      const defenseChoices = describeMeleeDice(defenderFighter, roleThresholds[defenderIndex]).filter(die => !die.used);
       const successfulAttackDice = attackChoices.filter(die => die.succeeds);
       const remainingSegments = Math.max(0, 4 - state.segment);
       const canAct = state.segment <= 3 && exchangeReady;
       const canAdvance = combat && configurations.some(entry => entry.id === combat.combatant?.actor?.id) && !exchangeReady;
-      const roleThresholds = configurations.map((entry, index) => index === attackerIndex
-        ? profiles[index].attack + meleeManeuverBonuses(state.fighters[index]).attack
-        : profiles[index].defense + meleeManeuverBonuses(state.fighters[index]).defense);
+      const canAttemptBerserk = canAct && !defenderFighter.berserk
+        && defenderFighter.maneuver !== "fullDefense" && defenderFighter.berserkAttemptedRound !== state.round;
       const thresholdsByFighter = Object.fromEntries(state.fighters.map((fighter, index) => [fighter.id, roleThresholds[index]]));
       const summary = [attackerIndex, defenderIndex].map((index, role) => {
         const fighter = state.fighters[index];
@@ -350,11 +384,11 @@ export async function openMeleeDuel(host) {
         const key = role ? "defense" : "attack";
         const threshold = roleThresholds[index];
         return `<section style="flex:1;min-width:220px;padding:12px;border:1px solid var(--color-border-light-primary,#666);border-radius:6px;">
-          <h3>${escape(actors[index].name)} — ${role ? "broni się" : "atakuje"}</h3>
+          <h3>${escape(actors[index].name)} — ${role && !fighter.berserk ? "broni się" : fighter.berserk ? "atakuje jako berserker" : "atakuje"}</h3>
           <p>${escape(profiles[index].weaponName)} · próg <strong>${formatMeleeThreshold(threshold)}</strong>${threshold < 1 ? " — <strong>sukces niemożliwy</strong>" : ""} · kara ${profiles[index].penalty}%</p>
           <p><strong>Budowa ${build}</strong> — obrażenia za sukcesy:<br>${damagePreview}</p>
           <small>Przed uwzględnieniem lokacji trafienia i pancerza.</small>
-          <p>Punkty Umiejętności: <strong>${fighter.skill - fighter.spent}/${fighter.skill}</strong> · ${MELEE_MANEUVER_LABELS[fighter.maneuver ?? "standard"]}</p>
+          <p>Punkty Umiejętności: <strong>${fighter.skill - fighter.spent}/${fighter.skill}</strong> · ${MELEE_MANEUVER_LABELS[fighter.maneuver ?? "standard"]}${fighter.berserk ? " · <strong>Tryb Berserka</strong>" : ""}</p>
           ${describeMeleeDice(fighter, threshold).map(die => `<div class="form-group">
             <input id="melee-${key}-${die.index}" name="${key}${die.index}" data-melee-dice="${key}" type="checkbox" ${die.used || !canAct ? "disabled" : ""} ${!die.used && checked(selectedDice[`${key}${die.index}`]) ? "checked" : ""}>
             <label for="melee-${key}-${die.index}">${escape(die.label)}</label></div>`).join("")}
@@ -362,8 +396,9 @@ export async function openMeleeDuel(host) {
           ${fighter.maneuver === "fullDefense" ? `<p>Przewaga obrony: ${fighter.defenseAdvantage ?? 0}/2</p>` : ""}
         </section>`;
       }).join("");
-      const actions = canAct ? [["exchange", "Rozstrzygnij cios"], ["points", "Wydaj punkty"]]
+      const actions = canAct ? [["exchange", defenderFighter.berserk ? "Rozstrzygnij wymianę" : "Rozstrzygnij cios"], ["points", "Wydaj punkty"]]
         : state.segment > 3 && nextRoundReady ? [["next", "Nowa tura"]] : [["wait", "Zamknij"]];
+      if (canAttemptBerserk) actions.push(["berserk", "Test Morale — Berserk"]);
       if (canAdvance) actions.push(["tracker", "Dalej w Trackerze"]);
       actions.push(["end", "Zakończ pojedynek"]);
       const lastExchange = state.history.filter(entry => entry.type === "exchange").at(-1);
@@ -376,8 +411,10 @@ export async function openMeleeDuel(host) {
         render: (event, dialog) => bindMeleeDiceSelection(dialog.element, remainingSegments),
         content: `<div style="display:flex;flex-wrap:wrap;gap:12px;">${summary}</div>
           <p>Zwiększone tempo: ${state.tempo ?? 0}. ${combat ? `Tracker: runda ${combat.round}, segment ${combat.getFlag("neuroshima", "combatSegment") || 1}.` : ""}</p>
-          ${lastExchange ? `<p><strong>Ostatni cios:</strong> ${lastExchange.attackSuccesses} sukcesów ataku / ${lastExchange.defenseSuccesses} obrony. ${lastExchange.hit ? "Trafienie." : lastExchange.counterHit ? "Kontrcios przy Furii." : lastExchange.initiativeChanged ? "Przejęcie Inicjatywy." : lastExchange.failedDiceDraw ? "Remis — obie strony bez sukcesów. Inicjatywa bez zmian." : "Brak trafienia."}</p>` : ""}
-          ${canAct ? `<p>${selectionInstruction} Cios łączony wymaga sukcesów ataku. Możesz też zaznaczyć równą liczbę porażek obu stron, aby rozliczyć te segmenty razem jako remis, bez obrażeń i zmiany Inicjatywy. Dostępne sukcesy: ${successfulAttackDice.length}.</p>` : ""}`,
+          ${lastExchange ? `<p><strong>Ostatnia wymiana:</strong> ${lastExchange.attackSuccesses} sukcesów pierwszego ataku / ${lastExchange.defenseSuccesses} ${lastExchange.defenderBerserk ? "kontrataku" : "obrony"}. ${lastExchange.defenderBerserk ? [lastExchange.hit ? "Pierwszy atak trafia." : "Pierwszy atak chybia.", lastExchange.berserkHit ? "Berserker trafia." : "Berserker chybia."].join(" ") : lastExchange.hit ? "Trafienie." : lastExchange.counterHit ? "Kontrcios przy Furii." : lastExchange.initiativeChanged ? "Przejęcie Inicjatywy." : lastExchange.failedDiceDraw ? "Remis — obie strony bez sukcesów. Inicjatywa bez zmian." : "Brak trafienia."}</p>` : ""}
+          ${canAct ? defenderFighter.berserk
+            ? `<p>${selectionInstruction} <strong>Obie strony atakują.</strong> Kości ${escape(actors[defenderIndex].name)} nie bronią — mogą zadać drugie, równoczesne trafienie. Cios łączony atakującego wymaga samych sukcesów; Berserker zadaje własny cios za liczbę swoich udanych kości, a porażki tylko zużywają segmenty.</p>`
+            : `<p>${selectionInstruction} Cios łączony wymaga sukcesów ataku. Możesz też zaznaczyć równą liczbę porażek obu stron, aby rozliczyć te segmenty razem jako remis, bez obrażeń i zmiany Inicjatywy. Dostępne sukcesy: ${successfulAttackDice.length}.</p>` : ""}`,
         buttons: actions.map(([action, label]) => action === "points"
           ? { action, label, callback: async (event, button) => {
             const formValues = button?.form ? Object.fromEntries(new FormData(button.form)) : {};
@@ -399,6 +436,13 @@ export async function openMeleeDuel(host) {
           const confirmed = await foundry.applications.api.DialogV2.confirm({ window: { title: "Zakończ pojedynek" },
             content: "<p>Zakończyć pojedynek? Wyniki wymian pozostaną na czacie.</p>", rejectClose: false });
           if (confirmed) { await save(null); break; }
+        } else if (data.action === "berserk" && canAttemptBerserk) {
+          const result = await rollMeleeBerserkMorale(actors[defenderIndex]);
+          duel = { ...duel, state: enterMeleeBerserk(state, { fighterId: defenderFighter.id, passed: result.passed }) };
+          await save(duel);
+          ui.notifications.info(result.passed
+            ? `${escape(actors[defenderIndex].name)} wchodzi w Tryb Berserka.`
+            : `Test Morale nieudany — ${escape(actors[defenderIndex].name)} nie wchodzi w Tryb Berserka.`);
         } else if (data.action === "next" && state.segment > 3) {
           if (combat) assertTrackerNextRound(combat, duel);
           const declarations = await declareManeuvers(configurations, state.initiative, state, null, combat);
@@ -434,7 +478,8 @@ export async function openMeleeDuel(host) {
             throw new Error("Modyfikatory lub broń zmieniły się. Sprawdź nowe progi i wybierz kości ponownie.");
           }
           const result = resolveMeleeExchange(state, { attackDice,
-            defenseDice, attackThreshold: profiles[attackerIndex].attack, defenseThreshold: profiles[defenderIndex].defense });
+            defenseDice, attackThreshold: profiles[attackerIndex].attack,
+            defenseThreshold: defenderFighter.berserk ? profiles[defenderIndex].attack : profiles[defenderIndex].defense });
           duel = { ...duel, state: result.state,
             damageHits: [...(duel.damageHits ?? []), ...createMeleeDamageHits(state, result.exchange, configurations, actors)] };
           await save(duel);
@@ -442,10 +487,11 @@ export async function openMeleeDuel(host) {
           selectedDice = {};
           await foundry.documents.ChatMessage.create({ content: `<h3>Pojedynek wręcz — tura ${state.round}, segment ${state.segment}</h3>
             <p>${escape(actors[attackerIndex].name)} → ${escape(actors[defenderIndex].name)}; koszt ${exchange.cost} segmentów.</p>
-            <p>Sukcesy ataku: ${exchange.attackSuccesses}; obrony: ${exchange.defenseSuccesses}.</p>
-            <p>Atak: ${MELEE_MANEUVER_LABELS[exchange.attackerManeuver]}; obrona: ${MELEE_MANEUVER_LABELS[exchange.defenderManeuver]}; Zwiększone tempo: ${state.tempo ?? 0}.</p>
+            <p>Sukcesy pierwszego ataku: ${exchange.attackSuccesses}; ${exchange.defenderBerserk ? "kontrataku Berserkera" : "obrony"}: ${exchange.defenseSuccesses}.</p>
+            <p>Atak: ${MELEE_MANEUVER_LABELS[exchange.attackerManeuver]}; ${exchange.defenderBerserk ? "kontratak" : "obrona"}: ${MELEE_MANEUVER_LABELS[exchange.defenderManeuver]}; Zwiększone tempo: ${state.tempo ?? 0}.</p>
             ${exchange.counterHit ? `<p>Furia: ${escape(actors[attackerIndex].name)} traci Inicjatywę i otrzymuje cios za ${exchange.counterHitSuccesses} sukces. Obrażenia oczekują na rozliczenie w panelu.</p>` : ""}
-            <p>${exchange.hit ? `Trafienie za ${exchange.attackSuccesses} sukcesy. Obrażenia oczekują na rozliczenie w panelu.` : exchange.initiativeChanged ? "Obrońca przejmuje Inicjatywę od następnego segmentu." : exchange.failedDiceDraw ? "Remis — obie strony bez sukcesów. Bez obrażeń, Inicjatywa bez zmian." : "Brak trafienia. Inicjatywa bez zmian."}</p>` });
+            ${exchange.defenderBerserk ? `<p>${exchange.hit ? `${escape(actors[attackerIndex].name)} trafia za ${exchange.attackSuccesses} sukcesy.` : `${escape(actors[attackerIndex].name)} chybia.`} ${exchange.berserkHit ? `${escape(actors[defenderIndex].name)} trafia równocześnie za ${exchange.berserkHitSuccesses} sukcesy.` : `${escape(actors[defenderIndex].name)} chybia.`} Inicjatywa bez zmian.</p>`
+              : `<p>${exchange.hit ? `Trafienie za ${exchange.attackSuccesses} sukcesy. Obrażenia oczekują na rozliczenie w panelu.` : exchange.initiativeChanged ? "Obrońca przejmuje Inicjatywę od następnego segmentu." : exchange.failedDiceDraw ? "Remis — obie strony bez sukcesów. Bez obrażeń, Inicjatywa bez zmian." : "Brak trafienia. Inicjatywa bez zmian."}</p>`}` });
           if (duel.damageHits.some(hit => !hit.completed)) continue;
           if (combat && duel.state.segment === 4) {
             await advanceSegmentTurn(combat);

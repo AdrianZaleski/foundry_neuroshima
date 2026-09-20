@@ -494,3 +494,42 @@ w razie rozbieżności nadal obowiązuje zatwierdzona wyżej hierarchia źróde�
   dokończenia.
 - Po rozliczeniu niepełnej tury Tracker pomija pozostałe kolejki obu stron,
   ale nadal obsługuje normalnie pozostałych uczestników walki.
+
+## Tryb Berserka — 2026-09-20
+
+Źródło wskazane przez użytkownika:
+https://www.youtube.com/watch?v=oRBpjkCuO_g
+
+Film opisuje zasady zaawansowane. Tryb Berserka jest odrębny od manewru
+Furia: Furia daje premię do ataku i ryzyko kontrciosu przy utracie
+Inicjatywy, natomiast Berserker świadomie rezygnuje z obrony i atakuje
+równocześnie mimo braku Inicjatywy.
+
+- Zwykła postać bez Inicjatywy może spróbować wejść w Tryb Berserka
+  przez cholernie trudny test Charakteru z Umiejętnością Morale.
+- Faktyczna kara pancerza po uwzględnieniu Budowy ułatwia ten test o tę samą
+  liczbę PT. Rany i aktywne modyfikatory testu Charakteru/Morale nadal
+  działają normalnie. Rzut 3k20 jest jawny i zapisany na czacie.
+- Po sukcesie kości strony bez Inicjatywy nie są kośćmi obrony. Obie strony
+  atakują niezależnie i mogą trafić równocześnie. Sukcesy jednego ataku nie
+  anulują sukcesów drugiego, a każde trafienie tworzy osobne obrażenia.
+- Podczas takiej wymiany Inicjatywa nie zmienia właściciela. Cios łączony
+  posiadacza Inicjatywy nadal wymaga samych sukcesów. Berserker rozlicza
+  własny atak za liczbę sukcesów w tej samej puli segmentów; jego porażki
+  nie blokują wymiany, tylko nie zwiększają obrażeń.
+- Trybu Berserka nie można łączyć z Pełną obroną.
+- W konfiguracji pojedynku MG może zaznaczyć automatyczny Tryb Berserka
+  dla bestii, robota albo właściwej cechy. Taka postać nie wykonuje testu
+  Morale. System nie rozpoznaje jeszcze automatycznie odpowiednich cech
+  z bestiariusza.
+
+Interpretacje interfejsu przyjęte tam, gdzie materiał nie podaje czasu trwania:
+
+- nieudany test można wykonać najwyżej raz na turę pojedynku;
+- udany albo automatyczny Tryb Berserka trwa do końca pojedynku;
+- próbę wykonuje się przed wybraną wymianą, gdy postać nie ma Inicjatywy
+  i jej kości oraz kości przeciwnika są już jawne.
+
+Nie wdrożono jeszcze odrębnej reguły zaawansowanej, w której bestia może
+wybrać przejęcie Inicjatywy zamiast zadania obrażeń. Nie wdrożono również
+automatycznego przypisywania zachowania na podstawie typu aktora lub cechy.

@@ -55,6 +55,19 @@ function addArmor(env,reduction=0) {
     getFlag:()=>marks,async update(data){updates++;this.system.torso.currentDurability=data["system.torso.currentDurability"];marks[Object.keys(data).find(key=>key.startsWith("flags.")).split(".").at(-1)]=true;}};
   env.actor.items.push(armor);return {armor,get updates(){return updates;}};
 }
+test("Wymiana berserkerów tworzy osobne trafienie dla każdej strony", () => {
+  const configurations=[{id:"a",weaponId:""},{id:"b",weaponId:""}];
+  const actors=configurations.map(({id})=>({id,name:id,items:Object.assign([], {get:()=>null}),
+    system:{attributes:{budowa:{base:12}},activeModifiers:[]}}));
+  const state=createMeleeRound({initiative:"a",fighters:[
+    {id:"a",skill:0,dice:[3,19,19]},
+    {id:"b",skill:0,berserk:true,dice:[4,19,19]}
+  ]});
+  const result=resolveMeleeExchange(state,{attackDice:[0],defenseDice:[0],attackThreshold:12,defenseThreshold:12});
+  const hits=createMeleeDamageHits(state,result.exchange,configurations,actors);
+  assert.deepEqual(hits.map(hit=>[hit.sourceId,hit.targetId,hit.successes]), [["a","b",1],["b","a",1]]);
+});
+
 test("Anulowanie siniaków zachowuje trafienie; wznowienie zapisuje jeden siniak",async()=>{
   const env=environment();
   assert.equal(await resolveMeleeDamageHit(hit(),env.actor,env.persist),false);

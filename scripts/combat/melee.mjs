@@ -19,6 +19,7 @@ export function validateMeleeDeclarations(fighters, initiative) {
     if (tempo > fighter.skill) throw new Error("Zwiększone tempo nie może przekroczyć Umiejętności.");
     if (tempo && fighter.id !== initiative) throw new Error("Tempo zwiększa tylko posiadacz Inicjatywy.");
     if (tempo && maneuver === "fullDefense") throw new Error("Nie można łączyć Zwiększonego tempa z Pełną obroną.");
+    if (fighter.berserk && maneuver === "fullDefense") throw new Error("Berserker nie może korzystać z Pełnej obrony.");
   }
 }
 
@@ -42,6 +43,8 @@ export function createMeleeRound({ fighters, initiative, round = 1, startSegment
       if (!fighter.id || fighter.dice?.length !== 3) throw new Error("Każdy uczestnik musi mieć trzy kości.");
       return { id: fighter.id, skill: integer(fighter.skill, 0, 100, "Umiejętność"), spent: 0,
         maneuver: fighter.maneuver ?? "standard",
+        berserk: Boolean(fighter.berserk),
+        berserkAttemptedRound: Number.isInteger(fighter.berserkAttemptedRound) ? fighter.berserkAttemptedRound : 0,
         charge: round === 1 ? integer(fighter.charge ?? 0, 0, 3, "Szarża") : 0,
         chargePenalty: round === 1 ? integer(fighter.chargePenalty ?? 0, 0, 3, "kara Szarży") : 0,
         defenseAdvantage: fighter.maneuver === "fullDefense"
@@ -50,6 +53,23 @@ export function createMeleeRound({ fighters, initiative, round = 1, startSegment
           natural: integer(natural, 1, 20, "k20"), value: natural, used: false })) };
     }), history: []
   };
+}
+
+export function enterMeleeBerserk(state, { fighterId, passed, automatic = false }) {
+  const next = structuredClone(state);
+  const fighter = next.fighters.find(entry => entry.id === fighterId);
+  if (!fighter || next.segment > 3) throw new Error("Brak aktywnej tury pojedynku.");
+  if (fighter.berserk) return next;
+  if (!automatic && fighter.id === next.initiative) throw new Error("Test berserkera wykonuje strona bez Inicjatywy.");
+  if (fighter.maneuver === "fullDefense") throw new Error("Pełna obrona wyklucza tryb berserkera.");
+  if (!automatic && fighter.berserkAttemptedRound === next.round) {
+    throw new Error("Ta postać próbowała już wejść w tryb berserkera w tej turze.");
+  }
+  fighter.berserkAttemptedRound = next.round;
+  fighter.berserk = automatic || Boolean(passed);
+  next.history.push({ type: "berserk", segment: next.segment, fighterId,
+    automatic: Boolean(automatic), passed: fighter.berserk });
+  return next;
 }
 
 export function spendMeleePoints(state, { fighterId, targetId, dieIndex, points }) {
@@ -112,7 +132,8 @@ export function resolveMeleeExchange(state, { attackDice, defenseDice, attackThr
   const attacking = select(attacker, attackDice);
   const defending = select(defender, defenseDice);
   attackThreshold += meleeManeuverBonuses(attacker).attack;
-  defenseThreshold += meleeManeuverBonuses(defender).defense;
+  const defenderBonuses = meleeManeuverBonuses(defender);
+  defenseThreshold += defender.berserk ? defenderBonuses.attack : defenderBonuses.defense;
   const attackSuccesses = attacking.filter(die => meleeDieSucceeds(die, attackThreshold)).length;
   const defenseSuccesses = defending.filter(die => meleeDieSucceeds(die, defenseThreshold)).length;
   // Kilka par porażek można rozliczyć razem jako kolejne remisowe
@@ -124,8 +145,10 @@ export function resolveMeleeExchange(state, { attackDice, defenseDice, attackThr
     const failedNumbers = attackDice.filter((index, position) => !meleeDieSucceeds(attacking[position], attackThreshold)).map(index => index + 1);
     throw new Error(`Cios łączony: zaznaczono ${attackDice.length} kości ataku, ale sukcesów jest ${attackSuccesses}. Kości ataku z porażką: ${failedNumbers.join(", ")}. Odznacz je i wybierz tyle samo kości obrony co kości ataku. Porażki możesz rozegrać osobno; grupowy remis wymaga samych porażek obu stron.`);
   }
-  const hit = attackSuccesses > defenseSuccesses;
-  const defenseWon = attackSuccesses === 0 && defenseSuccesses > 0;
+  const berserkExchange = Boolean(defender.berserk);
+  const hit = berserkExchange ? attackSuccesses > 0 : attackSuccesses > defenseSuccesses;
+  const berserkHit = berserkExchange && defenseSuccesses > 0;
+  const defenseWon = !berserkExchange && attackSuccesses === 0 && defenseSuccesses > 0;
   // Pełna obrona wymaga dwóch kolejnych skutecznych obron przeciw
   // nieudanym atakom. Remis lub trafienie przerywa tę sekwencję.
   defender.defenseAdvantage = defender.maneuver === "fullDefense" && defenseWon
@@ -135,7 +158,9 @@ export function resolveMeleeExchange(state, { attackDice, defenseDice, attackThr
   if (initiativeChanged) defender.defenseAdvantage = 0;
   const exchange = { type: "exchange", segment: next.segment, cost: attackDice.length,
     attackerId: attacker.id, defenderId: defender.id, attackDice, defenseDice,
-    attackThreshold, defenseThreshold, attackSuccesses, defenseSuccesses, hit, initiativeChanged, failedDiceDraw,
+    attackThreshold, defenseThreshold, attackSuccesses, defenseSuccesses, hit, initiativeChanged,
+    failedDiceDraw: !berserkExchange && failedDiceDraw, defenderBerserk: berserkExchange,
+    berserkHit, berserkHitSuccesses: berserkHit ? defenseSuccesses : 0,
     counterHit, counterHitSuccesses: counterHit ? defenseSuccesses : 0,
     attackerManeuver: attacker.maneuver ?? "standard", defenderManeuver: defender.maneuver ?? "standard" };
   for (const die of [...attacking, ...defending]) die.used = true;

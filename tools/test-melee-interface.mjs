@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { openMeleeDuel, bindMeleePointLimit, bindMeleeDiceSelection } from "../scripts/combat/melee-interface.mjs";
+import { openMeleeDuel, bindMeleePointLimit, bindMeleeDiceSelection, rollMeleeBerserkMorale } from "../scripts/combat/melee-interface.mjs";
 import { findTrackedDuel, meleeTrackerAction } from "../scripts/combat/melee-tracker.mjs";
 import { advanceSegmentTurn } from "../scripts/combat/segments.mjs";
 
@@ -9,7 +9,7 @@ function setup(answers, isGM = true, diceSequence = []) {
   let stored = null, rolls = 0, painRoll = false;
   const actor = id => ({ id, name: id, type: "character", items: [], system: {
     attributes: { zrecznosc: { base: 12 }, budowa: { base: 12 }, charakter: { base: 12 } },
-    skills: { bijatyka: { base: 2 }, odpornoscNaBol: { base: 0 } }, activeModifiers: [], background: {}
+    skills: { bijatyka: { base: 2 }, morale: { base: 4 }, odpornoscNaBol: { base: 0 } }, activeModifiers: [], background: {}
   }, getFlag: () => stored, setFlag: async (system, key, value) => { stored = structuredClone(value); writes.push(value); } });
   const host = actor("a"), opponent = actor("b");
   const actors = [host, opponent];
@@ -294,6 +294,59 @@ test("Anulowanie deklaracji następnej tury zachowuje stare kości", async () =>
   assert.equal(environment.rolls(), 2);
   assert.equal(environment.state().state.segment, 4);
   assert.equal(environment.state().state.round, 1);
+});
+
+test("Test Morale włącza Berserka obrońcy i zmienia jego kości w kontratak", async () => {
+  const environment = setup([...start, { action: "berserk" }], true,
+    [[3, 6, 19], [3, 6, 19], [1, 2, 3]]);
+  await openMeleeDuel(environment.host);
+  assert.deepEqual(environment.warnings, []);
+  const defender = environment.state().state.fighters.find(fighter => fighter.id === "b");
+  assert.equal(defender.berserk, true);
+  assert.equal(defender.berserkAttemptedRound, 1);
+  assert.equal(environment.state().state.history.at(-1).type, "berserk");
+  assert.equal(environment.rolls(), 3);
+  const panels = environment.dialogs.filter(dialog => dialog.window.title.startsWith("Pojedynek —"));
+  assert.match(panels.at(-1).content, /atakuje jako berserker/);
+  assert.match(panels.at(-1).content, /Obie strony atakują/);
+  assert.ok(environment.messages.some(message => message.flavor?.includes("Tryb Berserka — test Morale")));
+});
+
+test("Automatyczny Berserk bestii lub robota nie wymaga testu Morale", async () => {
+  const environment = setup([start[0], { ...start[1], automaticBerserk1: "on" }, start[2]]);
+  await openMeleeDuel(environment.host);
+  assert.deepEqual(environment.warnings, []);
+  assert.equal(environment.state().state.fighters.find(fighter => fighter.id === "b").berserk, true);
+  assert.equal(environment.rolls(), 2);
+  const panel = environment.dialogs.find(dialog => dialog.window.title.startsWith("Pojedynek —"));
+  assert.match(panel.content, /atakuje jako berserker/);
+  assert.equal(panel.content.includes("Test Morale — Berserk"), false);
+});
+
+test("Panel rozlicza 3 sukcesy atakującego przeciw 2 sukcesom Berserkera", async () => {
+  const environment = setup([start[0], { ...start[1], automaticBerserk1: "on" }, start[2],
+    { action: "combined" },
+    { attack0: true, attack1: true, attack2: true, defense0: true, defense1: true, defense2: true }
+  ], true, [[3, 4, 5], [5, 19, 6]]);
+  await openMeleeDuel(environment.host);
+  assert.deepEqual(environment.warnings, []);
+  const exchange = environment.state().state.history.find(entry => entry.type === "exchange");
+  assert.equal(exchange.attackSuccesses, 3);
+  assert.equal(exchange.hit, true);
+  assert.equal(exchange.berserkHitSuccesses, 2);
+  assert.equal(exchange.berserkHit, true);
+  assert.equal(exchange.cost, 3);
+  assert.equal(environment.state().state.segment, 4);
+  assert.equal(environment.state().damageHits.length, 2);
+});
+
+test("Faktyczna kara pancerza ułatwia test Morale Berserka", async () => {
+  const environment = setup([], true, [[7, 8, 19]]);
+  environment.host.items.push({ type: "armor", system: { equipped: true, penaltyScope: "dexterity", penaltyPercent: 30 } });
+  const result = await rollMeleeBerserkMorale(environment.host);
+  assert.equal(result.armorAid, 30);
+  assert.equal(result.finalDifficulty, 3);
+  assert.match(environment.messages[0].flavor, /Kara pancerza pomaga: −30 PT/);
 });
 
 function attachCombat() {

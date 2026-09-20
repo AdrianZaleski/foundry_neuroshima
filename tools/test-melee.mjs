@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createMeleeRound, spendMeleePoints, resolveMeleeExchange, meleeManeuverBonuses } from "../scripts/combat/melee.mjs";
+import { createMeleeRound, spendMeleePoints, resolveMeleeExchange, meleeManeuverBonuses, enterMeleeBerserk } from "../scripts/combat/melee.mjs";
 
 const round = (first = [3, 6, 19], second = [12, 13, 18], skill = 0) => createMeleeRound({
   fighters: [{ id: "a", dice: first, skill }, { id: "b", dice: second, skill }], initiative: "a"
@@ -192,6 +192,44 @@ test("Deklaracje: limit tempa, Inicjatywa i zakaz łączenia z Pełną obroną",
   assert.throws(() => maneuverRound({ tempo: 1, maneuver: "fullDefense" }, {}));
   assert.throws(() => maneuverRound({ maneuver: "unknown" }, {}));
   assert.equal(maneuverRound({ tempo: 3, maneuver: "fury" }, {}).tempo, 3);
+});
+
+test("Berserker bez Inicjatywy atakuje zamiast się bronić", () => {
+  let state = maneuverRound({ dice: [3, 19, 19] }, { dice: [4, 19, 19] });
+  state = enterMeleeBerserk(state, { fighterId: "b", passed: true });
+  const result = exchange(state, [0], [0]);
+  assert.equal(result.exchange.hit, true);
+  assert.equal(result.exchange.berserkHit, true);
+  assert.equal(result.exchange.initiativeChanged, false);
+  assert.equal(result.state.initiative, "a");
+});
+
+test("Nieudana próba berserkera nie zmienia obrony i nie może być powtarzana w tej turze", () => {
+  let state = maneuverRound({ dice: [19, 19, 19] }, { dice: [4, 19, 19] });
+  state = enterMeleeBerserk(state, { fighterId: "b", passed: false });
+  assert.equal(state.fighters[1].berserk, false);
+  assert.throws(() => enterMeleeBerserk(state, { fighterId: "b", passed: true }), /próbowała już/);
+  const result = exchange(state, [0], [0]);
+  assert.equal(result.exchange.initiativeChanged, true);
+  assert.equal(result.exchange.berserkHit, false);
+});
+
+test("Cios za 3 sukcesy przechodzi mimo tylko 2 sukcesów Berserkera", () => {
+  let state = maneuverRound({ dice: [3, 4, 5] }, { dice: [5, 19, 6] });
+  state = enterMeleeBerserk(state, { fighterId: "b", passed: false, automatic: true });
+  assert.equal(state.fighters[1].berserk, true);
+  const result = exchange(state, [0, 1, 2], [0, 1, 2]);
+  assert.equal(result.exchange.hit, true);
+  assert.equal(result.exchange.attackSuccesses, 3);
+  assert.equal(result.exchange.berserkHit, true);
+  assert.equal(result.exchange.berserkHitSuccesses, 2);
+  assert.equal(result.exchange.cost, 3);
+  assert.equal(result.state.segment, 4);
+});
+
+test("Pełna obrona wyklucza wejście w tryb berserkera", () => {
+  const state = maneuverRound({}, { maneuver: "fullDefense" });
+  assert.throws(() => enterMeleeBerserk(state, { fighterId: "b", passed: true }), /Pełna obrona/);
 });
 
 test("Starszy zapis bez manewrów nadal rozstrzyga zwykłą walkę", () => {

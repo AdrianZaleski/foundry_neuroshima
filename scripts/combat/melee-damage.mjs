@@ -43,6 +43,7 @@ export function meleeDamageProfile(weapon, build, successes) {
 
 export function createMeleeDamageHits(state, exchange, configurations, actors) {
   const attacks = exchange.hit ? [[exchange.attackerId, exchange.defenderId, exchange.attackSuccesses, exchange.attackDice]] : [];
+  if (exchange.berserkHit) attacks.push([exchange.defenderId, exchange.attackerId, exchange.berserkHitSuccesses, exchange.defenseDice]);
   if (exchange.counterHit) attacks.push([exchange.defenderId, exchange.attackerId, exchange.counterHitSuccesses, exchange.defenseDice]);
   return attacks.map(([sourceId,targetId,successes,indices]) => {
     const source = actors.find(actor => actor.id === sourceId);
