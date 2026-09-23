@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { meleeDamageProfile, normalizeMeleeDamageCode, createMeleeDamageHits, resolveMeleeDamageHit } from "../scripts/combat/melee-damage.mjs";
+import { meleeDamageProfile, normalizeMeleeDamageCode, createMeleeDamageHits, resolveMeleeDamageHit,
+  meleeDamageChoicesHtml, validateMeleeDamageHitUpdate } from "../scripts/combat/melee-damage.mjs";
 import { createMeleeRound, resolveMeleeExchange } from "../scripts/combat/melee.mjs";
 import { blocksMeleeAdvance, assertTrackerNextRound } from "../scripts/combat/melee-tracker.mjs";
 
@@ -148,6 +149,34 @@ test("Zwykła rana nadal korzysta z Charakteru; krytyczne siniaki nie rzucają t
   await resolveMeleeDamageHit(criticalHit,critical.actor,critical.persist);
   assert.equal(critical.actor.items[0].system.injuryType,"bruise");
   assert.equal(critical.actor.items[0].system.penaltyPercent,160);
+});
+
+test("Rozliczenie gracza pokazuje MG dostępne opcje i jest sprawdzane etapami", () => {
+  const env = environment();
+  env.actor.id = "b";
+  const current = { ...hit(), spec: undefined, sourceId: "a", targetId: "b", build: 12, profile: "sD/sD/sD",
+    damageCode: "S_D", damageType: "blunt", armorPenetration: 0,
+    locationDice: [{ index: 0, natural: 10 }] };
+  const preview = meleeDamageChoicesHtml(current, env.actor);
+  assert.match(preview, /Dostępne obrażenia/);
+  assert.match(preview, /Kość 1: 10/);
+
+  const withSpec = validateMeleeDamageHitUpdate(current, { ...current,
+    spec: { damageCode: "S_D", naturalResult: 10, damageType: "blunt", armorPenetration: 0 } }, env.actor);
+  const withResult = validateMeleeDamageHitUpdate(withSpec, { ...withSpec, armor: null, result: {} }, env.actor);
+  assert.equal(withResult.result.finalDamageCode, "S_D");
+  const withInjury = validateMeleeDamageHitUpdate(withResult, { ...withResult,
+    injury: { injuryType: "bruise", testPassed: true, numberOfSuccesses: 2,
+      penaltyPercent: 5, attributeKey: "budowa" } }, env.actor);
+  const completed = validateMeleeDamageHitUpdate(withInjury, { ...withInjury, completed: true }, env.actor);
+  assert.equal(completed.completed, true);
+  assert.equal(completed.injury.penaltyPercent, 5);
+
+  assert.throws(() => validateMeleeDamageHitUpdate(withResult, { ...withResult,
+    injury: { injuryType: "bruise", testPassed: true, numberOfSuccesses: 2,
+      penaltyPercent: 60, attributeKey: "budowa" } }, env.actor), /testu bólu/);
+  assert.throws(() => validateMeleeDamageHitUpdate(current, { ...current,
+    spec: { damageCode: "S_D", naturalResult: 7, damageType: "blunt", armorPenetration: 0 } }, env.actor), /lokacji/);
 });
 
 test("Lokacja z użytej kości: wybór tułowia zachowuje jedno podniesienie za naturalne 2", async () => {

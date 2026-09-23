@@ -1,7 +1,7 @@
 import { calculateAttributeValue, escapeModifierText as escape } from "../effects/modifiers.mjs";
 import { resolveDamage, getHitLocation, HIT_LOCATION_LABELS } from "./damage-resolution.mjs";
 import { getArmorCoveringLocation } from "./armor.mjs";
-import { rollPainResistanceForInjury } from "../rolls/injury-roll.mjs";
+import { INJURY_ROLL_CONFIGURATION, rollPainResistanceForInjury } from "../rolls/injury-roll.mjs";
 import { BRUISE_NAMES } from "../health/injury-labels.mjs";
 
 // Górne granice włącznie, ostatni wiersz bez górnej granicy. B&W s.146–149.
@@ -66,13 +66,87 @@ const input = (title,content,label) => foundry.applications.api.DialogV2.input({
   window: { title }, content, ok: { label }, rejectClose: false, modal: false
 });
 
+const DAMAGE_CODES = ["D_D","D_L","D_C","D_K","S_D","S_L","S_C","S_K"];
+
+export function meleeDamageChoicesHtml(hit, actor) {
+  const locations = hit.locationDice?.length
+    ? hit.locationDice.map(die => `Kość ${die.index + 1}: ${die.natural} — ${HIT_LOCATION_LABELS[getHitLocation(die.natural)] ?? "brak lokacji"}`).join("; ")
+    : "naturalny wynik 1–19";
+  const selectedLocation = hit.spec ? HIT_LOCATION_LABELS[getHitLocation(hit.spec.naturalResult)] : null;
+  const armor = hit.spec ? getArmorCoveringLocation(actor, getHitLocation(hit.spec.naturalResult), hit.spec.damageType)
+    .map(entry => `${escape(entry.item.name)} — redukcja ${entry.reduction}`).join("; ") || "brak pasującego pancerza" : "zależy od lokacji i rodzaju obrażeń";
+  return `<p><strong>Dostępne obrażenia:</strong> ${DAMAGE_CODES.join(", ")} (profil sugeruje ${escape(hit.damageCode ?? "wybór MG")}).</p>
+    <p><strong>Dostępne kości lokacji:</strong> ${locations}.</p>
+    <p><strong>Rodzaj:</strong> obuchowe albo tnące/kłute. <strong>Przebicie:</strong> domyślnie ${Number(hit.armorPenetration) || 0}.</p>
+    <p><strong>Pancerz:</strong> ${armor}.</p>
+    ${hit.spec ? `<p><strong>Zapisany wybór:</strong> ${hit.spec.damageCode}, ${selectedLocation}, ${hit.spec.damageType === "blunt" ? "obuchowe" : "tnące/kłute"}, przebicie ${hit.spec.armorPenetration}.</p>` : ""}
+    ${hit.result ? `<p><strong>Wynik:</strong> ${escape(hit.result.finalDamageName)} — ${escape(hit.result.locationLabel)}${hit.result.prevented ? "; zatrzymane przez pancerz" : ""}.</p>` : ""}
+    ${hit.injury ? `<p><strong>Test bólu:</strong> ${hit.injury.testPassed === null ? "bez testu" : hit.injury.testPassed ? "zdany" : "niezdany"}; kara ${hit.injury.penaltyPercent}%.</p>` : ""}`;
+}
+
+export function validateMeleeDamageHitUpdate(current, submitted, actor) {
+  if (!current || !submitted || current.id !== submitted.id || current.sourceId !== submitted.sourceId
+    || current.targetId !== submitted.targetId || current.successes !== submitted.successes
+    || JSON.stringify(current.locationDice ?? []) !== JSON.stringify(submitted.locationDice ?? [])) {
+    throw new Error("Nieprawidłowe trafienie do rozliczenia.");
+  }
+  let spec;
+  if (submitted.spec) {
+    const naturalResult = Number(submitted.spec.naturalResult), armorPenetration = Number(submitted.spec.armorPenetration);
+    if (!DAMAGE_CODES.includes(submitted.spec.damageCode) || !Number.isInteger(naturalResult) || naturalResult < 1 || naturalResult > 19
+      || !["blunt","cutting"].includes(submitted.spec.damageType) || !Number.isInteger(armorPenetration) || armorPenetration < 0
+      || (current.locationDice?.length && !current.locationDice.some(die => die.natural === naturalResult))) {
+      throw new Error("Nieprawidłowy wybór obrażeń lub lokacji.");
+    }
+    spec = { damageCode: submitted.spec.damageCode, naturalResult, armorPenetration,
+      damageType: submitted.spec.damageType, damageBoost: current.locationDice?.some(die => [1,2].includes(die.natural)) ?? false };
+  }
+  if (current.spec && JSON.stringify(current.spec) !== JSON.stringify(spec)) throw new Error("Nie można zmienić zapisanego etapu obrażeń.");
+  let armor = null, result;
+  if (submitted.result) {
+    if (!spec) throw new Error("Najpierw wybierz obrażenia i lokację.");
+    const candidates = getArmorCoveringLocation(actor, getHitLocation(spec.naturalResult), spec.damageType);
+    if (submitted.armor) {
+      const selected = candidates.find(entry => entry.item.id === submitted.armor.id);
+      if (!selected) throw new Error("Wybrany pancerz nie może przyjąć tego trafienia.");
+      const coverageRoll = selected.coverageChance < 100 ? Number(submitted.armor.coverageRoll) : null;
+      if (coverageRoll !== null && (!Number.isInteger(coverageRoll) || coverageRoll < 1 || coverageRoll > 20)) throw new Error("Nieprawidłowy rzut osłony pancerza.");
+      armor = { id: selected.item.id, name: selected.item.name, coverageRoll,
+        covered: coverageRoll === null || coverageRoll <= Math.floor(selected.coverageChance / 5), reduction: selected.reduction };
+    } else if (candidates.length) throw new Error("Wybierz pancerz przyjmujący trafienie.");
+    result = resolveDamage({ ...spec, armorReduction: armor?.covered ? armor.reduction : 0 });
+  }
+  if (current.result && JSON.stringify(current.result) !== JSON.stringify(result)) throw new Error("Nie można zmienić zapisanego wyniku obrażeń.");
+  let injury;
+  if (submitted.injury) {
+    if (!result || result.prevented) throw new Error("To trafienie nie wymaga testu bólu.");
+    const configuration = INJURY_ROLL_CONFIGURATION[result.injuryType];
+    const testPassed = submitted.injury.testPassed;
+    const numberOfSuccesses = submitted.injury.numberOfSuccesses;
+    const expectedPenalty = configuration?.difficultyIndex === null ? 160
+      : testPassed === true ? configuration?.passedPenaltyPercent
+      : testPassed === false ? configuration?.failedPenaltyPercent : null;
+    if (!configuration || Number(submitted.injury.penaltyPercent) !== expectedPenalty
+      || (testPassed !== null && (!Number.isInteger(numberOfSuccesses) || (numberOfSuccesses >= 2) !== testPassed))
+      || (configuration.difficultyIndex === null && testPassed !== null)) {
+      throw new Error("Nieprawidłowy wynik testu bólu.");
+    }
+    injury = { ...submitted.injury, penaltyPercent: expectedPenalty,
+      injuryType: result.damageKind === "S" ? "bruise" : result.injuryType };
+  }
+  if (current.injury && JSON.stringify(current.injury) !== JSON.stringify(injury)) throw new Error("Nie można zmienić zapisanego testu bólu.");
+  const completed = Boolean(submitted.completed);
+  if (completed && (!result || (!result.prevented && !injury))) throw new Error("Rozliczenie obrażeń nie jest kompletne.");
+  return { ...current, ...(spec ? { spec } : {}), ...(result ? { armor, result } : {}), ...(injury ? { injury } : {}), completed };
+}
+
 // Każdy etap zapisujemy przed mutacją dokumentów. Id rany oraz znacznik
 // na pancerzu pozwalają wznowić zapis po przerwaniu bez podwójnych obrażeń.
 export async function resolveMeleeDamageHit(hit, actor, persist) {
   if (hit.completed) return true;
   const save = async changes => { hit = { ...hit, ...changes }; await persist(hit); };
   if (!hit.spec) {
-    const codes = ["D_D","D_L","D_C","D_K","S_D","S_L","S_C","S_K"];
+    const codes = DAMAGE_CODES;
     const locationField = hit.locationDice?.length
       ? `<div class="form-group"><label for="melee-hit-location">Kość lokacji — wybiera atakujący</label>
           <select id="melee-hit-location" name="naturalResult">${hit.locationDice.map(die => `<option value="${die.natural}">Kość ${die.index + 1}: ${die.natural} — ${HIT_LOCATION_LABELS[getHitLocation(die.natural)] ?? "brak lokacji"}</option>`).join("")}</select></div>`

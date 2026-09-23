@@ -7,7 +7,8 @@ import { calculateInitiativeResult } from "./initiative-calculation.mjs";
 import { MELEE_DUELS_FLAG, trackedDuels, findTrackedDuel, assertTrackerStart, interruptRangedShotsForMelee,
   assertTrackerExchange, assertTrackerNextRound, assertTrackerParticipants } from "./melee-tracker.mjs";
 import { advanceSegmentTurn } from "./segments.mjs";
-import { createMeleeDamageHits, resolveMeleeDamageHit, meleeDamageProfile } from "./melee-damage.mjs";
+import { createMeleeDamageHits, resolveMeleeDamageHit, meleeDamageProfile,
+  meleeDamageChoicesHtml, validateMeleeDamageHitUpdate } from "./melee-damage.mjs";
 import { calculateWoundPenaltyPercent, calculateDifficultyIndexFromPercentage, calculateFinalDifficultyIndex,
   DIFFICULTY_MODIFIERS, DIFFICULTY_LABELS, DIFFICULTY_STARTING_PERCENTAGES } from "../rolls/roll-helpers.mjs";
 import { calculateDifficultyIndexBeforeCriticalResults, applySkillToDieResults,
@@ -283,8 +284,10 @@ export async function handleMeleeRequest(payload) {
     const combat = game.combats?.get?.(payload.combatId) ?? game.combat;
     const duels = trackedDuels(combat);
     const duel = duels.find(entry => entry.hostId === payload.hostId && !entry.ended);
+    const damageRequest = payload.action === "updateDamageHit";
     if (!user?.active || !combat?.started || combat.id !== payload.combatId || !duel?.state
-      || duel.state.round !== payload.round || duel.state.segment !== payload.segment || duel.state.segment > 3) {
+      || duel.state.round !== payload.round || duel.state.segment !== payload.segment
+      || (!damageRequest && duel.state.segment > 3)) {
       throw new Error("Stan pojedynku zmienił się. Otwórz panel ponownie.");
     }
     const actor = [...combat.combatants].find(entry => entry.actor?.id === payload.actorId)?.actor;
@@ -294,7 +297,13 @@ export async function handleMeleeRequest(payload) {
     const fighter = duel.state.fighters.find(entry => entry.id === actor.id);
     if (!fighter) throw new Error("Postać nie uczestniczy w pojedynku.");
     let updated;
-    if (payload.action === "selectDice") {
+    if (payload.action === "updateDamageHit") {
+      const currentHit = duel.damageHits?.find(hit => hit.id === payload.hit?.id && !hit.completed);
+      if (!currentHit || currentHit.targetId !== actor.id) throw new Error("Nie znaleziono obrażeń tej postaci do rozliczenia.");
+      const nextHit = validateMeleeDamageHitUpdate(currentHit, payload.hit, actor);
+      updated = { ...duel, damageHits: duel.damageHits.map(hit => hit.id === currentHit.id
+        ? { ...nextHit, playerResolution: { userId: user.id, userName: user.name } } : hit) };
+    } else if (payload.action === "selectDice") {
       const dice = Array.isArray(payload.dice) ? payload.dice.map(Number) : [];
       if (!dice.length || dice.length > 4 - duel.state.segment || new Set(dice).size !== dice.length
         || dice.some(index => !Number.isInteger(index) || index < 0 || index > 2 || fighter.dice[index]?.used)) {
@@ -310,9 +319,12 @@ export async function handleMeleeRequest(payload) {
     } else throw new Error("Nieznana decyzja gracza.");
     await combat.setFlag("neuroshima", MELEE_DUELS_FLAG,
       [...duels.filter(entry => entry.hostId !== duel.hostId), updated]);
-    ui.notifications.info(user.name + (payload.action === "selectDice"
-      ? " zapisał wybór kości. Kliknij „Odśwież decyzje”." : " wydał punkty. Kliknij „Odśwież decyzje”."));
-    await replyMelee(payload, true, "Decyzja została zapisana.");
+    const message = payload.action === "selectDice" ? " zapisał wybór kości. Kliknij „Odśwież decyzje”."
+      : payload.action === "spendPoints" ? " wydał punkty. Kliknij „Odśwież decyzje”."
+      : payload.hit?.completed ? " rozliczył otrzymane obrażenia." : " wykonuje rozliczenie otrzymanych obrażeń.";
+    ui.notifications.info(user.name + message);
+    await replyMelee(payload, true, payload.action === "updateDamageHit"
+      ? "Etap obrażeń został zapisany." : "Decyzja została zapisana.");
   } catch (error) { await replyMelee(payload, false, error.message); }
 }
 
@@ -323,6 +335,11 @@ export function initializeMeleePlayerSocket() {
     if (payload?.type === "meleeResponse" && payload.targetUserId === game.user.id) {
       meleePending.get(payload.requestId)?.(payload);
       meleePending.delete(payload.requestId);
+    } else if (payload?.type === "meleeDamageReady" && !game.user.isGM) {
+      const combat = game.combats?.get?.(payload.combatId) ?? game.combat;
+      const actor = [...(combat?.combatants ?? [])].find(entry => entry.actor?.id === payload.targetId)?.actor
+        ?? game.actors.get(payload.targetId);
+      if (actor?.isOwner) ui.notifications.info(`${actor.name} otrzymuje trafienie. Otwórz „Decyzje pojedynku”, aby rozliczyć obrażenia.`);
     } else void handleMeleeRequest(payload);
   });
 }
@@ -346,9 +363,20 @@ export async function openMeleePlayerPanel(actor) {
   while (true) {
     const combat = game.combat;
     const duel = findTrackedDuel(combat, actor.id);
-    if (!combat?.started || !duel?.state || duel.state.segment > 3) {
+    if (!combat?.started || !duel?.state) {
       return ui.notifications.info("Brak aktywnej decyzji w pojedynku.");
     }
+    const pendingDamage = duel.damageHits?.find(hit => !hit.completed && hit.targetId === actor.id);
+    if (pendingDamage) {
+      const finished = await resolveMeleeDamageHit(pendingDamage, actor, async hit => {
+        const response = await requestMelee({ action: "updateDamageHit", hit, combatId: combat.id,
+          hostId: duel.hostId, actorId: actor.id, round: duel.state.round, segment: duel.state.segment });
+        if (!response.ok) throw new Error(response.message);
+      });
+      if (finished) ui.notifications.info("Obrażenia zostały rozliczone i zapisane.");
+      return;
+    }
+    if (duel.state.segment > 3) return ui.notifications.info("Brak aktywnej decyzji w pojedynku.");
     const { state, configurations } = duel;
     const actors = configurations.map(entry => duelActor(entry.id, combat));
     const profiles = configurations.map((entry, index) =>
@@ -495,7 +523,31 @@ export async function openMeleeDuel(host) {
       if (actors.some(actor => !actor)) throw new Error("Brakuje uczestnika. Przywróć go przed wznowieniem pojedynku.");
       const pending = duel.damageHits?.find(hit => !hit.completed);
       if (pending) {
-        const finished = await resolveMeleeDamageHit(pending, actors.find(actor => actor.id === pending.targetId), async hit => {
+        const targetActor = actors.find(actor => actor.id === pending.targetId);
+        const activePlayerOwner = targetActor?.hasPlayerOwner && [...game.users].some(user => user.active && !user.isGM
+          && targetActor.testUserPermission?.(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER));
+        if (activePlayerOwner) {
+          const damageAction = await foundry.applications.api.DialogV2.wait({
+            window: { title: `Oczekujące obrażenia — ${targetActor.name}` },
+            position: { width: 600 }, rejectClose: false, modal: false,
+            content: `<p><strong>${escape(targetActor.name)}</strong> może samodzielnie rozliczyć otrzymane trafienie z panelu „Decyzje pojedynku”.</p>
+              ${meleeDamageChoicesHtml(pending, targetActor)}
+              ${pending.playerResolution ? `<p>Rozlicza gracz: <strong>${escape(pending.playerResolution.userName)}</strong>.</p>` : "<p>Oczekiwanie na decyzję gracza.</p>"}`,
+            buttons: [
+              { action: "refresh", label: "Odśwież", default: true, callback: () => ({ action: "refresh" }) },
+              { action: "gm", label: "Rozlicz jako MG", callback: () => ({ action: "gm" }) },
+              { action: "close", label: "Zamknij", callback: () => ({ action: "close" }) }
+            ]
+          });
+          if (!damageAction || damageAction.action === "close") break;
+          if (damageAction.action === "refresh") {
+            duel = read();
+            snapshot = JSON.stringify(duel);
+            continue;
+          }
+          if (damageAction.action !== "gm") break;
+        }
+        const finished = await resolveMeleeDamageHit(pending, targetActor, async hit => {
           const updated = { ...duel, damageHits: duel.damageHits.map(entry => entry.id === hit.id ? hit : entry) };
           await save(updated);
           duel = updated;
@@ -643,9 +695,12 @@ export async function openMeleeDuel(host) {
           const result = resolveMeleeExchange(state, { attackDice,
             defenseDice, attackThreshold: profiles[attackerIndex].attack,
             defenseThreshold: defenderFighter.berserk ? profiles[defenderIndex].attack : profiles[defenderIndex].defense });
+          const newDamageHits = createMeleeDamageHits(state, result.exchange, configurations, actors);
           duel = { ...duel, playerSelections: {}, state: result.state,
-            damageHits: [...(duel.damageHits ?? []), ...createMeleeDamageHits(state, result.exchange, configurations, actors)] };
+            damageHits: [...(duel.damageHits ?? []), ...newDamageHits] };
           await save(duel);
+          for (const hit of newDamageHits) game.socket?.emit?.(MELEE_SOCKET,
+            { type: "meleeDamageReady", combatId: combat?.id, hostId, targetId: hit.targetId, hitId: hit.id });
           const exchange = result.exchange;
           selectedDice = {};
           await foundry.documents.ChatMessage.create({ content: `<h3>Pojedynek wręcz — tura ${state.round}, segment ${state.segment}</h3>
