@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { openMeleeDuel, bindMeleePointLimit, bindMeleeDiceSelection, rollMeleeBerserkMorale } from "../scripts/combat/melee-interface.mjs";
-import { findTrackedDuel, meleeTrackerAction } from "../scripts/combat/melee-tracker.mjs";
+import { openMeleeDuel, openMeleePlayerPanel, handleMeleeRequest, bindMeleePointLimit, bindMeleeDiceSelection, rollMeleeBerserkMorale } from "../scripts/combat/melee-interface.mjs";
+import { trackedDuels, findTrackedDuel, meleeTrackerAction } from "../scripts/combat/melee-tracker.mjs";
 import { advanceSegmentTurn } from "../scripts/combat/segments.mjs";
 
 function setup(answers, isGM = true, diceSequence = []) {
@@ -14,7 +14,18 @@ function setup(answers, isGM = true, diceSequence = []) {
   const host = actor("a"), opponent = actor("b");
   const actors = [host, opponent];
   actors.get = id => actors.find(entry => entry.id === id);
-  globalThis.game = { actors, user: { isGM: isGM, id: "gm" } };
+  const gm = { id: "gm", name: "MG", isGM: true, active: true };
+  const player = { id: "player", name: "Tester", isGM: false, active: true };
+  const users = [gm, player];
+  users.get = id => users.find(entry => entry.id === id);
+  for (const current of actors) {
+    current.isOwner = true;
+    current.testUserPermission = user => user.isGM || (user.id === "player" && current.id === "b");
+  }
+  globalThis.CONST = { DOCUMENT_OWNERSHIP_LEVELS: { OWNER: 3 } };
+  globalThis.game = { actors, user: isGM ? gm : player, users,
+    combats: { get: id => game.combat?.id === id ? game.combat : null },
+    socket: { emit: () => {}, on: () => {} } };
   globalThis.ui = { notifications: { warn: message => warnings.push(message), info: message => infos.push(message) } };
   globalThis.foundry = { utils: { escapeHTML: value => String(value) }, applications: { api: { DialogV2: {
     wait: async options => {
@@ -355,7 +366,7 @@ function attachCombat() {
   const participants = game.actors.map(actor => ({ id: actor.id, actor,
     getFlag: (scope, key) => key === "segmentAction" ? segmentActions[actor.id] ?? null : null,
     async setFlag(scope, key, value) { if (key === "segmentAction") segmentActions[actor.id] = structuredClone(value); } }));
-  const combat = { started: true, round: 1, turn: 0, combatants: participants, turns: participants,
+  const combat = { id: "combat", started: true, round: 1, turn: 0, combatants: participants, turns: participants,
     get combatant() { return participants[this.turn]; },
     getFlag: (scope, key) => flags[key],
     async setFlag(scope, key, value) { flags[key] = structuredClone(value); },
@@ -372,6 +383,65 @@ function attachCombat() {
   game.combat = combat;
   return combat;
 }
+
+test("Gracz widzi jawne kości i może zapisać wybór oraz wydać własne punkty", async () => {
+  const answers = [...start];
+  const environment = setup(answers);
+  const combat = attachCombat();
+  await openMeleeDuel(environment.host);
+  game.user = game.users.get("player");
+  answers.push({ action: "close" });
+  await openMeleePlayerPanel(game.actors.get("b"));
+  const panel = environment.dialogs.find(dialog => dialog.window.title.startsWith("Decyzje pojedynku"));
+  assert.ok(panel);
+  assert.match(panel.content, /Kość 1: 3 → 3 — sukces/);
+  assert.match(panel.content, /Punkty Umiejętności: <strong>2\/2/);
+  assert.ok(panel.buttons.some(button => button.action === "select"));
+  assert.ok(panel.buttons.some(button => button.action === "points"));
+  assert.match(panel.content, /Wybór przeciwnika:<\/strong> jeszcze nie zapisany/);
+
+  let duel = findTrackedDuel(combat, "b");
+  await combat.setFlag("neuroshima", "meleeDuels", trackedDuels(combat).map(entry => entry.hostId === duel.hostId
+    ? { ...entry, playerSelections: { a: { round: entry.state.round, segment: entry.state.segment, dice: [0, 2] } } }
+    : entry));
+  answers.push({ action: "close" });
+  await openMeleePlayerPanel(game.actors.get("b"));
+  const refreshedPanel = environment.dialogs.filter(dialog => dialog.window.title.startsWith("Decyzje pojedynku")).at(-1);
+  assert.match(refreshedPanel.content, /Wybór przeciwnika:<\/strong> 2 kości/);
+  assert.doesNotMatch(refreshedPanel.content, /Wybór przeciwnika:[\s\S]*kości 1, 3/);
+
+  game.user = game.users.get("gm");
+  duel = findTrackedDuel(combat, "b");
+  const base = { type: "meleeRequest", requestId: "request", userId: "player",
+    combatId: combat.id, hostId: duel.hostId, actorId: "b",
+    round: duel.state.round, segment: duel.state.segment };
+  await handleMeleeRequest({ ...base, action: "selectDice", dice: [0, 1] });
+  duel = findTrackedDuel(combat, "b");
+  assert.deepEqual(duel.playerSelections.b.dice, [0, 1]);
+  await handleMeleeRequest({ ...base, action: "spendPoints", targetId: "a", dieIndex: 0, points: 1 });
+  duel = findTrackedDuel(combat, "b");
+  assert.equal(duel.state.fighters.find(fighter => fighter.id === "b").spent, 1);
+  assert.equal(duel.state.fighters.find(fighter => fighter.id === "a").dice[0].value, 4);
+  assert.deepEqual(duel.playerSelections, {});
+});
+
+test("Albert może rozpocząć pojedynek po wcześniejszym Pasie Ulricha w tym samym segmencie", async () => {
+  const answers = [{ opponent: "a" },
+    { weapon0: "", weapon1: "", skill0: "bijatyka", skill1: "bijatyka", initiative: "b" },
+    { maneuver0: "standard", maneuver1: "standard", tempo0: "0" }];
+  const environment = setup(answers);
+  const combat = attachCombat();
+  combat.segmentActions.a = { name: "Pas", actionCode: "pass", duration: 1,
+    startedRound: 1, startedSegment: 1, startedAtTick: 1, endsAtTick: 1 };
+  combat.turn = 1;
+  await openMeleeDuel(game.actors.get("b"));
+  assert.deepEqual(environment.warnings, []);
+  const duel = findTrackedDuel(combat, "b");
+  assert.ok(duel);
+  assert.equal(duel.trackerStartSegment, 1);
+  assert.equal(duel.state.segment, 1);
+  assert.equal(environment.rolls(), 2);
+});
 
 test("Start w trzecim segmencie przerywa strzał i rozlicza jedną wymianę", async () => {
   const answers = [...start, { action: "exchange" }, { attackDie: "0", defenseDie: "0" }];

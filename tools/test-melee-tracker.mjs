@@ -34,8 +34,8 @@ function setup() {
   return { combat, flags, duel, participants, warnings, actions };
 }
 
-test("Łączenie wymaga wolnych postaci i właściwej kolejki", () => {
-  const { combat, flags, duel } = setup();
+test("Łączenie wymaga wolnych postaci i bieżącej kolejki jednej ze stron", () => {
+  const { combat, flags, duel, actions } = setup();
   assert.doesNotThrow(() => assertTrackerStart(combat, duel));
   flags.combatSegment = 2;
   assert.doesNotThrow(() => assertTrackerStart(combat, duel));
@@ -43,7 +43,11 @@ test("Łączenie wymaga wolnych postaci i właściwej kolejki", () => {
   assert.throws(() => assertTrackerStart(combat, duel), /kolejki jednej/);
   flags.combatSegment = 1;
   combat.turn = 1;
-  assert.throws(() => assertTrackerStart(combat, duel), /już działał/);
+  actions.a = { name: "Pas", actionCode: "pass", startedAtTick: 1, endsAtTick: 1 };
+  assert.doesNotThrow(() => assertTrackerStart(combat, duel));
+  actions.a = { name: "Trwająca akcja", actionCode: "custom", startedAtTick: 1, endsAtTick: 2 };
+  assert.throws(() => assertTrackerStart(combat, duel), /zadeklarowaną akcję/);
+  delete actions.a;
   combat.turn = 0;
   flags.meleeDuels = [duel];
   assert.throws(() => assertTrackerStart(combat, duel), /już uczestniczy/);

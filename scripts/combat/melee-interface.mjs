@@ -86,13 +86,16 @@ const input = (title, content, label = "Dalej") => foundry.applications.api.Dial
   window: { title }, position: { width: 650 }, content,
   ok: { label }, rejectClose: false, modal: false
 });
-async function editMeleePoints(state, actors, thresholds) {
-  const actorOptions = actors.map(actor => {
+async function editMeleePoints(state, actors, thresholds, lockedFighterId = null) {
+  const optionForActor = actor => {
     const fighter = state.fighters.find(entry => entry.id === actor.id);
     const available = fighter ? Math.max(0, fighter.skill - fighter.spent) : 0;
     return `<option value="${actor.id}">${escape(actor.name)} — ${available} pkt</option>`;
-  }).join("");
-  const initialFighter = state.fighters[0];
+  };
+  const spenderOptions = actors.filter(actor => !lockedFighterId || actor.id === lockedFighterId).map(optionForActor).join("");
+  const targetOptions = actors.map(actor => lockedFighterId
+    ? `<option value="${actor.id}">${escape(actor.name)}</option>` : optionForActor(actor)).join("");
+  const initialFighter = state.fighters.find(entry => entry.id === lockedFighterId) ?? state.fighters[0];
   const initialThreshold = thresholds[initialFighter.id];
   const diceOptions = initialFighter.dice.map((die, index) => `<option value="${index + 1}" ${die.used ? "disabled" : ""}>Kość ${index + 1}: ${die.natural} → ${die.value} — ${meleeDieSucceeds(die, initialThreshold) ? "sukces" : "porażka"} (próg ${formatMeleeThreshold(initialThreshold)})${die.used ? " — zużyta" : ""}</option>`).join("");
   return foundry.applications.api.DialogV2.wait({
@@ -100,8 +103,8 @@ async function editMeleePoints(state, actors, thresholds) {
     position: { width: 480 }, rejectClose: false, modal: false,
     render: (event, dialog) => bindMeleePointLimit(dialog.element, state.fighters, thresholds),
     content: `<p>Wybierz świadomie, kto wydaje punkty i którą kość zmienia. Własną kość obniżasz, a kość przeciwnika podwyższasz.</p>
-      <div class="form-group"><label for="melee-spender">Kto wydaje</label><select id="melee-spender" name="fighterId">${actorOptions}</select></div>
-      <div class="form-group"><label for="melee-target">Czyja kość</label><select id="melee-target" name="targetId">${actorOptions}</select></div>
+      <div class="form-group"><label for="melee-spender">Kto wydaje</label><select id="melee-spender" name="fighterId" ${lockedFighterId ? "disabled" : ""}>${spenderOptions}</select>${lockedFighterId ? `<input type="hidden" name="fighterId" value="${lockedFighterId}">` : ""}</div>
+      <div class="form-group"><label for="melee-target">Czyja kość</label><select id="melee-target" name="targetId">${targetOptions}</select></div>
       <div class="form-group"><label for="melee-die">Numer kości</label><select id="melee-die" name="die">${diceOptions}</select></div>
       <div class="form-group"><label for="melee-points">Liczba punktów</label><input id="melee-points" name="points" type="number" min="1" step="1" value="1"></div>
       <p data-point-limit></p>
@@ -261,6 +264,155 @@ async function rollOpening(configurations, opening, combat = null) {
   return { ...opening, winnerId, attempts: [...opening.attempts, results] };
 }
 
+
+const MELEE_SOCKET = "system.neuroshima";
+const meleePending = new Map();
+let meleeSocketReady = false;
+const activeMeleeGM = () => [...game.users].filter(user => user.active && user.isGM)
+  .sort((a, b) => String(a.id).localeCompare(String(b.id)))[0] ?? null;
+
+async function replyMelee(payload, ok, message) {
+  game.socket.emit(MELEE_SOCKET, { type: "meleeResponse", requestId: payload.requestId,
+    targetUserId: payload.userId, ok, message });
+}
+
+export async function handleMeleeRequest(payload) {
+  if (payload?.type !== "meleeRequest" || !game.user.isGM || activeMeleeGM()?.id !== game.user.id) return;
+  try {
+    const user = game.users.get(payload.userId);
+    const combat = game.combats?.get?.(payload.combatId) ?? game.combat;
+    const duels = trackedDuels(combat);
+    const duel = duels.find(entry => entry.hostId === payload.hostId && !entry.ended);
+    if (!user?.active || !combat?.started || combat.id !== payload.combatId || !duel?.state
+      || duel.state.round !== payload.round || duel.state.segment !== payload.segment || duel.state.segment > 3) {
+      throw new Error("Stan pojedynku zmienił się. Otwórz panel ponownie.");
+    }
+    const actor = [...combat.combatants].find(entry => entry.actor?.id === payload.actorId)?.actor;
+    if (!actor?.testUserPermission?.(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)) {
+      throw new Error("Możesz decydować tylko za własną postać.");
+    }
+    const fighter = duel.state.fighters.find(entry => entry.id === actor.id);
+    if (!fighter) throw new Error("Postać nie uczestniczy w pojedynku.");
+    let updated;
+    if (payload.action === "selectDice") {
+      const dice = Array.isArray(payload.dice) ? payload.dice.map(Number) : [];
+      if (!dice.length || dice.length > 4 - duel.state.segment || new Set(dice).size !== dice.length
+        || dice.some(index => !Number.isInteger(index) || index < 0 || index > 2 || fighter.dice[index]?.used)) {
+        throw new Error("Wybierz dostępne kości mieszczące się w pozostałych segmentach.");
+      }
+      updated = { ...duel, playerSelections: { ...(duel.playerSelections ?? {}),
+        [actor.id]: { round: duel.state.round, segment: duel.state.segment, dice } } };
+    } else if (payload.action === "spendPoints") {
+      updated = { ...duel, playerSelections: {}, state: spendMeleePoints(duel.state, {
+        fighterId: actor.id, targetId: payload.targetId,
+        dieIndex: Number(payload.dieIndex), points: Number(payload.points)
+      }) };
+    } else throw new Error("Nieznana decyzja gracza.");
+    await combat.setFlag("neuroshima", MELEE_DUELS_FLAG,
+      [...duels.filter(entry => entry.hostId !== duel.hostId), updated]);
+    ui.notifications.info(user.name + (payload.action === "selectDice"
+      ? " zapisał wybór kości. Kliknij „Odśwież decyzje”." : " wydał punkty. Kliknij „Odśwież decyzje”."));
+    await replyMelee(payload, true, "Decyzja została zapisana.");
+  } catch (error) { await replyMelee(payload, false, error.message); }
+}
+
+export function initializeMeleePlayerSocket() {
+  if (meleeSocketReady || !game.socket) return;
+  meleeSocketReady = true;
+  game.socket.on(MELEE_SOCKET, payload => {
+    if (payload?.type === "meleeResponse" && payload.targetUserId === game.user.id) {
+      meleePending.get(payload.requestId)?.(payload);
+      meleePending.delete(payload.requestId);
+    } else void handleMeleeRequest(payload);
+  });
+}
+
+function requestMelee(data) {
+  if (!activeMeleeGM()) return Promise.resolve({ ok: false, message: "Brak aktywnego MG." });
+  const requestId = foundry.utils.randomID();
+  return new Promise(resolve => {
+    const timer = setTimeout(() => {
+      meleePending.delete(requestId);
+      resolve({ ok: false, message: "MG nie potwierdził decyzji." });
+    }, 8000);
+    meleePending.set(requestId, response => { clearTimeout(timer); resolve(response); });
+    game.socket.emit(MELEE_SOCKET, { ...data, type: "meleeRequest", requestId, userId: game.user.id });
+  });
+}
+
+export async function openMeleePlayerPanel(actor) {
+  if (game.user.isGM) return openMeleeDuel(actor);
+  if (!actor?.isOwner) return ui.notifications.warn("Możesz decydować tylko za własną postać.");
+  while (true) {
+    const combat = game.combat;
+    const duel = findTrackedDuel(combat, actor.id);
+    if (!combat?.started || !duel?.state || duel.state.segment > 3) {
+      return ui.notifications.info("Brak aktywnej decyzji w pojedynku.");
+    }
+    const { state, configurations } = duel;
+    const actors = configurations.map(entry => duelActor(entry.id, combat));
+    const profiles = configurations.map((entry, index) =>
+      profile(actors[index], entry.weaponId, entry.skillKey, state.tempo ?? 0));
+    const attacker = configurations.findIndex(entry => entry.id === state.initiative);
+    const thresholds = configurations.map((entry, index) => index === attacker || state.fighters[index].berserk
+      ? profiles[index].attack + meleeManeuverBonuses(state.fighters[index]).attack
+      : profiles[index].defense + meleeManeuverBonuses(state.fighters[index]).defense);
+    const ownIndex = configurations.findIndex(entry => entry.id === actor.id);
+    const currentSelection = fighterId => {
+      const saved = duel.playerSelections?.[fighterId];
+      return saved?.round === state.round && saved?.segment === state.segment && Array.isArray(saved.dice)
+        ? saved.dice : [];
+    };
+    const selected = currentSelection(actor.id);
+    const sections = configurations.map((entry, index) => {
+      const fighter = state.fighters[index];
+      const own = index === ownIndex;
+      const role = index === attacker || fighter.berserk ? "atakuje" : "broni się";
+      const dice = describeMeleeDice(fighter, thresholds[index]).map(die => {
+        const checkbox = own ? '<input type="checkbox" name="die' + die.index + '" '
+          + (die.used ? "disabled" : "") + (selected.includes(die.index) && !die.used ? " checked" : "") + ">" : "";
+        return '<div class="form-group">' + checkbox + "<span>" + escape(die.label) + "</span></div>";
+      }).join("");
+      const points = own ? "<p>Punkty Umiejętności: <strong>" + (fighter.skill - fighter.spent)
+        + "/" + fighter.skill + "</strong></p>" : "";
+      const declaredCount = currentSelection(entry.id).length;
+      const declaration = own ? "" : declaredCount
+        ? "<p><strong>Wybór przeciwnika:</strong> " + declaredCount + " "
+          + (declaredCount === 1 ? "kość" : "kości") + ".</p>"
+        : "<p><strong>Wybór przeciwnika:</strong> jeszcze nie zapisany.</p>";
+      return '<section style="flex:1;min-width:220px;padding:12px;border:1px solid #666;border-radius:6px;"><h3>'
+        + escape(actors[index].name) + " — " + role + "</h3><p>Próg: <strong>"
+        + formatMeleeThreshold(thresholds[index]) + "</strong></p>" + points + declaration + dice + "</section>";
+    }).join("");
+    const data = await foundry.applications.api.DialogV2.wait({
+      window: { title: "Decyzje pojedynku — tura " + state.round + ", segment " + state.segment },
+      position: { width: 720 }, rejectClose: false, modal: false,
+      content: "<p>Kości są jawne. Wybierz własne kości lub wydaj własne punkty. MG rozstrzyga wymianę.</p>"
+        + '<div style="display:flex;flex-wrap:wrap;gap:12px;">' + sections + "</div>",
+      buttons: [
+        { action: "select", label: "Zapisz wybór kości", default: true,
+          callback: (event, button) => ({ action: "select", ...Object.fromEntries(new FormData(button.form)) }) },
+        { action: "points", label: "Wydaj punkty", callback: () => ({ action: "points" }) },
+        { action: "refresh", label: "Odśwież", callback: () => ({ action: "refresh" }) },
+        { action: "close", label: "Zamknij", callback: () => ({ action: "close" }) }
+      ]
+    });
+    if (!data || data.action === "close") return;
+    if (data.action === "refresh") continue;
+    let action;
+    if (data.action === "points") {
+      const points = await editMeleePoints(state, actors,
+        Object.fromEntries(state.fighters.map((fighter, index) => [fighter.id, thresholds[index]])), actor.id);
+      if (points?.action !== "spend") { ui.notifications.info("Anulowano wydawanie punktów."); continue; }
+      action = { action: "spendPoints", targetId: points.targetId,
+        dieIndex: Number(points.die) - 1, points: Number(points.points) };
+    } else action = { action: "selectDice", dice: [0, 1, 2].filter(index => checked(data["die" + index])) };
+    const response = await requestMelee({ ...action, combatId: combat.id, hostId: duel.hostId,
+      actorId: actor.id, round: state.round, segment: state.segment });
+    (response.ok ? ui.notifications.info : ui.notifications.warn)(response.message);
+  }
+}
+
 // Pojedynek w Trackerze zapisuje się na Combat, samodzielny na Actorze.
 // Porównanie wersji zapobiega nadpisaniu zmian po zamknięciu starego okna.
 export async function openMeleeDuel(host) {
@@ -373,6 +525,9 @@ export async function openMeleeDuel(host) {
       const thresholdsByFighter = Object.fromEntries(state.fighters.map((fighter, index) => [fighter.id, roleThresholds[index]]));
       const summary = [attackerIndex, defenderIndex].map((index, role) => {
         const fighter = state.fighters[index];
+        const submitted = duel.playerSelections?.[fighter.id];
+        const submittedDice = submitted?.round === state.round && submitted?.segment === state.segment
+          ? submitted.dice : [];
         const build = calculateAttributeValue(actors[index], "budowa");
         const weapon = configurations[index].weaponId ? actors[index].items.get(configurations[index].weaponId) : null;
         const damageLabels = { S_D: "drobny siniak", S_L: "siniak", S_C: "ciężki siniak", S_K: "krytyczny siniak",
@@ -390,8 +545,9 @@ export async function openMeleeDuel(host) {
           <small>Przed uwzględnieniem lokacji trafienia i pancerza.</small>
           <p>Punkty Umiejętności: <strong>${fighter.skill - fighter.spent}/${fighter.skill}</strong> · ${MELEE_MANEUVER_LABELS[fighter.maneuver ?? "standard"]}${fighter.berserk ? " · <strong>Tryb Berserka</strong>" : ""}</p>
           ${describeMeleeDice(fighter, threshold).map(die => `<div class="form-group">
-            <input id="melee-${key}-${die.index}" name="${key}${die.index}" data-melee-dice="${key}" type="checkbox" ${die.used || !canAct ? "disabled" : ""} ${!die.used && checked(selectedDice[`${key}${die.index}`]) ? "checked" : ""}>
+            <input id="melee-${key}-${die.index}" name="${key}${die.index}" data-melee-dice="${key}" type="checkbox" ${die.used || !canAct ? "disabled" : ""} ${!die.used && (checked(selectedDice[`${key}${die.index}`]) || submittedDice.includes(die.index)) ? "checked" : ""}>
             <label for="melee-${key}-${die.index}">${escape(die.label)}</label></div>`).join("")}
+          ${submittedDice.length ? `<p><strong>Wybór gracza zapisany:</strong> kości ${submittedDice.map(index => index + 1).join(", ")}.</p>` : ""}
           ${fighter.chargePenalty ? `<p>Kara Szarży: −${fighter.chargePenalty}</p>` : ""}
           ${fighter.maneuver === "fullDefense" ? `<p>Przewaga obrony: ${fighter.defenseAdvantage ?? 0}/2</p>` : ""}
         </section>`;
@@ -399,6 +555,7 @@ export async function openMeleeDuel(host) {
       const actions = canAct ? [["exchange", defenderFighter.berserk ? "Rozstrzygnij wymianę" : "Rozstrzygnij cios"], ["points", "Wydaj punkty"]]
         : state.segment > 3 && nextRoundReady ? [["next", "Nowa tura"]] : [["wait", "Zamknij"]];
       if (canAttemptBerserk) actions.push(["berserk", "Test Morale — Berserk"]);
+      if (canAct) actions.push(["refresh", "Odśwież decyzje"]);
       if (canAdvance) actions.push(["tracker", "Dalej w Trackerze"]);
       actions.push(["end", "Zakończ pojedynek"]);
       const lastExchange = state.history.filter(entry => entry.type === "exchange").at(-1);
@@ -424,6 +581,12 @@ export async function openMeleeDuel(host) {
           : { action, label, callback: (event, button) => ({ ...Object.fromEntries(new FormData(button.form)), action }) })
       });
       if (!data) break;
+      if (data.action === "refresh") {
+        duel = read();
+        snapshot = JSON.stringify(duel);
+        selectedDice = {};
+        continue;
+      }
       selectedDice = data;
       try {
         if (clock() !== clockSnapshot) throw new Error("Tracker zmienił się podczas wyboru. Otwórz panel ponownie.");
@@ -438,7 +601,7 @@ export async function openMeleeDuel(host) {
           if (confirmed) { await save(null); break; }
         } else if (data.action === "berserk" && canAttemptBerserk) {
           const result = await rollMeleeBerserkMorale(actors[defenderIndex]);
-          duel = { ...duel, state: enterMeleeBerserk(state, { fighterId: defenderFighter.id, passed: result.passed }) };
+          duel = { ...duel, playerSelections: {}, state: enterMeleeBerserk(state, { fighterId: defenderFighter.id, passed: result.passed }) };
           await save(duel);
           ui.notifications.info(result.passed
             ? `${escape(actors[defenderIndex].name)} wchodzi w Tryb Berserka.`
@@ -457,7 +620,7 @@ export async function openMeleeDuel(host) {
             ui.notifications.info("Anulowano wydawanie punktów.");
             continue;
           }
-          duel = { ...duel, state: spendMeleePoints(state, { fighterId: points.fighterId, targetId: points.targetId, dieIndex: Number(points.die) - 1, points: Number(points.points) }) };
+          duel = { ...duel, playerSelections: {}, state: spendMeleePoints(state, { fighterId: points.fighterId, targetId: points.targetId, dieIndex: Number(points.die) - 1, points: Number(points.points) }) };
           await save(duel);
           if (points.fighterId === points.targetId) {
             const fighter = duel.state.fighters.find(entry => entry.id === points.fighterId);
@@ -480,7 +643,7 @@ export async function openMeleeDuel(host) {
           const result = resolveMeleeExchange(state, { attackDice,
             defenseDice, attackThreshold: profiles[attackerIndex].attack,
             defenseThreshold: defenderFighter.berserk ? profiles[defenderIndex].attack : profiles[defenderIndex].defense });
-          duel = { ...duel, state: result.state,
+          duel = { ...duel, playerSelections: {}, state: result.state,
             damageHits: [...(duel.damageHits ?? []), ...createMeleeDamageHits(state, result.exchange, configurations, actors)] };
           await save(duel);
           const exchange = result.exchange;

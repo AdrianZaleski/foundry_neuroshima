@@ -33,5 +33,6 @@
       "armor": {},
       "effectDefinition": {}
     }
-  }
+  },
+  "socket": true
 }

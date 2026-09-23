@@ -1,7 +1,8 @@
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
 import { saveActorNickname } from "./actor-name.mjs";
 import { expandBruiseName } from "../health/injury-labels.mjs";
-import { openMeleeDuel } from "../combat/melee-interface.mjs";
+import { openMeleeDuel, openMeleePlayerPanel } from "../combat/melee-interface.mjs";
+import { findTrackedDuel } from "../combat/melee-tracker.mjs";
 import { treatInjury } from "../health/treatment-interface.mjs";
 import { healOverTime } from "../health/healing-interface.mjs";
 import { purchaseDevelopment, nextDevelopmentSession, toggleDevelopmentSessionLimit } from "../development/interface.mjs";
@@ -422,6 +423,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       rollInjury: this.#onRollInjury,
       rollInitiative: this.#onRollInitiative,
       meleeDuel: function () { return openMeleeDuel(this.actor); },
+      meleePlayerPanel: function () { return openMeleePlayerPanel(this.actor); },
       downloadCombatDiagnostics: this.#onDownloadCombatDiagnostics,
       declareSegmentAction: this.#onDeclareSegmentAction,
       passSegment: this.#onPassSegment,
@@ -583,6 +585,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.actor = this.actor;
     context.canManageDevelopmentSession = game.user.isGM;
     context.canManageMelee = game.user.isGM;
+    context.canUseMeleePlayerPanel = !game.user.isGM && this.actor.isOwner
+      && Boolean(game.combat?.started && findTrackedDuel(game.combat, this.actor.id));
     context.developmentHistory = [...(this.actor.system.development.history ?? [])].reverse();
     context.genderOptions = { "": "Nie określono", female: "Kobieta", male: "Mężczyzna", other: "Inna" };
     context.system = this.actor.system;

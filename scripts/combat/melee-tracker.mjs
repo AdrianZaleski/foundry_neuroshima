@@ -23,12 +23,8 @@ export function assertTrackerParticipants(combat, duel) {
 export function assertTrackerStart(combat, duel) {
   assertTrackerParticipants(combat, duel);
   const segment = segmentOf(combat);
-  const firstIndex = combat.turns.findIndex(participant => includesActor(duel, participant.actor?.id));
-  if (segment === 1 && combat.turn > firstIndex) {
-    throw new Error("Uczestnik już działał w tym segmencie. Rozpocznij pojedynek w jego bieżącej kolejce albo w kolejnej rundzie.");
-  }
-  if (segment > 1 && !includesActor(duel, combat.combatant?.actor?.id)) {
-    throw new Error("Zwarcie w środku rundy rozpocznij podczas kolejki jednej z jego stron.");
+  if (!includesActor(duel, combat.combatant?.actor?.id)) {
+    throw new Error("Zwarcie rozpocznij podczas kolejki jednej z jego stron.");
   }
   const tick = (combat.round - 1) * 3 + segment;
   for (const entry of duel.configurations) {
@@ -38,7 +34,9 @@ export function assertTrackerStart(combat, duel) {
     const interruptedShot = action?.effectCode === "rangedShot" && !action.resolved
       && !action.interrupted && action.startedAtTick <= tick && action.endsAtTick >= tick;
     const arrivingAction = participant.id === combat.combatant?.id && action?.endsAtTick === tick;
-    if (action && action.endsAtTick >= tick && !interruptedShot && !arrivingAction) {
+    const participantIndex = combat.turns.findIndex(candidate => candidate.id === participant.id);
+    const completedEarlierThisSegment = participantIndex < combat.turn && action?.endsAtTick === tick;
+    if (action && action.endsAtTick >= tick && !interruptedShot && !arrivingAction && !completedEarlierThisSegment) {
       throw new Error("Postać ma już zadeklarowaną akcję. Dokończ ją przed pojedynkiem.");
     }
     if (meleeTrackerAction(combat, entry.id)) throw new Error("Postać zużyła już segment na wcześniejszy pojedynek.");

@@ -26,6 +26,7 @@ import {
   NeuroshimaCombat
 } from "./combat/initiative.mjs";
 import { initializeSegmentCombatInterface } from "./combat/segments.mjs";
+import { initializeMeleePlayerSocket } from "./combat/melee-interface.mjs";
 import { initializeFeatureDuplicateGuard } from "./effects/feature-duplicates.mjs";
 import {
   initializeCatalogCompendia
@@ -260,5 +261,6 @@ Hooks.on("preCreateItem", (item) => {
 // Wariant prototypowy tworzy światowe biblioteki na podstawie źródeł
 // JSON przechowywanych w repozytorium. Docelowo zastąpią je paczki systemowe.
 Hooks.once("ready", async () => {
+  initializeMeleePlayerSocket();
   await initializeCatalogCompendia();
 });

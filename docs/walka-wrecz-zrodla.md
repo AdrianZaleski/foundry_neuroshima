@@ -486,6 +486,11 @@ w razie rozbieżności nadal obowiązuje zatwierdzona wyżej hierarchia źróde�
 - Zwarcie rozpoczęte w późniejszym segmencie musi powstać podczas kolejki
   jednego z jego uczestników. Dzięki temu globalna kolejność rozstrzyga, czy
   strzelec zdążył wcześniej oddać strzał.
+- Ta sama zasada obowiązuje w segmencie 1: jeśli wcześniejszy uczestnik już
+  zakończył swoją kolejkę (również przez Pas), drugi może podczas własnej
+  kolejki wciągnąć go do zwarcia. Zakończona akcja pozostaje rozliczona; nie
+  blokuje pojedynku. Nadal blokuje go rzeczywiście trwająca akcja
+  wielosegmentowa, z wyjątkiem osobno obsługiwanego przerwania strzału.
 - Nierozstrzygnięty strzał uczestnika, który trwa w chwili rozpoczęcia zwarcia,
   zostaje oznaczony jako przerwany i rozstrzygnięty bez wystrzału. Zapis czatu
   podaje przyczynę przerwania.
@@ -533,3 +538,22 @@ Interpretacje interfejsu przyjęte tam, gdzie materiał nie podaje czasu trwania
 Nie wdrożono jeszcze odrębnej reguły zaawansowanej, w której bestia może
 wybrać przejęcie Inicjatywy zamiast zadania obrażeń. Nie wdrożono również
 automatycznego przypisywania zachowania na podstawie typu aktora lub cechy.
+
+## Decyzje graczy w pojedynku — 2026-09-20
+
+- Właściciel postaci uczestniczącej w aktywnym pojedynku otrzymuje na karcie
+  przycisk „Decyzje pojedynku”. Nie otrzymuje dostępu do panelu MG.
+- Panel gracza pokazuje jawne kości obu stron, role, progi oraz wynik
+  sukces/porażka każdej kości. Własna pozostała pula punktów jest widoczna.
+- Gracz może zapisać wybór wyłącznie własnych, dostępnych kości oraz wydać
+  wyłącznie własne punkty: poprawić własną kość albo zepsuć kość przeciwnika.
+- Decyzja jest przesyłana do jednego aktywnego MG. MG ponownie sprawdza
+  właściciela postaci, bieżącą turę, segment, dostępność kości i punktów; klient
+  gracza nie zapisuje bezpośrednio stanu walki.
+- Panel MG pokazuje zapisane wybory jako zaznaczone kości. Przycisk „Odśwież
+  decyzje” pobiera wydatki i wybory wykonane po otwarciu panelu. Ostateczne
+  rozstrzygnięcie wymiany i obrażeń nadal należy do MG.
+- Wydanie punktów, zmiana roli na Berserkera i rozstrzygnięcie wymiany kasują
+  wcześniejsze wybory, aby nie zastosować decyzji podjętej dla starego stanu.
+
+Pierwszy test ręczny wymaga dwóch klientów: MG oraz właściciela jednej z postaci.
