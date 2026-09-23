@@ -497,9 +497,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       consumeMedicine: this.#onConsumeMedicine
     },
     position: {
-      width: 520,
-      // Większa wysokość pozwala zobaczyć pierwszą grupę umiejętności bez przewijania.
-      height: 560
+      width: 900,
+      height: 760
     },
     form: {
       closeOnSubmit: false,
@@ -525,6 +524,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   // Każda zakładka ma własny, mniejszy szablon Handlebars. Zmiana układu
   // ekwipunku nie wymaga dzięki temu edycji pól umiejętności albo ran.
   static PARTS = {
+    header: {
+      template: "systems/neuroshima/templates/actor/parts/header.hbs"
+    },
     navigation: {
       template: "templates/generic/tab-navigation.hbs"
     },

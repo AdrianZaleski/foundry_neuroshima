@@ -1,28 +1,17 @@
-<section class="tab {{tabs.main.cssClass}}" data-group="sheet" data-tab="main" style="height: calc(100% - 42px); overflow-y: auto; padding-right: 6px;">
-  {{!-- Pole nie ma atrybutu name, więc zbiorczy formularz nie łączy go
-  z drugim polem ksywy z zakładki Postać. Zapis wykonuje osobna akcja. --}}
-  <header>
-    <label>
-      Ksywa
-      <input type="text" value="{{actor.name}}" data-actor-name>
-      <button type="button" data-action="saveActorName">Zapisz ksywę</button>
-    </label>
-  </header>
-
-  <button type="button" data-action="rollInitiative">
-    Rzuć inicjatywę
-  </button>
-  {{#if canManageMelee}}
-    <button type="button" data-action="meleeDuel">Pojedynek wręcz (panel MG)</button>
-  {{/if}}
-  {{#if canUseMeleePlayerPanel}}
-    <button type="button" data-action="meleePlayerPanel">Decyzje pojedynku</button>
-  {{/if}}
-
-  <button type="button" data-action="downloadCombatDiagnostics">Pobierz diagnostykę postaci i walki</button>
+<section class="tab {{tabs.main.cssClass}} ns-sheet-tab" data-group="sheet" data-tab="main">
+  <div class="ns-action-toolbar">
+    <button class="ns-primary-action" type="button" data-action="rollInitiative"><i class="fa-solid fa-dice-d20"></i> Rzuć inicjatywę</button>
+    {{#if canManageMelee}}
+      <button type="button" data-action="meleeDuel"><i class="fa-solid fa-hand-fist"></i> Pojedynek wręcz (MG)</button>
+    {{/if}}
+    {{#if canUseMeleePlayerPanel}}
+      <button class="ns-primary-action" type="button" data-action="meleePlayerPanel"><i class="fa-solid fa-hand-fist"></i> Decyzje pojedynku</button>
+    {{/if}}
+    <button class="ns-diagnostic" type="button" data-action="downloadCombatDiagnostics"><i class="fa-solid fa-file-arrow-down"></i> Diagnostyka</button>
+  </div>
 
   {{#if combatStatus.inCombat}}
-    <section>
+    <section class="ns-panel ns-combat-panel">
       <h2>Walka</h2>
       {{#if combatStatus.started}}
         <p><strong>Runda {{combatStatus.round}} — segment {{combatStatus.segment}} z 3</strong></p>
@@ -93,7 +82,11 @@
     </section>
   {{/if}}
 
-  <h2>Współczynniki</h2>
+  <section class="ns-panel">
+    <div class="ns-section-heading">
+      <h2>Współczynniki</h2>
+      <small>Wartość bazowa + modyfikatory</small>
+    </div>
 
   {{!-- Każdy przycisk przekazuje do JavaScriptu klucz właściwego współczynnika. --}}
   <div class="attributes">
@@ -152,8 +145,10 @@
     <output>Wartość końcowa: {{attributeFinalValues.budowa}}</output>
     <button type="button" data-action="rollAttribute" data-attribute="budowa">Rzuć 3k20</button>
   </div>
+  </section>
 
-  <h2>Aktywne efekty i modyfikatory</h2>
+  <details class="ns-panel ns-collapsible">
+    <summary>Aktywne efekty i modyfikatory</summary>
   <button type="button" data-action="createModifier">Dodaj efekt</button>
   <button type="button" data-action="createCatalogModifier">Dodaj z Kompendium EFFECT</button>
   <p><small>Efekty mogą zmieniać Współczynnik, poziom Umiejętności albo procentową trudność wszystkich testów.</small></p>
@@ -193,8 +188,10 @@
       {{/each}}
     </tbody>
   </table>
+  </details>
 
-  <h2>Rany i utrudnienia</h2>
+  <details class="ns-panel ns-collapsible">
+    <summary>Rany i utrudnienia — kara {{totalWoundPenaltyPercent}}%</summary>
 
   {{!-- Rany są osobnymi Itemami, dlatego ich liczba nie jest z góry ograniczona. --}}
   <div class="injuries">
@@ -243,4 +240,5 @@
       </tbody>
     </table>
   </div>
+  </details>
 </section>

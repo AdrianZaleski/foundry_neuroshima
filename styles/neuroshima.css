@@ -1,6 +1,397 @@
+.neuroshima.character-sheet {
+  --ns-bg: rgba(13, 11, 16, 0.96);
+  --ns-panel: rgba(31, 27, 35, 0.92);
+  --ns-panel-soft: rgba(44, 38, 47, 0.76);
+  --ns-border: rgba(201, 178, 142, 0.32);
+  --ns-border-strong: rgba(219, 181, 123, 0.68);
+  --ns-text: #efe5d7;
+  --ns-muted: #bcae9d;
+  --ns-accent: #d37a4e;
+  --ns-accent-bright: #f09a63;
+  --ns-danger: #b84c4c;
+  --ns-radius: 7px;
+}
+
+.neuroshima.character-sheet .window-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  color: var(--ns-text);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(129, 48, 34, 0.22), transparent 32%),
+    linear-gradient(145deg, rgba(20, 16, 22, 0.98), var(--ns-bg));
+}
+
+.neuroshima.character-sheet .ns-character-header {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ns-border-strong);
+  background: linear-gradient(90deg, rgba(87, 31, 28, 0.5), rgba(24, 20, 27, 0.88) 55%);
+}
+
+.neuroshima.character-sheet .ns-character-portrait {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: 1px solid var(--ns-border-strong);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.38);
+}
+
+.neuroshima.character-sheet .ns-character-identity {
+  min-width: 0;
+}
+
+.neuroshima.character-sheet .ns-character-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.neuroshima.character-sheet .ns-character-name {
+  height: auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  color: var(--ns-text);
+  background: transparent;
+  font-family: var(--font-h1, serif);
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+
+.neuroshima.character-sheet .ns-character-name:focus {
+  border-bottom-color: var(--ns-accent-bright);
+  box-shadow: none;
+}
+
+.neuroshima.character-sheet .ns-icon-button {
+  flex: 0 0 34px;
+  width: 34px;
+  min-width: 34px;
+  padding: 0;
+}
+
+.neuroshima.character-sheet .ns-character-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 6px;
+  color: var(--ns-muted);
+  font-size: 0.83rem;
+}
+
+.neuroshima.character-sheet .ns-character-meta i {
+  width: 14px;
+  color: var(--ns-accent-bright);
+  text-align: center;
+}
+
+.neuroshima.character-sheet .ns-character-vitals {
+  display: flex;
+  gap: 7px;
+}
+
+.neuroshima.character-sheet .ns-vital {
+  min-width: 72px;
+  padding: 7px 9px;
+  border: 1px solid var(--ns-border);
+  border-radius: var(--ns-radius);
+  text-align: center;
+  background: rgba(10, 9, 12, 0.46);
+}
+
+.neuroshima.character-sheet .ns-vital span,
+.neuroshima.character-sheet .ns-vital strong {
+  display: block;
+}
+
+.neuroshima.character-sheet .ns-vital span {
+  color: var(--ns-muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.neuroshima.character-sheet .ns-vital strong {
+  margin-top: 2px;
+  font-size: 1.05rem;
+}
+
+.neuroshima.character-sheet nav.tabs {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 4px;
+  padding: 7px 12px 0;
+  border-bottom: 1px solid var(--ns-border);
+  background: rgba(8, 7, 10, 0.66);
+}
+
+.neuroshima.character-sheet nav.tabs [data-tab] {
+  flex: 1 1 0;
+  gap: 7px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  color: var(--ns-muted);
+  text-align: center;
+}
+
+.neuroshima.character-sheet nav.tabs [data-tab]:hover {
+  color: var(--ns-text);
+  background: rgba(211, 122, 78, 0.12);
+}
+
+.neuroshima.character-sheet nav.tabs [data-tab].active {
+  color: var(--ns-text);
+  border-color: var(--ns-border);
+  background: var(--ns-panel);
+  box-shadow: inset 0 2px 0 var(--ns-accent);
+}
+
+.neuroshima.character-sheet .ns-sheet-tab {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto !important;
+  overflow-y: auto !important;
+  padding: 14px 16px 20px !important;
+  scrollbar-gutter: stable;
+}
+
+.neuroshima.character-sheet .ns-action-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.neuroshima.character-sheet .ns-action-toolbar .ns-diagnostic {
+  margin-left: auto;
+}
+
+.neuroshima.character-sheet button {
+  width: auto;
+  min-height: 32px;
+  margin: 0;
+  padding: 5px 10px;
+  border: 1px solid var(--ns-border);
+  border-radius: 5px;
+  color: var(--ns-text);
+  background: linear-gradient(rgba(62, 53, 64, 0.92), rgba(35, 30, 39, 0.92));
+}
+
+.neuroshima.character-sheet button:hover,
+.neuroshima.character-sheet button:focus {
+  border-color: var(--ns-border-strong);
+  color: #fff7eb;
+  background: linear-gradient(rgba(87, 60, 62, 0.96), rgba(48, 36, 43, 0.96));
+  box-shadow: 0 0 0 1px rgba(240, 154, 99, 0.18);
+}
+
+.neuroshima.character-sheet button[disabled] {
+  opacity: 0.45;
+}
+
+.neuroshima.character-sheet .ns-primary-action {
+  border-color: var(--ns-accent);
+  background: linear-gradient(#9c4935, #6f3028);
+}
+
+.neuroshima.character-sheet .ns-panel,
+.neuroshima.character-sheet .ns-sheet-tab > section,
+.neuroshima.character-sheet .ns-sheet-tab > article,
+.neuroshima.character-sheet .ns-sheet-tab > details {
+  margin: 0 0 12px;
+  padding: 12px;
+  border: 1px solid var(--ns-border);
+  border-radius: var(--ns-radius);
+  background: var(--ns-panel);
+  box-shadow: 0 7px 22px rgba(0, 0, 0, 0.14);
+}
+
+.neuroshima.character-sheet .ns-panel h2,
+.neuroshima.character-sheet .ns-sheet-tab > h2 {
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--ns-border);
+  color: #f3ddc3;
+  font-size: 1.18rem;
+}
+
+.neuroshima.character-sheet .ns-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.neuroshima.character-sheet .ns-section-heading h2 {
+  flex: 1;
+  margin: 0;
+}
+
+.neuroshima.character-sheet .ns-section-heading small,
+.neuroshima.character-sheet small {
+  color: var(--ns-muted);
+}
+
+.neuroshima.character-sheet .ns-collapsible > summary,
+.neuroshima.character-sheet details > summary {
+  cursor: pointer;
+  color: #f3ddc3;
+  font-weight: 700;
+}
+
+.neuroshima.character-sheet .ns-collapsible > summary {
+  font-size: 1.05rem;
+}
+
+.neuroshima.character-sheet .ns-collapsible[open] > summary {
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--ns-border);
+}
+
+.neuroshima.character-sheet .ns-combat-panel {
+  border-color: rgba(211, 122, 78, 0.58);
+  background: linear-gradient(135deg, rgba(74, 35, 37, 0.72), var(--ns-panel));
+}
+
+.neuroshima.character-sheet .attributes {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.4fr) minmax(125px, 0.8fr) minmax(130px, 0.8fr) 110px;
+  gap: 8px 10px;
+  align-items: end;
+}
+
+.neuroshima.character-sheet .attributes label,
+.neuroshima.character-sheet .skills label,
+.neuroshima.character-sheet .ns-sheet-tab > label {
+  display: grid;
+  gap: 4px;
+  color: var(--ns-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.neuroshima.character-sheet input,
+.neuroshima.character-sheet select,
+.neuroshima.character-sheet textarea {
+  border: 1px solid rgba(201, 178, 142, 0.28);
+  border-radius: 4px;
+  color: var(--ns-text);
+  background: rgba(8, 7, 10, 0.58);
+}
+
+.neuroshima.character-sheet input:focus,
+.neuroshima.character-sheet select:focus,
+.neuroshima.character-sheet textarea:focus {
+  border-color: var(--ns-accent-bright);
+  box-shadow: 0 0 0 1px rgba(240, 154, 99, 0.22);
+}
+
+.neuroshima.character-sheet output {
+  min-height: 32px;
+  padding: 7px 9px;
+  border: 1px solid rgba(201, 178, 142, 0.18);
+  border-radius: 4px;
+  color: #f2d8bb;
+  background: rgba(8, 7, 10, 0.36);
+}
+
+.neuroshima.character-sheet .skills {
+  display: grid;
+  grid-template-columns: minmax(210px, 1fr) minmax(150px, 0.7fr) 145px;
+  gap: 7px 10px;
+  align-items: end;
+  margin-bottom: 14px;
+}
+
+.neuroshima.character-sheet .skills > h3 {
+  grid-column: 1 / -1;
+  margin: 10px 0 2px;
+  padding: 5px 8px;
+  border-left: 3px solid var(--ns-accent);
+  color: #ecd6bd;
+  background: rgba(211, 122, 78, 0.08);
+}
+
+.neuroshima.character-sheet table {
+  width: 100%;
+  margin: 8px 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--ns-border);
+  border-radius: 5px;
+  overflow: hidden;
+  font-size: 0.82rem;
+}
+
+.neuroshima.character-sheet table thead {
+  position: sticky;
+  top: -14px;
+  z-index: 2;
+}
+
+.neuroshima.character-sheet table th {
+  padding: 7px 8px;
+  color: #ead3b9;
+  background: rgba(75, 57, 58, 0.96);
+  text-align: left;
+}
+
+.neuroshima.character-sheet table td {
+  padding: 7px 8px;
+  border-top: 1px solid rgba(201, 178, 142, 0.13);
+  vertical-align: top;
+}
+
+.neuroshima.character-sheet table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.neuroshima.character-sheet table tbody tr:hover {
+  background: rgba(211, 122, 78, 0.07);
+}
+
+.neuroshima.character-sheet table td:last-child {
+  min-width: 110px;
+}
+
+.neuroshima.character-sheet table td button {
+  min-height: 27px;
+  margin: 2px;
+  padding: 3px 7px;
+  font-size: 0.75rem;
+}
+
+.neuroshima.character-sheet article,
+.neuroshima.character-sheet .disease {
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid rgba(201, 178, 142, 0.2);
+  border-radius: 5px;
+  background: var(--ns-panel-soft);
+}
+
+.neuroshima.character-sheet textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
 .neuroshima.character-sheet .specialization-skill {
-  background: rgba(125, 84, 32, 0.16);
-  box-shadow: inset 3px 0 0 #8a5b20;
+  background: rgba(211, 122, 78, 0.12);
+  box-shadow: inset 3px 0 0 var(--ns-accent);
 }
 
 .neuroshima.character-sheet label.specialization-skill,
@@ -9,7 +400,94 @@
 }
 
 .neuroshima.character-sheet .specialization-skill-heading {
-  background: rgba(125, 84, 32, 0.25);
-  border-left: 3px solid #8a5b20;
-  padding: 3px 6px;
+  background: rgba(211, 122, 78, 0.18);
+  border-left: 3px solid var(--ns-accent-bright);
+  padding: 5px 8px;
+}
+
+@media (max-width: 760px) {
+  .neuroshima.character-sheet .ns-character-header {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .neuroshima.character-sheet .ns-character-portrait {
+    width: 48px;
+    height: 48px;
+  }
+
+  .neuroshima.character-sheet .ns-character-vitals {
+    grid-column: 1 / -1;
+  }
+
+  .neuroshima.character-sheet .attributes,
+  .neuroshima.character-sheet .skills {
+    grid-template-columns: 1fr;
+  }
+
+  .neuroshima.character-sheet .skills > h3 {
+    grid-column: 1;
+  }
+
+  .neuroshima.character-sheet nav.tabs [data-tab] span {
+    display: none;
+  }
+}
+
+.neuroshima.character-sheet .skills,
+.neuroshima.character-sheet .armors,
+.neuroshima.character-sheet .melee-weapons,
+.neuroshima.character-sheet .weapons,
+.neuroshima.character-sheet .ammunition,
+.neuroshima.character-sheet .equipment {
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid var(--ns-border);
+  border-radius: var(--ns-radius);
+  background: var(--ns-panel);
+}
+
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="details"] > label {
+  grid-template-columns: 185px minmax(0, 1fr);
+  align-items: center;
+  margin: 7px 0;
+}
+
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="details"] > label:has(textarea) {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: stretch;
+  margin-top: 12px;
+}
+
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="details"] > h2,
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="health"] > h2,
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="inventory"] > h2,
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="skills"] > h2 {
+  margin-top: 16px;
+}
+
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="details"] > h2:first-child,
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="health"] > section:first-child,
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="inventory"] > h2:first-child,
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="skills"] > h2:first-child {
+  margin-top: 0;
+}
+
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="inventory"] > p {
+  padding: 10px 12px;
+  border: 1px solid var(--ns-border);
+  border-radius: var(--ns-radius);
+  background: var(--ns-panel);
+}
+
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="health"] > button,
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="inventory"] > button,
+.neuroshima.character-sheet .ns-sheet-tab[data-tab="details"] > button {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 760px) {
+  .neuroshima.character-sheet .ns-sheet-tab[data-tab="details"] > label {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,0 +1,27 @@
+<header class="ns-character-header">
+  <img class="ns-character-portrait" src="{{actor.img}}" alt="{{actor.name}}">
+  <div class="ns-character-identity">
+    <div class="ns-character-name-row">
+      <input class="ns-character-name" type="text" value="{{actor.name}}" data-actor-name aria-label="Ksywa postaci">
+      <button class="ns-icon-button" type="button" data-action="saveActorName" title="Zapisz ksywę" aria-label="Zapisz ksywę">
+        <i class="fa-solid fa-floppy-disk"></i>
+      </button>
+    </div>
+    <div class="ns-character-meta">
+      <span><i class="fa-solid fa-location-dot"></i>
+        {{#if selectedOrigin}}{{selectedOrigin.name}}{{else}}{{#if system.background.origin}}{{system.background.origin}}{{else}}Brak pochodzenia{{/if}}{{/if}}
+      </span>
+      <span><i class="fa-solid fa-briefcase"></i>
+        {{#if selectedProfession}}{{selectedProfession.name}}{{else}}{{#if system.background.profession}}{{system.background.profession}}{{else}}Brak profesji{{/if}}{{/if}}
+      </span>
+      <span><i class="fa-solid fa-crosshairs"></i>
+        {{#if selectedSpecialization}}{{selectedSpecialization.name}}{{else}}{{#if system.background.specialization}}{{system.background.specialization}}{{else}}Brak specjalizacji{{/if}}{{/if}}
+      </span>
+    </div>
+  </div>
+  <div class="ns-character-vitals">
+    <div class="ns-vital"><span>PD</span><strong>{{system.development.experiencePoints}}</strong></div>
+    <div class="ns-vital"><span>Kara ran</span><strong>{{totalWoundPenaltyPercent}}%</strong></div>
+    <div class="ns-vital"><span>Obrażenia</span><strong>{{totalDamageValue}}</strong></div>
+  </div>
+</header>
