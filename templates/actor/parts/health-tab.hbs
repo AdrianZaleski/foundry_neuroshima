@@ -9,26 +9,28 @@
         <p>{{this.injuryTypeName}}, kara {{this.penaltyPercent}}%.</p>
         {{#if this.stabilized}}<p>Rana krytyczna opatrzona. Pozostałe obrażenia i stan pacjenta ocenia MG.</p>{{/if}}
         <button type="button" data-action="treatInjury" data-item-id="{{this.id}}">Opatrz ranę</button>
-        <details><summary>Historia zabiegów</summary>
+        <button type="button" data-action="deleteInjury" data-item-id="{{this.id}}">Usuń ranę</button>
+        <details data-sync="health-tab-1-{{this.id}}"><summary>Historia zabiegów</summary>
           {{#each this.treatmentHistory}}<p>{{this.timestamp}} — {{this.healer}}, {{this.method}}: {{#if this.passed}}sukces{{else}}porażka{{/if}}. Kara {{this.before}}% → {{this.after}}%. Czas: {{this.duration}}.</p>
           {{else}}<p>Brak zabiegów.</p>{{/each}}
         </details>
-        <details><summary>Historia gojenia</summary>
+        <details data-sync="health-tab-2-{{this.id}}"><summary>Historia gojenia</summary>
           {{#each this.healingHistory}}<p>{{this.timestamp}} — {{this.days}} dni, {{this.mode}}: {{this.before}}% → {{this.after}}%.</p>{{else}}<p>Brak rozliczonego gojenia.</p>{{/each}}
         </details>
       </article>
     {{else}}<p>Brak ran do opatrzenia.</p>{{/each}}
     {{#if healedInjuryItems.length}}
-      <details>
+      <details data-sync="health-tab-3-{{this.id}}">
         <summary>Historia — obrażenia bez kary ({{healedInjuryItems.length}})</summary>
         {{#each healedInjuryItems}}
           <article><h3>{{this.name}} — {{this.locationName}}</h3>
             <p>Kara 0%.</p>
-            <details><summary>Historia zabiegów</summary>
+            <button type="button" data-action="deleteInjury" data-item-id="{{this.id}}">Usuń ranę</button>
+            <details data-sync="health-tab-4-{{this.id}}"><summary>Historia zabiegów</summary>
               {{#each this.treatmentHistory}}<p>{{this.timestamp}} — {{this.healer}}, {{this.method}}: kara {{this.before}}% → {{this.after}}%.</p>
               {{else}}<p>Brak zabiegów.</p>{{/each}}
             </details>
-            <details><summary>Historia gojenia</summary>
+            <details data-sync="health-tab-5-{{this.id}}"><summary>Historia gojenia</summary>
               {{#each this.healingHistory}}<p>{{this.timestamp}} — {{this.days}} dni, {{this.mode}}: {{this.before}}% → {{this.after}}%.</p>
               {{else}}<p>Brak rozliczonego gojenia.</p>{{/each}}
             </details>
@@ -67,7 +69,7 @@
         <p><strong>Leki:</strong> brak konkretnych pozycji w katalogu.</p>
       {{/if}}
       {{#if this.medicationDescription}}
-        <details>
+        <details data-sync="health-tab-6-{{this.id}}">
           <summary>Leczenie</summary>
           <p>{{this.medicationDescription}}</p>
         </details>
@@ -87,7 +89,7 @@
   <h2>Leki</h2>
   <button type="button" data-action="createMedicine">Dodaj lek</button>
 
-  <table>
+  <div class="ns-table-scroll"><table>
     <thead>
       <tr>
         <th>Lek</th>
@@ -121,5 +123,5 @@
         <tr><td colspan="5">Postać nie posiada jeszcze żadnych leków.</td></tr>
       {{/each}}
     </tbody>
-  </table>
+  </table></div>
 </section>

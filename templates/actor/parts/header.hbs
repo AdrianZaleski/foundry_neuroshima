@@ -1,27 +1,36 @@
 <header class="ns-character-header">
   <img class="ns-character-portrait" src="{{actor.img}}" alt="{{actor.name}}">
   <div class="ns-character-identity">
+    <div class="ns-dossier-title"><strong>NEUROSHIMA</strong><span>KARTA POSTACI</span></div>
+    <span class="ns-field-caption">Ksywa</span>
     <div class="ns-character-name-row">
       <input class="ns-character-name" type="text" value="{{actor.name}}" data-actor-name aria-label="Ksywa postaci">
       <button class="ns-icon-button" type="button" data-action="saveActorName" title="Zapisz ksywę" aria-label="Zapisz ksywę">
         <i class="fa-solid fa-floppy-disk"></i>
       </button>
     </div>
+    <div class="ns-identity-line"><span>Imię: <strong>{{system.identity.firstName}}</strong></span><span>Nazwisko: <strong>{{system.identity.lastName}}</strong></span></div>
     <div class="ns-character-meta">
-      <span><i class="fa-solid fa-location-dot"></i>
+      <span><small>Pochodzenie</small>
         {{#if selectedOrigin}}{{selectedOrigin.name}}{{else}}{{#if system.background.origin}}{{system.background.origin}}{{else}}Brak pochodzenia{{/if}}{{/if}}
       </span>
-      <span><i class="fa-solid fa-briefcase"></i>
+      <span><small>Profesja</small>
         {{#if selectedProfession}}{{selectedProfession.name}}{{else}}{{#if system.background.profession}}{{system.background.profession}}{{else}}Brak profesji{{/if}}{{/if}}
       </span>
-      <span><i class="fa-solid fa-crosshairs"></i>
+      <span><small>Specjalizacja</small>
         {{#if selectedSpecialization}}{{selectedSpecialization.name}}{{else}}{{#if system.background.specialization}}{{system.background.specialization}}{{else}}Brak specjalizacji{{/if}}{{/if}}
       </span>
     </div>
   </div>
   <div class="ns-character-vitals">
-    <div class="ns-vital"><span>PD</span><strong>{{system.development.experiencePoints}}</strong></div>
+    <label class="ns-vital ns-experience"><span>PD</span><input type="number" name="system.development.experiencePoints" value="{{system.development.experiencePoints}}" min="0" step="1" aria-label="Punkty doświadczenia"></label>
     <div class="ns-vital"><span>Kara ran</span><strong>{{totalWoundPenaltyPercent}}%</strong></div>
     <div class="ns-vital"><span>Obrażenia</span><strong>{{totalDamageValue}}</strong></div>
+  </div>
+  <div class="ns-hand-summary">
+    <strong>W dłoniach</strong>
+    {{#if heldEquipment.bothHands}}<span>Oburącz: <b>{{heldEquipment.leftName}}</b></span>
+    {{else}}<span>Lewa: <b>{{heldEquipment.leftName}}</b></span><span>Prawa: <b>{{heldEquipment.rightName}}</b></span>{{/if}}
+    <button type="button" data-action="configureHeldEquipment" title="Wybierz dobytą broń lub przedmiot">Zmień</button>
   </div>
 </header>

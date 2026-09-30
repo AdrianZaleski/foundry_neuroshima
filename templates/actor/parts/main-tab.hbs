@@ -82,77 +82,57 @@
     </section>
   {{/if}}
 
-  <section class="ns-panel">
-    <div class="ns-section-heading">
-      <h2>Współczynniki</h2>
-      <small>Wartość bazowa + modyfikatory</small>
-    </div>
+  <div class="ns-dossier-grid">
+    <section class="ns-panel ns-attributes-panel">
+      <div class="ns-section-heading"><h2>Współczynniki</h2><small>Test 3k20</small></div>
+      <table class="ns-attribute-matrix">
+        <thead><tr>
+          {{#each attributeColumns}}<th scope="col"><button type="button" class="ns-attribute-roll" data-action="rollAttribute" data-attribute="{{key}}" title="Test: {{label}}" aria-label="Test: {{label}}">{{abbreviation}}</button><span class="ns-attribute-label">{{label}}</span></th>{{/each}}
+          <th scope="col" class="ns-matrix-label">Współczynnik</th>
+        </tr></thead>
+        <tbody>
+          <tr class="ns-base-row">{{#each attributeColumns}}<td><input type="number" name="system.attributes.{{key}}.base" value="{{base}}" min="1" max="40" step="1" aria-label="{{label}} — baza"></td>{{/each}}<th scope="row">Baza</th></tr>
+          <tr class="ns-modifier-row">{{#each attributeColumns}}<td><input type="number" name="system.attributes.{{key}}.manualModifier" value="{{manualModifier}}" step="1" aria-label="{{label}} — modyfikator ręczny"></td>{{/each}}<th scope="row">Modyfikator</th></tr>
+          {{#each attributeDifficultyRows}}
+            <tr class="ns-threshold-row {{#if average}}ns-average-difficulty{{/if}}">{{#each values}}<td><button type="button" class="ns-threshold" data-action="selectAttributeLevel" data-attribute="{{key}}" data-difficulty="{{../index}}" aria-pressed="false" aria-label="Wybierz: {{label}}, {{../label}}, próg {{value}}" title="{{label}} — {{../label}}">{{value}}</button></td>{{/each}}<th scope="row">{{label}} <small>({{modifier}})</small>{{#if average}}<small class="ns-final-caption">wartość końcowa</small>{{/if}}</th></tr>
+          {{/each}}
+        </tbody>
+      </table>
+      <div class="ns-selected-test"><span data-attribute-selection-label aria-live="polite">{{#if attributeTestSelection}}{{attributeTestSelection.label}}{{else}}Wybierz próg w tabeli{{/if}}</span><button type="button" data-action="rollSelectedAttribute" {{#unless attributeTestSelection}}disabled{{/unless}}><i class="fa-solid fa-dice-d20"></i> Rzuć 3k20</button></div>
+      <p class="ns-reference-note">Zaznacz próg, a następnie rzuć kośćmi. Wybrany poziom jest bazą testu; kary i ułatwienia ustalasz w oknie rzutu.</p>
+    </section>
 
-  {{!-- Każdy przycisk przekazuje do JavaScriptu klucz właściwego współczynnika. --}}
-  <div class="attributes">
-    <label>
-      Zręczność bazowa
-      <input type="number" name="system.attributes.zrecznosc.base" value="{{system.attributes.zrecznosc.base}}" min="1" max="40" step="1">
-    </label>
-    <label>
-      Modyfikator ręczny
-      <input type="number" name="system.attributes.zrecznosc.manualModifier" value="{{system.attributes.zrecznosc.manualModifier}}" step="1">
-    </label>
-    <output>Wartość końcowa: {{attributeFinalValues.zrecznosc}}</output>
-    <button type="button" data-action="rollAttribute" data-attribute="zrecznosc">Rzuć 3k20</button>
-
-    <label>
-      Percepcja bazowa
-      <input type="number" name="system.attributes.percepcja.base" value="{{system.attributes.percepcja.base}}" min="1" max="40" step="1">
-    </label>
-    <label>
-      Modyfikator ręczny
-      <input type="number" name="system.attributes.percepcja.manualModifier" value="{{system.attributes.percepcja.manualModifier}}" step="1">
-    </label>
-    <output>Wartość końcowa: {{attributeFinalValues.percepcja}}</output>
-    <button type="button" data-action="rollAttribute" data-attribute="percepcja">Rzuć 3k20</button>
-
-    <label>
-      Charakter bazowy
-      <input type="number" name="system.attributes.charakter.base" value="{{system.attributes.charakter.base}}" min="1" max="40" step="1">
-    </label>
-    <label>
-      Modyfikator ręczny
-      <input type="number" name="system.attributes.charakter.manualModifier" value="{{system.attributes.charakter.manualModifier}}" step="1">
-    </label>
-    <output>Wartość końcowa: {{attributeFinalValues.charakter}}</output>
-    <button type="button" data-action="rollAttribute" data-attribute="charakter">Rzuć 3k20</button>
-
-    <label>
-      Spryt bazowy
-      <input type="number" name="system.attributes.spryt.base" value="{{system.attributes.spryt.base}}" min="1" max="40" step="1">
-    </label>
-    <label>
-      Modyfikator ręczny
-      <input type="number" name="system.attributes.spryt.manualModifier" value="{{system.attributes.spryt.manualModifier}}" step="1">
-    </label>
-    <output>Wartość końcowa: {{attributeFinalValues.spryt}}</output>
-    <button type="button" data-action="rollAttribute" data-attribute="spryt">Rzuć 3k20</button>
-
-    <label>
-      Budowa bazowa
-      <input type="number" name="system.attributes.budowa.base" value="{{system.attributes.budowa.base}}" min="1" max="40" step="1">
-    </label>
-    <label>
-      Modyfikator ręczny
-      <input type="number" name="system.attributes.budowa.manualModifier" value="{{system.attributes.budowa.manualModifier}}" step="1">
-    </label>
-    <output>Wartość końcowa: {{attributeFinalValues.budowa}}</output>
-    <button type="button" data-action="rollAttribute" data-attribute="budowa">Rzuć 3k20</button>
+    <section class="ns-panel ns-wounds-panel">
+      <div class="ns-section-heading"><h2>Rany i obrażenia</h2><strong class="ns-wound-total">{{totalWoundPenaltyPercent}}%</strong></div>
+      <div class="ns-wound-toolbar"><button type="button" data-action="rollInjury">Rzut na ranę</button><span>Obrażenia <strong>{{totalDamageValue}}</strong></span></div>
+      <div class="ns-body-map">
+        <figure class="ns-body-figure">
+          <img src="systems/neuroshima/assets/body-map.svg" alt="Sylwetka postaci; rany są pogrupowane według części ciała w sąsiednich polach.">
+          <figcaption>LOKACJE RAN</figcaption>
+        </figure>
+        {{#each injuryLocations}}
+          <section class="ns-body-location ns-location-{{key}} {{#if hasInjuries}}has-injuries{{/if}}" aria-label="{{label}}">
+            <div class="ns-location-heading"><h3>{{label}}</h3><button type="button" data-action="createInjury" data-location="{{key}}" title="Dodaj ranę: {{label}}" aria-label="Dodaj ranę: {{label}}">+</button></div>
+            {{#each items}}
+              <div class="ns-location-injury">
+                <button class="ns-injury-link" type="button" data-action="editInjury" data-item-id="{{id}}" title="{{name}} — {{injuryTypeName}}; obrażenia: {{damageValue}}">{{name}}</button>
+                <span>{{penaltyPercent}}%</span>
+                <div class="ns-injury-actions"><small>{{injuryTypeName}}</small><button type="button" data-action="treatInjury" data-item-id="{{id}}" aria-label="Opatrz: {{name}}">Opatrz</button><button type="button" class="ns-delete-injury" data-action="deleteInjury" data-item-id="{{id}}" aria-label="Usuń ranę: {{name}}" title="Usuń ranę całkowicie, niezależnie od jej kary">Usuń</button></div>
+              </div>
+            {{else}}<p class="ns-no-injuries">Brak ran</p>{{/each}}
+            {{#if hasInjuries}}<div class="ns-location-total">Kara lokacji <strong>{{penaltyPercent}}%</strong></div>{{/if}}
+          </section>
+        {{/each}}
+      </div>
+    </section>
   </div>
-  </section>
 
-  <details class="ns-panel ns-collapsible">
+  <details data-sync="modifiers" class="ns-panel ns-collapsible">
     <summary>Aktywne efekty i modyfikatory</summary>
   <button type="button" data-action="createModifier">Dodaj efekt</button>
   <button type="button" data-action="createCatalogModifier">Dodaj z Kompendium EFFECT</button>
   <p><small>Efekty mogą zmieniać Współczynnik, poziom Umiejętności albo procentową trudność wszystkich testów.</small></p>
-  <table>
+  <div class="ns-table-scroll"><table>
     <thead>
       <tr>
         <th>Źródło</th>
@@ -187,11 +167,11 @@
         <tr><td colspan="6">Brak zapisanych efektów.</td></tr>
       {{/each}}
     </tbody>
-  </table>
+  </table></div>
   </details>
 
-  <details class="ns-panel ns-collapsible">
-    <summary>Rany i utrudnienia — kara {{totalWoundPenaltyPercent}}%</summary>
+  <details data-sync="injury-details" class="ns-panel ns-collapsible">
+    <summary>Szczegóły ran i kara pancerza</summary>
 
   {{!-- Rany są osobnymi Itemami, dlatego ich liczba nie jest z góry ograniczona. --}}
   <div class="injuries">
@@ -207,7 +187,7 @@
     </label>
     <small>Pole zgodności ze starszymi kartami. Jest używane tylko wtedy, gdy postać nie ma założonego Itemu pancerza.</small>
 
-    <table>
+    <div class="ns-table-scroll"><table>
       <thead>
         <tr>
           <th>Rana</th>
@@ -238,7 +218,7 @@
           </tr>
         {{/each}}
       </tbody>
-    </table>
+    </table></div>
   </div>
   </details>
 </section>

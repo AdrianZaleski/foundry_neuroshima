@@ -1,4 +1,9 @@
+import { attributeSelection, displayAttributeSelection } from "./attribute-selection.mjs";
+import { prepareHeldEquipment, configureHeldEquipment } from "./held-equipment.mjs";
+import { captureFieldState, restoreFieldState } from "./sheet-view-state.mjs";
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
+import { INJURY_LOCATIONS, prepareInjuryLocations } from "./injury-layout.mjs";
+import { DIFFICULTY_LABELS, DIFFICULTY_MODIFIERS } from "../rolls/roll-helpers.mjs";
 import { saveActorNickname } from "./actor-name.mjs";
 import { expandBruiseName } from "../health/injury-labels.mjs";
 import { openMeleeDuel, openMeleePlayerPanel } from "../combat/melee-interface.mjs";
@@ -86,15 +91,7 @@ const weaponClassNames = {
   SHOTGUN: "Śrutówka"
 };
 
-const injuryLocationNames = {
-  general: "Ogólne / inny efekt",
-  head: "Głowa",
-  torso: "Tułów",
-  leftArm: "Lewa ręka",
-  rightArm: "Prawa ręka",
-  leftLeg: "Lewa noga",
-  rightLeg: "Prawa noga"
-};
+const injuryLocationNames = INJURY_LOCATIONS;
 
 const injuryTypeNames = {
   bruise: "Siniaki",
@@ -415,10 +412,14 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   // DEFAULT_OPTIONS opisuje zachowanie okna karty wspólne dla każdej postaci.
   static DEFAULT_OPTIONS = {
     classes: ["neuroshima", "character-sheet"],
+    window: { resizable: true },
     actions: {
       // Foundry wywoła tę metodę po kliknięciu elementu
       // posiadającego atrybut data-action="rollAttribute".
       rollAttribute: this.#onRollAttribute,
+      selectAttributeLevel: this.#onSelectAttributeLevel,
+      rollSelectedAttribute: this.#onRollSelectedAttribute,
+      configureHeldEquipment: function () { return configureHeldEquipment(this.actor); },
       rollSkill: this.#onRollSkill,
       rollInjury: this.#onRollInjury,
       rollInitiative: this.#onRollInitiative,
@@ -531,24 +532,40 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       template: "templates/generic/tab-navigation.hbs"
     },
     main: {
-      template: "systems/neuroshima/templates/actor/parts/main-tab.hbs"
+      template: "systems/neuroshima/templates/actor/parts/main-tab.hbs",
+      scrollable: [""]
     },
     details: {
-      template: "systems/neuroshima/templates/actor/parts/details-tab.hbs"
+      template: "systems/neuroshima/templates/actor/parts/details-tab.hbs",
+      scrollable: [""]
     },
     skills: {
-      template: "systems/neuroshima/templates/actor/parts/skills-tab.hbs"
+      template: "systems/neuroshima/templates/actor/parts/skills-tab.hbs",
+      scrollable: [""]
     },
     health: {
-      template: "systems/neuroshima/templates/actor/parts/health-tab.hbs"
+      template: "systems/neuroshima/templates/actor/parts/health-tab.hbs",
+      scrollable: [""]
     },
     inventory: {
-      template: "systems/neuroshima/templates/actor/parts/inventory-tab.hbs"
+      template: "systems/neuroshima/templates/actor/parts/inventory-tab.hbs",
+      scrollable: [""]
     }
   };
 
+  _preSyncPartState(partId, newElement, priorElement, state) {
+    super._preSyncPartState(partId, newElement, priorElement, state);
+    state.neuroshimaField = captureFieldState(priorElement);
+  }
+
+  _syncPartState(partId, newElement, priorElement, state) {
+    super._syncPartState(partId, newElement, priorElement, state);
+    restoreFieldState(newElement, state.neuroshimaField, state.scrollPositions);
+  }
+
   _onRender(context, options) {
     super._onRender(context, options);
+    displayAttributeSelection(this.element, this.attributeTestSelection);
 
     const specializationCode = this.actor.system.background.specializationSourceCode;
     const specializedSkillKeys = getSpecializedSkillKeys(specializationCode);
@@ -561,6 +578,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       const title = `Umiejętność specjalizacji: ${specializationLabel}`;
       button.classList.add("specialization-skill");
       button.title = title;
+      button.closest(".ns-skill-group")?.querySelector("h3")?.classList.add("specialization-skill-heading");
 
       // Pola jednej umiejętności znajdują się między jej przyciskiem a
       // poprzednim przyciskiem (lub nagłówkiem grupy). Obejmuje to również
@@ -585,6 +603,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
 
     // Udostępniamy szablonowi kartę Actora oraz jej dane systemowe.
     context.actor = this.actor;
+    context.heldEquipment = prepareHeldEquipment(this.actor);
+    context.attributeTestSelection = this.attributeTestSelection;
     context.canManageDevelopmentSession = game.user.isGM;
     context.canManageMelee = game.user.isGM;
     context.canUseMeleePlayerPanel = !game.user.isGM && this.actor.isOwner
@@ -604,6 +624,24 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         calculateAttributeValue(this.actor, attributeKey)
       ])
     );
+    const attributeAbbreviations = ["Zr", "Pc", "Ch", "Sp", "Bd"];
+    context.attributeColumns = Object.entries(ATTRIBUTE_LABELS).map(([key, label], index) => ({
+      key, label, abbreviation: attributeAbbreviations[index],
+      base: this.actor.system.attributes[key].base,
+      manualModifier: this.actor.system.attributes[key].manualModifier,
+      final: context.attributeFinalValues[key]
+    }));
+    context.attributeDifficultyRows = DIFFICULTY_LABELS.map((label, index) => ({
+      label,
+      index,
+      modifier: -DIFFICULTY_MODIFIERS[index],
+      average: index === 1,
+      values: context.attributeColumns.map(attribute => ({
+        key: attribute.key,
+        label: attribute.label,
+        value: attribute.final - DIFFICULTY_MODIFIERS[index]
+      }))
+    }));
     const prepareModifierEntry = (modifier, editable) => {
       const isActive = modifierIsActive(modifier);
       const expirationTime = Date.parse(modifier.expiresAt);
@@ -744,6 +782,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         return {
         id: item.id,
         name: name || item.name,
+        location: item.system.location,
         locationName,
         injuryTypeName: injuryTypeNames[item.system.injuryType] ?? item.system.injuryType,
         treatmentHistory: [...(item.system.treatment?.history ?? [])].reverse(),
@@ -754,6 +793,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
         };
       });
 
+    context.injuryLocations = prepareInjuryLocations(context.injuryItems);
     context.activeInjuryItems = context.injuryItems.filter(item => item.penaltyPercent > 0);
     context.healedInjuryItems = context.injuryItems.filter(item => item.penaltyPercent <= 0);
     context.totalWoundPenaltyPercent = context.injuryItems.reduce(
@@ -945,7 +985,22 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   // "target" oznacza przycisk, który został kliknięty przez użytkownika.
   static async #onRollAttribute(event, target) {
     const attributeKey = target.dataset.attribute;
-    await rollAttribute(this.actor, attributeKey);
+    const initialDifficultyIndex = this.attributeTestSelection?.attributeKey === attributeKey
+      ? this.attributeTestSelection.difficultyIndex : undefined;
+    await rollAttribute(this.actor, attributeKey, { initialDifficultyIndex });
+  }
+
+  static #onSelectAttributeLevel(event, target) {
+    const selection = attributeSelection(target.dataset.attribute, Number(target.dataset.difficulty));
+    if (!selection) return;
+    this.attributeTestSelection = selection;
+    displayAttributeSelection(this.element, selection);
+  }
+
+  static async #onRollSelectedAttribute() {
+    const selection = this.attributeTestSelection;
+    if (!selection) return;
+    await rollAttribute(this.actor, selection.attributeKey, { initialDifficultyIndex: selection.difficultyIndex });
   }
 
   // Klucz umiejętności odczytujemy z przycisku i przekazujemy do mechaniki testu.
@@ -1165,11 +1220,14 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     }
   }
 
-  static async #onCreateInjury() {
+  static async #onCreateInjury(event, target) {
+    const requestedLocation = target?.dataset.location;
+    const location = Object.hasOwn(INJURY_LOCATIONS, requestedLocation) ? requestedLocation : "general";
     const [createdInjury] = await this.actor.createEmbeddedDocuments("Item", [
       {
         name: "Nowa rana",
-        type: "injury"
+        type: "injury",
+        system: { location }
       }
     ]);
 

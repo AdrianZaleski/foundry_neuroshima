@@ -30,7 +30,7 @@ function prepareDieResultsDescription(dieResults, successThreshold) {
     .join(", ");
 }
 
-export async function rollAttribute(actor, attributeKey) {
+export async function rollAttribute(actor, attributeKey, { initialDifficultyIndex } = {}) {
   // Odczytujemy właściwy współczynnik na podstawie przycisku klikniętego na karcie.
   const attribute = actor.system.attributes[attributeKey];
 
@@ -44,7 +44,7 @@ export async function rollAttribute(actor, attributeKey) {
 
   // Najpierw pytamy użytkownika o rodzaj i trudność testu.
   // Zamknięcie okna przerywa cały test.
-  const testConfiguration = await selectTestConfiguration(actor, { attributeKey });
+  const testConfiguration = await selectTestConfiguration(actor, { attributeKey, initialDifficultyIndex });
 
   if (testConfiguration === null) {
     return;

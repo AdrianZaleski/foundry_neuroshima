@@ -92,10 +92,7 @@
     </article>
   {{/if}}
 
-  <label>
-    Punkty Doświadczenia
-    <input type="number" name="system.development.experiencePoints" value="{{system.development.experiencePoints}}" min="0" step="1">
-  </label>
+  <p><strong>Punkty Doświadczenia:</strong> {{system.development.experiencePoints}} <small>— edytuj w nagłówku karty.</small></p>
 
   <section>
     <h3>Rozwój za PD</h3>
@@ -104,18 +101,18 @@
     {{#if canManageDevelopmentSession}}<button type="button" data-action="toggleDevelopmentSessionLimit">{{#if system.development.ignoreSessionLimit}}Przywróć limit podniesień (MG){{else}}Wyłącz limit podniesień (MG){{/if}}</button>{{/if}}
     <button type="button" data-action="purchaseDevelopment">Kup rozwój za PD</button>
     {{#if canManageDevelopmentSession}}<button type="button" data-action="nextDevelopmentSession">Kolejna sesja rozwoju (MG)</button>{{/if}}
-    <details><summary>Historia rozwoju</summary>
-      <table><thead><tr><th>Sesja</th><th>Rozwój</th><th>Poziom</th><th>Koszt PD</th><th>PD po zakupie</th></tr></thead>
+    <details data-sync="development-history"><summary>Historia rozwoju</summary>
+      <div class="ns-table-scroll"><table><thead><tr><th>Sesja</th><th>Rozwój</th><th>Poziom</th><th>Koszt PD</th><th>PD po zakupie</th></tr></thead>
         <tbody>{{#each developmentHistory}}<tr><td>{{this.session}}</td><td>{{this.label}}</td><td>{{this.from}} → {{this.to}}</td><td>{{this.cost}}</td><td>{{this.balanceAfter}}</td></tr>
         {{else}}<tr><td colspan="5">Brak zakupów rozwoju.</td></tr>{{/each}}</tbody>
-      </table>
+      </table></div>
     </details>
   </section>
 
   <h2>Sztuczki</h2>
   <button type="button" data-action="createFeature" data-feature-type="perk">Dodaj sztuczkę</button>
 
-  <table>
+  <div class="ns-table-scroll"><table>
     <thead>
       <tr>
         <th>Nazwa</th>
@@ -141,13 +138,13 @@
         </tr>
       {{/each}}
     </tbody>
-  </table>
+  </table></div>
 
   <h2>Cechy</h2>
 
   <button type="button" data-action="createFeature" data-feature-type="trait">Dodaj cechę</button>
 
-  <table>
+  <div class="ns-table-scroll"><table>
     <thead>
       <tr>
         <th>Nazwa</th>
@@ -177,7 +174,7 @@
         </tr>
       {{/each}}
     </tbody>
-  </table>
+  </table></div>
 
   <h2>Notatki</h2>
 

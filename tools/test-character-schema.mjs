@@ -14,6 +14,14 @@ globalThis.foundry = {
 };
 const { NeuroshimaCharacterDataModel } = await import("../scripts/data-models/character.mjs");
 
+test("starsze postacie mają domyślnie wolne dłonie", () => {
+  const hands = NeuroshimaCharacterDataModel.defineSchema().hands.fields;
+  for (const hand of [hands.left, hands.right]) {
+    assert.equal(hand.options.initial, "");
+    assert.equal(hand.options.blank, true);
+  }
+});
+
 test("brak wyboru premii u starszego Actora jest dozwolonym stanem pola", () => {
   const field = NeuroshimaCharacterDataModel.defineSchema().background.fields.originBonusAttribute;
   assert.equal(field.options.initial, "");

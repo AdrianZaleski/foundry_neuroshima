@@ -83,6 +83,7 @@ export async function selectTestConfiguration(
     attributeKey = "",
     skillKey = "",
     fixedDifficultyIndex = null,
+    initialDifficultyIndex = DEFAULT_DIFFICULTY_INDEX,
     fixedPenaltyPercent = 0
   } = {}
 ) {
@@ -103,11 +104,13 @@ export async function selectTestConfiguration(
 
   // Tworzymy pozycje listy na podstawie tej samej tabeli,
   // której później użyjemy podczas obliczania progu testu.
+  const initialDifficulty = Number.isInteger(initialDifficultyIndex) && initialDifficultyIndex >= 0
+    && initialDifficultyIndex < DIFFICULTY_LABELS.length ? initialDifficultyIndex : DEFAULT_DIFFICULTY_INDEX;
   const difficultyOptions = DIFFICULTY_LABELS
     .map((difficultyLabel, difficultyIndex) => {
       const thresholdChange = -DIFFICULTY_MODIFIERS[difficultyIndex];
       const thresholdChangeLabel = thresholdChange >= 0 ? `+${thresholdChange}` : thresholdChange;
-      const selectedAttribute = difficultyIndex === (fixedDifficultyIndex ?? DEFAULT_DIFFICULTY_INDEX) ? "selected" : "";
+      const selectedAttribute = difficultyIndex === (fixedDifficultyIndex ?? initialDifficulty) ? "selected" : "";
 
       return `<option value="${difficultyIndex}" ${selectedAttribute}>${difficultyLabel} (współczynnik ${thresholdChangeLabel})</option>`;
     })
@@ -120,7 +123,7 @@ export async function selectTestConfiguration(
       <input type="hidden" name="testType" value="${fixedTestType}">
     `
     : `
-      <div class="form-group">
+      <div class="ns-test-field">
         <label for="neuroshima-test-type">Rodzaj testu</label>
         <select id="neuroshima-test-type" name="testType">
           <option value="closed" selected>Zamknięty</option>
@@ -129,43 +132,30 @@ export async function selectTestConfiguration(
       </div>
     `;
   const formData = await foundry.applications.api.DialogV2.input({
-    window: {
-      title: windowTitle
-    },
+    classes: ["neuroshima-test-dialog"],
+    window: { title: windowTitle, resizable: true },
+    position: { width: 520 },
     content: `
-      ${testTypeField}
-      <hr>
-      <p><strong>Modyfikatory wartości:</strong> ${valueModifierDescription}</p>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" name="includeWounds" checked>
-          Uwzględnij rany (${woundPenaltyPercent}%)
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" name="includeArmor" checked>
-          Uwzględnij pancerz (${armorPenaltyPercent}%)
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" name="includeEffects" checked>
-          Uwzględnij aktywne efekty (${testModifierPercent}%)
-        </label>
-        <small>${testModifierDescription}</small>
-      </div>
-      <div class="form-group">
-        <label for="neuroshima-custom-penalty">Dodatkowe utrudnienie lub ułatwienie</label>
-        <input id="neuroshima-custom-penalty" type="number" name="customPenaltyPercent" value="0" step="1">
-        <span>%</span>
-      </div>
-      <div class="form-group">
-        <label for="neuroshima-difficulty">Poziom trudności</label>
-        <p>Modyfikator wynikający z akcji: ${Number(fixedPenaltyPercent) || 0}%</p>
-        <select id="neuroshima-difficulty" name="difficultyIndex" ${fixedDifficultyIndex !== null ? "disabled" : ""}>
-          ${difficultyOptions}
-        </select>
+      <div class="ns-test-settings">
+        ${testTypeField}
+        <div class="ns-test-field">
+          <label for="neuroshima-difficulty">Bazowy poziom trudności</label>
+          <select id="neuroshima-difficulty" name="difficultyIndex" ${fixedDifficultyIndex !== null ? "disabled" : ""}>${difficultyOptions}</select>
+        </div>
+        <hr>
+        <p><strong>Modyfikatory wartości:</strong> ${valueModifierDescription}</p>
+        <label class="ns-test-check"><input type="checkbox" name="includeWounds" checked><span>Uwzględnij rany (${woundPenaltyPercent}%)</span></label>
+        <label class="ns-test-check"><input type="checkbox" name="includeArmor" checked><span>Uwzględnij pancerz (${armorPenaltyPercent}%)</span></label>
+        <div>
+          <label class="ns-test-check"><input type="checkbox" name="includeEffects" checked><span>Uwzględnij aktywne efekty (${testModifierPercent}%)</span></label>
+          <p class="ns-test-hint">${testModifierDescription}</p>
+        </div>
+        <div class="ns-test-field">
+          <label for="neuroshima-custom-penalty">Dodatkowa modyfikacja</label>
+          <div class="ns-percent-field"><input id="neuroshima-custom-penalty" type="number" name="customPenaltyPercent" value="0" step="1" aria-describedby="neuroshima-penalty-help"><span>%</span></div>
+        </div>
+        <p class="ns-test-hint" id="neuroshima-penalty-help">Wartości dodatnie = utrudnienie (np. +20%). Wartości ujemne = ułatwienie (np. −20%).</p>
+        <p class="ns-test-hint">Modyfikator wynikający z akcji: ${Number(fixedPenaltyPercent) || 0}%. Rany, pancerz, efekty i dodatkowa modyfikacja zmieniają bazowy poziom trudności.</p>
       </div>
     `,
     ok: {

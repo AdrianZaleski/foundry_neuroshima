@@ -11,7 +11,7 @@
       <strong>Masa pancerzy:</strong> {{totalArmorWeight}} kg<br>
       <strong>Kara za założone pancerze:</strong> Zręczność {{equippedDexterityArmorPenalty}}%, Percepcja {{equippedPerceptionArmorPenalty}}%
     </p>
-    <table>
+    <div class="ns-table-scroll"><table>
       <thead><tr><th>Pancerz</th><th>Stan</th><th>Chronione lokacje</th><th>Kara</th><th>Masa</th><th>Akcje</th></tr></thead>
       <tbody>
         {{#each armorItems}}
@@ -31,7 +31,7 @@
           <tr><td colspan="6">Postać nie posiada jeszcze pancerza.</td></tr>
         {{/each}}
       </tbody>
-    </table>
+    </table></div>
   </div>
 
   <h2>Broń ręczna</h2>
@@ -41,7 +41,7 @@
 
     <p><strong>Masa broni ręcznej:</strong> {{totalMeleeWeaponWeight}} kg</p>
 
-    <table>
+    <div class="ns-table-scroll"><table>
       <thead>
         <tr>
           <th>Broń</th>
@@ -86,7 +86,7 @@
           </tr>
         {{/each}}
       </tbody>
-    </table>
+    </table></div>
   </div>
 
   <h2>Broń dystansowa</h2>
@@ -97,7 +97,7 @@
 
     <p><strong>Masa broni dystansowej:</strong> {{totalWeaponWeight}} kg</p>
 
-    <table>
+    <div class="ns-table-scroll"><table>
       <thead>
         <tr>
           <th>Broń</th>
@@ -142,7 +142,7 @@
           </tr>
         {{/each}}
       </tbody>
-    </table>
+    </table></div>
   </div>
 
   <h2>Amunicja</h2>
@@ -154,7 +154,7 @@
     <p><strong>Masa amunicji:</strong> {{totalAmmunitionWeight}} kg</p>
     <p><strong>Łączna wartość amunicji:</strong> {{totalAmmunitionPrice}}</p>
 
-    <table>
+    <div class="ns-table-scroll"><table>
       <thead>
         <tr>
           <th>Amunicja</th>
@@ -187,7 +187,7 @@
           </tr>
         {{/each}}
       </tbody>
-    </table>
+    </table></div>
   </div>
 
   <h2>Ekwipunek</h2>
@@ -198,7 +198,7 @@
 
     <p><strong>Masa zwykłego ekwipunku:</strong> {{totalEquipmentWeight}} kg</p>
 
-    <table>
+    <div class="ns-table-scroll"><table>
       <thead>
         <tr>
           <th>Nazwa</th>
@@ -228,6 +228,6 @@
           </tr>
         {{/each}}
       </tbody>
-    </table>
+    </table></div>
   </div>
 </section>

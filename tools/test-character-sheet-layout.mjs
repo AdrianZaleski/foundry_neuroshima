@@ -21,7 +21,7 @@ test("karta postaci ma wspólny nagłówek i przewijane zakładki nowego layoutu
   assert.match(header, /data-action="saveActorName"/);
   assert.match(css, /\.ns-character-header/);
   assert.match(css, /\.ns-sheet-tab/);
-  assert.match(css, /@media \(max-width: 760px\)/);
+  assert.match(css, /@container character-sheet \(max-width: 760px\)/);
   for (const tab of tabs) {
     assert.match(tab, /ns-sheet-tab/);
     assert.doesNotMatch(tab, /style="height: calc\(100% - 42px\)/);

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 380" fill="none">
+  <g stroke="#c6c0b3" stroke-width="1">
+    <path d="M80 8v355M24 62h112M18 173h124M30 279h100" stroke-dasharray="3 5"/>
+    <circle cx="80" cy="180" r="70"/>
+    <path d="M6 16h14M6 16v14M154 16h-14M154 16v14M6 356h14M6 356v-14M154 356h-14M154 356v-14"/>
+  </g>
+  <g fill="#d3cdbf" stroke="#524f47" stroke-width="2" stroke-linejoin="round">
+    <path d="M63 22Q80 10 97 22L100 44 95 58 87 66H73L65 58 60 44Z"/>
+    <path d="M72 67v12l-19 9-6 37 10 46 1 29h44l1-29 10-46-6-37-19-9V67"/>
+    <path d="M51 89l-12 5-12 52-8 47-8 19 5 12 11-4 7-22 13-46 9-28"/>
+    <path d="M109 89l12 5 12 52 8 47 8 19-5 12-11-4-7-22-13-46-9-28"/>
+    <path d="M58 204l-5 50 3 34 1 46-9 15v6h24l3-65 5-56 5 56 3 65h24v-6l-9-15 1-46 3-34-5-50Z"/>
+  </g>
+  <g stroke="#888276" stroke-width="1.2">
+    <path d="M58 105q22 12 44 0M80 91v62M60 155q20 8 40 0M58 179h44M56 279l17 1M87 280l17-1M27 148l16 5M117 153l16-5"/>
+  </g>
+  <g fill="#fbf8f0" stroke="#524f47" stroke-width="1.5">
+    <circle cx="80" cy="39" r="4"/><circle cx="80" cy="126" r="4"/>
+    <circle cx="38" cy="156" r="4"/><circle cx="122" cy="156" r="4"/>
+    <circle cx="64" cy="274" r="4"/><circle cx="96" cy="274" r="4"/>
+  </g>
+</svg>

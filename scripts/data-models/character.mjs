@@ -81,6 +81,11 @@ export class NeuroshimaCharacterDataModel extends foundry.abstract.TypeDataModel
         specializationSourceCode: new StringField({ required: true, nullable: false, initial: "" })
       }),
 
+      hands: new SchemaField({
+        left: new StringField({ required: true, nullable: false, blank: true, initial: "" }),
+        right: new StringField({ required: true, nullable: false, blank: true, initial: "" })
+      }),
+
       development: new SchemaField({
         ignoreSessionLimit: new BooleanField({ initial: false }),
         session: new NumberField({ initial: 1, min: 1, integer: true }),
