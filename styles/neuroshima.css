@@ -504,12 +504,21 @@
 .neuroshima.character-sheet .ns-dossier-title {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: 5px 12px;
   margin-bottom: 4px;
   letter-spacing: 0.14em;
 }
-.neuroshima.character-sheet .ns-dossier-title strong { font-size: 1.05rem; }
+.neuroshima.character-sheet .ns-brand-mark {
+  display: block;
+  width: clamp(210px, 29cqi, 360px);
+  max-width: 100%;
+  height: auto;
+  flex: 0 1 auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
 .neuroshima.character-sheet .ns-dossier-title span { font-size: 0.62rem; color: var(--ns-muted); }
 .neuroshima.character-sheet .ns-identity-line {
   display: flex;
@@ -602,7 +611,6 @@
 .neuroshima.character-sheet:not(.minimized):not(.minimizing):not(.maximizing) { min-width: 360px; min-height: 400px; }
 .neuroshima.character-sheet .ns-character-header { flex: 0 0 auto; gap: 12px; border-bottom: 2px solid var(--ns-text); }
 .neuroshima.character-sheet .ns-character-portrait { border-radius: 0; box-shadow: none; }
-.neuroshima.character-sheet .ns-dossier-title strong { font: italic 900 1.45rem Arial, sans-serif; letter-spacing: -0.05em; }
 .neuroshima.character-sheet .ns-field-caption { display: block; margin-top: 5px; color: var(--ns-muted); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .neuroshima.character-sheet .ns-character-name-row { border-bottom: 1px solid var(--ns-border-strong); }
 .neuroshima.character-sheet .ns-character-name { font-size: 1.55rem; }
