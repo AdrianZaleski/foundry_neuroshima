@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { prepareInjuryLocations } from "../scripts/sheets/injury-layout.mjs";
+import { setupItemAddition } from "./helpers/item-addition-fixture.mjs";
 
 test("mapa ran pokazuje wszystkie lokacje, również puste", () => {
   const groups = prepareInjuryLocations([]);
@@ -28,21 +29,16 @@ test("rana trafia dokładnie do jednej lokacji; kary i rany 0% nie znikają", ()
 });
 
 test("dodanie rany z mapy zapisuje lokację, a zwykłe dodawanie zachowuje lokację ogólną", async () => {
-  globalThis.foundry = { documents: { Combat: class {} }, applications: {
-    api: { HandlebarsApplicationMixin: Base => Base },
-    sheets: { ActorSheetV2: class {} }
-  } };
+  setupItemAddition();
   const { NeuroshimaCharacterSheet } = await import("../scripts/sheets/character-sheet.mjs");
   for (const [requested, expected] of [["head", "head"], ["leftArm", "leftArm"], [undefined, "general"], ["invalid", "general"]]) {
-    let saved, opened = false;
-    const sheet = { actor: { async createEmbeddedDocuments(type, data) {
-      assert.equal(type, "Item");
-      saved = data;
-      return [{ sheet: { async render() { opened = true; } } }];
-    } } };
-    await NeuroshimaCharacterSheet.DEFAULT_OPTIONS.actions.createInjury.call(sheet, {}, { dataset: { location: requested } });
+    const { actor, saved } = setupItemAddition();
+    const draft = await NeuroshimaCharacterSheet.DEFAULT_OPTIONS.actions.createInjury.call({ actor }, {}, { dataset: { location: requested } });
+    assert.equal(saved.length, 0);
+    assert.equal(draft.item.system.location, expected);
+    await draft.confirmAddition();
     assert.equal(saved[0].system.location, expected);
     assert.equal(saved[0].type, "injury");
-    assert.equal(opened, true);
+    assert.equal(saved.length, 1);
   }
 });

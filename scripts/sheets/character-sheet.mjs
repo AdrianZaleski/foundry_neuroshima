@@ -1,4 +1,5 @@
 import { attributeSelection, displayAttributeSelection } from "./attribute-selection.mjs";
+import { openItemAddition } from "./item-addition.mjs";
 import { prepareHeldEquipment, configureHeldEquipment } from "./held-equipment.mjs";
 import { captureFieldState, restoreFieldState } from "./sheet-view-state.mjs";
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
@@ -1223,15 +1224,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   static async #onCreateInjury(event, target) {
     const requestedLocation = target?.dataset.location;
     const location = Object.hasOwn(INJURY_LOCATIONS, requestedLocation) ? requestedLocation : "general";
-    const [createdInjury] = await this.actor.createEmbeddedDocuments("Item", [
-      {
-        name: "Nowa rana",
-        type: "injury",
-        system: { location }
-      }
-    ]);
-
-    await createdInjury.sheet.render({ force: true });
+    return openItemAddition(this.actor, "injury", { system: { location } });
   }
 
   static async #onEditInjury(event, target) {
@@ -1270,10 +1263,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   }
 
   static async #onCreateDisease() {
-    const [createdDisease] = await this.actor.createEmbeddedDocuments("Item", [
-      { name: "Nowa choroba", type: "disease" }
-    ]);
-    await createdDisease.sheet.render({ force: true });
+    return openItemAddition(this.actor, "disease");
   }
 
   static async #onEditDisease(event, target) {
@@ -1322,10 +1312,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   }
 
   static async #onCreateMedicine() {
-    const [createdMedicine] = await this.actor.createEmbeddedDocuments("Item", [
-      { name: "Nowy lek", type: "medicine" }
-    ]);
-    await createdMedicine.sheet.render({ force: true });
+    return openItemAddition(this.actor, "medicine");
   }
 
   static async #onEditMedicine(event, target) {
@@ -1394,11 +1381,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       return;
     }
 
-    const data = { name: featureTypeNames[featureType], type: featureType };
-    if (!(await confirmPerkAddition(this.actor, data))) return;
-    const [createdFeature] = await this.actor.createEmbeddedDocuments("Item", [data]);
-
-    if (createdFeature) await createdFeature.sheet.render({ force: true });
+    return openItemAddition(this.actor, featureType);
   }
 
   static async #onToggleConditionalFeature(event, target) {
@@ -1448,25 +1431,12 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
   }
 
-  // Tworzymy nowy Item bezpośrednio wewnątrz Actora. Taki przedmiot należy
-  // wyłącznie do tej postaci i może mieć własną ilość, masę, cenę oraz opis.
   static async #onCreateEquipment() {
-    const [createdItem] = await this.actor.createEmbeddedDocuments("Item", [
-      {
-        name: "Nowy przedmiot",
-        type: "equipment"
-      }
-    ]);
-
-    // Po utworzeniu od razu otwieramy kartę przedmiotu do uzupełnienia.
-    await createdItem.sheet.render({ force: true });
+    return openItemAddition(this.actor, "equipment");
   }
 
   static async #onCreateArmor() {
-    const [createdArmor] = await this.actor.createEmbeddedDocuments("Item", [
-      { name: "Nowy pancerz", type: "armor" }
-    ]);
-    await createdArmor.sheet.render({ force: true });
+    return openItemAddition(this.actor, "armor");
   }
 
   static async #onEditArmor(event, target) {
@@ -1539,28 +1509,12 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
   }
 
-  // Nowa broń powstaje bezpośrednio wewnątrz postaci i od razu otwiera
-  // własną kartę, na której można uzupełnić jej parametry.
   static async #onCreateWeapon() {
-    const [createdWeapon] = await this.actor.createEmbeddedDocuments("Item", [
-      {
-        name: "Nowa broń",
-        type: "weapon"
-      }
-    ]);
-
-    await createdWeapon.sheet.render({ force: true });
+    return openItemAddition(this.actor, "weapon");
   }
 
   static async #onCreateMeleeWeapon() {
-    const [createdWeapon] = await this.actor.createEmbeddedDocuments("Item", [
-      {
-        name: "Nowa broń ręczna",
-        type: "meleeWeapon"
-      }
-    ]);
-
-    await createdWeapon.sheet.render({ force: true });
+    return openItemAddition(this.actor, "meleeWeapon");
   }
 
   static async #onEditMeleeWeapon(event, target) {
@@ -1764,17 +1718,8 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
   }
 
-  // Amunicję tworzymy wewnątrz postaci, ponieważ jej ilość jest prywatnym
-  // stanem tej postaci i będzie się później zmniejszać podczas przeładowania.
   static async #onCreateAmmunition() {
-    const [createdAmmunition] = await this.actor.createEmbeddedDocuments("Item", [
-      {
-        name: "Nowa amunicja",
-        type: "ammunition"
-      }
-    ]);
-
-    await createdAmmunition.sheet.render({ force: true });
+    return openItemAddition(this.actor, "ammunition");
   }
 
   static async #onEditAmmunition(event, target) {

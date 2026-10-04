@@ -681,6 +681,14 @@
 .neuroshima.character-sheet .ns-hand-summary { grid-column: 1 / -1; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; border-top: 1px solid var(--ns-border); padding-top: 6px; font-size: 0.8rem; }
 .neuroshima.character-sheet .ns-hand-summary span { overflow-wrap: anywhere; }
 .neuroshima.character-sheet .ns-hand-summary button { margin-left: auto; min-height: 26px; padding: 2px 8px; font-size: 0.75rem; }
+.neuroshima-item-addition .window-content { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.neuroshima-item-addition .window-content > [data-application-part="main"] { flex: 1 1 0; min-height: 0; overflow: auto; }
+.neuroshima-item-addition [data-application-part="main"] label { display: block; margin: 8px 0; line-height: 1.4; }
+.neuroshima-item-addition [data-application-part="main"] textarea { display: block; width: 100%; font-family: inherit; line-height: 1.5; resize: vertical; }
+.neuroshima-item-addition .ns-addition-footer { flex: 0 0 auto; padding-top: 10px; border-top: 1px solid var(--color-border-light-primary); }
+.neuroshima-item-addition .ns-addition-footer p { margin: 0 0 10px; font-size: 0.85rem; line-height: 1.4; overflow-wrap: anywhere; }
+.neuroshima-item-addition .ns-addition-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.neuroshima-item-addition .ns-addition-buttons button { flex: 1; min-width: 130px; }
 .neuroshima-test-dialog { max-width: calc(100vw - 24px); }
 .neuroshima-test-dialog .ns-test-settings { display: grid; gap: 14px; min-width: 0; }
 .neuroshima-test-dialog .ns-test-field { display: grid; grid-template-columns: minmax(130px, 1fr) minmax(0, 1.5fr); align-items: center; gap: 12px; }
