@@ -28,6 +28,7 @@ import {
 import { initializeSegmentCombatInterface } from "./combat/segments.mjs";
 import { initializeMeleePlayerSocket } from "./combat/melee-interface.mjs";
 import { initializeFeatureDuplicateGuard } from "./effects/feature-duplicates.mjs";
+import { initializeConsciousness } from "./health/consciousness-interface.mjs";
 import {
   initializeCatalogCompendia
 } from "./compendia/catalog-compendia.mjs";
@@ -55,6 +56,7 @@ Hooks.once("init", () => {
   CONFIG.Combat.initiative.decimals = 0;
   initializeSegmentCombatInterface();
   initializeFeatureDuplicateGuard();
+  initializeConsciousness();
 
   // Łączymy typ Itemu "equipment" z modelem danych zwykłego ekwipunku.
   CONFIG.Item.dataModels.equipment = NeuroshimaEquipmentDataModel;

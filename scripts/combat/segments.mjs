@@ -3,6 +3,9 @@ import {
   resolveCombatAction
 } from "./action-catalog.mjs";
 import { findTrackedDuel, meleeTrackerAction, meleeRoundSpent, blocksMeleeAdvance, trackedDuels, MELEE_DUELS_FLAG } from "./melee-tracker.mjs";
+import { usableFirearms } from "./weapon-handling-state.mjs";
+import { isBurstAction, supportsAutomaticFire, burstSegmentPending } from "./burst-fire.mjs";
+import { isUnconscious, allowCombatAction } from "./action-access.mjs";
 
 const SYSTEM_ID = "neuroshima";
 const COMBAT_SEGMENT_FLAG = "combatSegment";
@@ -65,6 +68,12 @@ function actionConsumesTick(action, currentTick) {
   return currentTick >= action.startedAtTick && currentTick <= action.endsAtTick;
 }
 
+function hasPendingBurstDamage(action, actor) {
+  const state = action?.burst;
+  return Boolean(state?.segment && !state.segment.completed
+    && actor.items.get(action.aimingConfiguration?.weaponId)?.getFlag(SYSTEM_ID, "burstReceipt") === `${state.id}_${state.segment.tick}`);
+}
+
 function describeActionTiming(action, currentTick) {
   const remainingAfterCurrentSegment = Math.max(0, action.endsAtTick - currentTick);
 
@@ -80,12 +89,13 @@ function describeActionTiming(action, currentTick) {
 }
 
 export function prepareActorCombatStatus(actor, combat = game.combat) {
+  const unconscious = isUnconscious(actor);
   const combatant = findActorCombatant(combat, actor);
 
   if (!combatant) {
     return {
       inCombat: false,
-      started: false
+      started: false, unconscious
     };
   }
 
@@ -103,7 +113,8 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
     round,
     segment,
     isActiveTurn,
-    canDeclareAction: isActiveTurn && !consumesCurrentSegment && !findTrackedDuel(combat, actor.id),
+    unconscious,
+    canDeclareAction: !unconscious && isActiveTurn && !consumesCurrentSegment && !findTrackedDuel(combat, actor.id),
     consumesCurrentSegment,
     action: action ? {
       ...action,
@@ -113,31 +124,37 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
       isCurrent: consumesCurrentSegment,
       isPending: consumesCurrentSegment && action.endsAtTick > currentTick,
       canFinishEarly: isActiveTurn
+        && !unconscious
+        && !isBurstAction(action)
         && consumesCurrentSegment
         && action.endsAtTick > currentTick
         && action.effectCode !== "melee"
+        && action.effectCode !== "weaponHandling"
         && action.effectCode !== "clearMinorJam",
       canInterrupt: isActiveTurn
+        && !hasPendingBurstDamage(action, actor)
         && consumesCurrentSegment
         && !action.resolved
         && (
           action.endsAtTick > currentTick
-          || ["rangedShot", "clearMinorJam"].includes(action.effectCode)
+          || ["rangedShot", "clearMinorJam", "weaponHandling"].includes(action.effectCode)
         ),
       finishEarlyLabel: action.effectCode === "rangedShot"
         ? "Zakończ wcześniej i strzel"
         : "Zakończ wcześniej",
-      interruptLabel: action.effectCode === "rangedShot"
+      interruptLabel: isBurstAction(action) ? "Przerwij dalszy ogień" : action.effectCode === "rangedShot"
         ? "Przerwij akcję bez strzału"
         : "Przerwij akcję",
       canResolveShot: isActiveTurn
+        && (!unconscious || hasPendingBurstDamage(action, actor))
         && consumesCurrentSegment
         && action.effectCode === "rangedShot"
-        && action.endsAtTick === currentTick
+        && (isBurstAction(action) ? burstSegmentPending(action, currentTick) : action.endsAtTick === currentTick)
         && Boolean(action.aimingConfiguration)
         && !action.interrupted
         && !action.resolved,
       canConfigureAiming: isActiveTurn
+        && !unconscious
         && consumesCurrentSegment
         && action.effectCode === "rangedShot"
         && !action.aimingConfiguration,
@@ -147,17 +164,25 @@ export function prepareActorCombatStatus(actor, combat = game.combat) {
         && !action.aimingConfiguration
         && !action.resolved,
       canConfigureJamClearing: isActiveTurn
+        && !unconscious
         && consumesCurrentSegment
         && action.effectCode === "clearMinorJam"
         && !action.jamClearingConfiguration,
+      canResolveHandling: !unconscious && isActiveTurn && consumesCurrentSegment
+        && action.effectCode === "weaponHandling" && action.endsAtTick === currentTick
+        && Boolean(action.handlingConfiguration) && !action.interrupted && !action.resolved,
       canAdvanceAfterAction: isActiveTurn
         && consumesCurrentSegment
-        && action.endsAtTick === currentTick
+        && (action.endsAtTick === currentTick || action.burst?.lastTick === currentTick)
         && (
+          action.burst?.lastTick === currentTick
+          ||
           action.resolved
           || action.interrupted
-          || !["rangedShot", "clearMinorJam"].includes(action.effectCode)
+          || !["rangedShot", "clearMinorJam", "weaponHandling"].includes(action.effectCode)
         ),
+      resolveShotLabel: isBurstAction(action) ? "Rozlicz pociski bieżącego segmentu" : "Rozstrzygnij strzał",
+      burstDescription: action.burst ? `Wystrzelono: ${action.burst.totalFired}; trafienia: ${action.burst.totalHits}. ${action.burst.segment && !action.burst.segment.completed ? "Dokończ oczekujące obrażenia." : ""}` : "",
       timingDescription: consumesCurrentSegment
         ? describeActionTiming(action, currentTick)
         : "Poprzednia akcja jest zakończona."
@@ -188,6 +213,7 @@ async function requireActiveCombatant(actor) {
 }
 
 export async function declareSegmentAction(actor, actionName, duration, metadata = {}) {
+  if (!allowCombatAction(actor)) return false;
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
 
@@ -197,7 +223,10 @@ export async function declareSegmentAction(actor, actionName, duration, metadata
     return false;
   }
   const safeName = String(actionName ?? "").trim();
-  const safeDuration = Math.max(1, Math.min(Number(duration) || 1, SEGMENTS_PER_ROUND));
+  const requestedDuration = Number(duration);
+  if (metadata.effectCode === "weaponHandling" && (!Number.isSafeInteger(requestedDuration) || requestedDuration < 1)) return false;
+  const safeDuration = metadata.effectCode === "weaponHandling" ? requestedDuration
+    : Math.max(1, Math.min(requestedDuration || 1, SEGMENTS_PER_ROUND));
   const segment = getCombatSegment(combat);
   const round = Math.max(1, Number(combat.round) || 1);
   const currentTick = calculateSegmentTick(round, segment);
@@ -221,6 +250,7 @@ export async function declareSegmentAction(actor, actionName, duration, metadata
     isCustom: Boolean(metadata.isCustom),
     effectCode: metadata.effectCode ?? "",
     aimingBonusDice: Number(metadata.aimingBonusDice) || 0,
+    ...(metadata.handlingConfiguration ? { handlingConfiguration: metadata.handlingConfiguration } : {}),
     startedRound: round,
     startedSegment: segment,
     startedAtTick: currentTick,
@@ -257,17 +287,26 @@ export async function passSegment(actor) {
 }
 
 async function changeCurrentAction(actor, changeType) {
+  if (changeType === "finished" && !allowCombatAction(actor)) return false;
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
 
   const { combat, combatant } = activeParticipant;
   const action = getSegmentAction(combatant);
   if (action?.effectCode === "melee") return false;
+  if (isBurstAction(action) && (changeType === "finished" || hasPendingBurstDamage(action, actor))) {
+    ui.notifications.warn("Dokończ obrażenia oddanych pocisków. Możesz potem przerwać dalszy ogień; serii nie można przyspieszyć.");
+    return false;
+  }
+  if (changeType === "finished" && ["weaponHandling", "clearMinorJam"].includes(action?.effectCode)) {
+    ui.notifications.warn("Tej czynności nie można skrócić. Możesz ją przerwać bez wykonania.");
+    return false;
+  }
   const segment = getCombatSegment(combat);
   const round = Math.max(1, Number(combat.round) || 1);
   const currentTick = calculateSegmentTick(round, segment);
   const canInterruptUnresolvedShotAtEnd = changeType === "interrupted"
-    && ["rangedShot", "clearMinorJam"].includes(action?.effectCode)
+    && ["rangedShot", "clearMinorJam", "weaponHandling"].includes(action?.effectCode)
     && !action.resolved
     && action.endsAtTick === currentTick;
 
@@ -288,7 +327,7 @@ async function changeCurrentAction(actor, changeType) {
       ? { aimingBonusDice: Math.min(2, currentTick - action.startedAtTick) }
       : {}),
     ...(action.effectCode === "rangedShot" && changeType === "interrupted"
-      ? { resolved: true, resolution: "Przerwano — brak strzału" }
+      ? { resolved: true, resolution: isBurstAction(action) ? `Przerwano dalszy ogień: ${action.burst?.totalFired ?? 0} nabojów, ${action.burst?.totalHits ?? 0} trafień` : "Przerwano — brak strzału" }
       : {})
   };
   await combatant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, changedAction);
@@ -326,11 +365,13 @@ export async function markCurrentSegmentActionResolved(actor, resolution) {
 export async function cancelCurrentSegmentActionDeclaration(actor) {
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
+  if (getSegmentAction(activeParticipant.combatant)?.burst) return false;
   await deleteCombatantFlag(activeParticipant.combatant, COMBATANT_ACTION_FLAG);
   return true;
 }
 
 export async function configureCurrentAiming(actor, aimingConfiguration) {
+  if (!allowCombatAction(actor)) return false;
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
 
@@ -340,6 +381,7 @@ export async function configureCurrentAiming(actor, aimingConfiguration) {
   if (
     !actionConsumesTick(action, currentTick)
     || action.effectCode !== "rangedShot"
+    || action.burst
   ) {
     ui.notifications.warn("Bieżąca akcja nie jest przygotowywanym strzałem.");
     return false;
@@ -352,6 +394,7 @@ export async function configureCurrentAiming(actor, aimingConfiguration) {
 }
 
 export async function configureCurrentJamClearing(actor, jamClearingConfiguration) {
+  if (!allowCombatAction(actor)) return false;
   const activeParticipant = await requireActiveCombatant(actor);
   if (!activeParticipant) return false;
 
@@ -380,13 +423,14 @@ export async function configureCurrentJamClearing(actor, jamClearingConfiguratio
 }
 
 export async function selectSegmentAction(actor) {
+  if (!allowCombatAction(actor)) return false;
   const formData = await foundry.applications.api.DialogV2.input({
     window: { title: `Akcja: ${actor.name}` },
     content: `
       <div class="form-group">
         <label for="neuroshima-segment-action-code">Akcja</label>
         <select id="neuroshima-segment-action-code" name="actionCode" autofocus>
-          ${prepareCombatActionOptions()}
+          ${prepareCombatActionOptions({ automaticFireAvailable: usableFirearms(actor).some(supportsAutomaticFire) })}
         </select>
       </div>
       <div class="form-group">
@@ -418,17 +462,18 @@ export async function selectSegmentAction(actor) {
     formData.customName,
     formData.duration
   );
+  if (selectedAction.effectCode === "weaponHandling") {
+    const { requestWeaponHandling } = await import("./weapon-handling.mjs");
+    return requestWeaponHandling(actor, selectedAction.actionCode);
+  }
   if (selectedAction.effectCode === "rangedShot") {
-    const usableWeapons = actor.items.filter((item) => (
-      item.type === "weapon"
-      && item.system.weaponClass !== "LAUNCHER"
-      && item.system.weaponClass !== "PROJECTILE"
-      && item.system.currentAmmunition > 0
-      && item.system.jamState === "ready"
-    ));
+    const readyWeapons = usableFirearms(actor);
+    const usableWeapons = readyWeapons.filter(weapon => !isBurstAction(selectedAction) || supportsAutomaticFire(weapon));
     if (usableWeapons.length === 0) {
       ui.notifications.warn(
-        "Nie można zadeklarować strzału: postać nie ma sprawnej, załadowanej broni palnej."
+        isBurstAction(selectedAction) && readyWeapons.length
+          ? "Broń jest gotowa do strzału, ale nie ma zapisanego trybu A lub poprawnej szybkostrzelności. Wybierz Strzał; seria i ogień ciągły wymagają trybu A."
+          : "Brak gotowej broni w dłoniach. Sprawdź dobycie, przygotowanie, zabezpieczenie, zacięcia i amunicję."
       );
       return false;
     }
@@ -461,14 +506,47 @@ async function announceSegment(combat) {
   );
 }
 
+export async function interruptUnconsciousActions(combat = game.combat) {
+  if (!combat?.started) return;
+  const tick = calculateSegmentTick(combat.round, getCombatSegment(combat));
+  for (const participant of combat.combatants ?? []) {
+    if (!isUnconscious(participant.actor)) continue;
+    if (!game.user?.isGM && !participant.actor?.isOwner) continue;
+    const action = participant.getFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG);
+    // Oddane pociski muszą dokończyć zadawanie obrażeń; nie wolno ich anulować.
+    if (!action || action.resolved || action.interrupted || hasPendingBurstDamage(action, participant.actor)) continue;
+    await participant.setFlag(SYSTEM_ID, COMBATANT_ACTION_FLAG, { ...action,
+      endsAtTick: Math.min(action.endsAtTick, tick), resolved: true, interrupted: true,
+      resolution: `Przerwano z powodu nieprzytomności.${action.burst ? ` Oddano ${action.burst.totalFired} strzałów; zachowano ich skutki.` : ""}` });
+  }
+  const duels = trackedDuels(combat);
+  const updated = duels.map(duel => !duel.ended && !duel.damageHits?.some(hit => !hit.completed)
+    && duel.configurations.some(entry => [...(combat.combatants ?? [])].some(participant => participant.actor?.id === entry.id && isUnconscious(participant.actor)))
+    ? { ...duel, ended: true, endReason: "Nieprzytomność uczestnika" } : duel);
+  if (game.user?.isGM && updated.some((duel, index) => duel !== duels[index])) await combat.setFlag(SYSTEM_ID, MELEE_DUELS_FLAG, updated);
+}
+
 async function announceCompletedAction(combat) {
+  await interruptUnconsciousActions(combat);
   const combatant = combat.combatant;
   let action = getSegmentAction(combatant);
   if (action?.effectCode === "melee") return;
+  if (combatant?.actor && burstSegmentPending(action, calculateSegmentTick(combat.round, getCombatSegment(combat)))) {
+    const { resolveSingleShot } = await import("./ranged-shot.mjs");
+    await resolveSingleShot(combatant.actor);
+    return;
+  }
   if (!combatant?.actor || !action || action.duration <= 1) return;
 
   const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
   if (action.endsAtTick !== currentTick) return;
+
+  if (action.effectCode === "weaponHandling" && !action.interrupted && !action.resolved) {
+    const { resolveWeaponHandling } = await import("./weapon-handling.mjs");
+    await resolveWeaponHandling(combatant.actor);
+    action = getSegmentAction(combatant) ?? action;
+    if (!action.resolved) return;
+  }
 
   if (
     action.effectCode === "rangedShot"
@@ -506,7 +584,7 @@ function currentUnresolvedShot(combat) {
     !combatant?.actor
     || !actionConsumesTick(action, currentTick)
     || action?.effectCode !== "rangedShot"
-    || action.endsAtTick !== currentTick
+    || (isBurstAction(action) ? !burstSegmentPending(action, currentTick) : action.endsAtTick !== currentTick)
     || action.interrupted
     || action.resolved
   ) {
@@ -584,6 +662,20 @@ export async function startSegmentCombat(combat) {
   return startedCombat;
 }
 
+function preventAdvanceForWeaponHandling(combat, wholeRound = false) {
+  const participants = wholeRound ? combat.combatants : [combat.combatant];
+  const currentTick = calculateSegmentTick(combat.round, getCombatSegment(combat));
+  const nextRoundTick = calculateSegmentTick(Number(combat.round) + 1, 1);
+  const pending = participants.find(participant => {
+    const action = getSegmentAction(participant);
+    return action?.effectCode === "weaponHandling" && !action.resolved && !action.interrupted
+      && (wholeRound ? action.endsAtTick < nextRoundTick : action.endsAtTick <= currentTick);
+  });
+  if (!pending) return false;
+  ui.notifications.warn(`${pending.actor?.name ?? pending.name}: dokończ albo przerwij obsługę broni przed pominięciem segmentu.`);
+  return true;
+}
+
 export async function advanceSegmentTurn(combat) {
   // Przechodzimy wyłącznie przez kolejki już rozliczonych pojedynków.
   // Strzelców i pozostałe akcje nadal obsługujemy osobno w każdym segmencie.
@@ -600,12 +692,14 @@ export async function advanceSegmentTurn(combat) {
 
 async function advanceSingleSegmentTurn(combat) {
   if (!combat.started || combat.turns.length === 0) return combat;
+  await interruptUnconsciousActions(combat);
   if (blocksMeleeAdvance(combat)) {
     ui.notifications.warn("Najpierw rozstrzygnij trzy segmenty pojedynku i oczekujące obrażenia (panel MG).");
     return combat;
   }
   if (preventAdvanceForUnresolvedShot(combat)) return combat;
   if (preventAdvanceForUnresolvedJamClearing(combat)) return combat;
+  if (preventAdvanceForWeaponHandling(combat)) return combat;
 
   const segment = getCombatSegment(combat);
   const isLastParticipant = combat.turn >= combat.turns.length - 1;
@@ -663,6 +757,17 @@ export async function rewindSegmentTurn(combat) {
 }
 
 export async function advanceSegmentRound(combat) {
+  await interruptUnconsciousActions(combat);
+  const nextTick = calculateSegmentTick(Number(combat.round) + 1, 1);
+  if (combat.combatants.some(participant => {
+    const action = getSegmentAction(participant);
+    return isBurstAction(action) && !action.resolved && !action.interrupted
+      && (action.burst?.lastTick ?? action.startedAtTick - 1) + 1 < nextTick;
+  })) {
+    ui.notifications.warn("Rozlicz pociski bieżącej rundy lub przerwij dalszy ogień przed pominięciem segmentów.");
+    return combat;
+  }
+  if (preventAdvanceForWeaponHandling(combat, true)) return combat;
   if (blocksMeleeAdvance(combat, true)) {
     ui.notifications.warn("Dokończ pojedynki wręcz przed przejściem do kolejnej rundy.");
     return combat;

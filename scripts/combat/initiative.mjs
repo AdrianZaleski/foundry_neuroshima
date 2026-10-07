@@ -1,4 +1,5 @@
 import { calculateInitiativeResult } from './initiative-calculation.mjs';
+import { allowCombatAction } from "./action-access.mjs";
 export { calculateInitiativeResult, applySkillToOpenInitiativeDice } from './initiative-calculation.mjs';
 import {
   DIFFICULTY_LABELS,
@@ -180,8 +181,10 @@ function describeInitiativeDice(consideredDice) {
 }
 
 export async function rollNeuroshimaInitiative(actor, { messageOptions = {} } = {}) {
+  if (!allowCombatAction(actor)) return null;
   const configuration = await selectInitiativeConfiguration(actor);
   if (!configuration) return null;
+  if (!allowCombatAction(actor)) return null;
 
   const attribute = actor.system.attributes?.[configuration.attributeKey];
   if (!attribute) {

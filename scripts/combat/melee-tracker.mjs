@@ -1,4 +1,5 @@
 // Pojedynek i zużycie jego segmentów mają jeden zapis na dokumencie Combat.
+import { assertCombatAction } from "./action-access.mjs";
 // Dzięki temu nie trzeba zapisywać osobno akcji obu Combatantów.
 export const MELEE_DUELS_FLAG = "meleeDuels";
 export function trackedDuels(combat) {
@@ -22,6 +23,7 @@ export function assertTrackerParticipants(combat, duel) {
 
 export function assertTrackerStart(combat, duel) {
   assertTrackerParticipants(combat, duel);
+  for (const entry of duel.configurations) assertCombatAction([...combat.combatants].find(p => p.actor?.id === entry.id)?.actor);
   const segment = segmentOf(combat);
   if (!includesActor(duel, combat.combatant?.actor?.id)) {
     throw new Error("Zwarcie rozpocznij podczas kolejki jednej z jego stron.");
@@ -66,6 +68,7 @@ export async function interruptRangedShotsForMelee(combat, duel) {
 
 export function assertTrackerExchange(combat, duel) {
   assertTrackerParticipants(combat, duel);
+  for (const entry of duel.configurations) assertCombatAction([...combat.combatants].find(p => p.actor?.id === entry.id)?.actor);
   if (duel.trackerRound !== combat.round || !duel.state || duel.state.segment > 3
     || duel.state.segment < segmentOf(combat)) {
     throw new Error("Poczekaj na właściwą rundę pojedynku w Combat Trackerze.");
@@ -75,6 +78,7 @@ export function assertTrackerExchange(combat, duel) {
 
 export function assertTrackerNextRound(combat, duel) {
   assertTrackerParticipants(combat, duel);
+  for (const entry of duel.configurations) assertCombatAction([...combat.combatants].find(p => p.actor?.id === entry.id)?.actor);
   if (duel.damageHits?.some(hit => !hit.completed)) throw new Error("Najpierw rozlicz oczekujące obrażenia pojedynku.");
   if (duel.state?.segment !== 4 || combat.round !== duel.trackerRound + 1 || segmentOf(combat) !== 1) {
     throw new Error("Nowe kości wymagają ukończenia tury pojedynku i rozpoczęcia następnej rundy Trackera.");

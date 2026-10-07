@@ -1,6 +1,6 @@
 <section class="tab {{tabs.main.cssClass}} ns-sheet-tab" data-group="sheet" data-tab="main">
   <div class="ns-action-toolbar">
-    <button class="ns-primary-action" type="button" data-action="rollInitiative"><i class="fa-solid fa-dice-d20"></i> Rzuć inicjatywę</button>
+    <button class="ns-primary-action" type="button" data-action="rollInitiative" {{#if consciousness.unconscious}}disabled{{/if}}><i class="fa-solid fa-dice-d20"></i> Rzuć inicjatywę</button>
     {{#if canManageMelee}}
       <button type="button" data-action="meleeDuel"><i class="fa-solid fa-hand-fist"></i> Pojedynek wręcz (MG)</button>
     {{/if}}
@@ -22,7 +22,10 @@
             (koszt: {{combatStatus.action.durationLabel}})
           </p>
           {{#if combatStatus.action.canResolveShot}}
-            <button type="button" data-action="resolveSingleShot">Rozstrzygnij strzał</button>
+            <button type="button" data-action="resolveSingleShot">{{combatStatus.action.resolveShotLabel}}</button>
+          {{/if}}
+          {{#if combatStatus.action.canResolveHandling}}
+            <button type="button" data-action="resolveWeaponHandling">Dokończ obsługę broni</button>
           {{/if}}
           {{#if combatStatus.action.canConfigureAiming}}
             <button type="button" data-action="configureAiming">Wybierz broń i cel strzału</button>
@@ -48,6 +51,7 @@
             <p><strong>Rozstrzygnięcie:</strong> {{combatStatus.action.resolution}}</p>
           {{/if}}
           <p>{{combatStatus.action.timingDescription}}</p>
+          {{#if combatStatus.action.burstDescription}}<p>{{combatStatus.action.burstDescription}}</p>{{/if}}
           <p>
             {{#if combatStatus.action.requiresTest}}
               Rozstrzygnięcie wymaga testu.
@@ -70,7 +74,7 @@
             <button type="button" data-action="passSegment">Pas</button>
           {{else}}
             {{#if combatStatus.isActiveTurn}}
-              <p>Rozlicz rundę walki wręcz w panelu MG.</p>
+              {{#if consciousness.unconscious}}<p>Postać jest nieprzytomna. Przejdź dalej w Trackerze; działania wymagają zdjęcia statusu przez MG.</p>{{else}}<p>Rozlicz rundę walki wręcz w panelu MG.</p>{{/if}}
             {{else}}
               <p>Postać czeka na swój moment w tym segmencie.</p>
             {{/if}}
@@ -79,6 +83,22 @@
       {{else}}
         <p>Postać jest w Combat Trackerze. Rozpocznij walkę po ustaleniu Inicjatywy.</p>
       {{/if}}
+    </section>
+  {{/if}}
+
+  {{#if quickWeaponGuidance.length}}
+    <section class="ns-weapon-guide">
+      <h2>Broń — co dalej?</h2>
+      <p class="ns-weapon-guide-intro">Wykonuj tylko wskazany następny krok. Broń w dłoni z amunicją nie wymaga osobnego „Przygotuj”, chyba że MG ustawił dodatkowy wymóg.</p>
+      {{#each quickWeaponGuidance}}
+        <article class="ns-weapon-guide-card">
+          <div><strong>{{this.name}}</strong> <span>{{this.locationLabel}} · {{this.ammunition}} nabojów</span></div>
+          <p class="ns-weapon-readiness">{{this.readinessLabel}}</p>
+          {{#if this.unavailable}}<p class="ns-weapon-blocker">{{this.unavailable}}</p>{{else}}<p>{{this.next.explanation}}</p>{{/if}}
+          <div class="ns-weapon-next"><button class="ns-primary-action" type="button" data-action="nextWeaponStep" data-item-id="{{this.id}}" {{#if this.disabled}}disabled{{/if}}>{{this.next.label}}</button><small>{{this.cost}}</small></div>
+          {{#if this.steps.length}}<details data-sync="weapon-guide-{{this.id}}"><summary>Kolejność pozostałych czynności</summary><ol>{{#each this.steps}}<li><strong>{{this.label}}</strong>{{#if this.duration}} ({{this.duration}} seg.){{/if}} — {{this.explanation}}</li>{{/each}}<li>Strzel — wybierz cel i ewentualne celowanie.</li></ol></details>{{/if}}
+        </article>
+      {{/each}}
     </section>
   {{/if}}
 
@@ -105,6 +125,15 @@
     <section class="ns-panel ns-wounds-panel">
       <div class="ns-section-heading"><h2>Rany i obrażenia</h2><strong class="ns-wound-total">{{totalWoundPenaltyPercent}}%</strong></div>
       <div class="ns-wound-toolbar"><button type="button" data-action="rollInjury">Rzut na ranę</button><span>Obrażenia <strong>{{totalDamageValue}}</strong></span></div>
+      <div class="ns-consciousness {{#if consciousness.hasPending}}ns-consciousness-pending{{/if}}">
+        {{#if consciousness.unconscious}}<p><strong>Postać jest nieprzytomna.</strong> Wybudzenie ustal z MG; status można zdjąć z tokena.</p>{{/if}}
+        {{#if consciousness.hasPending}}
+          <p><strong>Zachowanie przytomności — oczekuje na test</strong></p>
+          <ul>{{#each consciousness.pending}}<li>{{reason}}{{#if injuryName}} — {{injuryName}}{{/if}}</li>{{/each}}</ul>
+        {{/if}}
+        {{#unless consciousness.unconscious}}<button type="button" data-action="rollConsciousness">{{#if consciousness.hasPending}}Rozpatrz zachowanie przytomności{{else}}Test zachowania przytomności{{/if}}</button>{{/unless}}
+        <details data-sync="consciousness-rules"><summary>Kiedy wykonać test?</summary><p>Problematyczny test Budowy: rana ciężka, co najmniej lekka rana w głowę lub od czwartej lekkiej rany w jednej turze. Po ranie krytycznej: Cholernie trudny test Budowy. To reguła dodatkowa.</p><p>Lekkie rany liczymy w całej rundzie Trackera (3 segmenty). Poza walką użyj przycisku i wskaż powód. Test jest osobny od Odporności na ból.</p></details>
+      </div>
       <div class="ns-body-map">
         <figure class="ns-body-figure">
           <img src="systems/neuroshima/assets/body-map.svg" alt="Sylwetka postaci; rany są pogrupowane według części ciała w sąsiednich polach.">

@@ -1,4 +1,10 @@
 <header class="ns-character-header">
+  {{#if consciousness.unconscious}}
+    <div class="ns-unconscious-banner" role="status">
+      <strong><i class="fa-solid fa-bed" aria-hidden="true"></i> POSTAĆ NIEPRZYTOMNA — AKCJE ZABLOKOWANE</strong>
+      <span>Nie może strzelać ani wykonywać innych akcji bojowych. MG musi zdjąć status Nieprzytomność, aby dopuścić ją do działania.</span>
+    </div>
+  {{/if}}
   <img class="ns-character-portrait" src="{{actor.img}}" alt="{{actor.name}}">
   <div class="ns-character-identity">
     <div class="ns-dossier-title">
@@ -34,6 +40,7 @@
     <strong>W dłoniach</strong>
     {{#if heldEquipment.bothHands}}<span>Oburącz: <b>{{heldEquipment.leftName}}</b></span>
     {{else}}<span>Lewa: <b>{{heldEquipment.leftName}}</b></span><span>Prawa: <b>{{heldEquipment.rightName}}</b></span>{{/if}}
-    <button type="button" data-action="configureHeldEquipment" title="Wybierz dobytą broń lub przedmiot">Zmień</button>
+    <button type="button" data-action="configureHeldEquipment" title="Wybierz dobytą broń lub przedmiot" {{#if consciousness.unconscious}}disabled{{/if}}>Zmień</button>
+    {{#each heldWeaponGuidance}}<span class="ns-held-weapon-status"><b>{{this.name}}:</b> {{this.readinessLabel}}</span>{{/each}}
   </div>
 </header>

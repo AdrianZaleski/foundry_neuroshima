@@ -84,7 +84,9 @@ export async function selectTestConfiguration(
     skillKey = "",
     fixedDifficultyIndex = null,
     initialDifficultyIndex = DEFAULT_DIFFICULTY_INDEX,
-    fixedPenaltyPercent = 0
+    fixedPenaltyPercent = 0,
+    description = "",
+    modal = true
   } = {}
 ) {
   const woundPenaltyPercent = calculateWoundPenaltyPercent(actor);
@@ -137,6 +139,7 @@ export async function selectTestConfiguration(
     position: { width: 520 },
     content: `
       <div class="ns-test-settings">
+        ${description ? `<p>${foundry.utils.escapeHTML(description)}</p>` : ""}
         ${testTypeField}
         <div class="ns-test-field">
           <label for="neuroshima-difficulty">Bazowy poziom trudności</label>
@@ -163,7 +166,7 @@ export async function selectTestConfiguration(
       icon: "fas fa-dice-d20"
     },
     rejectClose: false,
-    modal: true
+    modal
   });
 
   if (!formData) {
@@ -190,7 +193,7 @@ export async function selectTestConfiguration(
   ] + totalPenaltyPercent;
 
   return {
-    testType: String(formData.testType),
+    testType: fixedTestType || String(formData.testType),
     startingDifficultyIndex,
     includedWoundPenaltyPercent,
     includedArmorPenaltyPercent,

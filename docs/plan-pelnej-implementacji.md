@@ -2,6 +2,11 @@
 
 Stan bazowego audytu: 2026-09-06. Aktualizacja priorytetów: 2026-09-10.
 
+Aktualizacja 2026-10-04: podłączono dobycie, przygotowanie, odbezpieczenie,
+przeładowanie i dłonie do akcji segmentowych oraz warunków oddania strzału.
+Czas przeładowania z katalogu oznacza segmenty, również ponad jedną rundę.
+Zakres i ograniczenia: [obsługa broni](obsluga-broni.md).
+
 ## Aktualne priorytety — 2026-09-10
 
 Dalsza automatyzacja pojedynczych cech została odłożona decyzją użytkownika.
@@ -127,12 +132,16 @@ Do dodania:
 - automatyczna kara za dystans według klasy broni z zakładki `WEAPON` —
   zrealizowane dla standardowego strzału pojedynczego,
 - modyfikatory za ruch strzelca i celu, postawę, widoczność, rozmiar celu
-  oraz osłonę,
+  oraz osłonę — formularz warunków wdrożony; widoczność i nietypowy rozmiar
+  ustala MG, pozostałe wartości z tabeli podręcznika; wybór lokacji działa
+  także przy pancerzu i zapisie rany (`warunki-strzalu.md`),
 - kontrola, czy broń rzeczywiście obsługuje wybrany rodzaj ataku,
 - przypisanie właściwej Umiejętności do klasy broni,
 - wymagana Budowa i konsekwencje niespełnienia wymagania,
 - szybkostrzelność, czas przeładowania, dobywanie i przygotowanie broni,
-- seria krótka, seria długa i ogień ciągły,
+- seria krótka, seria długa i ogień ciągły — wdrożone dla jednego celu
+  (2026-10-06); koszt, amunicja, jeden rzut, trafienia i rany segmentami:
+  [opis obsługi](serie-i-ogien-ciagly.md),
 - korygowanie i przenoszenie ognia,
 - seria trzystrzałowa,
 - strzał śrutem,
@@ -222,6 +231,10 @@ Fundament pancerzy działa. Do pełnej obsługi pozostają:
 - wygodna naprawa albo wymiana zniszczonego elementu.
 
 ### 6. Rany, leczenie, choroby i śmierć
+
+Działa dodatkowa reguła zachowania przytomności: wywołanie po nowej ranie,
+licznik lekkich ran w rundzie, test Budowy i status nieprzytomności.
+Szczegóły: [zachowanie-przytomnosci.md](zachowanie-przytomnosci.md).
 
 Do dodania:
 
@@ -330,6 +343,8 @@ pozostaje do potwierdzenia. Szczegóły i pozostały zakres:
 ## Najbliższy krok
 
 Wybrać kolejny większy etap zgodnie z aktualnymi priorytetami powyżej.
-Zapisany wcześniej krok strzelania — osobne ustawienia ruchu, widoczności,
-osłony i wybranej lokacji — pozostaje otwarty, ale nie jest jedynym
-kandydatem do następnej realizacji.
+Warunki strzału (ruch, widoczność, postawa, osłona i wybrana lokacja)
+oraz serie i ogień ciągły w jeden cel zostały wdrożone.
+Następny proponowany etap to korygowanie i przenoszenie ognia.
+Nie rozwijamy obecnie skutków ran poszczególnych lokacji —
+użytkownik wskazał niepełny opis tych zasad w podręczniku.

@@ -33,9 +33,15 @@ import {
   sumModifierSources
 } from "../effects/modifiers.mjs";
 import {
-  calculateRangeModifier,
   measureTokenDistanceMeters
 } from "./range.mjs";
+import { usableFirearms } from "./weapon-handling-state.mjs";
+import { declareSegmentAction, prepareActorCombatStatus, cancelCurrentSegmentActionDeclaration } from "./segments.mjs";
+import { COMBAT_ACTIONS } from "./action-catalog.mjs";
+import { shotConditionsHtml, evaluateShotConfiguration, bindShotConfiguration } from "./shot-conditions-interface.mjs";
+import { shotPercent } from "./shot-conditions.mjs";
+import { BURST_MODES, isBurstAction, supportsAutomaticFire, burstWeaponPenalty, burstSegmentPlan } from "./burst-fire.mjs";
+import { allowCombatAction, isUnconscious } from "./action-access.mjs";
 
 const SYSTEM_ID = "neuroshima";
 const SKILL_USAGE_FLAG = "combatSkillUsage";
@@ -105,13 +111,7 @@ function getAvailableShotTargets(combatant) {
 }
 
 function getUsableFirearms(actor) {
-  return actor.items.filter((item) => (
-    item.type === "weapon"
-    && item.system.weaponClass !== "LAUNCHER"
-    && item.system.weaponClass !== "PROJECTILE"
-    && item.system.currentAmmunition > 0
-    && item.system.jamState === "ready"
-  ));
+  return usableFirearms(actor);
 }
 
 function getCurrentSkillUsage(combatant, round) {
@@ -252,10 +252,11 @@ export function classifyJamSeverity(jamRollResult) {
   return "critical";
 }
 
-async function selectShotConfiguration(actor, target, shotPreparation, sourceToken) {
+export async function selectShotConfiguration(actor, target, shotPreparation, sourceToken, { burst = false } = {}) {
+  if (!allowCombatAction(actor)) return null;
   const weapon = actor.items.get(String(shotPreparation?.weaponId ?? ""));
   if (!weapon || !getUsableFirearms(actor).includes(weapon)) {
-    ui.notifications.warn("Wybrana broń nie jest już sprawna albo nie ma amunicji.");
+    ui.notifications.warn("Broń nie jest gotowa do strzału. Sprawdź panel „Broń — co dalej?” na karcie.");
     return null;
   }
 
@@ -263,17 +264,18 @@ async function selectShotConfiguration(actor, target, shotPreparation, sourceTok
   const armorPenalty = calculateArmorPenaltyPercent(actor, "zrecznosc");
   const globalTestModifierSources = collectTestModifierSources(actor);
   const globalTestModifierPercent = sumModifierSources(globalTestModifierSources);
+  const getPreviewContext = skillKey => {
+    if (!Object.hasOwn(RANGED_SKILLS, skillKey) || (burst && skillKey !== "bronMaszynowa")) throw new Error("Wybierz Umiejętność strzelania (serie: Broń maszynowa).");
+    return { weapon, woundPenalty, armorPenalty, modeModifier: burst ? burstWeaponPenalty(weapon) : 0,
+      skillLevel: Math.max(0, calculateSkillValue(actor, skillKey)),
+      testModifierPercent: sumModifierSources(collectTestModifierSources(actor, { attributeKey: "zrecznosc", skillKey })) };
+  };
   const measuredDistance = measureTokenDistanceMeters(sourceToken, target);
-  const measuredRange = measuredDistance === null
-    ? null
-    : calculateRangeModifier(weapon, measuredDistance);
-  const measuredRangeDescription = measuredRange?.supported
-    ? measuredRange.inRange
-      ? `${measuredDistance} m; ${measuredRange.rangeLabel}; do ${measuredRange.bandMaximum} m: ${measuredRange.modifierPercent >= 0 ? "+" : ""}${measuredRange.modifierPercent}%`
-      : `${measuredDistance} m; poza zasięgiem standardowego strzału (maks. ${measuredRange.maximumDistance} m)`
-    : "brak automatycznego pomiaru lub tabeli dla tej klasy";
   const formData = await foundry.applications.api.DialogV2.input({
-    window: { title: `Strzał: ${actor.name} → ${target.name}` },
+    classes: ["neuroshima-shot-dialog"],
+    window: { title: `Strzał: ${actor.name} → ${target.name}`, resizable: true },
+    position: { width: 680 },
+    render: (event, dialog) => bindShotConfiguration(dialog.element, getPreviewContext),
     content: `
       <p>
         Broń: <strong>${foundry.utils.escapeHTML(weapon.name)}</strong><br>
@@ -282,20 +284,23 @@ async function selectShotConfiguration(actor, target, shotPreparation, sourceTok
       <div class="form-group">
         <label for="neuroshima-shot-skill">Umiejętność</label>
         <select id="neuroshima-shot-skill" name="skillKey">
-          ${prepareSkillOptions(actor, getDefaultRangedSkillKey(weapon))}
+          ${burst ? '<option value="bronMaszynowa">Broń maszynowa — seria / ogień ciągły</option>' : prepareSkillOptions(actor, getDefaultRangedSkillKey(weapon))}
         </select>
       </div>
       <hr>
       <div class="form-group">
         <label for="neuroshima-shot-distance">Odległość do celu</label>
         <input id="neuroshima-shot-distance" type="number" name="distanceMeters"
-          value="${measuredDistance ?? ""}" min="0" step="0.1" placeholder="metry">
+          value="${measuredDistance ?? ""}" min="0" step="0.1" placeholder="metry" aria-describedby="neuroshima-shot-range">
         <span>m</span>
-        <small>Automatyczny wynik: ${measuredRangeDescription}</small>
+        <small id="neuroshima-shot-range" data-shot-range aria-live="polite">Modyfikator zasięgu dla wpisanej odległości.</small>
+        <small>${measuredDistance === null ? "Brak pomiaru z mapy — wpisz odległość ręcznie." : `Pomiar z mapy: ${measuredDistance.toLocaleString("pl-PL")} m. Możesz zmienić odległość ręcznie.`}</small>
       </div>
       <div class="form-group">
         <label><input type="checkbox" name="includeRange" checked> Uwzględnij modyfikator zasięgu</label>
       </div>
+      ${shotConditionsHtml()}
+      <details class="ns-shot-other"><summary>Pozostałe modyfikatory i efekty</summary>
       <div class="form-group">
         <label><input type="checkbox" name="includeWounds" checked> Uwzględnij rany (${woundPenalty}%)</label>
       </div>
@@ -307,60 +312,51 @@ async function selectShotConfiguration(actor, target, shotPreparation, sourceTok
         <small>${describeModifierSources(globalTestModifierSources, "%")}</small>
       </div>
       <div class="form-group">
-        <label for="neuroshima-shot-modifier">Ruch, osłona i inne warunki</label>
+        <label for="neuroshima-shot-modifier">Pozostałe modyfikatory — ustala MG</label>
         <input id="neuroshima-shot-modifier" type="number" name="customModifier" value="0" step="1"> %
       </div>
+      <p class="ns-shot-hint">Dodatnie wartości utrudniają, ujemne ułatwiają. Wpisz tu np. wpływ nietypowego rozmiaru celu. Nie powtarzaj kar wybranych powyżej.</p>
+      </details>
+      <section class="ns-shot-summary" aria-live="polite">
+        <strong data-shot-summary>Podsumowanie warunków</strong>
+        <details><summary>Skąd ten wynik?</summary><p data-shot-breakdown></p></details>
+        <p data-shot-error role="alert"></p>
+        <small>PT przed rzutem. Naturalne 1 i 20 mogą jeszcze go zmienić. Pancerz celu rozpatrujemy dopiero po trafieniu.</small>
+      </section>
     `,
     ok: {
       label: "Rzuć",
       icon: "fas fa-crosshairs"
     },
     rejectClose: false,
-    modal: true
+    modal: false
   });
 
   if (!formData) return null;
 
   const skillKey = String(formData.skillKey);
-  const distanceText = String(formData.distanceMeters ?? "").trim();
-  const distanceMeters = distanceText ? Number(distanceText) : Number.NaN;
-  const includeRange = checkboxIsSelected(formData.includeRange);
-  const rangeResult = Number.isFinite(distanceMeters)
-    ? calculateRangeModifier(weapon, distanceMeters)
-    : null;
-  if (includeRange && (!rangeResult?.supported || !rangeResult.inRange)) {
-    const message = rangeResult?.supported
-      ? `Cel znajduje się poza zasięgiem standardowego strzału (maks. ${rangeResult.maximumDistance} m).`
-      : "Nie można ustalić kary zasięgu. Wpisz odległość w metrach albo wyłącz modyfikator zasięgu.";
-    ui.notifications.warn(message);
+  let evaluated;
+  try { evaluated = evaluateShotConfiguration(formData, getPreviewContext(skillKey)); }
+  catch (error) { ui.notifications.warn(error.message); return null; }
+  if (evaluated.blockers.length) {
+    ui.notifications.warn(evaluated.blockers.join(" "));
     return null;
   }
   const testModifierSources = collectTestModifierSources(actor, {
     attributeKey: "zrecznosc",
     skillKey
   });
-  const testModifierPercent = sumModifierSources(testModifierSources);
-
   return {
+    ...evaluated,
     weapon,
     skillKey,
-    woundPenalty: checkboxIsSelected(formData.includeWounds) ? woundPenalty : 0,
-    armorPenalty: checkboxIsSelected(formData.includeArmor) ? armorPenalty : 0,
-    effectModifier: checkboxIsSelected(formData.includeEffects)
-      ? testModifierPercent
-      : 0,
     testModifierSources: checkboxIsSelected(formData.includeEffects)
       ? testModifierSources
-      : [],
-    distanceMeters: Number.isFinite(distanceMeters) ? distanceMeters : null,
-    rangeResult,
-    rangeModifier: includeRange ? rangeResult.modifierPercent : 0,
-    includeRange,
-    customModifier: Number(formData.customModifier) || 0
+      : []
   };
 }
 
-async function selectSpentSkillPoints(actor, skillName, availablePoints, naturalResults) {
+export async function selectSpentSkillPoints(actor, skillName, availablePoints, naturalResults) {
   if (availablePoints <= 0 || naturalResults.every((result) => result === 20)) {
     return naturalResults.map(() => 0);
   }
@@ -402,6 +398,7 @@ async function selectSpentSkillPoints(actor, skillName, availablePoints, natural
 }
 
 export async function configureAiming(actor) {
+  if (!allowCombatAction(actor)) return false;
   const combatant = getActorCombatant(actor);
   const action = getSegmentAction(combatant);
   if (!combatant || game.combat?.combatant?.id !== combatant.id) {
@@ -413,9 +410,9 @@ export async function configureAiming(actor) {
     return false;
   }
 
-  const weapons = getUsableFirearms(actor);
+  const weapons = getUsableFirearms(actor).filter(weapon => !isBurstAction(action) || supportsAutomaticFire(weapon));
   if (weapons.length === 0) {
-    ui.notifications.warn("Postać nie ma sprawnej, załadowanej broni palnej.");
+    ui.notifications.warn("Brak gotowej broni w dłoniach. Sprawdź stan broni na karcie.");
     return false;
   }
 
@@ -445,7 +442,7 @@ export async function configureAiming(actor) {
       </div>
       <p>
         Czas akcji: <strong>${action.duration} ${action.duration === 1 ? "segment" : "segmenty"}</strong><br>
-        Rzut po zakończeniu: <strong>${1 + action.aimingBonusDice}k20</strong>
+        ${isBurstAction(action) ? 'Jeden rzut 1k20 w pierwszym segmencie. Kolejne pociski rozliczane w następnych segmentach.' : `Rzut po zakończeniu: <strong>${1 + action.aimingBonusDice}k20</strong>`}
       </p>
     `,
     ok: { label: "Zapisz broń i cel", icon: "fas fa-crosshairs" },
@@ -455,7 +452,7 @@ export async function configureAiming(actor) {
   if (!formData) return false;
 
   const weapon = actor.items.get(String(formData.weaponId));
-  if (!weapon || !weapons.includes(weapon)) return false;
+  if (!weapon || !getUsableFirearms(actor).includes(weapon) || (isBurstAction(action) && !supportsAutomaticFire(weapon))) return false;
   const targetTokenId = String(formData.targetTokenId);
   const target = availableTargets.find((candidate) => candidate.id === targetTokenId);
   if (!target) {
@@ -545,7 +542,7 @@ async function publishDamageResolution(
     content: [
       `<strong>Skutek trafienia: ${foundry.utils.escapeHTML(target.name)}</strong>`,
       `Kość trafienia: ${hitDie.naturalResult}`,
-      `Lokacja: <strong>${damageResult.locationLabel}</strong>`,
+      `Lokacja${damageResult.locationWasChosen ? " wybrana przed rzutem" : " z kości"}: <strong>${damageResult.locationLabel}</strong>`,
       `Obrażenia broni: ${foundry.utils.escapeHTML(baseDamageName)}`,
       damageResult.headBonus ? "Trafienie w głowę: obrażenia zwiększone o 1 poziom" : null,
       `Pancerz: ${armorName}`,
@@ -562,10 +559,13 @@ async function publishDamageResolution(
   });
 }
 
-async function resolveHitConsequences(shooter, target, weapon, shotResult) {
-  const hitDie = await selectHitDie(shotResult.evaluatedDice);
+export async function resolveHitConsequences(shooter, target, weapon, shotResult, calledLocation = null) {
+  // Przy zadeklarowanej lokacji wybór kości niczego już nie zmienia.
+  const hitDie = calledLocation
+    ? shotResult.evaluatedDice.filter(die => die.succeeded).sort((a, b) => b.pointsDifference - a.pointsDifference)[0]
+    : await selectHitDie(shotResult.evaluatedDice);
   if (!hitDie) return;
-  const location = getHitLocation(hitDie.naturalResult);
+  const location = calledLocation ?? getHitLocation(hitDie.naturalResult);
   const targetActor = target.actor;
   const armorSelection = targetActor && location
     ? await selectArmorForHit(targetActor, location, "ballistic")
@@ -574,6 +574,7 @@ async function resolveHitConsequences(shooter, target, weapon, shotResult) {
   const damageResult = resolveDamage({
     damageCode: weapon.system.damageCode,
     naturalResult: hitDie.naturalResult,
+    hitLocation: calledLocation,
     armorReduction,
     armorPenetration: weapon.system.armorPenetration
   });
@@ -621,7 +622,58 @@ async function resolveHitConsequences(shooter, target, weapon, shotResult) {
   });
 }
 
+const pendingShots = new Set();
+const pendingDeclarations = new Set();
+
+export async function startWeaponShot(actor, weaponId) {
+  if (!allowCombatAction(actor)) return false;
+  const key = actor.uuid ?? actor.id;
+  if (pendingDeclarations.has(key)) return false;
+  pendingDeclarations.add(key);
+  try {
+    const weapon = actor.items.get(weaponId);
+    if (!actor.isOwner || !prepareActorCombatStatus(actor).canDeclareAction || !usableFirearms(actor).includes(weapon)) {
+      ui.notifications.warn("Sprawdź gotowość tej broni i poczekaj na wolny segment swojej kolejki.");
+      return false;
+    }
+    const targets = getAvailableShotTargets(getActorCombatant(actor));
+    if (!targets.length) { ui.notifications.warn("Na scenie nie ma dostępnego celu strzału."); return false; }
+    const selected = [...game.user.targets].find(token => targets.some(target => target.id === token.id));
+    const answer = await foundry.applications.api.DialogV2.input({
+      classes: ["neuroshima-weapon-handling-dialog"], window: { title: `Strzel: ${weapon.name}` },
+      content: `<p><strong>${foundry.utils.escapeHTML(weapon.name)}</strong> — ${weapon.system.currentAmmunition} nabojów.</p>
+        <label>Cel<select name="targetTokenId">${prepareTargetOptions(targets, selected?.id)}</select></label>
+        <label>Sposób strzału<select name="shotType"><option value="shot">Zwykły — 1 segment</option><option value="aimingOne">Celowany — 2 segmenty, +1k20</option><option value="aimingTwo">Długo celowany — 3 segmenty, +2k20</option>${supportsAutomaticFire(weapon) ? Object.entries(BURST_MODES).map(([code, mode]) => `<option value="${code}">${mode.name} — ${mode.duration} seg., ${burstSegmentPlan(code, weapon.system.fireRate, weapon.system.currentAmmunition).reduce((a,b)=>a+b,0)} nabojów</option>`).join("") : ""}</select></label>
+        <p>Strzał celowany nastąpi w ostatnim segmencie wybranego czasu. Seria rozpoczyna się od razu: jeden rzut na całą akcję, amunicja i trafienia rozliczane w każdym segmencie. Dalszy ogień można przerwać.</p>`,
+      ok: { label: "Zadeklaruj strzał" }, rejectClose: false, modal: true
+    });
+    if (!answer) return false;
+    if (!prepareActorCombatStatus(actor).canDeclareAction || !usableFirearms(actor).includes(weapon)) return false;
+    const target = getAvailableShotTargets(getActorCombatant(actor)).find(token => token.id === String(answer.targetTokenId));
+    if (!target || !["shot", "aimingOne", "aimingTwo", ...(supportsAutomaticFire(weapon) ? Object.keys(BURST_MODES) : [])].includes(answer.shotType)) return false;
+    const definition = COMBAT_ACTIONS[answer.shotType];
+    if (!(await declareSegmentAction(actor, `${definition.name}: ${weapon.name}`, definition.duration, { ...definition, actionCode: answer.shotType }))) return false;
+    const configured = await configureCurrentAiming(actor, { weaponId, weaponName: weapon.name, targetTokenId: target.id, targetName: target.name });
+    if (!configured) { await cancelCurrentSegmentActionDeclaration(actor); return false; }
+    if (definition.duration === 1 || isBurstAction({ actionCode: answer.shotType })) await resolveSingleShot(actor);
+    return true;
+  } finally { pendingDeclarations.delete(key); }
+}
+
 export async function resolveSingleShot(actor) {
+  const key = actor.uuid ?? actor.id;
+  if (pendingShots.has(key)) return false;
+  pendingShots.add(key);
+  try { return await resolveSingleShotOnce(actor); }
+  finally { pendingShots.delete(key); }
+}
+
+async function resolveSingleShotOnce(actor) {
+  if (isBurstAction(getSegmentAction(getActorCombatant(actor)))) {
+    const { resolveBurstFire } = await import("./burst-fire-interface.mjs");
+    return resolveBurstFire(actor);
+  }
+  if (!allowCombatAction(actor)) return false;
   const combatant = getActorCombatant(actor);
   const action = getSegmentAction(combatant);
   if (!combatant || game.combat?.combatant?.id !== combatant.id) {
@@ -661,6 +713,17 @@ export async function resolveSingleShot(actor) {
   if (!configuration) return false;
 
   const { weapon, skillKey } = configuration;
+  const actionStillCurrent = () => {
+    const current = getSegmentAction(combatant);
+    return !isUnconscious(actor) && game.combat?.combatant?.id === combatant.id
+      && calculateSegmentTick(game.combat.round, getCombatSegment(game.combat)) === currentTick
+      && current?.startedAtTick === action.startedAtTick && !current.resolved && !current.interrupted
+      && getUsableFirearms(actor).includes(weapon);
+  };
+  if (!actionStillCurrent()) {
+    ui.notifications.warn("Stan broni albo bieżąca akcja zmieniły się. Strzał nie został wykonany.");
+    return false;
+  }
   const aimingBonusDice = Math.max(0, Math.min(action.aimingBonusDice, 2));
   const numberOfDice = 1 + aimingBonusDice;
   const skillLevel = Math.max(0, calculateSkillValue(actor, skillKey));
@@ -690,13 +753,12 @@ export async function resolveSingleShot(actor) {
     (sum, spentPoints) => sum + spentPoints,
     0
   );
+  if (!actionStillCurrent()) {
+    ui.notifications.warn("Stan broni albo bieżąca akcja zmieniły się podczas rzutu. Nie zużyto amunicji.");
+    return false;
+  }
 
-  const totalDifficultyPercentage = configuration.woundPenalty
-    + configuration.armorPenalty
-    + configuration.effectModifier
-    + configuration.rangeModifier
-    + configuration.customModifier
-    + weapon.system.accuracyModifier;
+  const totalDifficultyPercentage = configuration.totalDifficultyPercentage;
   const result = calculateRangedShotResult({
     dexterity: calculateAttributeValue(actor, "zrecznosc"),
     naturalResults,
@@ -725,7 +787,8 @@ export async function resolveSingleShot(actor) {
   } else {
     // Nabój odejmujemy wyłącznie wtedy, gdy broń rzeczywiście wystrzeliła.
     await weapon.update({
-      "system.currentAmmunition": ammunitionAfterSuccessfulDischarge
+      "system.currentAmmunition": ammunitionAfterSuccessfulDischarge,
+      "system.needsCycling": Boolean(weapon.system.requiresCycling)
     });
   }
 
@@ -741,6 +804,9 @@ export async function resolveSingleShot(actor) {
   const resolution = jamResult
     ? "Zacięcie — broń nie wystrzeliła"
     : result.testPassed ? "Trafienie" : "Pudło";
+  // Nabój został rozliczony: błąd późniejszego okna obrażeń nie może pozwolić
+  // oddać drugiego strzału w ramach tej samej akcji.
+  await markCurrentSegmentActionResolved(actor, resolution);
   const diceDescription = result.evaluatedDice.map((die, dieIndex) => {
     const adjustedDescription = die.spentSkillPoints > 0
       ? `${die.naturalResult} → ${die.adjustedResult}`
@@ -765,7 +831,8 @@ export async function resolveSingleShot(actor) {
       configuration.distanceMeters === null
         ? "Dystans: nieustalony"
         : `Dystans: ${configuration.distanceMeters} m; ${configuration.rangeResult?.rangeLabel ?? "tabela pominięta"}${configuration.rangeResult?.bandMaximum ? `; przedział do ${configuration.rangeResult.bandMaximum} m` : ""}`,
-      `Kary i modyfikatory: rany ${configuration.woundPenalty}%, pancerz ${configuration.armorPenalty}%, efekty ${configuration.effectModifier}%, zasięg ${configuration.rangeModifier}%, warunki ${configuration.customModifier}%, broń ${weapon.system.accuracyModifier}%`,
+      `Warunki strzału: ${configuration.conditions.descriptions.map(text => foundry.utils.escapeHTML(text)).join("; ")}`,
+      `Kary i modyfikatory: ${configuration.breakdown.map(entry => `${foundry.utils.escapeHTML(entry.label)} ${shotPercent(entry.percent)}`).join("; ")}`,
       `Źródła efektów testu: ${describeModifierSources(configuration.testModifierSources, "%")}`,
       `Suma kar i modyfikatorów: ${totalDifficultyPercentage}%`,
       `Ostateczny PT: ${DIFFICULTY_LABELS[result.finalDifficultyIndex]}`,
@@ -796,9 +863,8 @@ export async function resolveSingleShot(actor) {
   }
 
   if (shotDischarged && result.testPassed) {
-    await resolveHitConsequences(actor, target, weapon, result);
+    await resolveHitConsequences(actor, target, weapon, result, configuration.conditions.calledLocation);
   }
 
-  await markCurrentSegmentActionResolved(actor, resolution);
   return true;
 }

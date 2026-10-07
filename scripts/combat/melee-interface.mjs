@@ -7,6 +7,7 @@ import { calculateInitiativeResult } from "./initiative-calculation.mjs";
 import { MELEE_DUELS_FLAG, trackedDuels, findTrackedDuel, assertTrackerStart, interruptRangedShotsForMelee,
   assertTrackerExchange, assertTrackerNextRound, assertTrackerParticipants } from "./melee-tracker.mjs";
 import { advanceSegmentTurn } from "./segments.mjs";
+import { assertCombatAction, isUnconscious, UNCONSCIOUS_ACTION_MESSAGE } from "./action-access.mjs";
 import { createMeleeDamageHits, resolveMeleeDamageHit, meleeDamageProfile,
   meleeDamageChoicesHtml, validateMeleeDamageHitUpdate } from "./melee-damage.mjs";
 import { calculateWoundPenaltyPercent, calculateDifficultyIndexFromPercentage, calculateFinalDifficultyIndex,
@@ -137,6 +138,7 @@ function profile(actor, weaponId, skillKey, tempo = 0) {
 }
 
 export async function rollMeleeBerserkMorale(actor) {
+  assertCombatAction(actor);
   const skillLevel = Math.max(0, calculateSkillValue(actor, "morale"));
   const woundPenalty = calculateWoundPenaltyPercent(actor);
   const armorAid = calculateArmorPenaltyPercent(actor);
@@ -193,6 +195,7 @@ async function declareManeuvers(configurations, initiative, previousState = null
 }
 
 async function rollFighters(declarations, combat = null) {
+  for (const declaration of declarations) assertCombatAction(duelActor(declaration.id, combat));
   const fighters = [];
   const sharedTempo = Math.max(0, ...declarations.map(entry => entry.tempo ?? 0));
   for (const declaration of declarations) {
@@ -244,6 +247,7 @@ async function setup(host) {
 }
 
 async function rollOpening(configurations, opening, combat = null) {
+  for (const configuration of configurations) assertCombatAction(duelActor(configuration.id, combat));
   const results = [];
   for (const configuration of configurations) {
     const actor = duelActor(configuration.id, combat);
@@ -295,6 +299,7 @@ export async function handleMeleeRequest(payload) {
       throw new Error("Możesz decydować tylko za własną postać.");
     }
     const fighter = duel.state.fighters.find(entry => entry.id === actor.id);
+    if (!damageRequest) assertCombatAction(actor);
     if (!fighter) throw new Error("Postać nie uczestniczy w pojedynku.");
     let updated;
     if (payload.action === "updateDamageHit") {
@@ -570,6 +575,12 @@ export async function openMeleeDuel(host) {
       const defenseChoices = describeMeleeDice(defenderFighter, roleThresholds[defenderIndex]).filter(die => !die.used);
       const successfulAttackDice = attackChoices.filter(die => die.succeeds);
       const remainingSegments = Math.max(0, 4 - state.segment);
+      const incapacitated = actors.some(isUnconscious);
+      if (incapacitated) {
+        ui.notifications.warn(UNCONSCIOUS_ACTION_MESSAGE);
+        await save(null);
+        break;
+      }
       const canAct = state.segment <= 3 && exchangeReady;
       const canAdvance = combat && configurations.some(entry => entry.id === combat.combatant?.actor?.id) && !exchangeReady;
       const canAttemptBerserk = canAct && !defenderFighter.berserk
@@ -641,6 +652,7 @@ export async function openMeleeDuel(host) {
       }
       selectedDice = data;
       try {
+        if (["exchange", "combined", "next", "points", "berserk"].includes(data.action)) actors.forEach(assertCombatAction);
         if (clock() !== clockSnapshot) throw new Error("Tracker zmienił się podczas wyboru. Otwórz panel ponownie.");
         if (data.action === "wait") break;
         if (data.action === "tracker" && canAdvance) {

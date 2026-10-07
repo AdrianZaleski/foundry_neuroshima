@@ -1,5 +1,8 @@
 import { attributeSelection, displayAttributeSelection } from "./attribute-selection.mjs";
 import { openItemAddition } from "./item-addition.mjs";
+import { requestWeaponHandling, resolveWeaponHandling } from "../combat/weapon-handling.mjs";
+import { prepareWeaponGuidance } from "./weapon-guidance.mjs";
+import { startWeaponShot } from "../combat/ranged-shot.mjs";
 import { prepareHeldEquipment, configureHeldEquipment } from "./held-equipment.mjs";
 import { captureFieldState, restoreFieldState } from "./sheet-view-state.mjs";
 import { ATTRIBUTE_LABELS, rollAttribute } from "../rolls/attribute-roll.mjs";
@@ -11,6 +14,8 @@ import { openMeleeDuel, openMeleePlayerPanel } from "../combat/melee-interface.m
 import { findTrackedDuel } from "../combat/melee-tracker.mjs";
 import { treatInjury } from "../health/treatment-interface.mjs";
 import { healOverTime } from "../health/healing-interface.mjs";
+import { prepareConsciousness } from "../health/consciousness.mjs";
+import { resolveConsciousness } from "../health/consciousness-interface.mjs";
 import { purchaseDevelopment, nextDevelopmentSession, toggleDevelopmentSessionLimit } from "../development/interface.mjs";
 import { isMerchantMind } from "../effects/conditional-features.mjs";
 import { checkFeatureRequirements } from "../effects/background-features.mjs";
@@ -423,6 +428,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       configureHeldEquipment: function () { return configureHeldEquipment(this.actor); },
       rollSkill: this.#onRollSkill,
       rollInjury: this.#onRollInjury,
+      rollConsciousness: function () { return resolveConsciousness(this.actor); },
       rollInitiative: this.#onRollInitiative,
       meleeDuel: function () { return openMeleeDuel(this.actor); },
       meleePlayerPanel: function () { return openMeleePlayerPanel(this.actor); },
@@ -476,6 +482,9 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       editWeapon: this.#onEditWeapon,
       deleteWeapon: this.#onDeleteWeapon,
       reloadWeapon: this.#onReloadWeapon,
+      handleWeapon: this.#onHandleWeapon,
+      nextWeaponStep: this.#onNextWeaponStep,
+      resolveWeaponHandling: this.#onResolveWeaponHandling,
 
       createMeleeWeapon: this.#onCreateMeleeWeapon,
       editMeleeWeapon: this.#onEditMeleeWeapon,
@@ -557,6 +566,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
   _preSyncPartState(partId, newElement, priorElement, state) {
     super._preSyncPartState(partId, newElement, priorElement, state);
     state.neuroshimaField = captureFieldState(priorElement);
+    if (state.neuroshimaField) state.focus = undefined;
   }
 
   _syncPartState(partId, newElement, priorElement, state) {
@@ -614,6 +624,10 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.genderOptions = { "": "Nie określono", female: "Kobieta", male: "Mężczyzna", other: "Inna" };
     context.system = this.actor.system;
     context.combatStatus = prepareActorCombatStatus(this.actor);
+    context.weaponGuidance = this.actor.items.filter(item => item.type === "weapon")
+      .map(item => prepareWeaponGuidance(this.actor, item, context.combatStatus, Boolean(game.combat?.started)));
+    context.heldWeaponGuidance = context.weaponGuidance.filter(item => item.heldHands);
+    context.quickWeaponGuidance = context.heldWeaponGuidance.length ? context.heldWeaponGuidance : context.weaponGuidance;
     // Wartości z bieżących Itemów, tak jak w rzutach; nie z wcześniejszego
     // przygotowania modelu, które może poprzedzać przygotowanie cech Actora.
     context.skillFinalValues = Object.fromEntries(
@@ -795,6 +809,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
       });
 
     context.injuryLocations = prepareInjuryLocations(context.injuryItems);
+    context.consciousness = prepareConsciousness(this.actor);
     context.activeInjuryItems = context.injuryItems.filter(item => item.penaltyPercent > 0);
     context.healedInjuryItems = context.injuryItems.filter(item => item.penaltyPercent <= 0);
     context.totalWoundPenaltyPercent = context.injuryItems.reduce(
@@ -918,6 +933,7 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     context.weaponItems = this.actor.items
       .filter((item) => item.type === "weapon")
       .map((item) => ({
+        ...prepareWeaponGuidance(this.actor, item, context.combatStatus, Boolean(game.combat?.started)),
         id: item.id,
         name: item.name,
         weaponClassName: weaponClassNames[item.system.weaponClass] ?? item.system.weaponClass,
@@ -1564,133 +1580,36 @@ export class NeuroshimaCharacterSheet extends HandlebarsApplicationMixin(ActorSh
     await weaponItem.sheet.render({ force: true });
   }
 
-  // Przeładowanie porównuje kod wymagany przez broń z symbolem kompatybilności
-  // zapasu amunicji. Nie opiera się na nazwach widocznych dla użytkownika.
   static async #onReloadWeapon(event, target) {
-    const itemId = target.dataset.itemId;
-    const weaponItem = this.actor.items.get(itemId);
+    await requestWeaponHandling(this.actor, "changeMagazine", target.dataset.itemId);
+    this.render();
+  }
 
-    if (!weaponItem || weaponItem.type !== "weapon") {
-      ui.notifications.warn("Nie znaleziono tej broni na karcie postaci.");
-      return;
+  static async #onHandleWeapon(event, target) {
+    await requestWeaponHandling(this.actor, target.dataset.operation, target.dataset.itemId);
+    this.render();
+  }
+
+  static async #onNextWeaponStep(event, target) {
+    const weapon = this.actor.items.get(target.dataset.itemId);
+    if (!weapon || weapon.type !== "weapon") return;
+    const guidance = prepareWeaponGuidance(this.actor, weapon, prepareActorCombatStatus(this.actor), Boolean(game.combat?.started));
+    if (guidance.disabled) { ui.notifications.warn(guidance.unavailable); return; }
+    const action = guidance.next.action;
+    if (action === "shot") await startWeaponShot(this.actor, weapon.id);
+    else if (action === "hands") await configureHeldEquipment(this.actor);
+    else if (action === "jam") {
+      await handleWeaponJam(this.actor, weapon);
+      const status = prepareActorCombatStatus(this.actor);
+      if (status.action?.effectCode === "clearMinorJam" && !status.action.isPending && !status.action.resolved) await resolveMinorJamClearing(this.actor);
     }
+    else await requestWeaponHandling(this.actor, action, weapon.id);
+    this.render();
+  }
 
-    const magazineCapacity = weaponItem.system.magazineCapacity;
-    const currentAmmunition = weaponItem.system.currentAmmunition;
-
-    if (magazineCapacity <= 0) {
-      ui.notifications.warn("Ta broń nie ma określonej pojemności magazynka.");
-      return;
-    }
-
-    if (currentAmmunition >= magazineCapacity) {
-      ui.notifications.info(`Magazynek broni ${weaponItem.name} jest już pełny.`);
-      return;
-    }
-
-    const requiredAmmunitionSymbol = weaponItem.system.ammunitionCode.trim();
-
-    if (!requiredAmmunitionSymbol) {
-      ui.notifications.warn("Broń nie ma określonego kodu wymaganej amunicji.");
-      return;
-    }
-
-    // Bierzemy pod uwagę tylko zgodne zapasy, w których pozostał co najmniej
-    // jeden nabój. Puste Itemy pozostają na karcie, ale nie można ich użyć.
-    const compatibleAmmunitionItems = this.actor.items.filter((item) => (
-      item.type === "ammunition"
-      && item.system.quantity > 0
-      && item.system.ammunitionSymbol.trim() === requiredAmmunitionSymbol
-    ));
-
-    if (compatibleAmmunitionItems.length === 0) {
-      ui.notifications.warn(`Brak amunicji zgodnej z kodem ${requiredAmmunitionSymbol}.`);
-      return;
-    }
-
-    let selectedAmmunitionItem = compatibleAmmunitionItems[0];
-
-    // Kilka wariantów może mieć ten sam symbol, na przykład zwykłe i sportowe
-    // strzały. W takiej sytuacji użytkownik wybiera konkretny zapas.
-    if (compatibleAmmunitionItems.length > 1) {
-      const ammunitionOptions = compatibleAmmunitionItems
-        .map((ammunitionItem) => {
-          const safeName = foundry.utils.escapeHTML(ammunitionItem.name);
-          return `<option value="${ammunitionItem.id}">${safeName} (${ammunitionItem.system.quantity} szt.)</option>`;
-        })
-        .join("");
-
-      const formData = await foundry.applications.api.DialogV2.input({
-        window: {
-          title: `Przeładowanie: ${weaponItem.name}`
-        },
-        content: `
-          <div class="form-group">
-            <label for="neuroshima-ammunition-item">Wybierz zapas amunicji</label>
-            <select id="neuroshima-ammunition-item" name="ammunitionItemId">
-              ${ammunitionOptions}
-            </select>
-          </div>
-        `,
-        ok: {
-          label: "Przeładuj"
-        },
-        rejectClose: false,
-        modal: true
-      });
-
-      if (!formData) return;
-
-      selectedAmmunitionItem = this.actor.items.get(String(formData.ammunitionItemId));
-
-      if (!selectedAmmunitionItem || selectedAmmunitionItem.type !== "ammunition") {
-        ui.notifications.warn("Nie znaleziono wybranego zapasu amunicji.");
-        return;
-      }
-    }
-
-    const missingAmmunition = magazineCapacity - currentAmmunition;
-    const transferredAmmunition = Math.min(
-      missingAmmunition,
-      selectedAmmunitionItem.system.quantity
-    );
-
-    const loadedAmmunitionSourceCode = weaponItem.system.loadedAmmunitionSourceCode;
-    const selectedAmmunitionSourceCode = selectedAmmunitionItem.system.sourceCode;
-
-    // Nie mieszamy automatycznie dwóch specjalnych wariantów w jednym
-    // magazynku. Najpierw trzeba opróżnić magazynek na karcie broni.
-    if (
-      currentAmmunition > 0
-      && loadedAmmunitionSourceCode
-      && loadedAmmunitionSourceCode !== selectedAmmunitionSourceCode
-    ) {
-      ui.notifications.warn(
-        "W magazynku znajduje się inny wariant amunicji. Najpierw opróżnij magazynek."
-      );
-      return;
-    }
-
-    // Oba dokumenty aktualizujemy jednym wywołaniem Foundry. Dzięki temu
-    // magazynek i zapas nie rozjadą się w połowie operacji.
-    await this.actor.updateEmbeddedDocuments("Item", [
-      {
-        _id: weaponItem.id,
-        "system.currentAmmunition": currentAmmunition + transferredAmmunition,
-        "system.loadedAmmunitionSourceCode": selectedAmmunitionSourceCode,
-        // Broń przechowuje masę jednego załadowanego naboju w kilogramach.
-        // Dzięki temu późniejsza zmiana jednostki na Itemie amunicji nie psuje magazynka.
-        "system.loadedAmmunitionUnitWeight": selectedAmmunitionItem.system.unitWeightInKilograms
-      },
-      {
-        _id: selectedAmmunitionItem.id,
-        "system.quantity": selectedAmmunitionItem.system.quantity - transferredAmmunition
-      }
-    ]);
-
-    ui.notifications.info(
-      `${weaponItem.name}: załadowano ${transferredAmmunition} szt. amunicji.`
-    );
+  static async #onResolveWeaponHandling() {
+    await resolveWeaponHandling(this.actor);
+    this.render();
   }
 
   // Potwierdzenie chroni przed przypadkowym usunięciem całej broni wraz

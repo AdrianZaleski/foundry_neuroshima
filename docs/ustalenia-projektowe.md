@@ -143,7 +143,8 @@
 - Wynik, także ujemny w przypadku Punktów Porażki, jest zapisywany jako liczba Inicjatywy uczestnika. Dzięki temu Foundry może prawidłowo uporządkować również postacie, którym test się nie udał.
 - Przy identycznych wynikach system zgłasza remis. Remisujący wykonują ponowne rzuty albo rozstrzygają oddanie Inicjatywy poza automatyzacją.
 - Przycisk na karcie Actora zapisuje wynik w aktywnej walce, jeżeli Actor jest jej uczestnikiem. Poza walką publikuje wyłącznie wynik testu na czacie.
-- Serie, granaty i automatyczne rozstrzyganie konkretnych akcji pozostają odłożone.
+- Aktualizacja 2026-10-06: serie i ogień ciągły w jeden cel działają —
+  [obsługa i zakres](serie-i-ogien-ciagly.md). Granaty pozostają odłożone.
 - Jedna runda walki składa się z trzech globalnych segmentów. W każdym segmencie uczestnicy otrzymują kolejno moment działania zgodnie z Inicjatywą.
 - Natywna kolejność uczestników w Combat Trackerze nie jest duplikowana. Dodatkowy licznik zapisany na walce określa aktualny segment.
 - Akcja ma nazwę, koszt od jednego do trzech segmentów oraz wyliczony moment zakończenia.
@@ -152,7 +153,9 @@
 - Akcję wielosegmentową można zakończyć wcześniej albo przerwać. W obu przypadkach bieżący segment pozostaje wykorzystany.
 - Pas jest traktowany jak akcja zajmująca jeden segment.
 - Pierwsza wersja pozwala wpisywać dowolną nazwę akcji. Powiązanie konkretnych działań z testami, bronią i amunicją nastąpi w kolejnych etapach.
-- Deklaracja udostępnia katalog podstawowych akcji z podręcznika oraz opcję własnej akcji. Serie i rzuty granatem są świadomie pominięte.
+- Deklaracja udostępnia katalog podstawowych akcji z podręcznika oraz opcję własnej akcji.
+  Od 2026-10-06 obejmuje też krótką i długą serię oraz ogień ciągły.
+  Rzuty granatem pozostają poza zakresem.
 - Akcje katalogowe mają stały koszt jednego, dwóch albo trzech segmentów oraz informację, czy wymagają testu.
 - Strzał występuje w trzech wariantach: zwykły kosztuje `1` segment i używa `1k20`, celowany kosztuje `2` segmenty i używa `2k20`, a długo celowany kosztuje `3` segmenty i używa `3k20`.
 - Oznaczenie „wymaga testu” uruchamia obecnie właściwy rzut tylko dla pojedynczego strzału. Pozostałe testowane akcje zostaną podłączone osobno.
@@ -184,7 +187,8 @@
   cofnąć z karty postaci bez restartowania walki.
 - Test jest oparty na Zręczności i rozpoczyna się na PT Przeciętnym. Uwzględnia
   kary z ran, pancerza strzelca, celność broni, automatyczną karę za dystans
-  oraz ręcznie wpisane warunki takie jak ruch i osłona.
+  oraz wybierane warunki ruchu, postawy, osłony i lokacji. Widoczność oraz
+  pozostałe modyfikatory nadal ustala MG; szczegóły w `warunki-strzalu.md`.
 - Dystans jest mierzony między tokenem strzelca i celu dopiero w chwili
   rozstrzygania strzału. Można poprawić go ręcznie, jeżeli scena używa
   niestandardowej skali.
@@ -220,6 +224,8 @@
 - Po udanym strzale naturalny wynik wybranej kości wyznacza lokację: `1–2` głowa, `3–4` prawa ręka, `5–6` lewa ręka, `7–15` tułów, `16–17` prawa noga, `18–19` lewa noga.
 - Jeżeli dzięki celowaniu trafiło kilka kości, użytkownik wybiera, która z nich określa lokację trafienia.
 - Trafienie w głowę zwiększa obrażenia o jeden poziom.
+- Wybrana przed rzutem lokacja zastępuje lokację z kości i ma osobną
+  karę z tabeli strzelania. Kieruje wyborem pancerza i zapisem rany.
 - Krytycznych obrażeń zwiększonych trafieniem w głowę nie ograniczamy przed rozliczeniem pancerza. Dodatkowy poziom stanowi zapas, który może pochłonąć Redukcja.
 - Punkty Przebicia broni najpierw obniżają Redukcję pancerza. Pozostała Redukcja obniża obrażenia o odpowiednią liczbę poziomów.
 - Ponieważ nie ma jeszcze Itemów pancerza przypisanych do lokacji, Redukcję trafionego miejsca podaje się ręcznie w zakresie `0–4`.

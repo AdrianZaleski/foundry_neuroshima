@@ -43,12 +43,14 @@ function getLocationDescription(definition, location) {
 export function resolveDamage({
   damageCode,
   naturalResult,
+  hitLocation = null,
   damageBoost = false,
   armorReduction = 0,
   armorPenetration = 0
 }) {
   const parsedDamage = parseDamageCode(damageCode);
-  const location = getHitLocation(Number(naturalResult));
+  const location = hitLocation === null ? getHitLocation(Number(naturalResult))
+    : Object.hasOwn(HIT_LOCATION_LABELS, hitLocation) ? hitLocation : null;
   if (!parsedDamage || !location) return null;
 
   const baseSeverityIndex = SEVERITY_CODES.indexOf(parsedDamage.severityCode);
@@ -79,6 +81,7 @@ export function resolveDamage({
     baseDamageCode: `${parsedDamage.damageKind}_${parsedDamage.severityCode}`,
     baseSeverityCode: parsedDamage.severityCode,
     location,
+    locationWasChosen: hitLocation !== null,
     locationLabel: HIT_LOCATION_LABELS[location],
     headBonus,
     incomingSeverityIndex,

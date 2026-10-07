@@ -1,3 +1,5 @@
+import { BURST_MODES } from "./burst-fire.mjs";
+
 export const COMBAT_ACTIONS = {
   shot: {
     name: "Strzał",
@@ -20,6 +22,9 @@ export const COMBAT_ACTIONS = {
     effectCode: "rangedShot",
     aimingBonusDice: 2
   },
+  ...Object.fromEntries(Object.entries(BURST_MODES).map(([code, mode]) => [code, {
+    name: mode.name, duration: mode.duration, requiresTest: true, effectCode: "rangedShot", aimingBonusDice: 0
+  }])),
   clearMinorJam: {
     name: "Usunięcie lekkiego zacięcia",
     duration: 3,
@@ -29,12 +34,14 @@ export const COMBAT_ACTIONS = {
   safetyOff: {
     name: "Odbezpieczenie broni",
     duration: 1,
-    requiresTest: false
+    requiresTest: false,
+    effectCode: "weaponHandling"
   },
   pumpAction: {
     name: "Przeładowanie pompki",
     duration: 1,
-    requiresTest: false
+    requiresTest: false,
+    effectCode: "weaponHandling"
   },
   kneel: {
     name: "Przyklęknięcie",
@@ -84,12 +91,14 @@ export const COMBAT_ACTIONS = {
   drawWeapon: {
     name: "Dobycie broni",
     duration: 2,
-    requiresTest: false
+    requiresTest: false,
+    effectCode: "weaponHandling"
   },
   readyWeapon: {
-    name: "Przygotowanie broni",
+    name: "Dodatkowe przygotowanie wymagane przez MG",
     duration: 2,
-    requiresTest: false
+    requiresTest: false,
+    effectCode: "weaponHandling"
   },
   standFromKneeling: {
     name: "Powstanie z przyklęku",
@@ -97,9 +106,10 @@ export const COMBAT_ACTIONS = {
     requiresTest: false
   },
   changeMagazine: {
-    name: "Zmiana magazynka",
+    name: "Przeładowanie / uzupełnienie magazynka",
     duration: 3,
-    requiresTest: false
+    requiresTest: false,
+    effectCode: "weaponHandling"
   },
   standFromProne: {
     name: "Podniesienie się z pozycji leżącej",
@@ -119,11 +129,12 @@ export const COMBAT_ACTIONS = {
   loadRevolverRound: {
     name: "Załadowanie jednego naboju do bębna",
     duration: 3,
-    requiresTest: false
+    requiresTest: false,
+    effectCode: "weaponHandling"
   }
 };
 
-export function prepareCombatActionOptions() {
+export function prepareCombatActionOptions({ automaticFireAvailable = true } = {}) {
   const groupedActions = new Map([
     [1, []],
     [2, []],
@@ -131,19 +142,23 @@ export function prepareCombatActionOptions() {
   ]);
 
   for (const [actionCode, action] of Object.entries(COMBAT_ACTIONS)) {
+    if (actionCode === "changeMagazine") continue;
     groupedActions.get(action.duration).push({ actionCode, ...action });
   }
 
   const fixedGroups = [1, 2, 3].map((duration) => {
     const options = groupedActions.get(duration).map((action) => {
       const testLabel = action.requiresTest ? " — wymaga testu" : "";
-      return `<option value="${action.actionCode}">${action.name}${testLabel}</option>`;
+      const unavailable = Object.hasOwn(BURST_MODES, action.actionCode) && !automaticFireAvailable;
+      const selected = action.actionCode === "shot" ? " selected" : "";
+      return `<option value="${action.actionCode}"${selected}${unavailable ? " disabled" : ""}>${action.name}${unavailable ? " — wymaga gotowej broni z trybem A" : testLabel}</option>`;
     }).join("");
     return `<optgroup label="Akcje za ${duration} ${duration === 1 ? "segment" : "segmenty"}">${options}</optgroup>`;
   });
 
   return [
     ...fixedGroups,
+    '<optgroup label="Czas z karty broni"><option value="changeMagazine">Przeładowanie / uzupełnienie magazynka</option></optgroup>',
     '<optgroup label="Koszt wybierany"><option value="custom">Własna akcja</option></optgroup>'
   ].join("");
 }

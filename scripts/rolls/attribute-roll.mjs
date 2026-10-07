@@ -30,7 +30,11 @@ function prepareDieResultsDescription(dieResults, successThreshold) {
     .join(", ");
 }
 
-export async function rollAttribute(actor, attributeKey, { initialDifficultyIndex } = {}) {
+export async function rollAttribute(actor, attributeKey, {
+  initialDifficultyIndex, fixedDifficultyIndex = null, fixedTestType = "",
+  configurationTitle = "Ustawienia testu", testTitle: customTestTitle = "", testDescription = "",
+  modal = true, canRoll = () => true
+} = {}) {
   // Odczytujemy właściwy współczynnik na podstawie przycisku klikniętego na karcie.
   const attribute = actor.system.attributes[attributeKey];
 
@@ -44,9 +48,12 @@ export async function rollAttribute(actor, attributeKey, { initialDifficultyInde
 
   // Najpierw pytamy użytkownika o rodzaj i trudność testu.
   // Zamknięcie okna przerywa cały test.
-  const testConfiguration = await selectTestConfiguration(actor, { attributeKey, initialDifficultyIndex });
+  const testConfiguration = await selectTestConfiguration(actor, {
+    attributeKey, initialDifficultyIndex, fixedDifficultyIndex, fixedTestType,
+    windowTitle: configurationTitle, description: testDescription, modal
+  });
 
-  if (testConfiguration === null) {
+  if (testConfiguration === null || !canRoll()) {
     return;
   }
 
@@ -63,9 +70,9 @@ export async function rollAttribute(actor, attributeKey, { initialDifficultyInde
     difficultyPercentageAfterPenalties,
     difficultyIndexAfterPercentagePenalties
   } = testConfiguration;
-  const testTitle = testType === "open"
+  const testTitle = customTestTitle || (testType === "open"
     ? `Otwarty test: ${attributeLabel}`
-    : `Test: ${attributeLabel}`;
+    : `Test: ${attributeLabel}`);
 
   // Foundry sam losuje trzy kości dwudziestościenne i przechowuje ich wyniki.
   const roll = await new foundry.dice.Roll("3d20").evaluate();
@@ -84,6 +91,7 @@ export async function rollAttribute(actor, attributeKey, { initialDifficultyInde
   const attributeValue = calculateAttributeValue(actor, attributeKey);
   const successThreshold = attributeValue - DIFFICULTY_MODIFIERS[finalDifficultyIndex];
   let resultDescriptionLines;
+  let rollResult;
 
   if (testType === "open") {
     const sortedDieResults = [...dieResults].sort((firstResult, secondResult) => firstResult - secondResult);
@@ -92,6 +100,7 @@ export async function rollAttribute(actor, attributeKey, { initialDifficultyInde
     const decisiveDieResult = consideredDieResults[1];
     const pointsDifference = successThreshold - decisiveDieResult;
     const testPassed = pointsDifference >= 0;
+    rollResult = { testPassed, pointsDifference, numberOfSuccesses: null };
     const pointsDescription = testPassed
       ? `Punkty Sukcesu: ${pointsDifference}`
       : `Punkty Porażki: ${Math.abs(pointsDifference)}`;
@@ -105,6 +114,7 @@ export async function rollAttribute(actor, attributeKey, { initialDifficultyInde
     ];
   } else {
     const numberOfSuccesses = dieResults.filter((dieResult) => dieResult <= successThreshold).length;
+    rollResult = { testPassed: numberOfSuccesses >= 2, pointsDifference: null, numberOfSuccesses };
     const dieResultsDescription = prepareDieResultsDescription(dieResults, successThreshold);
 
     resultDescriptionLines = [
@@ -132,4 +142,5 @@ export async function rollAttribute(actor, attributeKey, { initialDifficultyInde
       ...resultDescriptionLines
     ].join("<br>")
   });
+  return { ...rollResult, testType, finalDifficultyIndex, successThreshold };
 }

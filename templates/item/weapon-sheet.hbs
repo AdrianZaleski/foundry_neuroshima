@@ -114,6 +114,7 @@
   <label>
     Szybkostrzelność
     <input type="number" name="system.fireRate" value="{{system.fireRate}}" min="1" step="1">
+    <small>Dla trybu A: X nabojów w krótkiej serii; długa seria 3X, ogień ciągły 6X.</small>
   </label>
 
   <label>
@@ -123,9 +124,21 @@
   <small>Rozpoznane rodzaje: {{attackTypeDescription}}</small>
 
   <label>
-    Czas przeładowania
+    Czas przeładowania w segmentach (0 = ustala MG)
     <input type="number" name="system.reloadTime" value="{{system.reloadTime}}" min="0" step="1">
   </label>
+
+  <fieldset>
+    <legend>Obsługa egzemplarza</legend>
+    <label>Wymagane dłonie <input type="number" name="system.requiredHands" value="{{system.requiredHands}}" min="1" max="2" step="1"></label>
+    <label><input type="checkbox" name="system.requiresPreparation" {{checked system.requiresPreparation}}> MG wymaga dodatkowego przygotowania przed strzałem (2 segmenty)</label>
+    <label>Na czym polega dodatkowe przygotowanie? <input type="text" name="system.preparationDescription" value="{{system.preparationDescription}}" placeholder="Opisz czynność wymaganą dla tego egzemplarza"></label>
+    <label><input type="checkbox" name="system.prepared" {{checked system.prepared}}> Dodatkowe przygotowanie wykonane (istotne tylko przy zaznaczonym wymogu powyżej)</label>
+    <label><input type="checkbox" name="system.safetyOn" {{checked system.safetyOn}}> Zabezpieczona</label>
+    <label><input type="checkbox" name="system.requiresCycling" {{checked system.requiresCycling}}> Po strzale wymaga ręcznego przeładowania mechanizmu</label>
+    <label><input type="checkbox" name="system.needsCycling" {{checked system.needsCycling}}> Obecnie wymaga przeładowania mechanizmu</label>
+    <p><small>Zwykła broń nie wymaga osobnego „Przygotuj”: jeśli jest w dłoni, załadowana, sprawna i odbezpieczona, można strzelać. Wymóg dodatkowego przygotowania włączaj tylko dla świadomie ustalonego wyjątku. Podczas walki używaj przycisków na karcie postaci, aby rozliczać czas.</small></p>
+  </fieldset>
 
   <label>
     Punkty przebicia pancerza

@@ -115,6 +115,7 @@
               <strong>{{this.name}}</strong><br>
               <small>{{this.weaponClassName}}</small><br>
               <small>{{this.attackTypeNames}}</small>
+              <br><small><strong>{{this.locationLabel}}</strong><br>{{this.readinessLabel}}</small>
             </td>
             <td>
               {{this.currentAmmunition}} / {{this.magazineCapacity}}<br>
@@ -128,12 +129,14 @@
             </td>
             <td>{{this.weight}} kg</td>
             <td>
-              <button type="button" data-action="reloadWeapon" data-item-id="{{this.id}}">Przeładuj</button>
-              {{#if this.isJammed}}
-                <button type="button" data-action="handleWeaponJam" data-item-id="{{this.id}}">Usuń zacięcie</button>
-              {{/if}}
-              <button type="button" data-action="editWeapon" data-item-id="{{this.id}}">Edytuj</button>
-              <button type="button" data-action="deleteWeapon" data-item-id="{{this.id}}">Usuń</button>
+              <button type="button" data-action="nextWeaponStep" data-item-id="{{this.id}}" {{#if this.disabled}}disabled{{/if}}>{{this.next.label}}</button>
+              <small>{{this.cost}}</small>
+              <p><small>{{#if this.unavailable}}{{this.unavailable}}{{else}}{{this.next.explanation}}{{/if}}</small></p>
+              <details data-sync="weapon-options-{{this.id}}"><summary>Więcej opcji</summary>
+                {{#if this.canTopUp}}<button type="button" data-action="reloadWeapon" data-item-id="{{this.id}}" {{#if this.actionsBlocked}}disabled{{/if}}>Uzupełnij amunicję</button>{{/if}}
+                <button type="button" data-action="editWeapon" data-item-id="{{this.id}}">Edytuj broń</button>
+                <button type="button" data-action="deleteWeapon" data-item-id="{{this.id}}">Usuń</button>
+              </details>
             </td>
           </tr>
         {{else}}

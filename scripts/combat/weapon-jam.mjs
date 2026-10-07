@@ -1,4 +1,5 @@
 import { rollSkill } from "../rolls/skill-roll.mjs";
+import { allowCombatAction } from "./action-access.mjs";
 import {
   calculateSegmentTick,
   configureCurrentJamClearing,
@@ -58,6 +59,7 @@ async function clearWeaponJam(actor, weapon, description) {
 }
 
 export async function configureMinorJamClearing(actor) {
+  if (!allowCombatAction(actor)) return false;
   const combatant = getActorCombatant(actor);
   const action = getSegmentAction(combatant);
   if (
@@ -107,6 +109,7 @@ export async function configureMinorJamClearing(actor) {
 }
 
 export async function resolveMinorJamClearing(actor) {
+  if (!allowCombatAction(actor)) return false;
   const combatant = getActorCombatant(actor);
   const action = getSegmentAction(combatant);
   const currentTick = calculateSegmentTick(
@@ -146,6 +149,7 @@ export async function resolveMinorJamClearing(actor) {
 }
 
 export async function handleWeaponJam(actor, weapon) {
+  if (!allowCombatAction(actor)) return false;
   if (!weapon || weapon.type !== "weapon") {
     ui.notifications.warn("Nie znaleziono tej broni na karcie postaci.");
     return false;

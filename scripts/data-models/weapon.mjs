@@ -5,9 +5,17 @@ import {
 
 export class NeuroshimaWeaponDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
-    const { NumberField, StringField } = foundry.data.fields;
+    const { NumberField, StringField, BooleanField } = foundry.data.fields;
 
     return {
+      requiresPreparation: new BooleanField({ initial: false }),
+      preparationDescription: new StringField({ initial: "", blank: true }),
+      prepared: new BooleanField({ initial: false }),
+      safetyOn: new BooleanField({ initial: false }),
+      requiresCycling: new BooleanField({ initial: false }),
+      needsCycling: new BooleanField({ initial: false }),
+      // Wymóg chwytu ustala MG dla egzemplarza; nie zgadujemy go z nazwy.
+      requiredHands: new NumberField({ initial: 1, min: 1, max: 2, integer: true }),
       // Kod źródłowy pozwoli później połączyć wpis z rekordem w arkuszu danych.
       // Nie jest on nazwą wyświetlaną graczowi, lecz stabilnym identyfikatorem.
       sourceCode: new StringField({
